@@ -13,6 +13,7 @@ public class Pager implements Serializable {
     private int pageSize;
     private int pageCount;
     private int recordCount;
+    private boolean autoCount;
 
     public Pager() {
         pageNumber = 1;
@@ -69,6 +70,15 @@ public class Pager implements Serializable {
                 recordCount,
                 pageNumber,
                 this.getPageCount());
+    }
+
+    public boolean isAutoCount() {
+        return autoCount;
+    }
+
+    public Pager setAutoCount(boolean autoCount) {
+        this.autoCount = autoCount;
+        return this;
     }
 
     public boolean isFirst() {

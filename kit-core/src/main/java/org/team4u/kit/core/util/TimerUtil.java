@@ -159,7 +159,7 @@ public class TimerUtil {
         }
 
         List<Runnable> awaitingExecution = taskScheduler.shutdownNow();
-        log.info("Tasks stopping. Tasks awaiting execution: %d", timerNum + awaitingExecution.size());
+        log.info("Tasks stopping. Tasks awaiting execution: {}", timerNum + awaitingExecution.size());
     }
 
     /**

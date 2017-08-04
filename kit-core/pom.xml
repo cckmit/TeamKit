@@ -12,19 +12,6 @@
     <packaging>jar</packaging>
 
     <dependencies>
-        <dependency>
-            <groupId>com.xiaoleilu</groupId>
-            <artifactId>hutool-core</artifactId>
-            <version>3.0.9</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.xiaoleilu</groupId>
-            <artifactId>hutool-log</artifactId>
-            <version>3.0.9</version>
-            <scope>provided</scope>
-        </dependency>
-
         <!--For Log util-->
         <dependency>
             <groupId>log4j</groupId>

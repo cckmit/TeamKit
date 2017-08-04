@@ -4,8 +4,6 @@ import com.xiaoleilu.hutool.util.ClassUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -49,61 +47,6 @@ public class FieldUtil {
         }
         return new Class<?>[0];
     }
-
-
-    public static void setValue(Object obj, String name, Object value)
-            throws InvocationTargetException, NoSuchFieldException {
-        if (obj == null || StrUtil.isEmpty(name)) {
-            return;
-        }
-
-        Method method = ClassUtil.getPublicMethod(obj.getClass(), "set" + StrUtil.upperFirst(name));
-
-        if (method == null) {
-            setValue(obj, obj.getClass().getDeclaredField(name), value);
-        } else {
-            ClassUtil.invoke(obj, method, EmptyValue.EMPTY_OBJECT_ARRAY);
-        }
-    }
-
-    public static void setValue(Object obj, Field f, Object value) {
-        if (!f.isAccessible())
-            f.setAccessible(true);
-        try {
-            f.set(obj, value);
-        } catch (Exception e) {
-            throw new RuntimeException(obj.getClass() + "." + f.getName() + " setValue fail", e);
-        }
-    }
-
-    public static <T> T getValue(Object obj, String name)
-            throws InvocationTargetException, NoSuchFieldException, IllegalAccessException {
-        if (obj == null || StrUtil.isEmpty(name)) {
-            return null;
-        }
-
-        Method method = ClassUtil.getPublicMethod(obj.getClass(), "get" + StrUtil.upperFirst(name));
-
-        if (method == null) {
-            return getValue(obj, obj.getClass().getDeclaredField(name));
-        } else {
-            return ClassUtil.invoke(obj, method, EmptyValue.EMPTY_OBJECT_ARRAY);
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <T> T getValue(Object obj, Field f) {
-        if (!f.isAccessible()) {
-            f.setAccessible(true);
-        }
-
-        try {
-            return (T) f.get(obj);
-        } catch (IllegalAccessException e) {
-            return null;
-        }
-    }
-
 
     /**
      * 获取一个字段的某一个泛型参数，如果没有，返回 null

@@ -72,7 +72,7 @@ public class Counter {
 
     private void dump() {
         if (log.isTraceEnabled()) {
-            log.trace("%s size:%d", name, size());
+            log.trace("{} size:{}", name, size());
         }
     }
 }

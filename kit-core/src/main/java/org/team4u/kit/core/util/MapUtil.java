@@ -191,7 +191,7 @@ public abstract class MapUtil {
                     continue;
                 }
 
-                Object v = FieldUtil.getValue(obj, field);
+                Object v = ReflectUtil.getFieldValue(obj, field);
                 if (v == null) {
                     map.put(field.getName(), null);
                     continue;
@@ -322,7 +322,7 @@ public abstract class MapUtil {
                         fieldValue = Convert.convert(fieldType, mapValue);
                     }
 
-                    FieldUtil.setValue(obj, field, fieldValue);
+                    ReflectUtil.setFieldValue(obj, field, fieldValue);
                 }
             }
 

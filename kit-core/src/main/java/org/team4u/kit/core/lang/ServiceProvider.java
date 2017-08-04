@@ -1,8 +1,9 @@
-package org.team4u.kit.core.util;
+package org.team4u.kit.core.lang;
 
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.LogFactory;
 import com.xiaoleilu.hutool.util.ClassUtil;
+import org.team4u.kit.core.util.AssertUtil;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -53,7 +54,7 @@ public class ServiceProvider implements Closeable {
     public <T> T get(String key) {
         Object object = services.get(key);
 
-        AssertUtil.notNull(key, "Service not fount(key=%s)", key);
+        AssertUtil.notNull(key, "Service not fount(key={})", key);
 
         if (object instanceof Factory) {
             Factory<T> factory = (Factory<T>) object;
@@ -61,17 +62,17 @@ public class ServiceProvider implements Closeable {
 
             switch (factory.getScope()) {
                 case prototype:
-                    log.debug("Creating new service(key=%s)", key);
+                    log.debug("Creating new service(key={})", key);
                     instance = factory.create();
-                    log.debug("Created new service(key=%s,instance=%s)", key, instance);
+                    log.debug("Created new service(key={},instance={})", key, instance);
                     break;
 
                 default:
                     synchronized (this) {
                         if (services.get(key) instanceof Factory) {
-                            log.debug("Creating new service(key=%s)", key);
+                            log.debug("Creating new service(key={})", key);
                             instance = factory.create();
-                            log.debug("Created new service(key=%s,instance=%s)", key, instance);
+                            log.debug("Created new service(key={},instance={})", key, instance);
 
                             register(key, instance);
                         } else {
@@ -82,13 +83,13 @@ public class ServiceProvider implements Closeable {
 
             return instance;
         } else {
-            log.trace("Get service(key=%s,instance=%s)", key, object);
+            log.trace("Get service(key={},instance={})", key, object);
             return (T) object;
         }
     }
 
     public ServiceProvider register(String key, Object service) {
-        log.debug("Register service(key=%s,instance=%s)", key, service);
+        log.debug("Register service(key={},instance={})", key, service);
         services.put(key, service);
         return this;
     }
@@ -110,9 +111,9 @@ public class ServiceProvider implements Closeable {
             if (entry.getValue() instanceof Closeable) {
                 try {
                     ((Closeable) entry.getValue()).close();
-                    log.debug("Service closed(key=%s,instance=%s)", entry.getKey(), entry.getValue());
+                    log.debug("Service closed(key={},instance={})", entry.getKey(), entry.getValue());
                 } catch (Exception e) {
-                    log.error(String.format("Close service failure(key=%s,instance=%s)",
+                    log.error(String.format("Close service failure(key={},instance={})",
                             entry.getKey(), entry.getValue()), e);
                 }
             }

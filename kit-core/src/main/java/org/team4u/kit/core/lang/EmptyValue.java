@@ -1,4 +1,4 @@
-package org.team4u.kit.core.util;
+package org.team4u.kit.core.lang;
 
 import java.io.Serializable;
 
