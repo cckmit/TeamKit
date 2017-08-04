@@ -5,11 +5,10 @@
     <parent>
         <groupId>org.team4u</groupId>
         <artifactId>team-kit</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0.0</version>
     </parent>
 
-    <artifactId>kit-core</artifactId>
-    <version>${kit-core.version}</version>
+    <artifactId>team-kit-core</artifactId>
     <packaging>jar</packaging>
 
     <dependencies>

@@ -63,7 +63,7 @@ public abstract class LongTimeThread extends Thread implements Closeable {
         onClose();
     }
 
-    public void waitForClosed() {
+    public void awaitTermination() {
         ThreadUtil.waitForDie(this);
     }
 

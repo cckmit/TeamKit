@@ -17,17 +17,17 @@ public class BufferTask<T> implements Closeable {
 
     private static final Log log = LogFactory.get();
 
-    private boolean isClosed = false;
     private LinkedBlockingQueue<T> tasks;
+    private boolean isClosed = false;
 
-    private Callback<List<T>> worker;
-    private int maxBufferSize = 1;
+    private int maxBufferSize = 100;
     private long timeoutMillis = 1000;
+    private Callback<List<T>> worker;
 
     private ExecutorService threadExecutor = Executors.newSingleThreadExecutor();
 
     public BufferTask<T> start() {
-        if (!isClosed) {
+        if (isClosed) {
             throw new IllegalStateException("BufferTask already closed");
         }
 

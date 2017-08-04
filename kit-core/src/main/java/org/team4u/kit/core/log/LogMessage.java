@@ -1,5 +1,8 @@
 package org.team4u.kit.core.log;
 
+import com.xiaoleilu.hutool.util.CharsetUtil;
+import com.xiaoleilu.hutool.util.URLUtil;
+
 import java.util.Map;
 
 /**
@@ -55,6 +58,11 @@ public class LogMessage {
         bodyBuilder.append(SEPARATOR)
                 .append("\"").append(key).append("\"").append("=")
                 .append("\"").append(value).append("\"");
+        return this;
+    }
+
+    public LogMessage appendWithEscape(String key, Object value) {
+        append(key, value == null ? null : URLUtil.encode(value.toString(), CharsetUtil.UTF_8));
         return this;
     }
 
