@@ -4,6 +4,7 @@ import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.ReflectUtil;
 import org.team4u.kit.core.action.Function;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -180,5 +181,48 @@ public class CollectionExUtil {
         }
 
         return (T) list.subList(fromIndex, toIndex);
+    }
+
+    /**
+     * 如果是数组或集合取得第一个对象。 否则返回自身
+     *
+     * @param obj 任意对象
+     * @return 第一个代表对象
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T getFirst(Object obj) {
+        if (null == obj)
+            return null;
+
+        if (obj instanceof Iterable<?>) {
+            return (T) CollectionUtil.getFirst((Iterable<?>) obj);
+        }
+
+        if (obj.getClass().isArray())
+            return Array.getLength(obj) > 0 ? (T) Array.get(obj, 0) : null;
+
+        return (T) obj;
+    }
+
+    /**
+     * 获取集合中的最后一个元素，如果集合为空，返回 null
+     *
+     * @param self 集合
+     * @return 第一个元素
+     */
+    public static <T> T getLast(List<T> self) {
+        if (ValueUtil.isEmpty(self)) {
+            return null;
+        }
+
+        return self.get(self.size() - 1);
+    }
+
+    public static <T> T getLast(T[] array) {
+        if (ValueUtil.isEmpty(array)) {
+            return null;
+        }
+
+        return array[array.length - 1];
     }
 }

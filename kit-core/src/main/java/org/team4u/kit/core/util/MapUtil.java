@@ -110,12 +110,20 @@ public abstract class MapUtil {
     }
 
     public static Map<String, ?> toPathMap(Map<?, ?> map) {
-        return toPathMap(map, "node.");
+        return toPathMap(map,
+                "node.",
+                PathMapBuilder.DEFAULT_NODE_SEPARATOR,
+                PathMapBuilder.DEFAULT_LIST_SEPARATOR);
+    }
+
+    public static Map<String, ?> toPathMap(Map<?, ?> map, char nodeSeparator, char listSeparator) {
+        return toPathMap(map, "node.", nodeSeparator, listSeparator);
     }
 
     @SuppressWarnings("unchecked")
-    public static Map<String, ?> toPathMap(Map<?, ?> map, String prefixToRemove) {
-        PathMapBuilder builder = new PathMapBuilder();
+    public static Map<String, ?> toPathMap(Map<?, ?> map, String prefixToRemove,
+                                           char nodeSeparator, char listSeparator) {
+        PathMapBuilder builder = new PathMapBuilder(nodeSeparator, listSeparator);
         for (Map.Entry<?, ?> entry : map.entrySet()) {
             builder.put(prefixToRemove + entry.getKey().toString(), entry.getValue());
         }
@@ -156,7 +164,7 @@ public abstract class MapUtil {
     }
 
     @SuppressWarnings("unchecked")
-    private static class ObjectToMapBuilder {
+    public static class ObjectToMapBuilder {
         /**
          * 将对象转换成 Map
          *
@@ -251,7 +259,7 @@ public abstract class MapUtil {
     }
 
     @SuppressWarnings("unchecked")
-    private static class MapToObjectBuilder {
+    public static class MapToObjectBuilder {
 
         public static <T> T build(Map<?, ?> src, Class<T> toType) {
             if (null == toType) {
@@ -388,11 +396,16 @@ public abstract class MapUtil {
      * <p>
      * </code>
      */
-    private static class PathMapBuilder {
-        private static final char separator = '.';
-        private static final char LIST_SEPARATOR = ':';
+    public static class PathMapBuilder {
         private static final int TYPE_NONE = 0;
         private static final int TYPE_LIST = 1;
+
+        public final static char DEFAULT_NODE_SEPARATOR = '.';
+        public final static char DEFAULT_LIST_SEPARATOR = ':';
+
+        private final char nodeSeparator;
+        private final char listSeparator;
+
         //节点名
         private String name;
         //叶子节点的值
@@ -403,6 +416,16 @@ public abstract class MapUtil {
         private Map<String, PathMapBuilder> child = new LinkedHashMap<String, PathMapBuilder>();
         //类型
         private int type = TYPE_NONE;
+
+        public PathMapBuilder() {
+            this.nodeSeparator = DEFAULT_NODE_SEPARATOR;
+            this.listSeparator = DEFAULT_LIST_SEPARATOR;
+        }
+
+        public PathMapBuilder(char nodeSeparator, char listSeparator) {
+            this.nodeSeparator = nodeSeparator;
+            this.listSeparator = listSeparator;
+        }
 
         /**
          * 初始化当前结点
@@ -464,7 +487,7 @@ public abstract class MapUtil {
             String subname = fetchName(path);
             PathMapBuilder onn = child.get(subname);
             if (onn == null) {
-                onn = new PathMapBuilder();
+                onn = new PathMapBuilder(nodeSeparator, listSeparator);
             }
             onn.putPath(path, value);
             child.put(subname, onn);
@@ -477,7 +500,7 @@ public abstract class MapUtil {
             String key = fetchNode(path);
             if (isList(key)) {
                 type = TYPE_LIST;
-                name = key.substring(0, key.indexOf(LIST_SEPARATOR));
+                name = key.substring(0, key.indexOf(listSeparator));
                 return;
             }
             name = key;
@@ -488,9 +511,9 @@ public abstract class MapUtil {
          */
         private String fetchSubPath(String path) {
             if (isList(fetchNode(path))) {
-                return path.substring(path.indexOf(LIST_SEPARATOR) + 1);
+                return path.substring(path.indexOf(listSeparator) + 1);
             }
-            return path.substring(path.indexOf(separator) + 1);
+            return path.substring(path.indexOf(nodeSeparator) + 1);
         }
 
 
@@ -498,10 +521,10 @@ public abstract class MapUtil {
          * 取得节点名
          */
         private String fetchNode(String path) {
-            if (path.indexOf(separator) <= 0) {
+            if (path.indexOf(nodeSeparator) <= 0) {
                 return path;
             }
-            return path.substring(0, path.indexOf(separator));
+            return path.substring(0, path.indexOf(nodeSeparator));
         }
 
 
@@ -511,7 +534,7 @@ public abstract class MapUtil {
         private String fetchName(String path) {
             String key = fetchNode(path);
             if (isList(key)) {
-                return key.substring(0, key.indexOf(LIST_SEPARATOR));
+                return key.substring(0, key.indexOf(listSeparator));
             }
             return key;
         }
@@ -541,7 +564,7 @@ public abstract class MapUtil {
          * 是否是list节点
          */
         private boolean isList(String key) {
-            return key.indexOf(LIST_SEPARATOR) > 0;
+            return key.indexOf(listSeparator) > 0;
         }
 
         private String getName() {
