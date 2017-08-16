@@ -1,6 +1,6 @@
 package org.team4u.kit.core.config;
 
-import com.jsoniter.JsonIterator;
+import com.alibaba.fastjson.JSON;
 import com.xiaoleilu.hutool.util.ReUtil;
 import org.team4u.kit.core.util.AssertUtil;
 
@@ -13,7 +13,7 @@ public class JsonConfigLoader implements ConfigLoader<String> {
         content = ReUtil.get(".*?(\\{.+\\}).*", content, 1);
         AssertUtil.notNull(content);
         content = content.replaceAll("(?m)^\\s*//.*", "");
-        return JsonIterator.deserialize(content, configClass);
+        return JSON.parseObject(content, configClass);
     }
 
     @Override

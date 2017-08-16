@@ -1,7 +1,6 @@
 package org.team4u.kit.core.codec.impl;
 
-import com.jsoniter.JsonIterator;
-import com.jsoniter.output.JsonStream;
+import com.alibaba.fastjson.JSON;
 import com.xiaoleilu.hutool.util.ClassUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 import org.team4u.kit.core.codec.Codec;
@@ -20,7 +19,7 @@ public abstract class JsoniterStringCodec<V> implements Codec<V, String> {
             return null;
         }
 
-        return JsonStream.serialize(obj);
+        return JSON.toJSONString(obj);
     }
 
     @Override
@@ -29,6 +28,6 @@ public abstract class JsoniterStringCodec<V> implements Codec<V, String> {
             return null;
         }
 
-        return JsonIterator.deserialize(e, targetClass);
+        return JSON.parseObject(e, targetClass);
     }
 }

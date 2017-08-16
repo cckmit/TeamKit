@@ -30,10 +30,10 @@
 
         <!--For JsonConfigLoader-->
         <dependency>
-            <groupId>com.jsoniter</groupId>
-            <artifactId>jsoniter</artifactId>
-            <version>0.9.15</version>
-            <optional>true</optional>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.36</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>
