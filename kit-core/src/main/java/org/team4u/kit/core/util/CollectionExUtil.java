@@ -1,13 +1,12 @@
 package org.team4u.kit.core.util;
 
+import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.ReflectUtil;
 import org.team4u.kit.core.action.Function;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Jay Wu
@@ -224,5 +223,107 @@ public class CollectionExUtil {
         }
 
         return array[array.length - 1];
+    }
+
+    /**
+     * 将一个或者多个数组填入一个集合。
+     *
+     * @param <C>     集合类型
+     * @param <T>     数组元素类型
+     * @param self    集合
+     * @param sources 数组 （数目可变）
+     * @return 集合对象
+     */
+    public static <C extends Collection<T>, T> C addAll(C self, T[]... sources) {
+        for (T[] objs : sources) {
+            Collections.addAll(self, objs);
+        }
+
+        return self;
+    }
+
+    /**
+     * 将集合变成数组，数组的类型为集合的第一个元素的类型。如果集合为空，则返回 null
+     *
+     * @param self 集合对象
+     * @return 数组
+     */
+    @SuppressWarnings("unchecked")
+    public static <E> E[] toArray(Collection<E> self) {
+        if (null == self)
+            return null;
+        if (self.size() == 0)
+            return (E[]) new Object[0];
+
+        @SuppressWarnings("ConstantConditions")
+        Class<E> eleType = (Class<E>) getFirst(self).getClass();
+        return toArray(self, eleType);
+    }
+
+    /**
+     * 将集合变成指定类型的数组
+     *
+     * @param col     集合对象
+     * @param eleType 数组元素类型
+     * @return 数组
+     */
+    @SuppressWarnings("unchecked")
+    public static <E> E[] toArray(Collection<?> col, Class<E> eleType) {
+        if (null == col)
+            return null;
+        Object re = Array.newInstance(eleType, col.size());
+        int i = 0;
+        for (Object obj : col) {
+            if (null == obj)
+                Array.set(re, i++, null);
+            else
+                Array.set(re, i++, Convert.convert(eleType, obj));
+        }
+        return (E[]) re;
+    }
+
+    public static <E> Collection<E> toCollection(E[] array, Class<?> collectionType) {
+        Collection<E> result = newInstance(collectionType);
+        Collections.addAll(result, array);
+        return result;
+    }
+
+    public static <E> Collection<E> toCollection(Collection<E> self, Class<?> toCollectionType) {
+        Collection<E> result = newInstance(toCollectionType);
+        result.addAll(self);
+        return result;
+    }
+
+    public static <F, T> Collection<T> toCollection(Collection<F> self, Class<?> collectionType, Class<T> eleType) {
+        Collection<T> result = newInstance(collectionType);
+        for (F it : self) {
+            result.add(Convert.convert(eleType, it));
+        }
+        return result;
+    }
+
+    public static <E> List<E> toList(E[] array) {
+        List<E> result = new ArrayList<E>();
+        Collections.addAll(result, array);
+        return result;
+    }
+
+    public static <F, T> List<T> toList(F[] array, Class<T> eleType) {
+        List<T> result = new ArrayList<T>();
+        for (F it : array) {
+            result.add(Convert.convert(eleType, it));
+        }
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> Collection<T> newInstance(Class<?> collectionType) {
+        if (collectionType == List.class) {
+            return new ArrayList<T>();
+        } else if (collectionType == Set.class) {
+            return new LinkedHashSet<T>();
+        } else {
+            return (Collection<T>) ReflectUtil.newInstance(collectionType);
+        }
     }
 }
