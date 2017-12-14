@@ -61,10 +61,29 @@
         </plugins>
     </build>
 
+    <!--<distributionManagement>-->
+    <!--<repository>-->
+    <!--<id>team4u-repo</id>-->
+    <!--<url>https://api.bintray.com/maven/team4u/team4u/TeamKit/;publish=1</url>-->
+    <!--</repository>-->
+    <!--</distributionManagement>-->
+
+    <!--<repositories>-->
+    <!--<repository>-->
+    <!--<snapshots>-->
+    <!--<enabled>false</enabled>-->
+    <!--</snapshots>-->
+    <!--<id>vip-repo</id>-->
+    <!--<name>vip</name>-->
+    <!--<url>http://mvn1.tools.vipshop.com/nexus/content/groups/public</url>-->
+    <!--</repository>-->
+    <!--</repositories>-->
+
+
     <distributionManagement>
         <repository>
-            <id>team4u-repo</id>
-            <url>https://api.bintray.com/maven/team4u/team4u/TeamKit/;publish=1</url>
+            <id>vip-repo</id>
+            <url>http://mvn1.tools.vipshop.com/nexus/content/repositories/releases</url>
         </repository>
     </distributionManagement>
 </project>

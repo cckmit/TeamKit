@@ -1,17 +1,20 @@
 package org.team4u.kit.core.util;
 
 import com.xiaoleilu.hutool.util.StrUtil;
-import net.sf.oval.ConstraintViolation;
-import net.sf.oval.Validator;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.groups.Default;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class ValidatorUtil {
 
-    private static Validator validator = new Validator();
+    private static Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
-    public static Result validate(Object obj) {
+    public static <T> Result validate(T obj) {
         Result result = new Result();
 
         if (obj == null) {
@@ -20,13 +23,12 @@ public class ValidatorUtil {
             return result;
         }
 
-        List<ConstraintViolation> constraintViolations = validator.validate(obj);
-        result.error = !constraintViolations.isEmpty();
-
-        for (ConstraintViolation c : constraintViolations) {
-            result.addMessage(c.getMessage());
+        Set<ConstraintViolation<T>> violations = validator.validate(obj, Default.class);
+        if (violations != null && !violations.isEmpty()) {
+            for (ConstraintViolation violation : violations) {
+                result.addMessage(violation.getPropertyPath() + violation.getMessage());
+            }
         }
-
         return result;
     }
 
