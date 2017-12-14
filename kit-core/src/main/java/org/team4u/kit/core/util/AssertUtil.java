@@ -2,6 +2,7 @@ package org.team4u.kit.core.util;
 
 import com.xiaoleilu.hutool.util.StrUtil;
 import org.team4u.kit.core.error.ErrorCode;
+import org.team4u.kit.core.error.ServiceException;
 
 import java.util.Collection;
 import java.util.Map;
@@ -364,7 +365,7 @@ public abstract class AssertUtil {
     }
 
     public static void error(ErrorCode errorCode, Object... fmt) {
-        throw errorCode.createException(errorCode.getCode(), fmt != null ?
+        throw new ServiceException(errorCode.getInnerName(), fmt != null ?
                 String.format(errorCode.getMessage(), fmt) : errorCode.getMessage());
     }
 
