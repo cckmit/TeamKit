@@ -365,7 +365,7 @@ public abstract class AssertUtil {
     }
 
     public static void error(ErrorCode errorCode, Object... fmt) {
-        throw new ServiceException(errorCode.getInnerName(), fmt != null ?
+        throw new ServiceException(errorCode.getInnerCode(), fmt != null ?
                 String.format(errorCode.getMessage(), fmt) : errorCode.getMessage());
     }
 

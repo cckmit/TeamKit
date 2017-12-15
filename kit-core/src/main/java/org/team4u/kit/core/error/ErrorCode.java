@@ -8,6 +8,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class ErrorCode {
 
+    private static final Map<String, ErrorCode> ERROR_CODES = new ConcurrentHashMap<String, ErrorCode>();
+
     public static final ErrorCode SUCCESS = new ErrorCode("common", "0", "处理成功");
 
     public static final ErrorCode NOT_LOGIN = new ErrorCode("common", "not.login", "没有登录");
@@ -19,18 +21,16 @@ public class ErrorCode {
     public static final ErrorCode PARAM_EMPTY = new ErrorCode("common", "param.empty", "%s参数为空");
     public static final ErrorCode PARAM_ERROR = new ErrorCode("common", "param.error", "非法参数：%s");
 
-    private static final Map<String, ErrorCode> ERROR_CODES = new ConcurrentHashMap<String, ErrorCode>();
-
     private final String type;
     private final String code;
     private final String message;
-    private final String innerName;
+    private final String innerCode;
 
     public ErrorCode(String type, String code, String message) {
         this.type = type;
         this.code = code;
         this.message = message;
-        this.innerName = toInnerName(type, code);
+        this.innerCode = toInnerName(type, code);
 
         register();
     }
@@ -55,8 +55,8 @@ public class ErrorCode {
         return type;
     }
 
-    public String getInnerName() {
-        return innerName;
+    public String getInnerCode() {
+        return innerCode;
     }
 
     public String getMessage() {
@@ -65,10 +65,10 @@ public class ErrorCode {
 
     @Override
     public String toString() {
-        return "MessageCode: " + innerName;
+        return "MessageCode: " + innerCode;
     }
 
     private void register() {
-        ERROR_CODES.put(this.innerName, this);
+        ERROR_CODES.put(innerCode, this);
     }
 }
