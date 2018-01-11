@@ -1,13 +1,13 @@
 package org.team4u.kit.core.test.util;
 
 
-import com.xiaoleilu.hutool.util.CollectionUtil;
+import com.xiaoleilu.hutool.collection.CollectionUtil;
 import org.junit.Assert;
 import org.junit.Test;
 import org.team4u.kit.core.config.ConfigLoader;
 import org.team4u.kit.core.config.Configurable;
 import org.team4u.kit.core.config.Configurer;
-import org.team4u.kit.core.util.MapUtil;
+import org.team4u.kit.core.util.MapExUtil;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ public class ConfigLoaderTest {
         a = Configurer.getInstance().loadWithContent(
                 ConfigA.class,
                 Configurer.LoaderType.MAP.getKey(),
-                MapUtil.toMap(a));
+                MapExUtil.toMap(a));
         check(a);
     }
 

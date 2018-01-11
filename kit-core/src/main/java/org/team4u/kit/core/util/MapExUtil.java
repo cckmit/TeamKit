@@ -1,8 +1,8 @@
 package org.team4u.kit.core.util;
 
+import com.xiaoleilu.hutool.collection.CollectionUtil;
 import com.xiaoleilu.hutool.convert.Convert;
 import com.xiaoleilu.hutool.util.ClassUtil;
-import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.ReflectUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 import org.team4u.kit.core.action.Each;
@@ -13,7 +13,7 @@ import java.lang.reflect.Field;
 import java.util.*;
 import java.util.concurrent.Callable;
 
-public abstract class MapUtil {
+public abstract class MapExUtil {
 
     /**
      * 创建一个一个键的 Map 对象
@@ -41,7 +41,7 @@ public abstract class MapUtil {
         if (toType == Map.class) {
             return newHashMap();
         } else {
-            return (Map<K, V>) ClassUtil.newInstance(toType);
+            return (Map<K, V>) ReflectUtil.newInstance(toType);
         }
     }
 

@@ -2,7 +2,7 @@ package org.team4u.kit.core.lang;
 
 import com.xiaoleilu.hutool.log.Log;
 import com.xiaoleilu.hutool.log.LogFactory;
-import com.xiaoleilu.hutool.util.ClassUtil;
+import com.xiaoleilu.hutool.util.ReflectUtil;
 import org.team4u.kit.core.util.AssertUtil;
 
 import java.io.Closeable;
@@ -43,7 +43,7 @@ public class ServiceProvider implements Closeable {
                 return instance;
             }
 
-            instance = ClassUtil.newInstance(keyClass);
+            instance = ReflectUtil.newInstance(keyClass);
             register(instance);
         }
 

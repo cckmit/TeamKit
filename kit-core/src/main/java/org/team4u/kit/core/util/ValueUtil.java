@@ -1,6 +1,7 @@
 package org.team4u.kit.core.util;
 
 import com.xiaoleilu.hutool.util.ClassUtil;
+import com.xiaoleilu.hutool.util.ReflectUtil;
 import com.xiaoleilu.hutool.util.StrUtil;
 import org.team4u.kit.core.action.Each;
 import org.team4u.kit.core.action.Loop;
@@ -92,7 +93,7 @@ public class ValueUtil {
             return ((Map<?, ?>) obj).size();
         }
 
-        return (Integer) ClassUtil.invoke(obj, "length", EmptyValue.EMPTY_OBJECT_ARRAY);
+        return (Integer) ReflectUtil.invoke(obj, "length", EmptyValue.EMPTY_OBJECT_ARRAY);
     }
 
     /**

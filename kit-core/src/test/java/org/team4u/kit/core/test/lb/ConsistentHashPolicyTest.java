@@ -1,6 +1,6 @@
 package org.team4u.kit.core.test.lb;
 
-import com.xiaoleilu.hutool.util.CollectionUtil;
+import com.xiaoleilu.hutool.collection.CollectionUtil;
 import org.junit.Assert;
 import org.junit.Test;
 import org.team4u.kit.core.lb.ConsistentHashPolicy;

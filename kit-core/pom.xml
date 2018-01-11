@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.team4u</groupId>
         <artifactId>team-kit</artifactId>
-        <version>1.0.3</version>
+        <version>1.0.4</version>
     </parent>
 
     <artifactId>team-kit-core</artifactId>
@@ -24,7 +24,7 @@
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>6.0.5.Final</version>
+            <version>6.0.7.Final</version>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -38,7 +38,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.2.36</version>
+            <version>1.2.44</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

@@ -1,13 +1,13 @@
 package org.team4u.kit.core.test.lb;
 
-import com.xiaoleilu.hutool.util.CollectionUtil;
+import com.xiaoleilu.hutool.collection.CollectionUtil;
 import org.junit.Assert;
 import org.junit.Test;
 import org.team4u.kit.core.action.Callback;
 import org.team4u.kit.core.lang.Pair;
 import org.team4u.kit.core.lb.RoundRobinPolicy;
 import org.team4u.kit.core.lb.WeightRoundRobinPolicy;
-import org.team4u.kit.core.util.MapUtil;
+import org.team4u.kit.core.util.MapExUtil;
 
 public class RoundRobinPolicyTest {
 
@@ -93,7 +93,7 @@ public class RoundRobinPolicyTest {
 
     @Test
     public void weightSelect() {
-        WeightRoundRobinPolicy<Integer> policy = new WeightRoundRobinPolicy<Integer>(MapUtil.hashMapOf(
+        WeightRoundRobinPolicy<Integer> policy = new WeightRoundRobinPolicy<Integer>(MapExUtil.hashMapOf(
                 new Pair<Integer, Integer>(1, 1),
                 new Pair<Integer, Integer>(2, 2)));
         Assert.assertEquals(Integer.valueOf(1), policy.select());

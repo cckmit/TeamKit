@@ -1,12 +1,13 @@
 package org.team4u.kit.core.util;
 
+import com.xiaoleilu.hutool.collection.CollUtil;
 import com.xiaoleilu.hutool.convert.Convert;
-import com.xiaoleilu.hutool.util.CollectionUtil;
 import com.xiaoleilu.hutool.util.ReflectUtil;
 import org.team4u.kit.core.action.Function;
 
 import java.lang.reflect.Array;
 import java.util.*;
+
 
 /**
  * @author Jay Wu
@@ -133,7 +134,7 @@ public class CollectionExUtil {
 
     public static <T, R, C extends Collection<R>> List<R> flatMap(Iterable<T> self,
                                                                   Function<T, Iterable<R>> transform) {
-        List<R> result = CollectionUtil.newArrayList();
+        List<R> result = CollUtil.newArrayList();
         return flatMapTo(self, result, transform);
     }
 
@@ -194,7 +195,7 @@ public class CollectionExUtil {
             return null;
 
         if (obj instanceof Iterable<?>) {
-            return (T) CollectionUtil.getFirst((Iterable<?>) obj);
+            return (T) CollUtil.getFirst((Iterable<?>) obj);
         }
 
         if (obj.getClass().isArray())
@@ -297,7 +298,8 @@ public class CollectionExUtil {
     public static <F, T> Collection<T> toCollection(Collection<F> self, Class<?> collectionType, Class<T> eleType) {
         Collection<T> result = newInstance(collectionType);
         for (F it : self) {
-            result.add(Convert.convert(eleType, it));
+            //noinspection unchecked
+            result.add((T) Convert.convert(eleType, it));
         }
         return result;
     }
@@ -311,7 +313,8 @@ public class CollectionExUtil {
     public static <F, T> List<T> toList(F[] array, Class<T> eleType) {
         List<T> result = new ArrayList<T>();
         for (F it : array) {
-            result.add(Convert.convert(eleType, it));
+            //noinspection unchecked
+            result.add((T) Convert.convert(eleType, it));
         }
         return result;
     }
