@@ -20,7 +20,7 @@ public class LogMessageTest {
         LogMessage message = newLogMessage()
                 .fail("y")
                 .append("x", "1");
-        Assert.assertEquals("TEST|view|fail|\"errorMessage\"=\"y\"|\"x\"=\"1\"", message.toString());
+        Assert.assertEquals("TEST|view|fail|errorMessage=y|x=1", message.toString());
     }
 
     @Test
@@ -29,24 +29,14 @@ public class LogMessageTest {
                 .processing()
                 .append("x", "1")
                 .append("y", "2");
-        Assert.assertEquals("TEST|view|processing|\"x\"=\"1\"|\"y\"=\"2\"", message.toString());
+        Assert.assertEquals("TEST|view|processing|x=1|y=2", message.toString());
     }
 
     @Test
     public void copy() {
         LogMessage message = newLogMessage();
-        Assert.assertEquals("TEST|view|processing|\"x\"=\"1\"",
-                message.copy().processing().append("x", "1").toString());
-        Assert.assertEquals("TEST|view|success|\"y\"=\"2\"",
-                message.copy().success().append("y", "2").toString());
-    }
-
-    @Test
-    public void appendWithEscape() {
-        LogMessage message = newLogMessage()
-                .processing()
-                .appendWithEscape("x", "我");
-        Assert.assertEquals("TEST|view|processing|\"x\"=\"%u6211\"", message.toString());
+        Assert.assertEquals("TEST|view|processing", message.copy().processing().toString());
+        Assert.assertEquals("TEST|view|success", message.copy().success().toString());
     }
 
     private LogMessage newLogMessage() {
