@@ -1,7 +1,7 @@
 package org.team4u.kit.core.debug;
 
-import com.xiaoleilu.hutool.log.Log;
-import com.xiaoleilu.hutool.log.LogFactory;
+import cn.hutool.log.Log;
+import cn.hutool.log.LogFactory;
 
 import java.util.Timer;
 import java.util.TimerTask;

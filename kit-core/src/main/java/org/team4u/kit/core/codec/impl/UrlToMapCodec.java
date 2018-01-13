@@ -1,8 +1,8 @@
 package org.team4u.kit.core.codec.impl;
 
-import com.xiaoleilu.hutool.util.CharsetUtil;
-import com.xiaoleilu.hutool.util.StrUtil;
-import com.xiaoleilu.hutool.util.URLUtil;
+import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.URLUtil;
 import org.team4u.kit.core.action.Each;
 import org.team4u.kit.core.action.Function;
 import org.team4u.kit.core.codec.Codec;

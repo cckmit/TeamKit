@@ -1,8 +1,9 @@
 package org.team4u.kit.core.lang;
 
-import com.xiaoleilu.hutool.log.Log;
-import com.xiaoleilu.hutool.log.LogFactory;
-import com.xiaoleilu.hutool.thread.ThreadUtil;
+
+import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.log.Log;
+import cn.hutool.log.LogFactory;
 
 import java.io.Closeable;
 

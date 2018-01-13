@@ -1,6 +1,6 @@
 package org.team4u.kit.core.config;
 
-import com.xiaoleilu.hutool.io.FileUtil;
+import cn.hutool.core.io.FileUtil;
 import org.team4u.kit.core.lang.Registry;
 
 import java.io.File;

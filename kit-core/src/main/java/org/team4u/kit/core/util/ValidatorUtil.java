@@ -1,6 +1,6 @@
 package org.team4u.kit.core.util;
 
-import com.xiaoleilu.hutool.util.StrUtil;
+import cn.hutool.core.util.StrUtil;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;

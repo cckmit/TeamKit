@@ -1,7 +1,8 @@
 package org.team4u.kit.core.lang;
 
-import com.xiaoleilu.hutool.log.Log;
-import com.xiaoleilu.hutool.log.LogFactory;
+
+import cn.hutool.log.Log;
+import cn.hutool.log.LogFactory;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;

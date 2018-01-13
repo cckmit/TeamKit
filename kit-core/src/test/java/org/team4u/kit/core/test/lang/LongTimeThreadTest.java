@@ -1,6 +1,6 @@
 package org.team4u.kit.core.test.lang;
 
-import com.xiaoleilu.hutool.thread.ThreadUtil;
+import cn.hutool.core.thread.ThreadUtil;
 import org.junit.Assert;
 import org.junit.Test;
 import org.team4u.kit.core.lang.LongTimeThread;

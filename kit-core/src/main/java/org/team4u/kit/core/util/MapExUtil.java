@@ -1,10 +1,10 @@
 package org.team4u.kit.core.util;
 
-import com.xiaoleilu.hutool.collection.CollectionUtil;
-import com.xiaoleilu.hutool.convert.Convert;
-import com.xiaoleilu.hutool.util.ClassUtil;
-import com.xiaoleilu.hutool.util.ReflectUtil;
-import com.xiaoleilu.hutool.util.StrUtil;
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.util.ClassUtil;
+import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.util.StrUtil;
 import org.team4u.kit.core.action.Each;
 import org.team4u.kit.core.error.ExceptionUtil;
 import org.team4u.kit.core.lang.Pair;

@@ -1,9 +1,9 @@
 package org.team4u.kit.core.lang;
 
-import com.xiaoleilu.hutool.log.Log;
-import com.xiaoleilu.hutool.log.LogFactory;
-import com.xiaoleilu.hutool.util.ReflectUtil;
-import org.team4u.kit.core.util.AssertUtil;
+import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.log.Log;
+import cn.hutool.log.LogFactory;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -54,7 +54,7 @@ public class ServiceProvider implements Closeable {
     public <T> T get(String key) {
         Object object = services.get(key);
 
-        AssertUtil.notNull(key, "Service not fount(key={})", key);
+        Assert.notNull(key, "Service not fount(key={})", key);
 
         if (object instanceof Factory) {
             Factory<T> factory = (Factory<T>) object;

@@ -1,8 +1,8 @@
 package org.team4u.kit.core.config;
 
+import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.ReUtil;
 import com.alibaba.fastjson.JSON;
-import com.xiaoleilu.hutool.util.ReUtil;
-import org.team4u.kit.core.util.AssertUtil;
 
 public class JsonConfigLoader implements ConfigLoader<String> {
 
@@ -11,7 +11,7 @@ public class JsonConfigLoader implements ConfigLoader<String> {
     @Override
     public <T> T load(Class<T> configClass, String content) {
         content = ReUtil.get(".*?(\\{.+\\}).*", content, 1);
-        AssertUtil.notNull(content);
+        Assert.notNull(content);
         content = content.replaceAll("(?m)^\\s*//.*", "");
         return JSON.parseObject(content, configClass);
     }

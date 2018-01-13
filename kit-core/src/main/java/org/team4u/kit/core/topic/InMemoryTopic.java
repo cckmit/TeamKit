@@ -1,6 +1,6 @@
 package org.team4u.kit.core.topic;
 
-import com.xiaoleilu.hutool.util.RandomUtil;
+import cn.hutool.core.util.RandomUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;

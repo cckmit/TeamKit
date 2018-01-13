@@ -1,8 +1,8 @@
 package org.team4u.kit.core.util;
 
-import com.xiaoleilu.hutool.date.DateUtil;
-import com.xiaoleilu.hutool.log.Log;
-import com.xiaoleilu.hutool.log.LogFactory;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.log.Log;
+import cn.hutool.log.LogFactory;
 
 import java.util.*;
 import java.util.concurrent.ScheduledFuture;

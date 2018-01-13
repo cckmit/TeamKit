@@ -1,8 +1,8 @@
 package org.team4u.kit.core.util;
 
-import com.xiaoleilu.hutool.collection.CollUtil;
-import com.xiaoleilu.hutool.convert.Convert;
-import com.xiaoleilu.hutool.util.ReflectUtil;
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.util.ReflectUtil;
 import org.team4u.kit.core.action.Function;
 
 import java.lang.reflect.Array;

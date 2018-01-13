@@ -1,6 +1,6 @@
 package org.team4u.kit.core.codec.impl;
 
-import com.xiaoleilu.hutool.util.ObjectUtil;
+import cn.hutool.core.util.ObjectUtil;
 import org.team4u.kit.core.codec.Codec;
 
 /**

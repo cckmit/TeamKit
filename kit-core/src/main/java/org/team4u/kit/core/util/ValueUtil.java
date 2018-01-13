@@ -1,8 +1,8 @@
 package org.team4u.kit.core.util;
 
-import com.xiaoleilu.hutool.util.ClassUtil;
-import com.xiaoleilu.hutool.util.ReflectUtil;
-import com.xiaoleilu.hutool.util.StrUtil;
+import cn.hutool.core.util.ClassUtil;
+import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.util.StrUtil;
 import org.team4u.kit.core.action.Each;
 import org.team4u.kit.core.action.Loop;
 import org.team4u.kit.core.error.ExceptionUtil;

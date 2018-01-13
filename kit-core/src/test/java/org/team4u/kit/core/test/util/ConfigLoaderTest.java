@@ -1,7 +1,7 @@
 package org.team4u.kit.core.test.util;
 
 
-import com.xiaoleilu.hutool.collection.CollectionUtil;
+import cn.hutool.core.collection.CollectionUtil;
 import org.junit.Assert;
 import org.junit.Test;
 import org.team4u.kit.core.config.ConfigLoader;

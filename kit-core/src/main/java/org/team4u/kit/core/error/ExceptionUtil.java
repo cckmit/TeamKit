@@ -1,6 +1,6 @@
 package org.team4u.kit.core.error;
 
-import org.team4u.kit.core.util.AssertUtil;
+import cn.hutool.core.lang.Assert;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -62,7 +62,7 @@ public abstract class ExceptionUtil {
      * @return 如果是则返还true
      */
     public static boolean causedBy(Throwable throwable, Class<? extends Throwable> causeType) {
-        AssertUtil.notNull(causeType, "causeType");
+        Assert.notNull(causeType, "causeType");
 
         Set<Throwable> causes = new HashSet<Throwable>();
 

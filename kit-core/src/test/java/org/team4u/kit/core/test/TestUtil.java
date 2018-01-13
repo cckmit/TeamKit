@@ -1,6 +1,7 @@
 package org.team4u.kit.core.test;
 
-import com.xiaoleilu.hutool.io.FileUtil;
+
+import cn.hutool.core.io.FileUtil;
 
 import java.io.File;
 

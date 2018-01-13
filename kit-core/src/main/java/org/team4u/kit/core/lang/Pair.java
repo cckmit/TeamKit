@@ -1,6 +1,7 @@
 package org.team4u.kit.core.lang;
 
-import com.xiaoleilu.hutool.util.StrUtil;
+
+import cn.hutool.core.util.StrUtil;
 
 import java.io.Serializable;
 

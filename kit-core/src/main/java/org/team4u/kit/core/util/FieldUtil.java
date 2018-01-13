@@ -1,7 +1,7 @@
 package org.team4u.kit.core.util;
 
-import com.xiaoleilu.hutool.util.ClassUtil;
-import com.xiaoleilu.hutool.util.StrUtil;
+import cn.hutool.core.util.ClassUtil;
+import cn.hutool.core.util.StrUtil;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;

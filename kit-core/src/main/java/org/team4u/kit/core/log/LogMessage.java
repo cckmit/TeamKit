@@ -1,7 +1,8 @@
 package org.team4u.kit.core.log;
 
-import com.xiaoleilu.hutool.util.CharsetUtil;
-import com.xiaoleilu.hutool.util.URLUtil;
+
+import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.URLUtil;
 
 import java.util.Map;
 
@@ -56,8 +57,8 @@ public class LogMessage {
 
     public LogMessage append(String key, Object value) {
         bodyBuilder.append(SEPARATOR)
-                .append("\"").append(key).append("\"").append("=")
-                .append("\"").append(value).append("\"");
+                .append(key).append("=")
+                .append(value);
         return this;
     }
 
