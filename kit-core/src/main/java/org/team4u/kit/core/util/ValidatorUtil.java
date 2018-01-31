@@ -18,7 +18,6 @@ public class ValidatorUtil {
         Result result = new Result();
 
         if (obj == null) {
-            result.error = true;
             result.addMessage("obj is null");
             return result;
         }
@@ -33,8 +32,6 @@ public class ValidatorUtil {
     }
 
     public static class Result {
-
-        private boolean error;
 
         private List<String> messages = new ArrayList<String>();
 
@@ -55,8 +52,12 @@ public class ValidatorUtil {
             return StrUtil.join(",", messages);
         }
 
+        public List<String> messages() {
+            return messages;
+        }
+
         public boolean hasError() {
-            return error;
+            return !messages.isEmpty();
         }
     }
 }

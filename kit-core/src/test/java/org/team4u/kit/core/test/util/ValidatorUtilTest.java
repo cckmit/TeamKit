@@ -14,7 +14,8 @@ public class ValidatorUtilTest {
     @Test
     public void validate() {
         ValidatorUtil.Result result = ValidatorUtil.validate(new A());
-        Assert.assertEquals("age最小不能小于1,names不能为空,name不能为空", result.message());
+        Assert.assertTrue(result.hasError());
+        Assert.assertEquals(3, result.messages().size());
     }
 
     public static class A {
