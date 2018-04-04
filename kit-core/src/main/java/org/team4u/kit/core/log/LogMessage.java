@@ -1,9 +1,7 @@
 package org.team4u.kit.core.log;
 
 
-import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.URLUtil;
-
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -18,14 +16,26 @@ public class LogMessage {
     private final static String SEPARATOR = "|";
 
     private String module;
-    private String method;
+    private String eventName;
     private String result;
 
-    private StringBuilder bodyBuilder = new StringBuilder();
+    private Map<String, Object> fieldValues = new HashMap<String, Object>();
 
-    public LogMessage(String module, String method) {
+    public LogMessage(String module, String eventName) {
         this.module = module;
-        this.method = method;
+        this.eventName = eventName;
+    }
+
+    public LogMessage(String eventName) {
+        this(null, eventName);
+    }
+
+    public static LogMessage create(String module, String eventName) {
+        return create(module, eventName, null);
+    }
+
+    public static LogMessage create(String module, String eventName, String result) {
+        return new LogMessage(module, eventName).setResult(result);
     }
 
     public String getModule() {
@@ -37,12 +47,12 @@ public class LogMessage {
         return this;
     }
 
-    public String getMethod() {
-        return method;
+    public String getEventName() {
+        return eventName;
     }
 
-    public LogMessage setMethod(String method) {
-        this.method = method;
+    public LogMessage setEventName(String eventName) {
+        this.eventName = eventName;
         return this;
     }
 
@@ -56,60 +66,77 @@ public class LogMessage {
     }
 
     public LogMessage append(String key, Object value) {
-        bodyBuilder.append(SEPARATOR)
-                .append(key).append("=")
-                .append(value);
-        return this;
-    }
-
-    public LogMessage appendWithEscape(String key, Object value) {
-        append(key, value == null ? null : URLUtil.encode(value.toString(), CharsetUtil.UTF_8));
+        fieldValues.put(key, value);
         return this;
     }
 
     public LogMessage setKeyValues(Map<String, Object> keyValues) {
-        for (Map.Entry<String, Object> kv : keyValues.entrySet()) {
-            append(kv.getKey(), kv.getValue());
-        }
+        fieldValues.putAll(keyValues);
         return this;
     }
 
+    /**
+     * 处理中
+     */
     public LogMessage processing() {
-        result = RESULT_PROCESSING;
+        result(RESULT_PROCESSING);
         return this;
     }
 
+    /**
+     * 处理成功
+     */
     public LogMessage success() {
-        result = RESULT_SUCCESS;
+        result(RESULT_SUCCESS);
         return this;
     }
 
+    /**
+     * 处理失败
+     */
     public LogMessage fail() {
-        result = RESULT_FAIL;
+        result(RESULT_FAIL);
         return this;
     }
 
+    /**
+     * 处理失败
+     */
     public LogMessage fail(String errorMessage) {
         append("errorMessage", errorMessage);
         return fail();
     }
 
+    /**
+     * 设置处理结果
+     */
+    public LogMessage result(String result) {
+        this.result = result;
+        return this;
+    }
+
     public LogMessage copy() {
-        LogMessage logMessage = new LogMessage(module, method);
+        LogMessage logMessage = new LogMessage(module, eventName);
         logMessage.result = result;
-        logMessage.bodyBuilder = new StringBuilder(bodyBuilder.toString());
+        logMessage.fieldValues = new HashMap<String, Object>(fieldValues);
         return logMessage;
     }
 
     public String toString() {
-        StringBuilder headerBuilder = new StringBuilder();
-        headerBuilder.append(module).append(SEPARATOR).append(method);
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(module).append(SEPARATOR).append(eventName);
 
         if (result != null) {
-            headerBuilder.append(SEPARATOR).append(result);
+            stringBuilder.append(SEPARATOR).append(result);
         }
-        headerBuilder.append(bodyBuilder.toString());
 
-        return headerBuilder.toString();
+        for (Map.Entry<String, Object> entry : fieldValues.entrySet()) {
+            stringBuilder.append(SEPARATOR)
+                    .append(entry.getKey())
+                    .append("=")
+                    .append(entry.getValue());
+        }
+
+        return stringBuilder.toString();
     }
 }

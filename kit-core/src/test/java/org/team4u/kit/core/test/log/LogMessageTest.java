@@ -28,6 +28,7 @@ public class LogMessageTest {
         LogMessage message = newLogMessage()
                 .processing()
                 .append("x", "1")
+                .append("y", "3")
                 .append("y", "2");
         Assert.assertEquals("TEST|view|processing|x=1|y=2", message.toString());
     }
