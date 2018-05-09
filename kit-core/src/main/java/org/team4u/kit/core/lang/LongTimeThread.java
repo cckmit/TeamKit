@@ -53,7 +53,7 @@ public abstract class LongTimeThread extends Thread implements Closeable {
             try {
                 onRun();
             } catch (Exception e) {
-                log.error(e.getMessage(), e);
+                log.error(e, e.getMessage());
             }
         }
     }

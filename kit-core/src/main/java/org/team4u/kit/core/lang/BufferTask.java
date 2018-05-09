@@ -80,7 +80,7 @@ public class BufferTask<T> implements Closeable {
         try {
             worker.invoke(buffer);
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            log.error(e, e.getMessage());
         }
     }
 

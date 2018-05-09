@@ -47,7 +47,7 @@ public class WaitingTasks<T> {
                 throw new TimeoutException("WaitingTasks full");
             }
         } catch (InterruptedException e) {
-            log.error(e.getMessage(), e);
+            log.error(e, e.getMessage());
         } finally {
             putLock.unlock();
         }
