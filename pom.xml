@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.team4u</groupId>
     <artifactId>team-kit</artifactId>
-    <version>1.0.7</version>
+    <version>1.0.8</version>
 
     <packaging>pom</packaging>
 
@@ -14,14 +14,8 @@
     <dependencies>
         <dependency>
             <groupId>cn.hutool</groupId>
-            <artifactId>hutool-core</artifactId>
-            <version>4.0.9</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-log</artifactId>
-            <version>4.0.9</version>
+            <artifactId>hutool-all</artifactId>
+            <version>4.0.12</version>
             <scope>provided</scope>
         </dependency>
 
