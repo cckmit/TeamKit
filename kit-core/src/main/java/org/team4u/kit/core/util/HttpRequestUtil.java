@@ -80,7 +80,14 @@ public class HttpRequestUtil {
                                                      Object params,
                                                      Function<String, T> responseConverter,
                                                      LogMessage logMessage) {
-        Map<String, Object> mapParams = BeanUtil.beanToMap(params);
+        Map<String, Object> mapParams;
+        if (params instanceof Map) {
+            //noinspection unchecked
+            mapParams = (Map<String, Object>) params;
+        } else {
+            mapParams = BeanUtil.beanToMap(params);
+        }
+
         LogMessage lm = logMessage.append("params", mapParams);
 
         try {
