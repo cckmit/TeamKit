@@ -119,10 +119,9 @@ public class HttpRequestUtil {
 
             if (result.hasError()) {
                 log.error(lm.fail().toString());
-                return null;
+            } else {
+                log.debug(lm.success().toString());
             }
-
-            log.debug(lm.success().toString());
 
             return result;
         } catch (Exception e) {
