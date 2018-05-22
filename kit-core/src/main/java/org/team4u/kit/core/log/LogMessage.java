@@ -10,9 +10,9 @@ import java.util.Map;
  */
 public class LogMessage {
 
-    private final static String RESULT_PROCESSING = "processing";
-    private final static String RESULT_SUCCESS = "success";
-    private final static String RESULT_FAIL = "fail";
+    public final static String RESULT_PROCESSING = "processing";
+    public final static String RESULT_SUCCESS = "success";
+    public final static String RESULT_FAIL = "fail";
 
     private final static String SEPARATOR = "|";
 
