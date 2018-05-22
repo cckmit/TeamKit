@@ -2,6 +2,7 @@ package org.team4u.kit.core.log;
 
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -19,7 +20,7 @@ public class LogMessage {
     private String eventName;
     private String result;
 
-    private Map<String, Object> fieldValues = new HashMap<String, Object>();
+    private Map<String, Object> fieldValues = new LinkedHashMap<String, Object>();
 
     public LogMessage(String module, String eventName) {
         this.module = module;
