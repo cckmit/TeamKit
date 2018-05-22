@@ -107,7 +107,7 @@ public class CircleQueue<T> {
     }
 
     /**
-     * @return 取 循环队列里的值（先进的index=0）
+     * 获取队列元素集合
      */
     @SuppressWarnings("unchecked")
     public List<T> toList() {
