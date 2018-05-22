@@ -29,6 +29,7 @@ public class CircleQueueTest {
         Assert.assertTrue(queue.isFull());
         Assert.assertEquals(10, queue.size());
         Assert.assertEquals("[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]", queue.toList().toString());
+        Assert.assertEquals(9, queue.last().intValue());
 
         queue.add(10);
         Assert.assertTrue(queue.isFull());

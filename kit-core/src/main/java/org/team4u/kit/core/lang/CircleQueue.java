@@ -65,10 +65,8 @@ public class CircleQueue<T> {
             elementData[0] = element;
         } else if (isFull()) {
             elementData[head] = element;
-            head++;
-            tail++;
-            head = head == capacity ? 0 : head;
-            tail = tail == capacity ? 0 : tail;
+            head = head + 1 == capacity ? 0 : head + 1;
+            tail = tail + 1 == capacity ? 0 : tail + 1;
         } else {
             elementData[tail + 1] = element;
             tail++;
