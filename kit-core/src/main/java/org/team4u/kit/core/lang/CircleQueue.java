@@ -93,6 +93,22 @@ public class CircleQueue<T> {
     }
 
     /**
+     * 队列头部元素
+     */
+    @SuppressWarnings("unchecked")
+    public T first() {
+        return (T) elementData[head];
+    }
+
+    /**
+     * 队列尾部元素
+     */
+    @SuppressWarnings("unchecked")
+    public T last() {
+        return (T) elementData[tail];
+    }
+
+    /**
      * @return 取 循环队列里的值（先进的index=0）
      */
     @SuppressWarnings("unchecked")
