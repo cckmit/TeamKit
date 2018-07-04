@@ -139,4 +139,11 @@ public class CircleQueue<T> {
 
         return elementDataSort;
     }
+
+    /**
+     * 队列容量
+     */
+    public int getCapacity() {
+        return capacity;
+    }
 }
