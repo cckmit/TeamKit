@@ -1,6 +1,6 @@
 package org.team4u.kit.core.topic;
 
-import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.IdUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public class InMemoryTopic<M> implements Topic<M> {
 
     @Override
     public String register(Subscriber<M> listener) {
-        String id = RandomUtil.randomUUID();
+        String id = IdUtil.randomUUID();
         subscriberMap.put(id, listener);
         return id;
     }

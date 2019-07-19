@@ -14,7 +14,7 @@ public abstract class LongTimeThread extends Thread implements Closeable {
 
     private static final Log log = LogFactory.get();
 
-    private boolean closed = false;
+    private volatile boolean closed = false;
 
     public LongTimeThread() {
     }
