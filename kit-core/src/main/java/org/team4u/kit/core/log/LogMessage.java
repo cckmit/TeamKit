@@ -6,19 +6,37 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * @author Jay Wu
+ * 日志消息
+ *
+ * @author jay.wu
  */
 public class LogMessage {
 
     private LogMessageConfig config = new LogMessageConfig();
-
+    /**
+     * 处理开始时间戳
+     */
     private Long processingTime = System.currentTimeMillis();
+    /**
+     * 处理完成时间戳
+     */
     private Long completedTime;
-
+    /**
+     * 日志模块
+     */
     private String module;
+    /**
+     * 日志事件
+     */
     private String eventName;
+    /**
+     * 处理结果
+     */
     private String result;
 
+    /**
+     * 消息体
+     */
     private Map<String, Object> fieldValues = new LinkedHashMap<String, Object>();
 
     public LogMessage(String module, String eventName) {
@@ -160,6 +178,11 @@ public class LogMessage {
 
     public LogMessage setCompletedTime(Long completedTime) {
         this.completedTime = completedTime;
+        return this;
+    }
+
+    public LogMessage setConfig(LogMessageConfig config) {
+        this.config = config;
         return this;
     }
 }

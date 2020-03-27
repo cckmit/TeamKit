@@ -2,6 +2,11 @@ package org.team4u.kit.core.log;
 
 import java.util.Map;
 
+/**
+ * 简单日志消息渲染器
+ *
+ * @author jay.wu
+ */
 public class SimpleLogMessageRender implements LogMessageRender {
 
     @Override
@@ -15,7 +20,7 @@ public class SimpleLogMessageRender implements LogMessageRender {
         return builder.toString();
     }
 
-    private void renderHeader(LogMessage logMessage, LogStringBuilder builder) {
+    protected void renderHeader(LogMessage logMessage, LogStringBuilder builder) {
         builder.append(logMessage.getModule())
                 .appendWithSeparator(logMessage.getEventName());
 
@@ -24,14 +29,14 @@ public class SimpleLogMessageRender implements LogMessageRender {
         }
     }
 
-    private void renderSpendTime(LogMessage logMessage, LogStringBuilder builder) {
+    protected void renderSpendTime(LogMessage logMessage, LogStringBuilder builder) {
         long spendTime = logMessage.spendTime();
         if (spendTime >= logMessage.config().getMinSpendTimeMillsToDisplay()) {
             builder.appendWithSeparator(spendTime).append("ms");
         }
     }
 
-    private void renderBody(LogMessage logMessage, LogStringBuilder builder) {
+    protected void renderBody(LogMessage logMessage, LogStringBuilder builder) {
         for (Map.Entry<String, Object> entry : logMessage.fieldValues().entrySet()) {
             builder.appendWithSeparator(entry.getKey())
                     .append("=")
@@ -39,7 +44,7 @@ public class SimpleLogMessageRender implements LogMessageRender {
         }
     }
 
-    private static class LogStringBuilder {
+    public static class LogStringBuilder {
 
         StringBuilder stringBuilder;
         LogMessageConfig config;
@@ -49,17 +54,17 @@ public class SimpleLogMessageRender implements LogMessageRender {
             this.config = config;
         }
 
-        private LogStringBuilder append(Object value) {
+        public LogStringBuilder append(Object value) {
             stringBuilder.append(value);
             return this;
         }
 
-        private LogStringBuilder separator() {
+        public LogStringBuilder separator() {
             stringBuilder.append(config.getSeparator());
             return this;
         }
 
-        private LogStringBuilder appendWithSeparator(Object value) {
+        public LogStringBuilder appendWithSeparator(Object value) {
             return separator().append(value);
         }
 

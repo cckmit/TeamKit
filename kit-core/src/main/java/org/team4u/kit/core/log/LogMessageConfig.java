@@ -1,17 +1,40 @@
 package org.team4u.kit.core.log;
 
+/**
+ * 日志消息配置
+ *
+ * @author jay.wu
+ */
 public class LogMessageConfig {
 
+    /**
+     * 日志消息分隔符
+     */
     private String separator = "|";
 
+    /**
+     * 处理中关键字
+     */
     private String processingKey = "processing";
 
+    /**
+     * 处理成功关键字
+     */
     private String succeededKey = "succeeded";
 
+    /**
+     * 处理失败功关键字
+     */
     private String failedKey = "failed";
 
-    private long minSpendTimeMillsToDisplay = 500;
+    /**
+     * 最小显示耗时（毫秒）阈值
+     */
+    private long minSpendTimeMillsToDisplay = 200;
 
+    /**
+     * 日志消息渲染器
+     */
     private LogMessageRender logMessageRender = new SimpleLogMessageRender();
 
     public String getSeparator() {
