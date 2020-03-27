@@ -10,11 +10,10 @@ import java.util.Map;
  */
 public class LogMessage {
 
-    public final static String RESULT_PROCESSING = "processing";
-    public final static String RESULT_SUCCESS = "success";
-    public final static String RESULT_FAIL = "fail";
+    private LogMessageConfig config = new LogMessageConfig();
 
-    private final static String SEPARATOR = "|";
+    private Long processingTime = System.currentTimeMillis();
+    private Long completedTime;
 
     private String module;
     private String eventName;
@@ -37,6 +36,10 @@ public class LogMessage {
 
     public static LogMessage create(String module, String eventName, String result) {
         return new LogMessage(module, eventName).setResult(result);
+    }
+
+    public LogMessageConfig config() {
+        return config;
     }
 
     public String getModule() {
@@ -80,7 +83,8 @@ public class LogMessage {
      * 处理中
      */
     public LogMessage processing() {
-        result(RESULT_PROCESSING);
+        result(config().getProcessingKey());
+        processingTime = System.currentTimeMillis();
         return this;
     }
 
@@ -88,7 +92,8 @@ public class LogMessage {
      * 处理成功
      */
     public LogMessage success() {
-        result(RESULT_SUCCESS);
+        result(config().getSucceededKey());
+        completedTime = System.currentTimeMillis();
         return this;
     }
 
@@ -96,7 +101,8 @@ public class LogMessage {
      * 处理失败
      */
     public LogMessage fail() {
-        result(RESULT_FAIL);
+        result(config().getFailedKey());
+        completedTime = System.currentTimeMillis();
         return this;
     }
 
@@ -119,25 +125,41 @@ public class LogMessage {
     public LogMessage copy() {
         LogMessage logMessage = new LogMessage(module, eventName);
         logMessage.result = result;
-        logMessage.fieldValues = new HashMap<String, Object>(fieldValues);
+        logMessage.fieldValues = new HashMap<>(fieldValues);
         return logMessage;
     }
 
     public String toString() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(module).append(SEPARATOR).append(eventName);
+        return config().getLogMessageRender().render(this);
+    }
 
-        if (result != null) {
-            stringBuilder.append(SEPARATOR).append(result);
+    public long spendTime() {
+        if (processingTime == null || completedTime == null) {
+            return 0;
         }
 
-        for (Map.Entry<String, Object> entry : fieldValues.entrySet()) {
-            stringBuilder.append(SEPARATOR)
-                    .append(entry.getKey())
-                    .append("=")
-                    .append(entry.getValue());
-        }
+        return completedTime - processingTime;
+    }
 
-        return stringBuilder.toString();
+    public Long processingTime() {
+        return processingTime;
+    }
+
+    public Long completedTime() {
+        return completedTime;
+    }
+
+    public Map<String, Object> fieldValues() {
+        return fieldValues;
+    }
+
+    public LogMessage setProcessingTime(Long processingTime) {
+        this.processingTime = processingTime;
+        return this;
+    }
+
+    public LogMessage setCompletedTime(Long completedTime) {
+        this.completedTime = completedTime;
+        return this;
     }
 }
