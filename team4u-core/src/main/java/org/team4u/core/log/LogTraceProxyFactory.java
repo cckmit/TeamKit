@@ -39,50 +39,67 @@ public class LogTraceProxyFactory {
 
         @Override
         public boolean before(Object target, Method method, Object[] args) {
+            if (!config.isEnabled()) {
+                return true;
+            }
+
             LogMessage logMessage = newLogMessage(target, method);
 
-            if (config.isEnabled() && config.isInputEnabled()) {
-                Object input = args;
-                if (ArrayUtil.length(args) == 1) {
-                    input = args[0];
-                } else if (ArrayUtil.isEmpty(args)) {
-                    input = null;
-                }
-
-                config.getLogX().info(logMessage.append("input", input)
-                        .processing()
-                        .toString());
+            if (config.isInputEnabled()) {
+                logMessage.append("input", formatArgs(args));
             }
+
+            config.getLogX().info(logMessage.processing().toString());
             return true;
+        }
+
+        private Object formatArgs(Object[] args) {
+            Object input = args;
+            if (ArrayUtil.length(args) == 1) {
+                input = args[0];
+            } else if (ArrayUtil.isEmpty(args)) {
+                input = null;
+            }
+
+            return input;
         }
 
         @Override
         public boolean after(Object target, Method method, Object[] args, Object returnVal) {
+            if (!config.isEnabled()) {
+                return true;
+            }
+
             LogMessage logMessage = newLogMessage(target, method);
 
-            if (config.isEnabled() && config.isOutputEnabled()) {
+            if (config.isOutputEnabled()) {
                 logMessage.append("output", returnVal);
             }
 
-            if (config.isEnabled()) {
-                config.getLogX().info(logMessage.success().toString());
-            }
+            config.getLogX().info(logMessage.success().toString());
 
             return true;
         }
 
         @Override
         public boolean afterException(Object target, Method method, Object[] args, Throwable e) {
-            LogMessage logMessage = newLogMessage(target, method);
-
-            if (config.isEnabled()) {
-                config.getLogX().error(e, logMessage.fail(e.getMessage()).toString());
+            if (!config.isEnabled()) {
+                return true;
             }
+
+            config.getLogX().error(
+                    e,
+                    newLogMessage(target, method).fail(e.getMessage()).toString()
+            );
+
             return true;
         }
 
         private LogMessage newLogMessage(Object target, Method method) {
-            LogMessage logMessage = LogMessages.createWithMasker(target.getClass().getSimpleName(), method.getName());
+            LogMessage logMessage = LogMessages.createWithMasker(
+                    target.getClass().getSimpleName(),
+                    method.getName()
+            );
 
             if (config.getLogMessageConfig() != null) {
                 logMessage.setConfig(config.getLogMessageConfig());

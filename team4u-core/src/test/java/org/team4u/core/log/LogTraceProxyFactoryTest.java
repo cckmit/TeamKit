@@ -31,7 +31,7 @@ public class LogTraceProxyFactoryTest {
         A a = LogTraceProxyFactory.proxy(new A(), newConfig().setInputEnabled(false));
 
         Assert.assertEquals("jay", a.say("jay"));
-        Assert.assertEquals("[A|say|succeeded|output=jay]",
+        Assert.assertEquals("[A|say|processing, A|say|succeeded|output=jay]",
                 logX.getMessages().toString());
     }
 
