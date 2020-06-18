@@ -1,0 +1,11 @@
+{
+  "invokerId": "springRetryableMethodInterceptorTest.TestRetry",
+  "methodName": "error",
+  "parameterTypes": [],
+  "parameterValues": [],
+  "noRetryForClass": [
+    "org.team4u.core.error.BusinessException"
+  ],
+  "retryForClass": [],
+  "shouldRemoveTrackerAfterCompleted": true
+}

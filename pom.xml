@@ -2,27 +2,34 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.team4u</groupId>
-    <artifactId>team-kit</artifactId>
-    <version>1.1.5</version>
+    <artifactId>team4u-kit</artifactId>
+    <version>2.0.0</version>
 
     <packaging>pom</packaging>
 
     <modules>
-        <module>kit-core</module>
+        <module>team4u-core</module>
+        <module>team4u-ddd</module>
     </modules>
 
     <dependencies>
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
-            <version>4.5.16</version>
+            <version>5.3.8</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.10</version>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.9.5</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -55,6 +62,12 @@
         </plugins>
     </build>
 
+    <repositories>
+        <repository>
+            <id>aliyun</id>
+            <url>http://maven.aliyun.com/nexus/content/groups/public</url>
+        </repository>
+    </repositories>
     <distributionManagement>
         <repository>
             <id>team4u-repo</id>

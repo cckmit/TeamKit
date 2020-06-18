@@ -1,0 +1,5 @@
+org.team4u.ddd.process.strategy.FixedRetryStrategy$Factory
+org.team4u.ddd.process.strategy.IncrementRetryStrategy$Factory
+org.team4u.ddd.process.strategy.ExponentialRetryStrategy$Factory
+org.team4u.ddd.process.strategy.ExponentialRandomRetryStrategy$Factory
+org.team4u.ddd.process.strategy.ExponentialRandom2RetryStrategy$Factory

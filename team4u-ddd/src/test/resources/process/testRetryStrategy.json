@@ -1,0 +1,39 @@
+{
+  "fixed": {
+    "id": "fixed",
+    "type": "fixed",
+    "intervalSec": 1,
+    "maxRetriesPermitted": 1
+  },
+  "increment": {
+    "id": "increment",
+    "type": "increment",
+    "intervalSec": 1,
+    "maxRetriesPermitted": 1
+  },
+  "exponentialRandom2": {
+    "id": "exponentialRandom2",
+    "type": "exponentialRandom2",
+    "exponentialBase": 1,
+    "maxRetriesPermitted": 1
+  },
+  "exponentialRandom": {
+    "id": "exponentialRandom",
+    "type": "exponentialRandom",
+    "minIntervalSec": 1,
+    "exponentialBase": 3,
+    "maxRetriesPermitted": 1
+  },
+  "exponential": {
+    "id": "exponential",
+    "type": "exponential",
+    "exponentialBase": 2,
+    "maxRetriesPermitted": 1
+  },
+  "default": {
+    "id": "default",
+    "type": "fixed",
+    "intervalSec": 1,
+    "maxRetriesPermitted": 1
+  }
+}
