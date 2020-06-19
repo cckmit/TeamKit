@@ -10,7 +10,17 @@
     <modules>
         <module>team4u-core</module>
         <module>team4u-ddd</module>
+        <module>team4u-template</module>
+        <module>team4u-kv</module>
+        <module>team4u-sentinel-cache</module>
+        <module>team4u-selector</module>
+        <module>team4u-command</module>
     </modules>
+
+    <properties>
+        <fastjson.version>1.2.71</fastjson.version>
+        <beetl.version>3.0.11.RELEASE</beetl.version>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -20,10 +30,10 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-aop</artifactId>
-            <version>5.2.7.RELEASE</version>
-            <optional>true</optional>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

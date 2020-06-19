@@ -1,0 +1,38 @@
+{
+  "handlers": [
+    {
+      "remoteHttp": {
+        "url": "http://baidu.com",
+        "method": "GET",
+        "params": {
+          "name": "${req.name}"
+        }
+      }
+    },
+    {
+      "jsonExtractor": {
+        "sourceKey": "target.body",
+        "targetType": "org.team4u.command.HandlerServiceTest$Response",
+        "template": {
+          "code": "x"
+        }
+      }
+    },
+    {
+      "codeMapping": {
+        "codeKey": "target.code",
+        "subCodeKey": "target.subCode",
+        "standardCodeKey": "target.standardCode",
+        "codeMappings": [
+          {
+            "code": "00",
+            "standardCode": "0000"
+          }
+        ]
+      }
+    }
+  ],
+  "interceptors": [
+    "trace"
+  ]
+}

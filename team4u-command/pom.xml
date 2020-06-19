@@ -8,35 +8,29 @@
         <version>2.0.0</version>
     </parent>
 
-    <artifactId>team4u-core</artifactId>
+    <artifactId>team4u-command</artifactId>
     <packaging>jar</packaging>
 
     <dependencies>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-aop</artifactId>
-            <version>5.2.7.RELEASE</version>
-            <optional>true</optional>
-        </dependency>
-        <!--For ValidatorUtil-->
-        <dependency>
-            <groupId>org.hibernate.validator</groupId>
-            <artifactId>hibernate-validator</artifactId>
-            <version>6.1.5.Final</version>
-            <optional>true</optional>
+            <groupId>org.team4u</groupId>
+            <artifactId>team4u-core</artifactId>
+            <version>${parent.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>javax.el</artifactId>
-            <version>3.0.0</version>
-            <optional>true</optional>
+            <groupId>org.team4u</groupId>
+            <artifactId>team4u-template</artifactId>
+            <version>${parent.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.ibeetl</groupId>
+            <artifactId>beetl</artifactId>
+            <version>${beetl.version}</version>
+        </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>${fastjson.version}</version>
-            <optional>true</optional>
         </dependency>
     </dependencies>
 </project>
