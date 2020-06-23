@@ -126,23 +126,23 @@ public abstract class IdObjectService<K, V extends IdObject<K>> {
     }
 
     /**
-     * 设置新对象
+     * 添加新对象
      *
      * @param key   键
      * @param value 值
      */
-    public void setObject(K key, V value) {
+    public void addObject(K key, V value) {
         idObjectMap.put(key, value);
     }
 
     /**
-     * 批量设置对象
+     * 批量添加对象
      *
      * @param objects 对象集合
      */
-    public void setObjects(Map<K, V> objects) {
-        for (Map.Entry<K, V> kv : objects.entrySet()) {
-            setObject(kv.getKey(), kv.getValue());
+    public void addObjects(List<V> objects) {
+        for (V object : objects) {
+            addObject(object.id(), object);
         }
     }
 
