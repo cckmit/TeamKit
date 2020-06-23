@@ -5,6 +5,7 @@ import cn.hutool.core.util.ClassUtil;
 import org.team4u.core.error.SystemDataNotExistException;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
@@ -16,7 +17,7 @@ import java.util.stream.Collectors;
  */
 public abstract class IdObjectService<K, V extends IdObject<K>> {
 
-    private Map<K, V> idObjectMap = new HashMap<>();
+    private final Map<K, V> idObjectMap = new ConcurrentHashMap<>();
 
     public IdObjectService() {
         this(null);
@@ -122,5 +123,46 @@ public abstract class IdObjectService<K, V extends IdObject<K>> {
     @SuppressWarnings("unchecked")
     public Class<K> keyType() {
         return (Class<K>) ClassUtil.getTypeArgument(this.getClass(), 1);
+    }
+
+    /**
+     * 设置新对象
+     *
+     * @param key   键
+     * @param value 值
+     */
+    public void setObject(K key, V value) {
+        idObjectMap.put(key, value);
+    }
+
+    /**
+     * 批量设置对象
+     *
+     * @param objects 对象集合
+     */
+    public void setObjects(Map<K, V> objects) {
+        for (Map.Entry<K, V> kv : objects.entrySet()) {
+            setObject(kv.getKey(), kv.getValue());
+        }
+    }
+
+    /**
+     * 删除对象
+     *
+     * @param key 键
+     */
+    public void removeObject(K key) {
+        idObjectMap.remove(key);
+    }
+
+    /**
+     * 批量删除对象
+     *
+     * @param keyList 键集合
+     */
+    public void removeObjects(List<K> keyList) {
+        for (K key : keyList) {
+            removeObject(key);
+        }
     }
 }
