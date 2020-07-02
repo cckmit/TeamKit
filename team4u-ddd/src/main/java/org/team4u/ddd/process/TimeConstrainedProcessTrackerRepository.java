@@ -1,5 +1,7 @@
 package org.team4u.ddd.process;
 
+import org.team4u.ddd.domain.model.DomainRepository;
+
 import java.util.Collection;
 
 /**
@@ -7,7 +9,7 @@ import java.util.Collection;
  *
  * @author jay.wu
  */
-public interface TimeConstrainedProcessTrackerRepository {
+public interface TimeConstrainedProcessTrackerRepository extends DomainRepository<TimeConstrainedProcessTracker> {
 
     /**
      * 获取所有超时的跟踪器

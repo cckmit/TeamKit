@@ -3,11 +3,13 @@ package org.team4u.ddd.infrastructure.persistence.mybatis;
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.springframework.dao.DuplicateKeyException;
+import org.team4u.core.error.IdempotentException;
+import org.team4u.ddd.domain.model.DomainEventAwareRepository;
+import org.team4u.ddd.event.EventStore;
 import org.team4u.ddd.process.TimeConstrainedProcessTracker;
 import org.team4u.ddd.process.TimeConstrainedProcessTrackerRepository;
 import org.team4u.ddd.process.strategy.RetryStrategyRepository;
-import org.springframework.dao.DuplicateKeyException;
-import org.team4u.core.error.IdempotentException;
 
 import java.util.Collection;
 import java.util.Date;
@@ -19,13 +21,17 @@ import java.util.stream.Collectors;
  *
  * @author jay.wu
  */
-public class MybatisTimeConstrainedProcessTrackerRepository implements TimeConstrainedProcessTrackerRepository {
+public class MybatisTimeConstrainedProcessTrackerRepository
+        extends DomainEventAwareRepository<TimeConstrainedProcessTracker>
+        implements TimeConstrainedProcessTrackerRepository {
 
     private final TimeConstrainedProcessTrackerMapper mapper;
     private final RetryStrategyRepository retryStrategyRepository;
 
-    public MybatisTimeConstrainedProcessTrackerRepository(TimeConstrainedProcessTrackerMapper mapper,
+    public MybatisTimeConstrainedProcessTrackerRepository(EventStore eventStore,
+                                                          TimeConstrainedProcessTrackerMapper mapper,
                                                           RetryStrategyRepository retryStrategyRepository) {
+        super(eventStore);
         this.mapper = mapper;
         this.retryStrategyRepository = retryStrategyRepository;
     }
@@ -74,7 +80,7 @@ public class MybatisTimeConstrainedProcessTrackerRepository implements TimeConst
     }
 
     @Override
-    public void save(TimeConstrainedProcessTracker tracker) {
+    protected void doSave(TimeConstrainedProcessTracker tracker) {
         TimeConstrainedProcessTrackerEntity entity = toEntity(tracker);
 
         entity.setUpdateTime(new Date());
@@ -149,5 +155,13 @@ public class MybatisTimeConstrainedProcessTrackerRepository implements TimeConst
         return entities.stream()
                 .map(this::toTracker)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public TimeConstrainedProcessTracker domainOf(String domainId) {
+        TimeConstrainedProcessTrackerEntity entity = mapper.selectOne(
+                new LambdaQueryWrapper<TimeConstrainedProcessTrackerEntity>()
+                        .eq(TimeConstrainedProcessTrackerEntity::getId, domainId));
+        return toTracker(entity);
     }
 }

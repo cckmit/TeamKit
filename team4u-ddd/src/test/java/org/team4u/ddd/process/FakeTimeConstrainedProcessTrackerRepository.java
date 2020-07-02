@@ -38,6 +38,14 @@ public class FakeTimeConstrainedProcessTrackerRepository implements TimeConstrai
     }
 
     @Override
+    public TimeConstrainedProcessTracker domainOf(String domainId) {
+        return trackers.stream()
+                .filter(it -> it.trackerId().equals(domainId))
+                .findFirst()
+                .orElse(null);
+    }
+
+    @Override
     public void save(TimeConstrainedProcessTracker tracker) {
         TimeConstrainedProcessTracker existedTracker = trackerOfProcessId(tracker.processId(), tracker.processTimedOutEventType());
         if (existedTracker != null) {
