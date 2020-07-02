@@ -38,6 +38,10 @@ public class CommandConfig {
         return handlerConfigMap.getProperty(handlerId, EasyMap.class);
     }
 
+    public void setConfig(String handlerId, EasyMap config) {
+        configOf(handlerId).set(handlerId, config);
+    }
+
     public List<EasyMap> getHandlers() {
         return handlers;
     }

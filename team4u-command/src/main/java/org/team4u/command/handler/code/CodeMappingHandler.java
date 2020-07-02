@@ -89,7 +89,7 @@ public class CodeMappingHandler extends AbstractDefaultHandler<
     }
 
     @Override
-    protected boolean isSaveResultToAttributes() {
+    protected boolean isSaveTargetToAttributes() {
         return false;
     }
 

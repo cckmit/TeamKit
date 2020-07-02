@@ -20,10 +20,10 @@ import static org.team4u.command.handler.HandlerAttributesKeys.TARGET;
  * 默认抽象处理器
  *
  * @param <Config> 配置类型
- * @param <Result> 结果类型
+ * @param <Target> 结果类型
  * @author jay.wu
  */
-public abstract class AbstractDefaultHandler<Config, Result> extends AbstractHandler {
+public abstract class AbstractDefaultHandler<Config, Target> extends AbstractHandler {
 
     private final Log log = LogFactory.get();
 
@@ -39,19 +39,19 @@ public abstract class AbstractDefaultHandler<Config, Result> extends AbstractHan
 
         try {
             Config actualConfig = buildConfig(config, attributes);
-            lm.append("config", actualConfig).append("isSaveResult", isSaveResultToAttributes());
+            lm.append("config", actualConfig).append("isSaveTargetToAttributes", isSaveTargetToAttributes());
 
-            Result result = internalHandle(actualConfig, attributes);
+            Target target = internalHandle(actualConfig, attributes);
 
-            log.info(lm.append(resultKey(config), result)
+            log.info(lm.append(targetKey(config), target)
                     .success()
                     .toString());
 
-            if (!isSaveResultToAttributes()) {
+            if (!isSaveTargetToAttributes()) {
                 return;
             }
 
-            saveResult(config, attributes, result);
+            saveTarget(config, attributes, target);
         } catch (Exception e) {
             log.error(lm.fail().toString());
             throw e;
@@ -109,22 +109,22 @@ public abstract class AbstractDefaultHandler<Config, Result> extends AbstractHan
      * @param attributes 上下文属性
      * @return 处理结果
      */
-    protected abstract Result internalHandle(Config config, EasyMap attributes);
+    protected abstract Target internalHandle(Config config, EasyMap attributes);
 
     /**
      * 是否保存结果到上下文属性
      *
      * @return true:保存（默认值）,false:不保持
      */
-    protected boolean isSaveResultToAttributes() {
+    protected boolean isSaveTargetToAttributes() {
         return true;
     }
 
-    private void saveResult(EasyMap config, EasyMap attributes, Result result) {
-        attributes.set(resultKey(config), result);
+    private void saveTarget(EasyMap config, EasyMap attributes, Target target) {
+        attributes.set(targetKey(config), target);
     }
 
-    private String resultKey(EasyMap config) {
+    protected String targetKey(EasyMap config) {
         return ObjectUtil.defaultIfEmpty(config.getStr(TARGET_KEY), TARGET);
     }
 }

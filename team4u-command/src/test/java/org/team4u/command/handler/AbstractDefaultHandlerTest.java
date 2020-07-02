@@ -12,6 +12,7 @@ public class AbstractDefaultHandlerTest {
 
     @Test
     public void handleWithDefault() {
+        System.out.println(Integer.MAX_VALUE);
         check(null);
     }
 
