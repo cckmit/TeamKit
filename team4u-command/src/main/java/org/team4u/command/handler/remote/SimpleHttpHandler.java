@@ -6,8 +6,8 @@ import cn.hutool.http.HttpResponse;
 import cn.hutool.http.Method;
 import org.team4u.command.HandlerInterceptorService;
 import org.team4u.command.handler.AbstractDefaultHandler;
-import org.team4u.core.error.RemoteCallException;
-import org.team4u.core.lang.EasyMap;
+import org.team4u.base.error.RemoteCallException;
+import org.team4u.base.lang.EasyMap;
 import org.team4u.template.TemplateEngine;
 
 import java.util.Map;

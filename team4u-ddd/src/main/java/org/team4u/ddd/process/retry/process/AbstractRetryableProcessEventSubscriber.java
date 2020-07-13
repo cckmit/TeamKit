@@ -7,7 +7,7 @@ import org.team4u.ddd.infrastructure.serializer.FastJsonSerializer;
 import org.team4u.ddd.process.TimeConstrainedProcessTracker;
 import org.team4u.ddd.process.TimeConstrainedProcessTrackerAppService;
 import org.team4u.ddd.process.retry.RetryService;
-import org.team4u.core.error.BusinessException;
+import org.team4u.base.error.BusinessException;
 
 /**
  * 可重试的本地线程池事件订阅者

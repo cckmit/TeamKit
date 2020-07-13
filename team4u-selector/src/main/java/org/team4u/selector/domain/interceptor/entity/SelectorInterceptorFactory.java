@@ -1,7 +1,7 @@
 package org.team4u.selector.domain.interceptor.entity;
 
 
-import org.team4u.core.lang.IdObject;
+import org.team4u.base.lang.IdObject;
 
 /**
  * 选择拦截器构建工厂

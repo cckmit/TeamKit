@@ -8,7 +8,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.team4u.ddd.process.strategy.RetryStrategy;
 import org.team4u.ddd.process.strategy.RetryStrategyFactoryService;
 import org.team4u.ddd.process.strategy.RetryStrategyRepository;
-import org.team4u.core.config.ConfigService;
+import org.team4u.base.config.ConfigService;
 
 /**
  * 基于配置的重试策略资源库

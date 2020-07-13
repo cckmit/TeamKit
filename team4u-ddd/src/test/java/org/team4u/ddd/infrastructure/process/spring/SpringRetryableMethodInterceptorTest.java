@@ -19,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.team4u.core.error.BusinessException;
+import org.team4u.base.error.BusinessException;
 
 import java.util.Date;
 import java.util.List;

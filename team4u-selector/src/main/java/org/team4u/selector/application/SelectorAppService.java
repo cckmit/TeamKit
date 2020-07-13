@@ -14,7 +14,7 @@ import org.team4u.selector.domain.selector.entity.Selector;
 import org.team4u.selector.domain.selector.entity.SelectorFactory;
 import org.team4u.selector.domain.selector.entity.binding.SelectorBinding;
 import org.team4u.selector.domain.selector.service.SelectorFactoryService;
-import org.team4u.core.log.LogMessage;
+import org.team4u.base.log.LogMessage;
 
 import java.util.Collections;
 import java.util.List;

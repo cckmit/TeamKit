@@ -4,7 +4,7 @@ import cn.hutool.core.lang.Dict;
 import org.team4u.command.handler.HandlerAttributesKeys;
 import org.junit.Assert;
 import org.junit.Test;
-import org.team4u.core.lang.EasyMap;
+import org.team4u.base.lang.EasyMap;
 
 import static org.team4u.command.TestUtil.newInterceptorService;
 import static org.team4u.command.TestUtil.newTemplateEngine;

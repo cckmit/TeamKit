@@ -1,7 +1,7 @@
 package org.team4u.command;
 
 
-import org.team4u.core.filter.FilterInterceptor;
+import org.team4u.base.filter.FilterInterceptor;
 
 /**
  * 处理拦截器

@@ -5,7 +5,7 @@ import org.team4u.ddd.process.ProcessTimedOutEvent;
 import org.team4u.ddd.process.TimeConstrainedProcessTracker;
 import org.team4u.ddd.process.TimeConstrainedProcessTrackerAppService;
 import org.team4u.ddd.process.retry.RetryService;
-import org.team4u.core.error.BusinessException;
+import org.team4u.base.error.BusinessException;
 
 /**
  * 超时事件订阅者

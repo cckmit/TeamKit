@@ -3,7 +3,7 @@ package org.team4u.selector.domain.config.repository;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import org.team4u.selector.domain.config.entity.SelectorConfig;
-import org.team4u.core.config.ConfigService;
+import org.team4u.base.config.ConfigService;
 
 /**
  * 基于配置的选择器资源库

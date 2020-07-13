@@ -8,7 +8,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>team4u-core</module>
+        <module>team4u-base</module>
         <module>team4u-ddd</module>
         <module>team4u-template</module>
         <module>team4u-kv</module>

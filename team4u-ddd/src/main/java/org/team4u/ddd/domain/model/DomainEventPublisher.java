@@ -3,7 +3,7 @@ package org.team4u.ddd.domain.model;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
-import org.team4u.core.log.LogMessage;
+import org.team4u.base.log.LogMessage;
 
 import java.util.*;
 import java.util.stream.Collectors;

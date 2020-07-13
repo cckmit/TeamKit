@@ -3,7 +3,7 @@ package org.team4u.kv.infrastruture.repository.memory;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
-import org.team4u.core.log.LogMessage;
+import org.team4u.base.log.LogMessage;
 import org.team4u.kv.KeyValueRepository;
 import org.team4u.kv.model.KeyValue;
 import org.team4u.kv.model.KeyValueId;

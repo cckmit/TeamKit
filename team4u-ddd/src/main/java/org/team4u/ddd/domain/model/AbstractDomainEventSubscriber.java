@@ -2,9 +2,9 @@ package org.team4u.ddd.domain.model;
 
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
-import org.team4u.core.log.LogMessage;
-import org.team4u.core.log.LogMessages;
-import org.team4u.core.log.LogService;
+import org.team4u.base.log.LogMessage;
+import org.team4u.base.log.LogMessages;
+import org.team4u.base.log.LogService;
 
 /**
  * 抽象多事件处理器

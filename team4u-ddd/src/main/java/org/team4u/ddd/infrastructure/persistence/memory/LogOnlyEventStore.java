@@ -2,7 +2,7 @@ package org.team4u.ddd.infrastructure.persistence.memory;
 
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
-import org.team4u.core.log.LogMessages;
+import org.team4u.base.log.LogMessages;
 import org.team4u.ddd.domain.model.DomainEvent;
 import org.team4u.ddd.event.EventStore;
 import org.team4u.ddd.event.StoredEvent;

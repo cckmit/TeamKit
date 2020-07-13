@@ -5,7 +5,7 @@ import org.team4u.command.TestUtil;
 import org.junit.Assert;
 import org.junit.Test;
 import org.team4u.command.handler.HandlerAttributesKeys;
-import org.team4u.core.lang.EasyMap;
+import org.team4u.base.lang.EasyMap;
 
 public class CodeMappingHandlerTest {
 

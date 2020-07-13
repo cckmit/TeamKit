@@ -1,7 +1,7 @@
 package org.team4u.command;
 
 import cn.hutool.core.lang.func.VoidFunc1;
-import org.team4u.core.filter.FilterInterceptorService;
+import org.team4u.base.filter.FilterInterceptorService;
 
 import java.util.List;
 

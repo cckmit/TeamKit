@@ -3,10 +3,10 @@ package org.team4u.command;
 import cn.hutool.core.collection.CollUtil;
 import org.team4u.command.config.CommandConfig;
 import org.team4u.command.config.CommandConfigRepository;
-import org.team4u.core.filter.FilterChain;
-import org.team4u.core.filter.FilterChainFactory;
-import org.team4u.core.lang.EasyMap;
-import org.team4u.core.lang.IdObjectService;
+import org.team4u.base.filter.FilterChain;
+import org.team4u.base.filter.FilterChainFactory;
+import org.team4u.base.lang.EasyMap;
+import org.team4u.base.lang.IdObjectService;
 
 import java.util.ArrayList;
 import java.util.List;

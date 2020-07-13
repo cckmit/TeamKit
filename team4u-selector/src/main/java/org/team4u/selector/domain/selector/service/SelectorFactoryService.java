@@ -1,7 +1,7 @@
 package org.team4u.selector.domain.selector.service;
 
 import org.team4u.selector.domain.selector.entity.SelectorFactory;
-import org.team4u.core.lang.IdObjectService;
+import org.team4u.base.lang.IdObjectService;
 
 import java.util.ServiceLoader;
 

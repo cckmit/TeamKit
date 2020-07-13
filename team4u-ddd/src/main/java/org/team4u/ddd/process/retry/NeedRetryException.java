@@ -1,7 +1,7 @@
 package org.team4u.ddd.process.retry;
 
 
- import org.team4u.core.error.ControlException;
+ import org.team4u.base.error.ControlException;
 
 /**
  * 需要继续重试控制异常

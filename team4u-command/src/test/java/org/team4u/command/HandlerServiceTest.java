@@ -12,7 +12,7 @@ import org.team4u.command.handler.remote.FakeHttpHandler;
 import org.team4u.command.handler.remote.SimpleHttpResponse;
 import org.junit.Assert;
 import org.junit.Test;
-import org.team4u.core.lang.EasyMap;
+import org.team4u.base.lang.EasyMap;
 import org.team4u.template.TemplateEngine;
 import org.team4u.template.TemplateFunction;
 import org.team4u.template.TemplateFunctionService;

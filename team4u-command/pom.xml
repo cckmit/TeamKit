@@ -14,7 +14,7 @@
     <dependencies>
         <dependency>
             <groupId>org.team4u</groupId>
-            <artifactId>team4u-core</artifactId>
+            <artifactId>team4u-base</artifactId>
             <version>${parent.version}</version>
         </dependency>
         <dependency>

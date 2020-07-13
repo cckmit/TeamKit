@@ -2,7 +2,7 @@ package org.team4u.sc;
 
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
-import org.team4u.core.log.LogMessageContext;
+import org.team4u.base.log.LogMessageContext;
 import org.team4u.kv.KeyValueCleaner;
 import org.team4u.kv.KeyValueRepository;
 import org.team4u.kv.KeyValueService;

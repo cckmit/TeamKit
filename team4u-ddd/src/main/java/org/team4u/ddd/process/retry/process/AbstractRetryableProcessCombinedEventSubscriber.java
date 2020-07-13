@@ -6,7 +6,7 @@ import cn.hutool.core.util.TypeUtil;
 import org.team4u.ddd.domain.model.DomainEvent;
 import org.team4u.ddd.domain.model.DomainEventSubscriber;
 import org.team4u.ddd.process.TimeConstrainedProcessTrackerAppService;
-import org.team4u.core.error.BusinessException;
+import org.team4u.base.error.BusinessException;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;

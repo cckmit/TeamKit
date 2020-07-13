@@ -1,7 +1,7 @@
 package org.team4u.ddd.domain.model;
 
 
-import org.team4u.core.log.LogMessages;
+import org.team4u.base.log.LogMessages;
 
 import java.util.ArrayList;
 import java.util.List;

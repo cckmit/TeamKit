@@ -9,8 +9,8 @@ import org.team4u.ddd.process.TimeConstrainedProcessTrackerAppService;
 import org.team4u.ddd.process.retry.RetryService;
 import org.team4u.ddd.process.retry.method.annotation.RetryableAnnotationParser;
 import org.team4u.ddd.process.retry.method.annotation.RetryableAttribute;
-import org.team4u.core.error.SystemException;
-import org.team4u.core.log.LogMessages;
+import org.team4u.base.error.SystemException;
+import org.team4u.base.log.LogMessages;
 
 import java.util.Date;
 

@@ -11,7 +11,7 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.team4u.core.log.LogMessages;
+import org.team4u.base.log.LogMessages;
 
 /**
  * 基于spring的可重试方法拦截器

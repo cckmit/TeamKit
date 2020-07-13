@@ -6,9 +6,9 @@ import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 import org.team4u.command.HandlerInterceptorService;
-import org.team4u.core.lang.EasyMap;
-import org.team4u.core.log.LogMessage;
-import org.team4u.core.log.LogMessages;
+import org.team4u.base.lang.EasyMap;
+import org.team4u.base.log.LogMessage;
+import org.team4u.base.log.LogMessages;
 import org.team4u.template.TemplateEngine;
 
 import static org.team4u.command.handler.HandlerAttributesKeyNames.SOURCE_KEY;

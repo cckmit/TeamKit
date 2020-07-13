@@ -3,7 +3,7 @@ package org.team4u.command.handler.remote;
 import cn.hutool.core.lang.Dict;
 import org.team4u.command.HandlerInterceptorService;
 import org.team4u.command.TestUtil;
-import org.team4u.core.lang.EasyMap;
+import org.team4u.base.lang.EasyMap;
 
 public class FakeHttpHandler extends MockHttpHandler {
 

@@ -4,7 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.dao.DuplicateKeyException;
-import org.team4u.core.error.IdempotentException;
+import org.team4u.base.error.IdempotentException;
 import org.team4u.ddd.domain.model.DomainEventAwareRepository;
 import org.team4u.ddd.event.EventStore;
 import org.team4u.ddd.process.TimeConstrainedProcessTracker;

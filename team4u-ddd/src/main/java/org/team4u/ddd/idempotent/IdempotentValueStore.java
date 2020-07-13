@@ -1,7 +1,7 @@
 package org.team4u.ddd.idempotent;
 
 
-import org.team4u.core.error.IdempotentException;
+import org.team4u.base.error.IdempotentException;
 
 /**
  * 幂等值资源库

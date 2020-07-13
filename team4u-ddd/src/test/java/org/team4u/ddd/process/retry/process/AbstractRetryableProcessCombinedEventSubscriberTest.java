@@ -8,8 +8,8 @@ import org.team4u.ddd.process.retry.NeedRetryException;
 import org.team4u.ddd.process.strategy.FakeRetryStrategyRepository;
 import org.junit.Assert;
 import org.junit.Test;
-import org.team4u.core.error.BusinessException;
-import org.team4u.core.error.SystemException;
+import org.team4u.base.error.BusinessException;
+import org.team4u.base.error.SystemException;
 import org.team4u.ddd.TestUtil;
 
 public class AbstractRetryableProcessCombinedEventSubscriberTest {

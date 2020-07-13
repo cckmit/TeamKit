@@ -3,7 +3,7 @@ package org.team4u.ddd.infrastructure.persistence.mybatis;
 import org.team4u.ddd.idempotent.IdempotentValue;
 import org.team4u.ddd.idempotent.IdempotentValueStore;
 import org.springframework.dao.DuplicateKeyException;
-import org.team4u.core.error.IdempotentException;
+import org.team4u.base.error.IdempotentException;
 
 import java.util.Date;
 

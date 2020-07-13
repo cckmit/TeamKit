@@ -4,9 +4,9 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 import org.team4u.ddd.process.strategy.RetryStrategyRepository;
-import org.team4u.core.error.OptimisticLockingFailureException;
-import org.team4u.core.log.LogMessage;
-import org.team4u.core.log.LogMessages;
+import org.team4u.base.error.OptimisticLockingFailureException;
+import org.team4u.base.log.LogMessage;
+import org.team4u.base.log.LogMessages;
 
 import java.util.Collection;
 import java.util.Date;

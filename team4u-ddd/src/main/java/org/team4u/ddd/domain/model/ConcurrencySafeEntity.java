@@ -1,7 +1,7 @@
 package org.team4u.ddd.domain.model;
 
 
-import org.team4u.core.error.OptimisticLockingFailureException;
+import org.team4u.base.error.OptimisticLockingFailureException;
 
 /**
  * 并发安全的实体类

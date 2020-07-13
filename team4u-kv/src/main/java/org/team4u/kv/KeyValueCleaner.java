@@ -3,8 +3,8 @@ package org.team4u.kv;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
-import org.team4u.core.lang.LongTimeThread;
-import org.team4u.core.log.LogMessageContext;
+import org.team4u.base.lang.LongTimeThread;
+import org.team4u.base.log.LogMessageContext;
 
 import java.util.Collections;
 import java.util.HashSet;

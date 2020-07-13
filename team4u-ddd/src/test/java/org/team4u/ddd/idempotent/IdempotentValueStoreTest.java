@@ -6,7 +6,7 @@ import org.team4u.ddd.infrastructure.persistence.mybatis.MybatisIdempotentValueS
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.team4u.core.error.IdempotentException;
+import org.team4u.base.error.IdempotentException;
 import org.team4u.ddd.TestUtil;
 
 public class IdempotentValueStoreTest extends DbTest {

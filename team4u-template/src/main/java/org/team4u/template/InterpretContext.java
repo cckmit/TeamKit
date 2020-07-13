@@ -1,6 +1,6 @@
 package org.team4u.template;
 
-import org.team4u.core.lang.EasyMap;
+import org.team4u.base.lang.EasyMap;
 
 /**
  * 模板交互上下文
@@ -9,12 +9,12 @@ import org.team4u.core.lang.EasyMap;
  */
 public class InterpretContext {
 
-    private static ThreadLocal<InterpretContext> contextThreadLocal = new ThreadLocal<>();
+    private static final ThreadLocal<InterpretContext> contextThreadLocal = new ThreadLocal<>();
 
     /**
      * 变量栈
      */
-    private EasyMap valueStack = new EasyMap();
+    private final EasyMap valueStack = new EasyMap();
 
     /**
      * 已渲染内容(未最终完成渲染时将动态变化)

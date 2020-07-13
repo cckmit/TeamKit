@@ -5,9 +5,9 @@ import cn.hutool.core.lang.func.VoidFunc1;
 import org.team4u.command.config.CommandConfig;
 import org.junit.Assert;
 import org.junit.Test;
-import org.team4u.core.error.SystemDataNotExistException;
-import org.team4u.core.filter.FilterInvoker;
-import org.team4u.core.lang.EasyMap;
+import org.team4u.base.error.SystemDataNotExistException;
+import org.team4u.base.filter.FilterInvoker;
+import org.team4u.base.lang.EasyMap;
 
 public class HandlerInterceptorServiceTest {
 

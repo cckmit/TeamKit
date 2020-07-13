@@ -1,9 +1,9 @@
 package org.team4u.command;
 
 import org.team4u.command.config.CommandConfig;
-import org.team4u.core.filter.Filter;
-import org.team4u.core.lang.EasyMap;
-import org.team4u.core.lang.IdObject;
+import org.team4u.base.filter.Filter;
+import org.team4u.base.lang.EasyMap;
+import org.team4u.base.lang.IdObject;
 
 /**
  * 命令处理器

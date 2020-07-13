@@ -1,7 +1,7 @@
 package org.team4u.ddd;
 
 
-import org.team4u.core.id.IdentityFactory;
+import org.team4u.base.id.IdentityFactory;
 
 public class FakeLongIdentityFactory implements IdentityFactory<Long> {
 

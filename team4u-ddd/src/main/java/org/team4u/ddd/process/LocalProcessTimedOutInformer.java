@@ -1,6 +1,6 @@
 package org.team4u.ddd.process;
 
-import org.team4u.core.lang.LongTimeThread;
+import org.team4u.base.lang.LongTimeThread;
 import org.team4u.kv.SimpleLockService;
 
 /**

@@ -2,7 +2,7 @@ package org.team4u.template;
 
 
 
-import org.team4u.core.lang.IdObjectService;
+import org.team4u.base.lang.IdObjectService;
 
 import java.util.List;
 

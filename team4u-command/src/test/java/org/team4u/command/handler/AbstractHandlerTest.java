@@ -5,8 +5,8 @@ import org.team4u.command.HandlerInterceptorService;
 import org.team4u.command.config.CommandConfig;
 import org.junit.Assert;
 import org.junit.Test;
-import org.team4u.core.filter.FilterInvoker;
-import org.team4u.core.lang.EasyMap;
+import org.team4u.base.filter.FilterInvoker;
+import org.team4u.base.lang.EasyMap;
 import org.team4u.template.TemplateEngine;
 import org.team4u.template.infrastructure.function.StringTemplateFunction;
 

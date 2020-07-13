@@ -1,7 +1,7 @@
 package org.team4u.selector.domain.selector.entity;
 
 
-import org.team4u.core.lang.IdObject;
+import org.team4u.base.lang.IdObject;
 
 /**
  * 选择执行器构建工厂

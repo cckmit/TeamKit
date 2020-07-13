@@ -8,7 +8,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.team4u.core.config.ConfigService;
+import org.team4u.base.config.ConfigService;
 import org.team4u.ddd.TestUtil;
 import org.team4u.ddd.process.strategy.*;
 

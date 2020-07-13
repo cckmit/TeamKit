@@ -4,7 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import org.team4u.command.HandlerInterceptorService;
 import org.team4u.command.handler.AbstractDefaultHandler;
-import org.team4u.core.lang.EasyMap;
+import org.team4u.base.lang.EasyMap;
 import org.team4u.template.TemplateEngine;
 
 import java.util.List;

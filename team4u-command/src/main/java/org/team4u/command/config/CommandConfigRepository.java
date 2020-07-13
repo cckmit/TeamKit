@@ -1,7 +1,7 @@
 package org.team4u.command.config;
 
 
-import org.team4u.core.lang.ObjectRepository;
+import org.team4u.base.lang.ObjectRepository;
 
 /**
  * 命令配置资源库

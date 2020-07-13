@@ -1,6 +1,6 @@
 package org.team4u.kv.infrastruture.translator;
 
-import org.team4u.core.util.ConvertUtil;
+import org.team4u.base.util.ConvertUtil;
 import org.team4u.kv.ValueTranslator;
 
 /**

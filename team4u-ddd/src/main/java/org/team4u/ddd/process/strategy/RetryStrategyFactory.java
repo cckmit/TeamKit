@@ -1,7 +1,7 @@
 package org.team4u.ddd.process.strategy;
 
 
-import org.team4u.core.lang.IdObject;
+import org.team4u.base.lang.IdObject;
 
 /**
  * 重试策略构建工厂

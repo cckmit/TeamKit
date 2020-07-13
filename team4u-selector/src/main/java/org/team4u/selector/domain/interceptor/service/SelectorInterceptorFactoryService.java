@@ -1,7 +1,7 @@
 package org.team4u.selector.domain.interceptor.service;
 
 import org.team4u.selector.domain.interceptor.entity.SelectorInterceptorFactory;
-import org.team4u.core.lang.IdObjectService;
+import org.team4u.base.lang.IdObjectService;
 
 import java.util.ServiceLoader;
 

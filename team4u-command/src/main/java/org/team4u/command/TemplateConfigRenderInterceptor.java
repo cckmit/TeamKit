@@ -1,7 +1,7 @@
 package org.team4u.command;
 
 import com.alibaba.fastjson.JSON;
-import org.team4u.core.lang.EasyMap;
+import org.team4u.base.lang.EasyMap;
 import org.team4u.template.TemplateEngine;
 
 public class TemplateConfigRenderInterceptor implements HandlerInterceptor {

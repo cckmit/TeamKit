@@ -6,8 +6,8 @@ import org.team4u.ddd.event.EventSerializer;
 import org.team4u.ddd.event.EventStore;
 import org.team4u.ddd.event.StoredEvent;
 import org.springframework.dao.DuplicateKeyException;
-import org.team4u.core.error.IdempotentException;
-import org.team4u.core.id.IdentityFactory;
+import org.team4u.base.error.IdempotentException;
+import org.team4u.base.id.IdentityFactory;
 
 import java.util.Date;
 import java.util.List;

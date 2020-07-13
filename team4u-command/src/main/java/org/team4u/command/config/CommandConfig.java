@@ -1,7 +1,7 @@
 package org.team4u.command.config;
 
 
-import org.team4u.core.lang.EasyMap;
+import org.team4u.base.lang.EasyMap;
 
 import java.util.ArrayList;
 import java.util.Collections;

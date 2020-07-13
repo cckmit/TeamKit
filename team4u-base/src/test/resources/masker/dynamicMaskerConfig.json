@@ -1,0 +1,30 @@
+[
+  {
+    "configId": "*",
+    "maskerExpressions": {
+      "HIDE": [
+        "name"
+      ]
+    }
+  },
+  {
+    "configId": "org.team4u.base.masker.DynamicMaskerTest$A",
+    "maskerExpressions": {
+      "NAME": [
+        "name"
+      ],
+      "TEST": [
+        "name2"
+      ]
+    }
+  },
+  {
+    "configId": "x.y",
+    "maskerExpressions": {
+      "HIDE": [
+        "z",
+        "a.name"
+      ]
+    }
+  }
+]

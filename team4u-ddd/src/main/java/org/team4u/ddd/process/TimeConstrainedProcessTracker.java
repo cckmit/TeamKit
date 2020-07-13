@@ -4,7 +4,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
-import org.team4u.core.error.NestedException;
+import org.team4u.base.error.NestedException;
 import org.team4u.ddd.domain.model.ConcurrencySafeAggregateRoot;
 import org.team4u.ddd.process.strategy.RetryStrategy;
 

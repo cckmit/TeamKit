@@ -2,7 +2,7 @@ package org.team4u.command.handler.render;
 
 import org.team4u.command.HandlerInterceptorService;
 import org.team4u.command.handler.AbstractDefaultHandler;
-import org.team4u.core.lang.EasyMap;
+import org.team4u.base.lang.EasyMap;
 import org.team4u.template.TemplateEngine;
 
 /**
