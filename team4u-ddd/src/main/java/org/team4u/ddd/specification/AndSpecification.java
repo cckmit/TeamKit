@@ -2,11 +2,13 @@ package org.team4u.ddd.specification;
 
 /**
  * 与规格
+ *
+ * @author jay.wu
  */
 class AndSpecification<C> extends AbstractSpecification<C> {
 
-    private Specification<C> one;
-    private Specification<C> other;
+    private final Specification<C> one;
+    private final Specification<C> other;
 
     public AndSpecification(Specification<C> one, Specification<C> other) {
         this.one = one;

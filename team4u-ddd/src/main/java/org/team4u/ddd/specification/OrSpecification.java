@@ -2,11 +2,13 @@ package org.team4u.ddd.specification;
 
 /**
  * 或规格
+ *
+ * @author jay.wu
  */
 class OrSpecification<C> extends AbstractSpecification<C> {
 
-    private Specification<C> one;
-    private Specification<C> other;
+    private final Specification<C> one;
+    private final Specification<C> other;
 
     public OrSpecification(Specification<C> one, Specification<C> other) {
         this.one = one;

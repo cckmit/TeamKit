@@ -18,9 +18,23 @@ public interface Specification<C> {
     Specification<C> and(Specification<C> other);
 
     /**
+     * 特殊与运算
+     * <p>
+     * 先回依次执行两个规则，再判断是否满足条件
+     */
+    Specification<C> andX(Specification<C> other);
+
+    /**
      * 和其他规格或关系
      */
     Specification<C> or(Specification<C> other);
+
+    /**
+     * 特殊或运算
+     * <p>
+     * 先回依次执行两个规则，再判断是否满足条件
+     */
+    Specification<C> orX(Specification<C> other);
 
     /**
      * 和现有规格非关系

@@ -21,4 +21,14 @@ public abstract class AbstractSpecification<C> implements Specification<C> {
     public Specification<C> and(Specification<C> other) {
         return new AndSpecification<>(this, other);
     }
+
+    @Override
+    public Specification<C> andX(Specification<C> other) {
+        return new AndXSpecification<>(this, other);
+    }
+
+    @Override
+    public Specification<C> orX(Specification<C> other) {
+        return new OrXSpecification<>(this, other);
+    }
 }
