@@ -1,6 +1,6 @@
 package org.team4u.ddd.process.retry.process;
 
-import org.team4u.ddd.domain.model.FakeEvent1;
+import org.team4u.ddd.message.FakeEvent1;
 import org.team4u.ddd.process.TimeConstrainedProcessTrackerAppService;
 
 import java.util.concurrent.ExecutorService;

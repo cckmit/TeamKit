@@ -42,7 +42,7 @@ public abstract class AbstractRetryableProcessTimedOutEventSubscriber<
 
     @SuppressWarnings("unchecked")
     @Override
-    protected Class<R> messageType() {
+    public Class<R> messageType() {
         return (Class<R>) ClassUtil.getTypeArgument(this.getClass(), 1);
     }
 

@@ -1,4 +1,6 @@
-package org.team4u.ddd.domain.model;
+package org.team4u.ddd.message;
+
+import org.team4u.ddd.domain.model.AbstractDomainEvent;
 
 import java.util.Date;
 

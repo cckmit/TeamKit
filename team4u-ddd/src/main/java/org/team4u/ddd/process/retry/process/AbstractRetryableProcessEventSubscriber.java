@@ -2,9 +2,9 @@ package org.team4u.ddd.process.retry.process;
 
 import cn.hutool.core.util.ClassUtil;
 import org.team4u.base.error.BusinessException;
-import org.team4u.ddd.domain.model.AbstractSingleDomainEventSubscriber;
 import org.team4u.ddd.domain.model.DomainEvent;
 import org.team4u.ddd.infrastructure.serializer.FastJsonSerializer;
+import org.team4u.ddd.message.AbstractMessageConsumer;
 import org.team4u.ddd.process.TimeConstrainedProcessTracker;
 import org.team4u.ddd.process.TimeConstrainedProcessTrackerAppService;
 import org.team4u.ddd.process.retry.RetryService;
@@ -17,7 +17,7 @@ import java.util.concurrent.ExecutorService;
  * @author jay.wu
  */
 public abstract class AbstractRetryableProcessEventSubscriber<E extends DomainEvent, R extends AbstractRetryableProcessTimedOutEvent>
-        extends AbstractSingleDomainEventSubscriber<E> {
+        extends AbstractMessageConsumer<E> {
 
     private final RetryService retryService;
     private final TimeConstrainedProcessTrackerAppService trackerAppService;
@@ -40,17 +40,16 @@ public abstract class AbstractRetryableProcessEventSubscriber<E extends DomainEv
     }
 
     @Override
-    public void onMessage(E event) {
+    public void processMessage(E event) {
         if (supports(event)) {
-            //noinspection unchecked
-            createAndSaveTracker((E) event);
+            createAndSaveTracker(event);
         }
 
-        super.onMessage(event);
+        super.processMessage(event);
     }
 
     @Override
-    protected void handle(E event) throws Exception {
+    protected void internalProcessMessage(E event) throws Exception {
         TimeConstrainedProcessTracker tracker = trackerAppService.trackerOfProcessId(
                 event.getDomainId(),
                 timedOutEventClass()

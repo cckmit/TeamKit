@@ -1,12 +1,12 @@
 package org.team4u.ddd.process;
 
 import cn.hutool.core.date.DateUtil;
-import org.team4u.ddd.domain.model.DomainEventPublisher;
-import org.team4u.ddd.domain.model.DomainEventSubscriber;
-import org.team4u.ddd.process.strategy.FixedRetryStrategy;
 import org.junit.Assert;
 import org.junit.Test;
 import org.team4u.ddd.TestUtil;
+import org.team4u.ddd.domain.model.DomainEventPublisher;
+import org.team4u.ddd.message.AbstractMessageConsumer;
+import org.team4u.ddd.process.strategy.FixedRetryStrategy;
 
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -41,7 +41,13 @@ public class TimeConstrainedProcessTrackerTest {
     public void processInformedOfTimeout() {
         TimeConstrainedProcessTracker tracker = tracker(1);
         AtomicReference<ProcessTimedOutEvent> x = new AtomicReference<>();
-        DomainEventPublisher.instance().subscribe((DomainEventSubscriber<ProcessTimedOutEvent>) x::set);
+        DomainEventPublisher.instance().subscribe(new AbstractMessageConsumer<ProcessTimedOutEvent>() {
+
+            @Override
+            protected void internalProcessMessage(ProcessTimedOutEvent message) throws Throwable {
+                x.set(message);
+            }
+        });
 
         Assert.assertFalse(tracker.isProcessInformedOfTimeout());
 

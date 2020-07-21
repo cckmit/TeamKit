@@ -1,40 +1,41 @@
 package org.team4u.ddd.domain.model;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 import org.team4u.base.log.LogMessage;
+import org.team4u.ddd.message.MessageConsumer;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class DomainEventPublisher {
 
-    private static final DomainEventPublisher instance = new DomainEventPublisher();
-    private Log log = LogFactory.get();
-    private List<DomainEventSubscriber<?>> subscribers = new ArrayList<>();
+    private static final DomainEventPublisher INSTANCE = new DomainEventPublisher();
+    private final Log log = LogFactory.get();
+    private final Set<MessageConsumer<? extends DomainEvent>> subscribers = new HashSet<>();
 
     public static DomainEventPublisher instance() {
-        return instance;
+        return INSTANCE;
     }
 
-    public void subscribe(DomainEventSubscriber<?>... listeners) {
-        this.subscribers.addAll(Arrays.asList(listeners));
+    public void subscribe(List<MessageConsumer<? extends DomainEvent>> listeners) {
+        for (MessageConsumer<? extends DomainEvent> listener : listeners) {
+            subscribe(listener);
+        }
+    }
+
+    public void subscribe(MessageConsumer<? extends DomainEvent> listener) {
+        subscribers.add(listener);
 
         log.info(LogMessage.create(this.getClass().getSimpleName(), "subscribe")
                 .success()
-                .append("subscriber", CollUtil.join(
-                        Arrays.stream(listeners)
-                                .map(it -> it.getClass().getName())
-                                .collect(Collectors.toList()),
-                        ","))
+                .append("subscriber", listener.getClass().getSimpleName())
                 .toString());
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     public <T extends DomainEvent> void publish(T event) {
-        for (DomainEventSubscriber subscriber : subscribers) {
-            subscriber.onMessage(event);
+        for (MessageConsumer subscriber : subscribers) {
+            subscriber.processMessage(event);
         }
     }
 
@@ -44,7 +45,7 @@ public class DomainEventPublisher {
         }
     }
 
-    public List<DomainEventSubscriber<?>> subscribers() {
-        return Collections.unmodifiableList(subscribers);
+    public Set<MessageConsumer<? extends DomainEvent>> subscribers() {
+        return Collections.unmodifiableSet(subscribers);
     }
 }

@@ -3,14 +3,6 @@ package org.team4u.ddd.infrastructure.process.spring;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.thread.ThreadUtil;
-import org.team4u.ddd.TestUtil;
-import org.team4u.ddd.process.FakeTimeConstrainedProcessTrackerRepository;
-import org.team4u.ddd.process.MockRetryStrategy;
-import org.team4u.ddd.process.TimeConstrainedProcessTracker;
-import org.team4u.ddd.process.retry.method.annotation.EnableRetry;
-import org.team4u.ddd.process.retry.method.annotation.Retryable;
-import org.team4u.ddd.process.retry.method.interceptor.AbstractRetryableMethodTimedOutEventSubscriber;
-import org.team4u.ddd.process.retry.method.interceptor.RetryableMethodTimedOutEvent;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,6 +12,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.team4u.base.error.BusinessException;
+import org.team4u.ddd.TestUtil;
+import org.team4u.ddd.process.FakeTimeConstrainedProcessTrackerRepository;
+import org.team4u.ddd.process.MockRetryStrategy;
+import org.team4u.ddd.process.TimeConstrainedProcessTracker;
+import org.team4u.ddd.process.retry.method.annotation.EnableRetry;
+import org.team4u.ddd.process.retry.method.annotation.Retryable;
+import org.team4u.ddd.process.retry.method.interceptor.AbstractRetryableMethodTimedOutEventSubscriber;
+import org.team4u.ddd.process.retry.method.interceptor.RetryableMethodTimedOutEvent;
 
 import java.util.Date;
 import java.util.List;
@@ -76,7 +76,7 @@ public class SpringRetryableMethodInterceptorTest {
                 RetryableMethodTimedOutEvent.class.getName()
         );
         repository.save(t);
-        subscriber.onMessage(new RetryableMethodTimedOutEvent(t.processId(), t.description()));
+        subscriber.processMessage(new RetryableMethodTimedOutEvent(t.processId(), t.description()));
 
         ThreadUtil.sleep(1000);
 
@@ -101,7 +101,7 @@ public class SpringRetryableMethodInterceptorTest {
                 RetryableMethodTimedOutEvent.class.getName()
         );
         repository.save(t);
-        subscriber.onMessage(new RetryableMethodTimedOutEvent(t.processId(), t.description()));
+        subscriber.processMessage(new RetryableMethodTimedOutEvent(t.processId(), t.description()));
 
         ThreadUtil.sleep(1000);
 

@@ -37,15 +37,15 @@ public abstract class AbstractRetryableProcessCombinedEventSubscriber<
 
     @SuppressWarnings("unchecked")
     @Override
-    public void handle(DomainEvent event) {
+    public void internalProcessMessage(DomainEvent event) {
         if (!supports(event)) {
             return;
         }
 
         if (event instanceof AbstractRetryableProcessTimedOutEvent) {
-            retryableProcessTimedOutEventSubscriber.onMessage((R) event);
+            retryableProcessTimedOutEventSubscriber.processMessage((R) event);
         } else {
-            retryableProcessEventSubscriber.onMessage((P) event);
+            retryableProcessEventSubscriber.processMessage((P) event);
         }
     }
 
@@ -159,7 +159,7 @@ public abstract class AbstractRetryableProcessCombinedEventSubscriber<
         }
 
         @Override
-        protected Class<P> messageType() {
+        public Class<P> messageType() {
             return AbstractRetryableProcessCombinedEventSubscriber.this.processEventClass();
         }
 
@@ -196,7 +196,7 @@ public abstract class AbstractRetryableProcessCombinedEventSubscriber<
         }
 
         @Override
-        protected Class<R> messageType() {
+        public Class<R> messageType() {
             return AbstractRetryableProcessCombinedEventSubscriber.this.timedOutEventClass();
         }
 

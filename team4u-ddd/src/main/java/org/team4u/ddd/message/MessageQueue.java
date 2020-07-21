@@ -1,11 +1,15 @@
 package org.team4u.ddd.message;
 
+import cn.hutool.core.lang.func.VoidFunc1;
+
+import java.io.Closeable;
+
 /**
- * 消息生产者
+ * 消息队列
  *
  * @author jay.wu
  */
-public interface MessageQueue {
+public interface MessageQueue<M> extends Closeable {
 
     /**
      * 开始监听队列
@@ -13,9 +17,16 @@ public interface MessageQueue {
     void start();
 
     /**
-     * 接收消息
+     * 消息处理器
      *
-     * @param message 消息体
+     * @param handler 处理器
      */
-    void onMessage(Object message);
+    void messageHandler(VoidFunc1<M> handler);
+
+    /**
+     * 消息类型
+     *
+     * @return 消息类型
+     */
+    Class<M> messageType();
 }

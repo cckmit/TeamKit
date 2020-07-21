@@ -1,4 +1,4 @@
-package org.team4u.ddd;
+package org.team4u.ddd.infrastructure;
 
 import cn.hutool.db.ds.simple.SimpleDataSource;
 import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Repository;
+import org.team4u.ddd.FakeLongIdentityFactory;
 import org.team4u.ddd.event.EventStore;
 import org.team4u.ddd.infrastructure.persistence.memory.LogOnlyEventStore;
 import org.team4u.ddd.infrastructure.persistence.mybatis.EventStoreMapper;

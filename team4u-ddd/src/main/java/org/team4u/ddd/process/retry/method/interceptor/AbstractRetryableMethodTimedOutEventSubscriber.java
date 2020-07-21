@@ -2,8 +2,8 @@ package org.team4u.ddd.process.retry.method.interceptor;
 
 import cn.hutool.core.thread.ExecutorBuilder;
 import com.alibaba.fastjson.JSON;
-import org.team4u.ddd.domain.model.AbstractSingleDomainEventSubscriber;
 import org.team4u.ddd.infrastructure.util.MethodInvoker;
+import org.team4u.ddd.message.AbstractMessageConsumer;
 import org.team4u.ddd.process.TimeConstrainedProcessTracker;
 import org.team4u.ddd.process.TimeConstrainedProcessTrackerAppService;
 import org.team4u.ddd.process.retry.RetryService;
@@ -18,7 +18,7 @@ import java.util.concurrent.ThreadPoolExecutor;
  *
  * @author jay.wu
  */
-public abstract class AbstractRetryableMethodTimedOutEventSubscriber extends AbstractSingleDomainEventSubscriber<RetryableMethodTimedOutEvent> {
+public abstract class AbstractRetryableMethodTimedOutEventSubscriber extends AbstractMessageConsumer<RetryableMethodTimedOutEvent> {
 
     private final MethodInvoker methodInvoker;
     private final TimeConstrainedProcessTrackerAppService trackerAppService;
@@ -36,7 +36,7 @@ public abstract class AbstractRetryableMethodTimedOutEventSubscriber extends Abs
     }
 
     @Override
-    protected void handle(RetryableMethodTimedOutEvent event) throws Throwable {
+    protected void internalProcessMessage(RetryableMethodTimedOutEvent event) throws Throwable {
         RetryContextReader contextReader = new RetryContextReader(JSON.parseObject(event.getDescription()));
 
         TimeConstrainedProcessTracker tracker = trackerAppService.trackerOfProcessId(
@@ -87,7 +87,7 @@ public abstract class AbstractRetryableMethodTimedOutEventSubscriber extends Abs
     }
 
     @Override
-    protected Class<RetryableMethodTimedOutEvent> messageType() {
+    public Class<RetryableMethodTimedOutEvent> messageType() {
         return RetryableMethodTimedOutEvent.class;
     }
 }

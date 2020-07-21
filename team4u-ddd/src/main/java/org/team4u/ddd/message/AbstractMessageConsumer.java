@@ -10,14 +10,11 @@ import org.team4u.base.log.LogService;
 import java.util.concurrent.ExecutorService;
 
 /**
- * 抽象多事件处理器
- * <p>
- * 事件总线在接收到一个领域事件时，先调用supports(event)方法判断当前监听器是否支持该事件，
- * 如果支持则调用onEvent()方法处理该事件
+ * 抽象消息消费者
  *
- * @param <V>
+ * @param <M> 消息类型
  */
-public abstract class AbstractMessageConsumer<V> implements MessageConsumer {
+public abstract class AbstractMessageConsumer<M> implements MessageConsumer<M> {
 
     protected final Log log = LogFactory.get();
 
@@ -27,30 +24,35 @@ public abstract class AbstractMessageConsumer<V> implements MessageConsumer {
     private final ExecutorService executorService;
 
 
+    protected AbstractMessageConsumer() {
+        this(null);
+    }
+
     protected AbstractMessageConsumer(ExecutorService executorService) {
         this.executorService = executorService;
     }
 
     @Override
-    public void onMessage(Object message) {
+    public void processMessage(M message) {
         if (!supports(message)) {
             return;
         }
 
         if (executorService == null) {
-            logAndHandle(message);
+            logAndProcessMessage(message);
             return;
         }
 
-        executorService.execute(() -> logAndHandle(message));
+        executorService.execute(() -> logAndProcessMessage(message));
     }
 
-    private void logAndHandle(V message) {
-        LogMessage lm = LogMessages.createWithMasker(this.getClass().getSimpleName(), "onMessage")
+    protected void logAndProcessMessage(M message) {
+        LogMessage lm = LogMessages.createWithMasker(this.getClass().getSimpleName(), "processMessage")
+                .append("messageType", message.getClass().getSimpleName())
                 .append("message", message);
 
         try {
-            handle(message);
+            internalProcessMessage(message);
             log.info(lm.success().toString());
         } catch (Throwable e) {
             LogService.logForError(log, lm, e);
@@ -59,22 +61,24 @@ public abstract class AbstractMessageConsumer<V> implements MessageConsumer {
 
 
     /**
-     * 处理消息
+     * 内部处理消息
      *
      * @param message 要处理的事件
+     * @throws Throwable 异常
      */
-    protected abstract void handle(V message) throws Throwable;
+    protected abstract void internalProcessMessage(M message) throws Throwable;
 
     /**
      * 判断是否监听指定的事件类型
      */
-    protected boolean supports(Object message) {
+    protected boolean supports(M message) {
         return messageType().isAssignableFrom(message.getClass());
     }
 
 
+    @Override
     @SuppressWarnings("unchecked")
-    protected Class<V> messageType() {
-        return (Class<V>) ClassUtil.getTypeArgument(this.getClass());
+    public Class<M> messageType() {
+        return (Class<M>) ClassUtil.getTypeArgument(this.getClass());
     }
 }

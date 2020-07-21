@@ -20,12 +20,4 @@ public abstract class AbstractSingleDomainEventSubscriber<E extends DomainEvent>
     public AbstractSingleDomainEventSubscriber() {
         this(null);
     }
-
-    /**
-     * 判断是否监听指定的事件类型
-     */
-    @Override
-    protected boolean supports(E event) {
-        return messageType().isAssignableFrom(event.getClass());
-    }
 }

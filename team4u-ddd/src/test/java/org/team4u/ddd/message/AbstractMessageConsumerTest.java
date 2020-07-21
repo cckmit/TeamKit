@@ -1,15 +1,16 @@
-package org.team4u.ddd.domain.model;
+package org.team4u.ddd.message;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.team4u.ddd.domain.model.DomainEvent;
 
-public class AbstractSingleDomainEventSubscriberTest {
+public class AbstractMessageConsumerTest {
 
     @Test
     public void handleWithExpectedEvent() {
         FakeEvent1Subscriber s = new FakeEvent1Subscriber();
         FakeEvent1 e = new FakeEvent1("");
-        s.onMessage(e);
+        s.processMessage(e);
         Assert.assertEquals(e, s.getEvent());
     }
 
@@ -17,22 +18,27 @@ public class AbstractSingleDomainEventSubscriberTest {
     public void handleWithNotExpectedEvent() {
         FakeEvent1Subscriber s = new FakeEvent1Subscriber();
         FakeEvent2 e = new FakeEvent2("");
-        s.onMessage(e);
+        s.processMessage(e);
         Assert.assertNull(s.getEvent());
     }
 
 
-    private static class FakeEvent1Subscriber extends AbstractSingleDomainEventSubscriber<FakeEvent1> {
+    private static class FakeEvent1Subscriber extends AbstractMessageConsumer<DomainEvent> {
 
-        private FakeEvent1 event;
+        private DomainEvent event;
 
         @Override
-        protected void handle(FakeEvent1 event) {
+        protected void internalProcessMessage(DomainEvent event) {
             this.event = event;
         }
 
-        public FakeEvent1 getEvent() {
+        public DomainEvent getEvent() {
             return event;
+        }
+
+        @Override
+        protected boolean supports(DomainEvent event) {
+            return event instanceof FakeEvent1;
         }
     }
 }

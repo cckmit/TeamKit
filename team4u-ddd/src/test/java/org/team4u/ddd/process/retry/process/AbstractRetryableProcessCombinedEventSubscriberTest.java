@@ -1,16 +1,16 @@
 package org.team4u.ddd.process.retry.process;
 
-import org.team4u.ddd.domain.model.FakeEvent1;
-import org.team4u.ddd.infrastructure.serializer.FastJsonSerializer;
-import org.team4u.ddd.process.FakeTimeConstrainedProcessTrackerRepository;
-import org.team4u.ddd.process.TimeConstrainedProcessTrackerAppService;
-import org.team4u.ddd.process.retry.NeedRetryException;
-import org.team4u.ddd.process.strategy.FakeRetryStrategyRepository;
 import org.junit.Assert;
 import org.junit.Test;
 import org.team4u.base.error.BusinessException;
 import org.team4u.base.error.SystemException;
 import org.team4u.ddd.TestUtil;
+import org.team4u.ddd.infrastructure.serializer.FastJsonSerializer;
+import org.team4u.ddd.message.FakeEvent1;
+import org.team4u.ddd.process.FakeTimeConstrainedProcessTrackerRepository;
+import org.team4u.ddd.process.TimeConstrainedProcessTrackerAppService;
+import org.team4u.ddd.process.retry.NeedRetryException;
+import org.team4u.ddd.process.strategy.FakeRetryStrategyRepository;
 
 public class AbstractRetryableProcessCombinedEventSubscriberTest {
 
@@ -22,7 +22,7 @@ public class AbstractRetryableProcessCombinedEventSubscriberTest {
         );
 
         FakeEvent1 e = new FakeEvent1(TestUtil.TEST_ID);
-        subscriber.onMessage(e);
+        subscriber.processMessage(e);
 
         Assert.assertEquals(subscriber.getFakeEvent1(), e);
         Assert.assertNull(subscriber.getTimedOutEvent());
@@ -45,7 +45,7 @@ public class AbstractRetryableProcessCombinedEventSubscriberTest {
                 FastJsonSerializer.instance().serialize(e1)
         );
 
-        subscriber.onMessage(e);
+        subscriber.processMessage(e);
 
         Assert.assertEquals(subscriber.getFakeEvent1().getDomainId(), TestUtil.TEST_ID);
         Assert.assertEquals(subscriber.getTimedOutEvent(), e);
@@ -65,7 +65,7 @@ public class AbstractRetryableProcessCombinedEventSubscriberTest {
         );
 
         FakeEvent1 e = new FakeEvent1(TestUtil.TEST_ID);
-        subscriber.onMessage(e);
+        subscriber.processMessage(e);
 
         Assert.assertNotNull(trackerAppService.repository().trackerOfProcessId(
                 TestUtil.TEST_ID,
@@ -82,7 +82,7 @@ public class AbstractRetryableProcessCombinedEventSubscriberTest {
         );
 
         FakeEvent1 e = new FakeEvent1(TestUtil.TEST_ID);
-        subscriber.onMessage(e);
+        subscriber.processMessage(e);
 
         Assert.assertNull(trackerAppService.repository().trackerOfProcessId(
                 TestUtil.TEST_ID,
@@ -99,7 +99,7 @@ public class AbstractRetryableProcessCombinedEventSubscriberTest {
         );
 
         FakeEvent1 e = new FakeEvent1(TestUtil.TEST_ID);
-        subscriber.onMessage(e);
+        subscriber.processMessage(e);
 
         Assert.assertNotNull(trackerAppService.repository().trackerOfProcessId(
                 TestUtil.TEST_ID,
