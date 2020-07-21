@@ -1,13 +1,15 @@
 package org.team4u.ddd.process.retry.process;
 
 import cn.hutool.core.util.ClassUtil;
+import org.team4u.base.error.BusinessException;
+import org.team4u.ddd.domain.model.AbstractSingleDomainEventSubscriber;
 import org.team4u.ddd.domain.model.DomainEvent;
-import org.team4u.ddd.domain.model.ThreadPoolEventSubscriber;
 import org.team4u.ddd.infrastructure.serializer.FastJsonSerializer;
 import org.team4u.ddd.process.TimeConstrainedProcessTracker;
 import org.team4u.ddd.process.TimeConstrainedProcessTrackerAppService;
 import org.team4u.ddd.process.retry.RetryService;
-import org.team4u.base.error.BusinessException;
+
+import java.util.concurrent.ExecutorService;
 
 /**
  * 可重试的本地线程池事件订阅者
@@ -15,12 +17,15 @@ import org.team4u.base.error.BusinessException;
  * @author jay.wu
  */
 public abstract class AbstractRetryableProcessEventSubscriber<E extends DomainEvent, R extends AbstractRetryableProcessTimedOutEvent>
-        extends ThreadPoolEventSubscriber<E> {
+        extends AbstractSingleDomainEventSubscriber<E> {
 
     private final RetryService retryService;
     private final TimeConstrainedProcessTrackerAppService trackerAppService;
 
-    public AbstractRetryableProcessEventSubscriber(TimeConstrainedProcessTrackerAppService trackerAppService) {
+
+    public AbstractRetryableProcessEventSubscriber(ExecutorService executorService,
+                                                   TimeConstrainedProcessTrackerAppService trackerAppService) {
+        super(executorService);
         this.trackerAppService = trackerAppService;
 
         this.retryService = new RetryService(
@@ -30,16 +35,22 @@ public abstract class AbstractRetryableProcessEventSubscriber<E extends DomainEv
         );
     }
 
-    @Override
-    protected void handle(DomainEvent event) throws Throwable {
-        //noinspection unchecked
-        createAndSaveTracker((E) event);
-
-        super.handle(event);
+    public AbstractRetryableProcessEventSubscriber(TimeConstrainedProcessTrackerAppService trackerAppService) {
+        this(null, trackerAppService);
     }
 
     @Override
-    protected void handleEvent(E event) throws Exception {
+    public void onMessage(E event) {
+        if (supports(event)) {
+            //noinspection unchecked
+            createAndSaveTracker((E) event);
+        }
+
+        super.onMessage(event);
+    }
+
+    @Override
+    protected void handle(E event) throws Exception {
         TimeConstrainedProcessTracker tracker = trackerAppService.trackerOfProcessId(
                 event.getDomainId(),
                 timedOutEventClass()

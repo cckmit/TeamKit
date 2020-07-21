@@ -76,7 +76,7 @@ public class SpringRetryableMethodInterceptorTest {
                 RetryableMethodTimedOutEvent.class.getName()
         );
         repository.save(t);
-        subscriber.onEvent(new RetryableMethodTimedOutEvent(t.processId(), t.description()));
+        subscriber.onMessage(new RetryableMethodTimedOutEvent(t.processId(), t.description()));
 
         ThreadUtil.sleep(1000);
 
@@ -101,7 +101,7 @@ public class SpringRetryableMethodInterceptorTest {
                 RetryableMethodTimedOutEvent.class.getName()
         );
         repository.save(t);
-        subscriber.onEvent(new RetryableMethodTimedOutEvent(t.processId(), t.description()));
+        subscriber.onMessage(new RetryableMethodTimedOutEvent(t.processId(), t.description()));
 
         ThreadUtil.sleep(1000);
 

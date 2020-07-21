@@ -34,7 +34,7 @@ public class DomainEventPublisher {
     @SuppressWarnings({"unchecked", "rawtypes"})
     public <T extends DomainEvent> void publish(T event) {
         for (DomainEventSubscriber subscriber : subscribers) {
-            subscriber.onEvent(event);
+            subscriber.onMessage(event);
         }
     }
 

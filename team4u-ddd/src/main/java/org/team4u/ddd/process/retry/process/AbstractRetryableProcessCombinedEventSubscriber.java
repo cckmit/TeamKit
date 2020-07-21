@@ -3,10 +3,10 @@ package org.team4u.ddd.process.retry.process;
 import cn.hutool.core.thread.ExecutorBuilder;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.TypeUtil;
-import org.team4u.ddd.domain.model.DomainEvent;
-import org.team4u.ddd.domain.model.DomainEventSubscriber;
-import org.team4u.ddd.process.TimeConstrainedProcessTrackerAppService;
 import org.team4u.base.error.BusinessException;
+import org.team4u.ddd.domain.model.DomainEvent;
+import org.team4u.ddd.message.AbstractMessageConsumer;
+import org.team4u.ddd.process.TimeConstrainedProcessTrackerAppService;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -23,29 +23,33 @@ import java.util.stream.Stream;
 public abstract class AbstractRetryableProcessCombinedEventSubscriber<
         P extends DomainEvent,
         R extends AbstractRetryableProcessTimedOutEvent
-        > implements DomainEventSubscriber<DomainEvent> {
+        > extends AbstractMessageConsumer<DomainEvent> {
 
     private final RetryableProcessEventSubscriber retryableProcessEventSubscriber;
     private final RetryableProcessTimedOutEventSubscriber retryableProcessTimedOutEventSubscriber;
 
     public AbstractRetryableProcessCombinedEventSubscriber(TimeConstrainedProcessTrackerAppService trackerAppService) {
+        super(null);
+
         retryableProcessEventSubscriber = new RetryableProcessEventSubscriber(trackerAppService);
         retryableProcessTimedOutEventSubscriber = new RetryableProcessTimedOutEventSubscriber(trackerAppService);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public void onEvent(DomainEvent event) {
+    public void handle(DomainEvent event) {
         if (!supports(event)) {
             return;
         }
 
         if (event instanceof AbstractRetryableProcessTimedOutEvent) {
-            retryableProcessTimedOutEventSubscriber.onEvent(event);
+            retryableProcessTimedOutEventSubscriber.onMessage((R) event);
         } else {
-            retryableProcessEventSubscriber.onEvent(event);
+            retryableProcessEventSubscriber.onMessage((P) event);
         }
     }
 
+    @Override
     protected boolean supports(DomainEvent event) {
         return Stream.of(TypeUtil.getTypeArguments(this.getClass()))
                 .anyMatch(it -> ((Class<?>) it).isAssignableFrom(event.getClass()));
@@ -131,7 +135,7 @@ public abstract class AbstractRetryableProcessCombinedEventSubscriber<
     private class RetryableProcessEventSubscriber extends AbstractRetryableProcessEventSubscriber<P, R> {
 
         public RetryableProcessEventSubscriber(TimeConstrainedProcessTrackerAppService trackerAppService) {
-            super(trackerAppService);
+            super(AbstractRetryableProcessCombinedEventSubscriber.this.executorService(), trackerAppService);
         }
 
         @Override
@@ -155,7 +159,7 @@ public abstract class AbstractRetryableProcessCombinedEventSubscriber<
         }
 
         @Override
-        protected Class<P> typeOfEventSubscribed() {
+        protected Class<P> messageType() {
             return AbstractRetryableProcessCombinedEventSubscriber.this.processEventClass();
         }
 
@@ -163,17 +167,12 @@ public abstract class AbstractRetryableProcessCombinedEventSubscriber<
         protected Class<R> timedOutEventClass() {
             return AbstractRetryableProcessCombinedEventSubscriber.this.timedOutEventClass();
         }
-
-        @Override
-        protected ExecutorService executorService() {
-            return AbstractRetryableProcessCombinedEventSubscriber.this.executorService();
-        }
     }
 
     private class RetryableProcessTimedOutEventSubscriber extends AbstractRetryableProcessTimedOutEventSubscriber<P, R> {
 
         public RetryableProcessTimedOutEventSubscriber(TimeConstrainedProcessTrackerAppService trackerAppService) {
-            super(trackerAppService);
+            super(AbstractRetryableProcessCombinedEventSubscriber.this.executorService(), trackerAppService);
         }
 
         @Override
@@ -197,18 +196,13 @@ public abstract class AbstractRetryableProcessCombinedEventSubscriber<
         }
 
         @Override
-        protected Class<R> typeOfEventSubscribed() {
+        protected Class<R> messageType() {
             return AbstractRetryableProcessCombinedEventSubscriber.this.timedOutEventClass();
         }
 
         @Override
         public Class<P> processEventClass() {
             return AbstractRetryableProcessCombinedEventSubscriber.this.processEventClass();
-        }
-
-        @Override
-        protected ExecutorService executorService() {
-            return AbstractRetryableProcessCombinedEventSubscriber.this.executorService();
         }
     }
 }

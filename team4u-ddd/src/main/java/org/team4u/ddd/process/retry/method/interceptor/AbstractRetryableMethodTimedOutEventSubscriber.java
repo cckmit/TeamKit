@@ -1,11 +1,15 @@
 package org.team4u.ddd.process.retry.method.interceptor;
 
+import cn.hutool.core.thread.ExecutorBuilder;
 import com.alibaba.fastjson.JSON;
-import org.team4u.ddd.domain.model.ThreadPoolEventSubscriber;
+import org.team4u.ddd.domain.model.AbstractSingleDomainEventSubscriber;
 import org.team4u.ddd.infrastructure.util.MethodInvoker;
 import org.team4u.ddd.process.TimeConstrainedProcessTracker;
 import org.team4u.ddd.process.TimeConstrainedProcessTrackerAppService;
 import org.team4u.ddd.process.retry.RetryService;
+
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * 可重试方法超时事件抽象订阅者
@@ -14,23 +18,30 @@ import org.team4u.ddd.process.retry.RetryService;
  *
  * @author jay.wu
  */
-public abstract class AbstractRetryableMethodTimedOutEventSubscriber extends ThreadPoolEventSubscriber<RetryableMethodTimedOutEvent> {
+public abstract class AbstractRetryableMethodTimedOutEventSubscriber extends AbstractSingleDomainEventSubscriber<RetryableMethodTimedOutEvent> {
 
     private final MethodInvoker methodInvoker;
     private final TimeConstrainedProcessTrackerAppService trackerAppService;
 
     public AbstractRetryableMethodTimedOutEventSubscriber(TimeConstrainedProcessTrackerAppService trackerAppService) {
+        super(ExecutorBuilder
+                .create()
+                .setCorePoolSize(3)
+                .setWorkQueue(new LinkedBlockingQueue<>(2000))
+                .setHandler(new ThreadPoolExecutor.CallerRunsPolicy())
+                .build());
+
         this.trackerAppService = trackerAppService;
         this.methodInvoker = new MethodInvoker();
     }
 
     @Override
-    protected void handleEvent(RetryableMethodTimedOutEvent event) throws Throwable {
+    protected void handle(RetryableMethodTimedOutEvent event) throws Throwable {
         RetryContextReader contextReader = new RetryContextReader(JSON.parseObject(event.getDescription()));
 
         TimeConstrainedProcessTracker tracker = trackerAppService.trackerOfProcessId(
                 event.getDomainId(),
-                typeOfEventSubscribed()
+                messageType()
         );
 
         retry(tracker, event, contextReader);
@@ -76,7 +87,7 @@ public abstract class AbstractRetryableMethodTimedOutEventSubscriber extends Thr
     }
 
     @Override
-    protected Class<RetryableMethodTimedOutEvent> typeOfEventSubscribed() {
+    protected Class<RetryableMethodTimedOutEvent> messageType() {
         return RetryableMethodTimedOutEvent.class;
     }
 }

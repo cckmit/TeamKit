@@ -5,6 +5,8 @@ import org.team4u.ddd.domain.model.DomainEvent;
 import org.team4u.ddd.infrastructure.serializer.FastJsonSerializer;
 import org.team4u.ddd.process.TimeConstrainedProcessTrackerAppService;
 
+import java.util.concurrent.ExecutorService;
+
 /**
  * 可重试超时事件订阅者
  *
@@ -15,8 +17,9 @@ public abstract class AbstractRetryableProcessTimedOutEventSubscriber<
         R extends AbstractRetryableProcessTimedOutEvent>
         extends AbstractProcessTimedOutEventSubscriber<R> {
 
-    public AbstractRetryableProcessTimedOutEventSubscriber(TimeConstrainedProcessTrackerAppService trackerAppService) {
-        super(trackerAppService);
+    public AbstractRetryableProcessTimedOutEventSubscriber(ExecutorService executorService,
+                                                           TimeConstrainedProcessTrackerAppService trackerAppService) {
+        super(executorService, trackerAppService);
     }
 
     @Override
@@ -39,7 +42,7 @@ public abstract class AbstractRetryableProcessTimedOutEventSubscriber<
 
     @SuppressWarnings("unchecked")
     @Override
-    protected Class<R> typeOfEventSubscribed() {
+    protected Class<R> messageType() {
         return (Class<R>) ClassUtil.getTypeArgument(this.getClass(), 1);
     }
 

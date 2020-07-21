@@ -1,11 +1,7 @@
 package org.team4u.ddd.domain.model;
 
-public interface DomainEventSubscriber<T extends DomainEvent> {
+import org.team4u.ddd.message.MessageConsumer;
 
-    /**
-     * 处理事件
-     *
-     * @param event 要处理的事件
-     */
-    void onEvent(T event);
+public interface DomainEventSubscriber<E extends DomainEvent> extends MessageConsumer<E> {
+
 }

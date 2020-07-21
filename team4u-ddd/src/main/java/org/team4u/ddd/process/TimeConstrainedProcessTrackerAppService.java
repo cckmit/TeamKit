@@ -3,10 +3,10 @@ package org.team4u.ddd.process;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
-import org.team4u.ddd.process.strategy.RetryStrategyRepository;
 import org.team4u.base.error.OptimisticLockingFailureException;
 import org.team4u.base.log.LogMessage;
 import org.team4u.base.log.LogMessages;
+import org.team4u.ddd.process.strategy.RetryStrategyRepository;
 
 import java.util.Collection;
 import java.util.Date;
@@ -237,6 +237,7 @@ public class TimeConstrainedProcessTrackerAppService {
         for (TimeConstrainedProcessTracker tracker : trackers) {
             try {
                 tracker.informProcessTimedOut();
+                saveTracker(tracker);
             } catch (Exception e) {
                 log.error(e, LogMessage.create(this.getClass().getSimpleName(), "informProcessTimedOut")
                         .fail(e.getMessage())

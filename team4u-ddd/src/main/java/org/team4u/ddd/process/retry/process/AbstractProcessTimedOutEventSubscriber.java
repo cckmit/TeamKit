@@ -1,11 +1,13 @@
 package org.team4u.ddd.process.retry.process;
 
-import org.team4u.ddd.domain.model.ThreadPoolEventSubscriber;
+import org.team4u.base.error.BusinessException;
+import org.team4u.ddd.domain.model.AbstractSingleDomainEventSubscriber;
 import org.team4u.ddd.process.ProcessTimedOutEvent;
 import org.team4u.ddd.process.TimeConstrainedProcessTracker;
 import org.team4u.ddd.process.TimeConstrainedProcessTrackerAppService;
 import org.team4u.ddd.process.retry.RetryService;
-import org.team4u.base.error.BusinessException;
+
+import java.util.concurrent.ExecutorService;
 
 /**
  * 超时事件订阅者
@@ -13,12 +15,14 @@ import org.team4u.base.error.BusinessException;
  * @author jay.wu
  */
 public abstract class AbstractProcessTimedOutEventSubscriber<E extends ProcessTimedOutEvent>
-        extends ThreadPoolEventSubscriber<E> {
+        extends AbstractSingleDomainEventSubscriber<E> {
 
     private final RetryService retryService;
     private final TimeConstrainedProcessTrackerAppService trackerAppService;
 
-    public AbstractProcessTimedOutEventSubscriber(TimeConstrainedProcessTrackerAppService trackerAppService) {
+    public AbstractProcessTimedOutEventSubscriber(ExecutorService executorService,
+                                                  TimeConstrainedProcessTrackerAppService trackerAppService) {
+        super(executorService);
         this.trackerAppService = trackerAppService;
 
         this.retryService = new RetryService(
@@ -29,10 +33,10 @@ public abstract class AbstractProcessTimedOutEventSubscriber<E extends ProcessTi
     }
 
     @Override
-    protected void handleEvent(E event) throws Exception {
+    protected void handle(E event) throws Exception {
         TimeConstrainedProcessTracker tracker = trackerAppService.trackerOfProcessId(
                 event.getDomainId(),
-                typeOfEventSubscribed()
+                messageType()
         );
 
         retryService.invokeAndAutoCloseTracker(tracker, shouldRemoveTrackerAfterCompleted(), () -> {

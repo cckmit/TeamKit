@@ -15,7 +15,7 @@ public class StoreDomainEventSubscriber implements DomainEventSubscriber<DomainE
     }
 
     @Override
-    public void onEvent(DomainEvent event) {
+    public void onMessage(DomainEvent event) {
         eventStore.append(event);
     }
 }

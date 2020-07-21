@@ -9,7 +9,7 @@ public class AbstractSingleDomainEventSubscriberTest {
     public void handleWithExpectedEvent() {
         FakeEvent1Subscriber s = new FakeEvent1Subscriber();
         FakeEvent1 e = new FakeEvent1("");
-        s.onEvent(e);
+        s.onMessage(e);
         Assert.assertEquals(e, s.getEvent());
     }
 
@@ -17,7 +17,7 @@ public class AbstractSingleDomainEventSubscriberTest {
     public void handleWithNotExpectedEvent() {
         FakeEvent1Subscriber s = new FakeEvent1Subscriber();
         FakeEvent2 e = new FakeEvent2("");
-        s.onEvent(e);
+        s.onMessage(e);
         Assert.assertNull(s.getEvent());
     }
 
@@ -27,7 +27,7 @@ public class AbstractSingleDomainEventSubscriberTest {
         private FakeEvent1 event;
 
         @Override
-        protected void handleEvent(FakeEvent1 event) {
+        protected void handle(FakeEvent1 event) {
             this.event = event;
         }
 

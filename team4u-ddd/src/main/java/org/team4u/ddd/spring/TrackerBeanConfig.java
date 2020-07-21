@@ -11,6 +11,7 @@ import org.team4u.ddd.infrastructure.persistence.mybatis.TimeConstrainedProcessT
 import org.team4u.ddd.infrastructure.process.strategy.ConfigRetryStrategyRepository;
 import org.team4u.ddd.process.LocalProcessTimedOutInformer;
 import org.team4u.ddd.process.TimeConstrainedProcessTrackerAppService;
+import org.team4u.ddd.process.strategy.RetryStrategyFactoryService;
 import org.team4u.ddd.process.strategy.RetryStrategyRepository;
 import org.team4u.kv.KeyValueService;
 import org.team4u.kv.SimpleLockService;
@@ -61,5 +62,10 @@ public class TrackerBeanConfig {
         informer.start();
 
         return informer;
+    }
+
+    @Bean
+    public RetryStrategyFactoryService retryStrategyFactoryService() {
+        return new RetryStrategyFactoryService();
     }
 }
