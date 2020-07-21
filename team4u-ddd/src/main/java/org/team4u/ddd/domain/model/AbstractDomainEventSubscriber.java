@@ -25,6 +25,7 @@ public abstract class AbstractDomainEventSubscriber implements DomainEventSubscr
         }
 
         LogMessage lm = LogMessages.createWithMasker(this.getClass().getSimpleName(), "handle")
+                .append("eventType", event.getClass().getSimpleName())
                 .append("event", event);
 
         try {

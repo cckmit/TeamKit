@@ -237,6 +237,7 @@ public class TimeConstrainedProcessTrackerAppService {
         for (TimeConstrainedProcessTracker tracker : trackers) {
             try {
                 tracker.informProcessTimedOut();
+                saveTracker(tracker);
             } catch (Exception e) {
                 log.error(e, LogMessage.create(this.getClass().getSimpleName(), "informProcessTimedOut")
                         .fail(e.getMessage())

@@ -32,6 +32,7 @@ public class LogOnlyEventStore implements EventStore {
     @Override
     public StoredEvent append(DomainEvent domainEvent) {
         log.info(LogMessages.createWithMasker(this.getClass().getSimpleName(), "append")
+                .append("eventType", domainEvent.getClass().getSimpleName())
                 .append("event", domainEvent)
                 .toString());
 
