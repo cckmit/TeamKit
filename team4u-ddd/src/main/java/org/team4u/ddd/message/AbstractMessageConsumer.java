@@ -3,6 +3,7 @@ package org.team4u.ddd.message;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
+import org.team4u.base.error.NestedException;
 import org.team4u.base.log.LogMessage;
 import org.team4u.base.log.LogMessages;
 import org.team4u.base.log.LogService;
@@ -43,7 +44,13 @@ public abstract class AbstractMessageConsumer<M> implements MessageConsumer<M> {
             return;
         }
 
-        executorService.execute(() -> logAndProcessMessage(message));
+        executorService.execute(() -> {
+            try {
+                logAndProcessMessage(message);
+            } catch (Exception e) {
+                // ignore error
+            }
+        });
     }
 
     protected void logAndProcessMessage(M message) {
@@ -56,6 +63,12 @@ public abstract class AbstractMessageConsumer<M> implements MessageConsumer<M> {
             log.info(lm.success().toString());
         } catch (Throwable e) {
             LogService.logForError(log, lm, e);
+
+            if (e instanceof RuntimeException) {
+                throw (RuntimeException) e;
+            } else {
+                throw new NestedException(e);
+            }
         }
     }
 

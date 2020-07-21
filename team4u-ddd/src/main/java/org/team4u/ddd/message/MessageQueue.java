@@ -22,11 +22,4 @@ public interface MessageQueue<M> extends Closeable {
      * @param handler 处理器
      */
     void messageHandler(VoidFunc1<M> handler);
-
-    /**
-     * 消息类型
-     *
-     * @return 消息类型
-     */
-    Class<M> messageType();
 }

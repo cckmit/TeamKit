@@ -1,6 +1,5 @@
 package org.team4u.ddd.message;
 
-import cn.hutool.core.convert.Converter;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.func.VoidFunc1;
 
@@ -19,14 +18,14 @@ public class MessageQueueMapper implements Closeable {
 
     public MessageQueueMapper(MessageConsumer<?> messageConsumer,
                               MessageQueue<?> messageQueue,
-                              Converter<?> converter) {
+                              MessageConverter messageConverter) {
         this.messageQueue = messageQueue;
-        this.messageHandler = new MessageHandler(messageConsumer, converter);
+        this.messageHandler = new MessageHandler(messageConsumer, messageConverter);
     }
 
     @SuppressWarnings("unchecked")
     public void start() {
-        this.messageQueue.messageHandler(messageHandler);
+        messageQueue.messageHandler(messageHandler);
         messageQueue.start();
     }
 
@@ -39,17 +38,17 @@ public class MessageQueueMapper implements Closeable {
 
         @SuppressWarnings("rawtypes")
         private final MessageConsumer messageConsumer;
-        private final Converter<?> converter;
+        private final MessageConverter messageConverter;
 
-        private MessageHandler(MessageConsumer<?> messageConsumer, Converter<?> converter) {
+        private MessageHandler(MessageConsumer<?> messageConsumer, MessageConverter messageConverter) {
             this.messageConsumer = messageConsumer;
-            this.converter = converter;
+            this.messageConverter = messageConverter;
         }
 
         @SuppressWarnings("unchecked")
         @Override
         public void call(Object message) {
-            Object target = converter.convert(message, null);
+            Object target = messageConverter.convert(message, messageConsumer.messageType());
             messageConsumer.processMessage(target);
         }
     }
