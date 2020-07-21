@@ -6,25 +6,27 @@ import cn.hutool.core.lang.func.VoidFunc1;
 
 import java.io.Closeable;
 
+/**
+ * 消息队列映射器
+ *
+ * @author jay.wu
+ */
 public class MessageQueueMapper implements Closeable {
 
     @SuppressWarnings("rawtypes")
-    private final MessageConsumer messageConsumer;
-    @SuppressWarnings("rawtypes")
     private final MessageQueue messageQueue;
-    private final Converter<?> converter;
+    private final MessageHandler messageHandler;
 
     public MessageQueueMapper(MessageConsumer<?> messageConsumer,
                               MessageQueue<?> messageQueue,
                               Converter<?> converter) {
-        this.messageConsumer = messageConsumer;
         this.messageQueue = messageQueue;
-        this.converter = converter;
+        this.messageHandler = new MessageHandler(messageConsumer, converter);
     }
 
     @SuppressWarnings("unchecked")
     public void start() {
-        messageQueue.messageHandler(new MessageHandler());
+        this.messageQueue.messageHandler(messageHandler);
         messageQueue.start();
     }
 
@@ -33,13 +35,22 @@ public class MessageQueueMapper implements Closeable {
         IoUtil.close(messageQueue);
     }
 
-    private class MessageHandler implements VoidFunc1<Object> {
+    private static class MessageHandler implements VoidFunc1<Object> {
+
+        @SuppressWarnings("rawtypes")
+        private final MessageConsumer messageConsumer;
+        private final Converter<?> converter;
+
+        private MessageHandler(MessageConsumer<?> messageConsumer, Converter<?> converter) {
+            this.messageConsumer = messageConsumer;
+            this.converter = converter;
+        }
 
         @SuppressWarnings("unchecked")
         @Override
-        public void call(Object message) throws Exception {
-            Object m = converter.convert(message, null);
-            messageConsumer.processMessage(m);
+        public void call(Object message) {
+            Object target = converter.convert(message, null);
+            messageConsumer.processMessage(target);
         }
     }
 }
