@@ -1,4 +1,4 @@
-package org.team4u.ddd.spring;
+package org.team4u.ddd.infrastructure.spring;
 
 /**
  * @author Jay Wu
