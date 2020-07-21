@@ -112,6 +112,7 @@ public class MybatisTimeConstrainedProcessTrackerRepository
 
     private TimeConstrainedProcessTrackerEntity toEntity(TimeConstrainedProcessTracker tracker) {
         TimeConstrainedProcessTrackerEntity entity = new TimeConstrainedProcessTrackerEntity();
+        entity.setId(tracker.getId());
         entity.setCompleted(tracker.isCompleted());
         entity.setDescription(tracker.description());
         entity.setProcessId(tracker.processId());
@@ -147,7 +148,8 @@ public class MybatisTimeConstrainedProcessTrackerRepository
                 entity.getProcessTimedOutEventType()
         );
 
-        BeanUtil.copyProperties(entity, tracker, "retryIntervalCalculator");
+        BeanUtil.copyProperties(entity, tracker);
+        tracker.setConcurrencyVersion(entity.getVersion());
         return tracker;
     }
 
