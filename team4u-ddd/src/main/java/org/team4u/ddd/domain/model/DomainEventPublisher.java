@@ -7,6 +7,11 @@ import org.team4u.ddd.message.MessageConsumer;
 
 import java.util.*;
 
+/**
+ * 领域事件发布者
+ *
+ * @author jay.wu
+ */
 public class DomainEventPublisher {
 
     private static final DomainEventPublisher INSTANCE = new DomainEventPublisher();
