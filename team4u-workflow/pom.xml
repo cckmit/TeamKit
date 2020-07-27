@@ -8,7 +8,7 @@
         <version>2.0.8.1</version>
     </parent>
 
-    <artifactId>team4u-command</artifactId>
+    <artifactId>team4u-workflow</artifactId>
     <packaging>jar</packaging>
 
     <dependencies>
@@ -16,21 +16,6 @@
             <groupId>org.team4u</groupId>
             <artifactId>team4u-base</artifactId>
             <version>${parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.team4u</groupId>
-            <artifactId>team4u-template</artifactId>
-            <version>${parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.ibeetl</groupId>
-            <artifactId>beetl</artifactId>
-            <version>3.0.11.RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>1.2.71</version>
         </dependency>
     </dependencies>
 </project>
