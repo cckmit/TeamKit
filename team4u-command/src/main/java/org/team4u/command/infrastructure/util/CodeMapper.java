@@ -6,6 +6,11 @@ import cn.hutool.core.util.StrUtil;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * 响应码映射器
+ *
+ * @author jay.wu
+ */
 public class CodeMapper {
 
     public String map(List<CodeMapping> codeMappings, String code, String subCode) {

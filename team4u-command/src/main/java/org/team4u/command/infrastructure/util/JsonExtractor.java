@@ -8,6 +8,11 @@ import org.team4u.base.data.extract.FastJsonDataTargetTemplateSerializer;
 
 import java.util.Map;
 
+/**
+ * Json提取器
+ *
+ * @author jay.wu
+ */
 public class JsonExtractor {
 
     @SuppressWarnings("unchecked")

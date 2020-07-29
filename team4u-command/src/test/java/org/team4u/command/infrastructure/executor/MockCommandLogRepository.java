@@ -12,7 +12,7 @@ public class MockCommandLogRepository implements CommandLogRepository {
     private MockCommandResponse response;
 
     @Override
-    public CommandLog find(String commandLogId) {
+    public CommandLog logOf(String commandLogId) {
         return null;
     }
 

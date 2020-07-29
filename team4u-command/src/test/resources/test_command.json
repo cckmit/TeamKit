@@ -1,0 +1,18 @@
+{
+  "items": {
+    "jsonExtractor": {
+      "targetType": "org.team4u.command.infrastructure.executor.MockCommandResponse",
+      "template": {
+        "channelCode": "x"
+      }
+    },
+    "codeMapping": {
+      "codeMappings": [
+        {
+          "channelCode": "00",
+          "standardCode": "0000"
+        }
+      ]
+    }
+  }
+}

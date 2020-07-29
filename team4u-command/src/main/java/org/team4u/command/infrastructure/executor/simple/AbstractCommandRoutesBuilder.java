@@ -6,6 +6,11 @@ import org.team4u.command.domain.executor.handler.requester.CommandRequester;
 
 import java.util.List;
 
+/**
+ * 抽象命令路由构建器
+ *
+ * @author jay.wu
+ */
 public abstract class AbstractCommandRoutesBuilder implements CommandRoutesBuilder {
 
     private final CommandRequester<?, ?> commandRequester;
@@ -13,7 +18,6 @@ public abstract class AbstractCommandRoutesBuilder implements CommandRoutesBuild
     public AbstractCommandRoutesBuilder(CommandRequester<?, ?> commandRequester) {
         this.commandRequester = commandRequester;
     }
-
 
     @Override
     public List<CommandHandler> configure() {

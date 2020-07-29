@@ -7,6 +7,11 @@ import org.team4u.command.domain.executor.handler.requester.CommandRequester;
 
 import java.util.List;
 
+/**
+ * 抽象可追踪的命令路由构建器
+ *
+ * @author jay.wu
+ */
 public abstract class AbstractTraceableCommandRoutesBuilder extends AbstractCommandRoutesBuilder {
 
     private final CommandLogHandler commandLogHandler;

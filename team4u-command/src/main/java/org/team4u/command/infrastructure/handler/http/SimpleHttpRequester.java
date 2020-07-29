@@ -2,13 +2,16 @@ package org.team4u.command.infrastructure.handler.http;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.http.Method;
-import org.team4u.command.domain.executor.handler.requester.http.HttpRequest;
-import org.team4u.command.domain.executor.handler.requester.http.HttpRequester;
-import org.team4u.command.domain.executor.handler.requester.http.HttpResponse;
 import org.team4u.base.error.RemoteCallException;
+import org.team4u.command.domain.executor.handler.requester.http.HttpRequester;
 
 import java.util.Map;
 
+/**
+ * 简单HTTP请求者
+ *
+ * @author jay.wu
+ */
 public class SimpleHttpRequester implements HttpRequester {
 
     @Override

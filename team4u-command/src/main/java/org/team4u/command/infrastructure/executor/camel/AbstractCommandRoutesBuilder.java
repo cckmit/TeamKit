@@ -4,6 +4,11 @@ import org.apache.camel.builder.RouteBuilder;
 import org.team4u.command.domain.executor.CommandHandler;
 import org.team4u.command.domain.executor.handler.requester.CommandRequester;
 
+/**
+ * 抽象命令路由构建器
+ *
+ * @author jay.wu
+ */
 public abstract class AbstractCommandRoutesBuilder extends RouteBuilder implements CommandRoutesBuilder {
 
     private final CommandRequester<?, ?> commandRequester;
@@ -12,21 +17,19 @@ public abstract class AbstractCommandRoutesBuilder extends RouteBuilder implemen
         this.commandRequester = commandRequester;
     }
 
-
     @Override
     public void configure() {
         bindToRegistry();
 
-        from(startUri())
-                .to("bean:commandRequester");
-    }
-
-    protected void bindToRegistry() {
-        bindToRegistry("commandRequester", commandRequester);
+        from(startUri()).to("bean:commandRequester");
     }
 
     public CommandHandler getCommandRequester() {
         return commandRequester;
+    }
+
+    protected void bindToRegistry() {
+        bindToRegistry("commandRequester", commandRequester);
     }
 
     protected String startUri() {

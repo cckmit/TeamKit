@@ -1,7 +1,7 @@
 package org.team4u.command.domain.executor;
 
 /**
- * 标准请求
+ * 命令请求
  *
  * @author jay.wu
  */

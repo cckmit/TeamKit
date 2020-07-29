@@ -30,17 +30,6 @@ public class ChannelResponse {
      */
     private Object responseBody;
 
-    public ChannelResponse() {
-    }
-
-    public ChannelResponse(String code, String message, String subCode, String subMessage, Object responseBody) {
-        this.code = code;
-        this.message = message;
-        this.subCode = subCode;
-        this.subMessage = subMessage;
-        this.responseBody = responseBody;
-    }
-
     public String getCode() {
         return code;
     }

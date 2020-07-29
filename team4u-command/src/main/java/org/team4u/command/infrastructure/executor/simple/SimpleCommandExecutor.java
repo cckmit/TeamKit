@@ -14,6 +14,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 基于责任链的简单命令执行器
+ *
+ * @author jay.wu
+ */
 public class SimpleCommandExecutor extends IdObjectService<String, CommandRoutesBuilder> implements CommandExecutor {
 
     private final Map<String, FilterChain<CommandHandler.Context>> filterChainMap = new HashMap<>();

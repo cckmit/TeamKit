@@ -4,15 +4,21 @@ import org.team4u.ddd.domain.model.AggregateRoot;
 
 import java.util.Date;
 
+/**
+ * 命令日志
+ *
+ * @author jay.wu
+ */
 public class CommandLog extends AggregateRoot {
 
     /**
-     * 标准请求值
+     * 命令请求
      */
     private CommandRequest request;
-
+    /**
+     * 命令响应
+     */
     private CommandResponse response;
-
     /**
      * 创建时间
      */

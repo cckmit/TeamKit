@@ -5,6 +5,11 @@ import org.team4u.base.filter.Filter;
 import org.team4u.base.filter.FilterInvoker;
 import org.team4u.command.domain.config.CommandConfig;
 
+/**
+ * 命令处理器
+ *
+ * @author jay.wu
+ */
 public interface CommandHandler extends Filter<CommandHandler.Context> {
 
     @Override
@@ -13,6 +18,11 @@ public interface CommandHandler extends Filter<CommandHandler.Context> {
         nextFilter.invoke(context);
     }
 
+    /**
+     * 处理命令
+     *
+     * @param context 处理器上下文
+     */
     void handle(Context context);
 
     class Context {

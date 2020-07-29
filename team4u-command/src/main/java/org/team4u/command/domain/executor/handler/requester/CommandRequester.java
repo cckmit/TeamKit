@@ -6,6 +6,11 @@ import org.team4u.command.domain.executor.CommandHandler;
 import org.team4u.command.domain.executor.CommandRequest;
 import org.team4u.command.domain.executor.CommandResponse;
 
+/**
+ * 命令请求者
+ *
+ * @author jay.wu
+ */
 public abstract class CommandRequester<Request, Response> implements CommandHandler {
 
     @Override
@@ -14,9 +19,29 @@ public abstract class CommandRequester<Request, Response> implements CommandHand
         context.setResponse(toCommandResponse(context.getConfig(), response));
     }
 
+    /**
+     * 执行请求
+     *
+     * @param request 请求者特定的请求对象
+     * @return 请求者特定的响应对象
+     */
     protected abstract Response execute(Request request);
 
+    /**
+     * 将命令请求转换为请求者特定的请求对象
+     *
+     * @param config         命令配置
+     * @param commandRequest 命令请求
+     * @return 请求者特定的请求对象
+     */
     protected abstract Request toRequest(CommandConfig config, CommandRequest commandRequest);
 
+    /**
+     * 将请求者特定的响应对象转换命令对象
+     *
+     * @param config   命令配置
+     * @param response 请求者特定的响应对象
+     * @return 请求者特定的请求对象
+     */
     protected abstract CommandResponse toCommandResponse(CommandConfig config, Response response);
 }

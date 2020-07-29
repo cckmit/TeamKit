@@ -5,6 +5,11 @@ import org.team4u.command.domain.executor.CommandHandler;
 import org.team4u.command.domain.executor.CommandLog;
 import org.team4u.command.domain.executor.CommandLogRepository;
 
+/**
+ * 命令日志处理器
+ *
+ * @author jay.wu
+ */
 public class CommandLogHandler implements CommandHandler {
 
     private final CommandLogRepository commandLogRepository;

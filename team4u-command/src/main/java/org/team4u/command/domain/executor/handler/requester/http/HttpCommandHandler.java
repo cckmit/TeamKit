@@ -2,7 +2,12 @@ package org.team4u.command.domain.executor.handler.requester.http;
 
 import org.team4u.command.domain.executor.handler.requester.CommandRequester;
 
-public abstract class HttpCommandHandler extends CommandRequester<HttpRequest, HttpResponse> {
+/**
+ * 基于HTTP的命令处理器
+ *
+ * @author jay.wu
+ */
+public abstract class HttpCommandHandler extends CommandRequester<HttpRequester.HttpRequest, HttpRequester.HttpResponse> {
 
     private final HttpRequester httpRequester;
 
@@ -11,7 +16,7 @@ public abstract class HttpCommandHandler extends CommandRequester<HttpRequest, H
     }
 
     @Override
-    protected HttpResponse execute(HttpRequest httpRequest) {
+    protected HttpRequester.HttpResponse execute(HttpRequester.HttpRequest httpRequest) {
         return httpRequester.execute(httpRequest);
     }
 }

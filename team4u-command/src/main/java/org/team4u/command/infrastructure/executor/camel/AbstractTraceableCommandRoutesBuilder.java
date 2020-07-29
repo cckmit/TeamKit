@@ -3,6 +3,11 @@ package org.team4u.command.infrastructure.executor.camel;
 import org.team4u.command.domain.executor.handler.CommandLogHandler;
 import org.team4u.command.domain.executor.handler.requester.CommandRequester;
 
+/**
+ * 抽象可追踪的命令路由构建器
+ *
+ * @author jay.wu
+ */
 public abstract class AbstractTraceableCommandRoutesBuilder extends AbstractCommandRoutesBuilder {
 
     private final CommandLogHandler commandLogHandler;
