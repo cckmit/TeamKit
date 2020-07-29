@@ -1,9 +1,17 @@
 package org.team4u.command.domain.executor;
 
 
+import org.team4u.base.filter.Filter;
+import org.team4u.base.filter.FilterInvoker;
 import org.team4u.command.domain.config.CommandConfig;
 
-public interface CommandHandler {
+public interface CommandHandler extends Filter<CommandHandler.Context> {
+
+    @Override
+    default void doFilter(Context context, FilterInvoker<Context> nextFilter) {
+        handle(context);
+        nextFilter.invoke(context);
+    }
 
     void handle(Context context);
 

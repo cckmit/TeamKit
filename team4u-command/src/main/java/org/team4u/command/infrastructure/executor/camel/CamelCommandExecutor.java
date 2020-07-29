@@ -29,12 +29,12 @@ public class CamelCommandExecutor extends IdObjectService<String, CommandRoutesB
 
     private void start() {
         try {
-            for (CommandRoutesBuilder routes : idObjects()) {
+            for (CommandRoutesBuilder builder : idObjects()) {
                 CamelContext context = new DefaultCamelContext();
-                routes.addRoutesToCamelContext(context);
+                builder.addRoutesToCamelContext(context);
                 context.start();
 
-                contexts.put(routes.id(), context);
+                contexts.put(builder.id(), context);
             }
         } catch (Exception e) {
             throw new SystemException(e);

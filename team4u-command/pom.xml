@@ -18,24 +18,16 @@
             <version>${parent.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.team4u</groupId>
-            <artifactId>team4u-template</artifactId>
-            <version>${parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.ibeetl</groupId>
-            <artifactId>beetl</artifactId>
-            <version>3.0.11.RELEASE</version>
-        </dependency>
-        <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>1.2.71</version>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-core</artifactId>
             <version>3.4.0</version>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 </project>

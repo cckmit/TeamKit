@@ -1,4 +1,4 @@
-package org.team4u.command.infrastructure.executor.camel;
+package org.team4u.command.infrastructure.executor.simple;
 
 import cn.hutool.core.collection.CollUtil;
 import org.team4u.command.domain.executor.CommandExecutor;
@@ -7,12 +7,11 @@ import org.team4u.command.infrastructure.executor.AbstractCommandExecutorTest;
 import org.team4u.command.infrastructure.executor.MockCommandLogRepository;
 import org.team4u.command.infrastructure.executor.MockHttpCommandHandler;
 
-public class CamelCommandExecutorTest extends AbstractCommandExecutorTest {
+public class SimpleCommandExecutorTest extends AbstractCommandExecutorTest {
 
     @Override
     protected CommandExecutor commandExecutor() {
-        MockRoutersBuilder mockRoutersBuilder = new MockRoutersBuilder();
-        return new CamelCommandExecutor(CollUtil.newArrayList(mockRoutersBuilder));
+        return new SimpleCommandExecutor(CollUtil.newArrayList(new MockRoutersBuilder()));
     }
 
     public static class MockRoutersBuilder extends AbstractTraceableCommandRoutesBuilder {
