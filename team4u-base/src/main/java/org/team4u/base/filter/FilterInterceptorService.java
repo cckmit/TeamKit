@@ -1,9 +1,9 @@
 package org.team4u.base.filter;
 
 import cn.hutool.core.lang.func.VoidFunc1;
-import org.team4u.base.lang.IdObjectService;
 import org.team4u.base.error.NestedException;
 import org.team4u.base.error.SystemDataNotExistException;
+import org.team4u.base.lang.IdObjectService;
 
 import java.util.Collections;
 import java.util.List;
@@ -56,16 +56,22 @@ public class FilterInterceptorService<Context,
      * 完成处理（无论是否异常最终执行）
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public void afterCompletion(Context context, List<String> interceptorIds, F filter, Exception ex) {
+    public boolean afterCompletion(Context context, List<String> interceptorIds, F filter, Exception ex) {
         List<Interceptor> interceptors = interceptorsOf(interceptorIds);
+        boolean shouldCallNextFilter = true;
+
         for (int i = interceptors.size() - 1; i >= 0; i--) {
             FilterInterceptor interceptor = interceptors.get(i);
             try {
-                interceptor.afterCompletion(context, filter, ex);
+                if (!interceptor.afterCompletion(context, filter, ex)) {
+                    shouldCallNextFilter = false;
+                }
             } catch (Exception e) {
                 throw toRuntimeException(e);
             }
         }
+
+        return shouldCallNextFilter;
     }
 
     /**
@@ -105,20 +111,16 @@ public class FilterInterceptorService<Context,
                          VoidFunc1 worker) {
         try {
             if (!preHandle(context, interceptorIds, filter)) {
-                afterCompletion(context, interceptorIds, filter, null);
-                return false;
+                return afterCompletion(context, interceptorIds, filter, null);
             }
 
             worker.call(context);
 
             postHandle(context, interceptorIds, filter);
 
-            afterCompletion(context, interceptorIds, filter, null);
-
-            return true;
+            return afterCompletion(context, interceptorIds, filter, null);
         } catch (Exception e) {
-            afterCompletion(context, interceptorIds, filter, e);
-            throw toRuntimeException(e);
+            return afterCompletion(context, interceptorIds, filter, e);
         }
     }
 

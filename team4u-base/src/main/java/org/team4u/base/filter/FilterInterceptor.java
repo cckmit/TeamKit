@@ -27,5 +27,5 @@ public interface FilterInterceptor<Context, F extends Filter<Context>> extends I
     /**
      * 完成处理（无论是否异常最终执行）
      */
-    void afterCompletion(Context context, F filter, Exception ex) throws Exception;
+    boolean afterCompletion(Context context, F filter, Exception ex) throws Exception;
 }
