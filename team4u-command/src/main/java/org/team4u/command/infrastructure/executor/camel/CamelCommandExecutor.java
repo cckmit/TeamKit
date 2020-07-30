@@ -45,17 +45,17 @@ public class CamelCommandExecutor extends IdObjectService<String, CommandRoutesB
     }
 
     @Override
-    public Object execute(CommandConfig config, Object request) {
-        CamelContext camelContext = contexts.get(config.getCommandId());
+    public Object execute(String commandId, CommandConfig config, Object request) {
+        CamelContext camelContext = contexts.get(commandId);
         if (camelContext == null) {
-            throw new SystemDataNotExistException("commandId=" + config.getCommandId());
+            throw new SystemDataNotExistException("commandId=" + commandId);
         }
 
-        CommandHandler.Context handlerContext = new CommandHandler.Context(config, request);
-        camelContext
-                .createProducerTemplate()
+        CommandHandler.Context handlerContext = new CommandHandler.Context(commandId, config, request);
+
+        camelContext.createProducerTemplate()
                 .sendBody(
-                        "direct:" + config.getCommandId(),
+                        "direct:" + commandId,
                         ExchangePattern.InOut,
                         handlerContext
                 );

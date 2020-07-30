@@ -29,6 +29,8 @@ public interface CommandHandler extends Filter<CommandHandler.Context> {
 
     class Context {
 
+        private final String commandId;
+
         private final CommandConfig config;
 
         private final Object request;
@@ -37,9 +39,14 @@ public interface CommandHandler extends Filter<CommandHandler.Context> {
 
         private final Dict extraAttributes = new Dict();
 
-        public Context(CommandConfig config, Object request) {
+        public Context(String commandId, CommandConfig config, Object request) {
+            this.commandId = commandId;
             this.config = config;
             this.request = request;
+        }
+
+        public String getCommandId() {
+            return commandId;
         }
 
         public CommandConfig getConfig() {

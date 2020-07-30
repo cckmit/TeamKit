@@ -13,9 +13,10 @@ public interface CommandExecutor {
     /**
      * 执行命令
      *
-     * @param config  命令配置
-     * @param request 命令请求
+     * @param commandId 命令标识
+     * @param config    命令配置
+     * @param request   命令请求
      * @return 命令响应
      */
-    Object execute(CommandConfig config, Object request);
+    Object execute(String commandId, CommandConfig config, Object request);
 }

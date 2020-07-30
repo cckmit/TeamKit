@@ -39,6 +39,7 @@ public class HttpJsonCommandHandlerTest {
         };
 
         CommandHandler.Context context = new CommandHandler.Context(
+                "test_command",
                 TestUtil.configOf("test_command.json"),
                 new MockCommandRequest(null)
         );

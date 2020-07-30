@@ -36,6 +36,6 @@ public class MockHttpCommandRequester extends HttpCommandRequester {
 
     @Override
     protected Object toCommandResponse(Context context, HttpRequester.HttpResponse httpResponse) {
-        return new MockCommandResponse().setChannelCode(context.getConfig().getCommandId());
+        return new MockCommandResponse().setChannelCode(context.getCommandId());
     }
 }

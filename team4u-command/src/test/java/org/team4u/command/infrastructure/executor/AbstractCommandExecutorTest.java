@@ -12,8 +12,10 @@ public abstract class AbstractCommandExecutorTest {
     @Test
     public void execute() {
         MockCommandResponse response = (MockCommandResponse) commandExecutor().execute(
-                new CommandConfig("test", new HashMap<>()),
-                new MockCommandRequest("test"));
+                "test",
+                new CommandConfig(new HashMap<>()),
+                new MockCommandRequest("test")
+        );
 
         Assert.assertEquals("test", response.getChannelCode());
         Assert.assertEquals("test", response.getChannelRawBody());

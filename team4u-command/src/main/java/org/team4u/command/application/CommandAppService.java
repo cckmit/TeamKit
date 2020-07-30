@@ -28,7 +28,7 @@ public class CommandAppService {
      */
     public <Response> Response execute(String commandId, Object request) {
         //noinspection unchecked
-        return (Response) commandExecutor.execute(commandConfigOf(commandId), request);
+        return (Response) commandExecutor.execute(commandId, commandConfigOf(commandId), request);
     }
 
     /**

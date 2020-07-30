@@ -1,5 +1,4 @@
 {
-  "commandId": "test",
   "items": {
     "jsonExtractor": {
       "targetType": "org.team4u.command.infrastructure.executor.MockCommandResponse",
