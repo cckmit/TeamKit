@@ -8,7 +8,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.team4u.command.TestUtil;
-import org.team4u.command.domain.config.CommandConfig;
 import org.team4u.command.domain.executor.CommandHandler;
 import org.team4u.command.domain.executor.CommandRequest;
 import org.team4u.command.infrastructure.executor.MockCommandResponse;
@@ -31,10 +30,10 @@ public class HttpJsonCommandHandlerTest {
 
         Mockito.when(httpRequester.execute(null)).thenReturn(httpResponse);
 
-        HttpJsonCommandHandler handler = new HttpJsonCommandHandler(httpRequester) {
+        HttpJsonCommandRequester handler = new HttpJsonCommandRequester(httpRequester) {
 
             @Override
-            protected HttpRequester.HttpRequest toRequest(CommandConfig config, CommandRequest commandRequest) {
+            protected HttpRequester.HttpRequest toRequest(Context context) {
                 return null;
             }
         };

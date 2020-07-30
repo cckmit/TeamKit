@@ -7,11 +7,11 @@ import org.team4u.command.domain.executor.handler.requester.CommandRequester;
  *
  * @author jay.wu
  */
-public abstract class HttpCommandHandler extends CommandRequester<HttpRequester.HttpRequest, HttpRequester.HttpResponse> {
+public abstract class HttpCommandRequester extends CommandRequester<HttpRequester.HttpRequest, HttpRequester.HttpResponse> {
 
     private final HttpRequester httpRequester;
 
-    public HttpCommandHandler(HttpRequester httpRequester) {
+    public HttpCommandRequester(HttpRequester httpRequester) {
         this.httpRequester = httpRequester;
     }
 

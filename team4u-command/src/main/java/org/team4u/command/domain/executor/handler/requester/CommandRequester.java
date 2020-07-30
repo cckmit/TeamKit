@@ -1,9 +1,7 @@
 package org.team4u.command.domain.executor.handler.requester;
 
 
-import org.team4u.command.domain.config.CommandConfig;
 import org.team4u.command.domain.executor.CommandHandler;
-import org.team4u.command.domain.executor.CommandRequest;
 import org.team4u.command.domain.executor.CommandResponse;
 
 /**
@@ -15,8 +13,8 @@ public abstract class CommandRequester<Request, Response> implements CommandHand
 
     @Override
     public void handle(Context context) {
-        Response response = execute(toRequest(context.getConfig(), context.getRequest()));
-        context.setResponse(toCommandResponse(context.getConfig(), response));
+        Response response = execute(toRequest(context));
+        context.setResponse(toCommandResponse(context, response));
     }
 
     /**
@@ -30,18 +28,17 @@ public abstract class CommandRequester<Request, Response> implements CommandHand
     /**
      * 将命令请求转换为请求者特定的请求对象
      *
-     * @param config         命令配置
-     * @param commandRequest 命令请求
+     * @param context 命令上下文
      * @return 请求者特定的请求对象
      */
-    protected abstract Request toRequest(CommandConfig config, CommandRequest commandRequest);
+    protected abstract Request toRequest(Context context);
 
     /**
      * 将请求者特定的响应对象转换命令对象
      *
-     * @param config   命令配置
+     * @param context  命令上下文
      * @param response 请求者特定的响应对象
      * @return 请求者特定的请求对象
      */
-    protected abstract CommandResponse toCommandResponse(CommandConfig config, Response response);
+    protected abstract CommandResponse toCommandResponse(Context context, Response response);
 }

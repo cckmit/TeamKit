@@ -5,7 +5,7 @@ import org.team4u.command.domain.executor.CommandExecutor;
 import org.team4u.command.domain.executor.handler.CommandLogHandler;
 import org.team4u.command.infrastructure.executor.AbstractCommandExecutorTest;
 import org.team4u.command.infrastructure.executor.MockCommandLogRepository;
-import org.team4u.command.infrastructure.executor.MockHttpCommandHandler;
+import org.team4u.command.infrastructure.executor.MockHttpCommandRequester;
 
 public class CamelCommandExecutorTest extends AbstractCommandExecutorTest {
 
@@ -19,7 +19,7 @@ public class CamelCommandExecutorTest extends AbstractCommandExecutorTest {
 
         public MockRoutersBuilder() {
             super(
-                    new MockHttpCommandHandler(null),
+                    new MockHttpCommandRequester(null),
                     new CommandLogHandler(new MockCommandLogRepository())
             );
         }

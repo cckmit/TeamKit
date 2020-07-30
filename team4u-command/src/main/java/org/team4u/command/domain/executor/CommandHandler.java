@@ -1,6 +1,8 @@
 package org.team4u.command.domain.executor;
 
 
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.lang.Dict;
 import org.team4u.base.filter.Filter;
 import org.team4u.base.filter.FilterInvoker;
 import org.team4u.command.domain.config.CommandConfig;
@@ -33,6 +35,8 @@ public interface CommandHandler extends Filter<CommandHandler.Context> {
 
         private CommandResponse response;
 
+        private final Dict extraAttributes = new Dict();
+
         public Context(CommandConfig config, CommandRequest request) {
             this.config = config;
             this.request = request;
@@ -53,6 +57,14 @@ public interface CommandHandler extends Filter<CommandHandler.Context> {
         public Context setResponse(CommandResponse response) {
             this.response = response;
             return this;
+        }
+
+        public void setExtraAttribute(String key, Object value) {
+            extraAttributes.set(key, value);
+        }
+
+        public <V> V extraAttribute(String key, Class<V> valueType) {
+            return Convert.convert(valueType, extraAttributes.get(key));
         }
     }
 }

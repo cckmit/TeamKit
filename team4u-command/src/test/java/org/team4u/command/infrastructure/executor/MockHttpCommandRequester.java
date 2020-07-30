@@ -4,15 +4,15 @@ package org.team4u.command.infrastructure.executor;
 import org.team4u.command.domain.config.CommandConfig;
 import org.team4u.command.domain.executor.CommandRequest;
 import org.team4u.command.domain.executor.CommandResponse;
-import org.team4u.command.domain.executor.handler.requester.http.HttpCommandHandler;
+import org.team4u.command.domain.executor.handler.requester.http.HttpCommandRequester;
 import org.team4u.command.domain.executor.handler.requester.http.HttpRequester;
 
-public class MockHttpCommandHandler extends HttpCommandHandler {
+public class MockHttpCommandRequester extends HttpCommandRequester {
 
     private CommandConfig config;
     private CommandRequest request;
 
-    public MockHttpCommandHandler(HttpRequester httpRequester) {
+    public MockHttpCommandRequester(HttpRequester httpRequester) {
         super(httpRequester);
     }
 
@@ -30,14 +30,14 @@ public class MockHttpCommandHandler extends HttpCommandHandler {
     }
 
     @Override
-    protected HttpRequester.HttpRequest toRequest(CommandConfig config, CommandRequest commandRequest) {
-        this.config = config;
-        this.request = commandRequest;
+    protected HttpRequester.HttpRequest toRequest(Context context) {
+        this.config = context.getConfig();
+        this.request = context.getRequest();
         return null;
     }
 
     @Override
-    protected CommandResponse toCommandResponse(CommandConfig config, HttpRequester.HttpResponse httpResponse) {
-        return new MockCommandResponse().setChannelCode(request.getCommandId());
+    protected CommandResponse toCommandResponse(Context context, HttpRequester.HttpResponse httpResponse) {
+        return new MockCommandResponse().setChannelCode(context.getRequest().getCommandId());
     }
 }
