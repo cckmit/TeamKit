@@ -1,8 +1,6 @@
 package org.team4u.command.infrastructure.executor;
 
-import org.team4u.command.domain.executor.CommandResponse;
-
-public class MockCommandResponse implements CommandResponse {
+public class MockCommandResponse {
 
     /**
      * 标准响应码

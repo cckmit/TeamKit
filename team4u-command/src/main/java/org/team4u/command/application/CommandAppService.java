@@ -3,8 +3,6 @@ package org.team4u.command.application;
 import org.team4u.command.domain.config.CommandConfig;
 import org.team4u.command.domain.config.CommandConfigRepository;
 import org.team4u.command.domain.executor.CommandExecutor;
-import org.team4u.command.domain.executor.CommandRequest;
-import org.team4u.command.domain.executor.CommandResponse;
 
 /**
  * 命令应用服务
@@ -28,8 +26,9 @@ public class CommandAppService {
      * @param request 命令请求
      * @return 命令响应
      */
-    public CommandResponse execute(CommandRequest request) {
-        CommandConfig config = commandConfigRepository.configOf(request.getCommandId());
-        return commandExecutor.execute(config, request);
+    public <Response> Response execute(String commandId, Object request) {
+        CommandConfig config = commandConfigRepository.configOf(commandId);
+        //noinspection unchecked
+        return (Response) commandExecutor.execute(config, request);
     }
 }

@@ -11,6 +11,10 @@ import java.util.Map;
  * @author jay.wu
  */
 public class CommandConfig {
+    /**
+     * 命令标识
+     */
+    public final String commandId;
 
     /**
      * 命令配置明细项
@@ -20,7 +24,8 @@ public class CommandConfig {
      */
     private final Map<String, Dict> items;
 
-    public CommandConfig(Map<String, Dict> items) {
+    public CommandConfig(String commandId, Map<String, Dict> items) {
+        this.commandId = commandId;
         this.items = items;
     }
 
@@ -34,5 +39,9 @@ public class CommandConfig {
      */
     public <T> T itemOf(String itemId, Class<T> configType) {
         return BeanUtil.toBean(items.get(itemId), configType);
+    }
+
+    public String getCommandId() {
+        return commandId;
     }
 }

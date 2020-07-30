@@ -21,7 +21,7 @@ public abstract class AbstractCommandRoutesBuilder extends RouteBuilder implemen
     public void configure() {
         bindToRegistry();
 
-        from(startUri()).to("bean:commandRequester");
+        from(startUri()).to("bean:commandRequester?method=handle");
     }
 
     public CommandHandler getCommandRequester() {

@@ -2,7 +2,6 @@ package org.team4u.command.domain.executor.handler.requester;
 
 
 import org.team4u.command.domain.executor.CommandHandler;
-import org.team4u.command.domain.executor.CommandResponse;
 
 /**
  * 命令请求者
@@ -40,5 +39,5 @@ public abstract class CommandRequester<Request, Response> implements CommandHand
      * @param response 请求者特定的响应对象
      * @return 请求者特定的请求对象
      */
-    protected abstract CommandResponse toCommandResponse(Context context, Response response);
+    protected abstract Object toCommandResponse(Context context, Response response);
 }

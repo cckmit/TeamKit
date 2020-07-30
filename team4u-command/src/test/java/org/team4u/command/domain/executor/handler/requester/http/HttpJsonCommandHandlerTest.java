@@ -9,7 +9,7 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.team4u.command.TestUtil;
 import org.team4u.command.domain.executor.CommandHandler;
-import org.team4u.command.domain.executor.CommandRequest;
+import org.team4u.command.infrastructure.executor.MockCommandRequest;
 import org.team4u.command.infrastructure.executor.MockCommandResponse;
 
 /**
@@ -40,7 +40,7 @@ public class HttpJsonCommandHandlerTest {
 
         CommandHandler.Context context = new CommandHandler.Context(
                 TestUtil.configOf("test_command.json"),
-                new CommandRequest(null, null, null)
+                new MockCommandRequest(null)
         );
 
         handler.handle(context);

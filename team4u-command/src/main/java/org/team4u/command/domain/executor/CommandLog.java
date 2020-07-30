@@ -14,11 +14,11 @@ public class CommandLog extends AggregateRoot {
     /**
      * 命令请求
      */
-    private CommandRequest request;
+    private Object request;
     /**
      * 命令响应
      */
-    private CommandResponse response;
+    private Object response;
     /**
      * 创建时间
      */
@@ -28,24 +28,26 @@ public class CommandLog extends AggregateRoot {
      */
     private Date updateTime;
 
-    public CommandLog(CommandRequest request) {
+    public CommandLog(Object request) {
         this.request = request;
     }
 
-    public CommandRequest getRequest() {
-        return request;
+    @SuppressWarnings("unchecked")
+    public <Request> Request getRequest() {
+        return (Request) request;
     }
 
-    public CommandLog setRequest(CommandRequest request) {
+    public CommandLog setRequest(Object request) {
         this.request = request;
         return this;
     }
 
-    public CommandResponse getResponse() {
-        return response;
+    @SuppressWarnings("unchecked")
+    public <Response> Response getResponse() {
+        return (Response) response;
     }
 
-    public CommandLog setResponse(CommandResponse response) {
+    public CommandLog setResponse(Object response) {
         this.response = response;
         return this;
     }

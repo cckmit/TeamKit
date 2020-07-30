@@ -9,8 +9,6 @@ import org.team4u.base.lang.IdObjectService;
 import org.team4u.command.domain.config.CommandConfig;
 import org.team4u.command.domain.executor.CommandExecutor;
 import org.team4u.command.domain.executor.CommandHandler;
-import org.team4u.command.domain.executor.CommandRequest;
-import org.team4u.command.domain.executor.CommandResponse;
 
 import java.util.HashMap;
 import java.util.List;
@@ -47,17 +45,17 @@ public class CamelCommandExecutor extends IdObjectService<String, CommandRoutesB
     }
 
     @Override
-    public CommandResponse execute(CommandConfig config, CommandRequest request) {
-        CamelContext camelContext = contexts.get(request.getCommandId());
+    public Object execute(CommandConfig config, Object request) {
+        CamelContext camelContext = contexts.get(config.getCommandId());
         if (camelContext == null) {
-            throw new SystemDataNotExistException("commandId=" + request.getCommandId());
+            throw new SystemDataNotExistException("commandId=" + config.getCommandId());
         }
 
         CommandHandler.Context handlerContext = new CommandHandler.Context(config, request);
         camelContext
                 .createProducerTemplate()
                 .sendBody(
-                        "direct:" + request.getCommandId(),
+                        "direct:" + config.getCommandId(),
                         ExchangePattern.InOut,
                         handlerContext
                 );

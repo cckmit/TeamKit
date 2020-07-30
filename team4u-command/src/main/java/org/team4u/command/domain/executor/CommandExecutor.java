@@ -17,5 +17,5 @@ public interface CommandExecutor {
      * @param request 命令请求
      * @return 命令响应
      */
-    CommandResponse execute(CommandConfig config, CommandRequest request);
+    Object execute(CommandConfig config, Object request);
 }

@@ -31,13 +31,13 @@ public interface CommandHandler extends Filter<CommandHandler.Context> {
 
         private final CommandConfig config;
 
-        private final CommandRequest request;
+        private final Object request;
 
-        private CommandResponse response;
+        private Object response;
 
         private final Dict extraAttributes = new Dict();
 
-        public Context(CommandConfig config, CommandRequest request) {
+        public Context(CommandConfig config, Object request) {
             this.config = config;
             this.request = request;
         }
@@ -46,15 +46,17 @@ public interface CommandHandler extends Filter<CommandHandler.Context> {
             return config;
         }
 
-        public CommandRequest getRequest() {
-            return request;
+        @SuppressWarnings("unchecked")
+        public <Request> Request getRequest() {
+            return (Request) request;
         }
 
-        public CommandResponse getResponse() {
-            return response;
+        @SuppressWarnings("unchecked")
+        public <Response> Response getResponse() {
+            return (Response) response;
         }
 
-        public Context setResponse(CommandResponse response) {
+        public Context setResponse(Object response) {
             this.response = response;
             return this;
         }

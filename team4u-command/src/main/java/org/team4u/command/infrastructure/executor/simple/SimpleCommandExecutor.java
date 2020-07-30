@@ -7,9 +7,6 @@ import org.team4u.base.lang.IdObjectService;
 import org.team4u.command.domain.config.CommandConfig;
 import org.team4u.command.domain.executor.CommandExecutor;
 import org.team4u.command.domain.executor.CommandHandler;
-import org.team4u.command.domain.executor.CommandRequest;
-import org.team4u.command.domain.executor.CommandResponse;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,10 +34,10 @@ public class SimpleCommandExecutor extends IdObjectService<String, CommandRoutes
     }
 
     @Override
-    public CommandResponse execute(CommandConfig config, CommandRequest request) {
-        FilterChain<CommandHandler.Context> filterChain = filterChainMap.get(request.getCommandId());
+    public Object execute(CommandConfig config, Object request) {
+        FilterChain<CommandHandler.Context> filterChain = filterChainMap.get(config.getCommandId());
         if (filterChain == null) {
-            throw new SystemDataNotExistException("commandId=" + request.getCommandId());
+            throw new SystemDataNotExistException("commandId=" + config.getCommandId());
         }
 
         CommandHandler.Context handlerContext = new CommandHandler.Context(config, request);

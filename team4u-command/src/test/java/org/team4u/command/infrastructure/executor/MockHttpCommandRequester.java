@@ -2,15 +2,13 @@ package org.team4u.command.infrastructure.executor;
 
 
 import org.team4u.command.domain.config.CommandConfig;
-import org.team4u.command.domain.executor.CommandRequest;
-import org.team4u.command.domain.executor.CommandResponse;
 import org.team4u.command.domain.executor.handler.requester.http.HttpCommandRequester;
 import org.team4u.command.domain.executor.handler.requester.http.HttpRequester;
 
 public class MockHttpCommandRequester extends HttpCommandRequester {
 
     private CommandConfig config;
-    private CommandRequest request;
+    private MockCommandRequest request;
 
     public MockHttpCommandRequester(HttpRequester httpRequester) {
         super(httpRequester);
@@ -20,7 +18,7 @@ public class MockHttpCommandRequester extends HttpCommandRequester {
         return config;
     }
 
-    public CommandRequest getRequest() {
+    public MockCommandRequest getRequest() {
         return request;
     }
 
@@ -37,7 +35,7 @@ public class MockHttpCommandRequester extends HttpCommandRequester {
     }
 
     @Override
-    protected CommandResponse toCommandResponse(Context context, HttpRequester.HttpResponse httpResponse) {
-        return new MockCommandResponse().setChannelCode(context.getRequest().getCommandId());
+    protected Object toCommandResponse(Context context, HttpRequester.HttpResponse httpResponse) {
+        return new MockCommandResponse().setChannelCode(context.getConfig().getCommandId());
     }
 }

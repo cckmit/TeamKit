@@ -9,8 +9,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.team4u.command.domain.config.CommandConfig;
 import org.team4u.command.domain.config.CommandConfigRepository;
 import org.team4u.command.domain.executor.CommandExecutor;
-import org.team4u.command.domain.executor.CommandRequest;
-import org.team4u.command.domain.executor.CommandResponse;
+import org.team4u.command.infrastructure.executor.MockCommandRequest;
 import org.team4u.command.infrastructure.executor.MockCommandResponse;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -25,15 +24,15 @@ public class CommandAppServiceTest {
     public void execute() {
         String commandId = "test";
 
-        CommandConfig commandConfig = new CommandConfig(null);
-        CommandRequest commandRequest = new CommandRequest(null, null, commandId);
-        CommandResponse commandResponse = new MockCommandResponse();
+        CommandConfig commandConfig = new CommandConfig(commandId, null);
+        MockCommandRequest commandRequest = new MockCommandRequest(commandId);
+        MockCommandResponse commandResponse = new MockCommandResponse();
 
         Mockito.when(configRepository.configOf(commandId)).thenReturn(commandConfig);
         Mockito.when(commandExecutor.execute(commandConfig, commandRequest)).thenReturn(commandResponse);
 
         CommandAppService appService = new CommandAppService(commandExecutor, configRepository);
-        CommandResponse acr = appService.execute(commandRequest);
+        MockCommandResponse acr = appService.execute(commandId, commandRequest);
 
         Assert.assertEquals(commandResponse, acr);
     }

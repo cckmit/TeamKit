@@ -25,7 +25,7 @@ public abstract class AbstractTraceableCommandRoutesBuilder extends AbstractComm
 
         from(startUri())
                 .to("bean:commandLogHandler")
-                .to("bean:commandRequester")
+                .to("bean:commandRequester?method=handle")
                 .to("bean:commandLogHandler");
     }
 
