@@ -28,12 +28,19 @@ public class CommandAppServiceTest {
         MockCommandRequest commandRequest = new MockCommandRequest(commandId);
         MockCommandResponse commandResponse = new MockCommandResponse();
 
-        Mockito.when(configRepository.configOf(commandId)).thenReturn(commandConfig);
-        Mockito.when(commandExecutor.execute(commandConfig, commandRequest)).thenReturn(commandResponse);
-
-        CommandAppService appService = new CommandAppService(commandExecutor, configRepository);
-        MockCommandResponse acr = appService.execute(commandId, commandRequest);
+        MockCommandResponse acr = appService(
+                commandConfig,
+                commandRequest,
+                commandResponse
+        ).execute(commandId, commandRequest);
 
         Assert.assertEquals(commandResponse, acr);
+    }
+
+    private CommandAppService appService(CommandConfig config, MockCommandRequest request, MockCommandResponse response) {
+        Mockito.when(configRepository.configOf(config.getCommandId())).thenReturn(config);
+        Mockito.when(commandExecutor.execute(config, request)).thenReturn(response);
+
+        return new CommandAppService(commandExecutor, configRepository);
     }
 }

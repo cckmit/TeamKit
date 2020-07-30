@@ -15,6 +15,7 @@ public class JsonCommandConfigRepositoryTest {
     @Test
     public void configOf() {
         CommandConfig commandConfig = TestUtil.configOf("test_command.json");
+        Assert.assertEquals("test", commandConfig.getCommandId());
 
         JsonExtractor.ExtractConfig extractConfig = commandConfig.itemOf(
                 "jsonExtractor",
