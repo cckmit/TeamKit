@@ -5,6 +5,8 @@ import org.team4u.command.domain.executor.CommandHandler;
 import org.team4u.command.domain.executor.CommandLog;
 import org.team4u.command.domain.executor.CommandLogRepository;
 
+import java.util.Date;
+
 /**
  * 命令日志处理器
  *
@@ -20,8 +22,14 @@ public class CommandLogHandler implements CommandHandler {
 
     @Override
     public void handle(Context context) {
-        CommandLog commandLog = new CommandLog(context.getRequest());
-        commandLog.setResponse(context.getResponse());
+        CommandLog commandLog = new CommandLog(context.getRequest())
+                .setUpdateTime(new Date());
+
+        if (context.getResponse() == null) {
+            commandLog.setCreateTime(new Date());
+        } else {
+            commandLog.setResponse(context.getResponse());
+        }
         commandLogRepository.save(commandLog);
     }
 }

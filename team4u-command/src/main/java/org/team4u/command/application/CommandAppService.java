@@ -27,8 +27,17 @@ public class CommandAppService {
      * @return 命令响应
      */
     public <Response> Response execute(String commandId, Object request) {
-        CommandConfig config = commandConfigRepository.configOf(commandId);
         //noinspection unchecked
-        return (Response) commandExecutor.execute(config, request);
+        return (Response) commandExecutor.execute(commandConfigOf(commandId), request);
+    }
+
+    /**
+     * 获取命令配置
+     *
+     * @param commandId 命令标识
+     * @return 命令配置
+     */
+    public CommandConfig commandConfigOf(String commandId) {
+        return commandConfigRepository.configOf(commandId);
     }
 }
