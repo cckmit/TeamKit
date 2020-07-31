@@ -22,7 +22,7 @@ public class CommandLogHandler implements CommandHandler {
 
     @Override
     public void handle(Context context) {
-        CommandLog commandLog = new CommandLog(context.getRequest())
+        CommandLog commandLog = newCommandLog(context.getRequest())
                 .setUpdateTime(new Date());
 
         if (context.getResponse() == null) {
@@ -31,5 +31,9 @@ public class CommandLogHandler implements CommandHandler {
             commandLog.setResponse(context.getResponse());
         }
         commandLogRepository.save(commandLog);
+    }
+
+    protected CommandLog newCommandLog(Context context) {
+        return new CommandLog(context.getRequest());
     }
 }
