@@ -1,7 +1,7 @@
 package org.team4u.command.infrastructure.executor;
 
-import org.team4u.command.domain.executor.CommandLog;
-import org.team4u.command.domain.executor.CommandLogRepository;
+import org.team4u.command.domain.executor.handler.log.CommandLog;
+import org.team4u.command.domain.executor.handler.log.CommandLogRepository;
 
 
 public class MockCommandLogRepository implements CommandLogRepository {

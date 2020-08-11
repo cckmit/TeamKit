@@ -8,7 +8,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.team4u.command.TestUtil;
-import org.team4u.command.domain.executor.CommandHandler;
+import org.team4u.command.domain.executor.handler.CommandHandler;
 import org.team4u.command.infrastructure.executor.MockCommandRequest;
 import org.team4u.command.infrastructure.executor.MockCommandResponse;
 

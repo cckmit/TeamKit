@@ -10,7 +10,7 @@ public interface CommandConfigRepository {
     /**
      * 获取命令配置
      *
-     * @param id 配置标识
+     * @param id 命令标识
      * @return 命令配置
      */
     CommandConfig configOf(String id);

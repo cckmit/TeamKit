@@ -1,6 +1,6 @@
 package org.team4u.command.infrastructure.executor.camel;
 
-import org.team4u.command.domain.executor.handler.CommandLogHandler;
+import org.team4u.command.domain.executor.handler.log.CommandLogHandler;
 import org.team4u.command.domain.executor.handler.requester.CommandRequester;
 
 /**

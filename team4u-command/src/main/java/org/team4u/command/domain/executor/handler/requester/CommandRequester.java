@@ -1,7 +1,7 @@
 package org.team4u.command.domain.executor.handler.requester;
 
 
-import org.team4u.command.domain.executor.CommandHandler;
+import org.team4u.command.domain.executor.handler.CommandHandler;
 
 /**
  * 命令请求者

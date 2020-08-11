@@ -6,7 +6,7 @@ import org.team4u.base.filter.FilterChainFactory;
 import org.team4u.base.lang.IdObjectService;
 import org.team4u.command.domain.config.CommandConfig;
 import org.team4u.command.domain.executor.CommandExecutor;
-import org.team4u.command.domain.executor.CommandHandler;
+import org.team4u.command.domain.executor.handler.CommandHandler;
 
 import java.util.HashMap;
 import java.util.List;

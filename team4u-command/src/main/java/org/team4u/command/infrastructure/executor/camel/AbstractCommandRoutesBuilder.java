@@ -1,7 +1,7 @@
 package org.team4u.command.infrastructure.executor.camel;
 
 import org.apache.camel.builder.RouteBuilder;
-import org.team4u.command.domain.executor.CommandHandler;
+import org.team4u.command.domain.executor.handler.CommandHandler;
 import org.team4u.command.domain.executor.handler.requester.CommandRequester;
 
 /**

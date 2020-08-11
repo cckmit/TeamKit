@@ -2,7 +2,7 @@ package org.team4u.command.infrastructure.executor.camel;
 
 import cn.hutool.core.collection.CollUtil;
 import org.team4u.command.domain.executor.CommandExecutor;
-import org.team4u.command.domain.executor.handler.CommandLogHandler;
+import org.team4u.command.domain.executor.handler.log.CommandLogHandler;
 import org.team4u.command.infrastructure.executor.AbstractCommandExecutorTest;
 import org.team4u.command.infrastructure.executor.MockCommandLogRepository;
 import org.team4u.command.infrastructure.executor.MockHttpCommandRequester;

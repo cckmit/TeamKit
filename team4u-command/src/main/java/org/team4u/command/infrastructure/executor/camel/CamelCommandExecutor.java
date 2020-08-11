@@ -8,7 +8,7 @@ import org.team4u.base.error.SystemException;
 import org.team4u.base.lang.IdObjectService;
 import org.team4u.command.domain.config.CommandConfig;
 import org.team4u.command.domain.executor.CommandExecutor;
-import org.team4u.command.domain.executor.CommandHandler;
+import org.team4u.command.domain.executor.handler.CommandHandler;
 
 import java.util.HashMap;
 import java.util.List;
@@ -45,7 +45,7 @@ public class CamelCommandExecutor extends IdObjectService<String, CommandRoutesB
     }
 
     @Override
-    public Object execute(String commandId, CommandConfig config, Object request) {
+    public Object execute(String commandId, CommandConfig config, Object  request) {
         CamelContext camelContext = contexts.get(commandId);
         if (camelContext == null) {
             throw new SystemDataNotExistException("commandId=" + commandId);
