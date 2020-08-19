@@ -16,6 +16,7 @@
         <module>team4u-selector</module>
         <module>team4u-command</module>
         <module>team4u-notification</module>
+        <module>team4u-config</module>
     </modules>
 
     <properties>

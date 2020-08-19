@@ -18,7 +18,7 @@ import java.util.concurrent.ExecutorService;
  */
 public abstract class AbstractMessageConsumer<M> implements MessageConsumer<M> {
 
-    protected final Log log = LogFactory.get();
+    protected final Log log = LogFactory.get(this.getClass());
 
     /**
      * 队列堆积任务超过阈值未处理，丢弃处理
