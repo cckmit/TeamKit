@@ -1,4 +1,4 @@
-package org.team4u.notification.infrastructure.jike;
+package org.team4u.notification.infrastructure.kz;
 
 import cn.hutool.core.util.IdUtil;
 import org.junit.Assert;
