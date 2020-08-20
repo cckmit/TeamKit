@@ -68,8 +68,7 @@ public class CacheableSimpleConfigRepository implements SimpleConfigRepository {
         if (oldConfig == null) {
             if (newConfig != null) {
                 newConfig.create();
-                DomainEventPublisher.instance().publishAll(newConfig.events());
-                newConfig.clearEvents();
+                publishEvent(newConfig);
             }
 
             return;
@@ -77,41 +76,41 @@ public class CacheableSimpleConfigRepository implements SimpleConfigRepository {
 
         if (newConfig == null) {
             oldConfig.delete();
-            DomainEventPublisher.instance().publishAll(oldConfig.events());
-            oldConfig.clearEvents();
+            publishEvent(oldConfig);
             return;
         }
 
         if (!oldConfig.getEnabled() && newConfig.getEnabled()) {
             oldConfig.enable(newConfig.getUpdatedBy());
-            DomainEventPublisher.instance().publishAll(oldConfig.events());
-            oldConfig.clearEvents();
+            publishEvent(oldConfig);
             return;
         }
 
         if (oldConfig.getEnabled() && !newConfig.getEnabled()) {
             oldConfig.disable(newConfig.getUpdatedBy());
-            DomainEventPublisher.instance().publishAll(oldConfig.events());
+            publishEvent(oldConfig);
             return;
         }
 
         if (!StrUtil.equals(oldConfig.getConfigValue(), newConfig.getConfigValue())) {
             oldConfig.changeConfigValue(newConfig.getConfigValue(), newConfig.getUpdatedBy());
-            DomainEventPublisher.instance().publishAll(oldConfig.events());
+            publishEvent(oldConfig);
         }
 
         if (!StrUtil.equals(oldConfig.getDescription(), newConfig.getDescription())) {
             oldConfig.changeDescription(newConfig.getDescription(), newConfig.getUpdatedBy());
-            DomainEventPublisher.instance().publishAll(oldConfig.events());
+            publishEvent(oldConfig);
         }
 
         if (oldConfig.getSequenceNo() != newConfig.getSequenceNo()) {
             oldConfig.changeSequenceNo(newConfig.getSequenceNo(), newConfig.getUpdatedBy());
-            DomainEventPublisher.instance().publishAll(oldConfig.events());
+            publishEvent(oldConfig);
         }
+    }
 
-        oldConfig.clearEvents();
-        newConfig.clearEvents();
+    private void publishEvent(SimpleConfig config) {
+        DomainEventPublisher.instance().publishAll(config.events());
+        config.clearEvents();
     }
 
     private boolean isExpired() {
