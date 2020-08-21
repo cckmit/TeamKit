@@ -2,7 +2,7 @@ package org.team4u.config.infrastructure.persistence;
 
 import org.team4u.config.domain.SimpleConfig;
 import org.team4u.config.domain.SimpleConfigRepository;
-import org.team4u.config.domain.SimpleDiffComparator;
+import org.team4u.config.domain.SimpleConfigComparator;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ public class CacheableSimpleConfigRepository implements SimpleConfigRepository {
 
     private final Config config;
 
-    private final SimpleDiffComparator simpleDiffComparator;
+    private final SimpleConfigComparator simpleConfigComparator;
 
     private final SimpleConfigRepository delegateConfigRepository;
 
@@ -20,7 +20,7 @@ public class CacheableSimpleConfigRepository implements SimpleConfigRepository {
     public CacheableSimpleConfigRepository(Config config, SimpleConfigRepository delegateConfigRepository) {
         this.config = config;
         this.delegateConfigRepository = delegateConfigRepository;
-        this.simpleDiffComparator = new SimpleDiffComparator();
+        this.simpleConfigComparator = new SimpleConfigComparator();
 
         refresh();
     }
@@ -32,7 +32,7 @@ public class CacheableSimpleConfigRepository implements SimpleConfigRepository {
 
             refresh();
 
-            simpleDiffComparator.compare(oldConfigs, allConfigs);
+            simpleConfigComparator.compare(oldConfigs, allConfigs);
         }
 
         return allConfigs;

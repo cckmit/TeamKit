@@ -5,7 +5,7 @@ import org.team4u.ddd.domain.model.DomainEventPublisher;
 
 import java.util.List;
 
-public class SimpleDiffComparator {
+public class SimpleConfigComparator {
 
     public void compare(List<SimpleConfig> oldConfigs, List<SimpleConfig> newConfigs) {
         for (SimpleConfig oldConfig : oldConfigs) {
