@@ -20,7 +20,7 @@ public class CommandLogHandler implements CommandHandler {
 
     @Override
     public void handle(Context context) {
-        CommandLog commandLog = commandLogRepository.logOf(context.getCommandId());
+        CommandLog commandLog = commandLogRepository.logOf(context.getCommandLogId());
 
         if (commandLog == null) {
             commandLog = newCommandLog(context)

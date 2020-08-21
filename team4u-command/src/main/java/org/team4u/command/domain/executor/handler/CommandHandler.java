@@ -29,6 +29,8 @@ public interface CommandHandler extends Filter<CommandHandler.Context> {
 
     class Context {
 
+        private String commandLogId;
+
         private final String commandId;
 
         private final CommandConfig config;
@@ -43,6 +45,14 @@ public interface CommandHandler extends Filter<CommandHandler.Context> {
             this.commandId = commandId;
             this.config = config;
             this.request = request;
+        }
+
+        public String getCommandLogId() {
+            return commandLogId;
+        }
+
+        public void setCommandLogId(String commandLogId) {
+            this.commandLogId = commandLogId;
         }
 
         public String getCommandId() {

@@ -18,7 +18,7 @@ import static org.team4u.config.TestUtil.c;
 
 public class CacheableSimpleConfigRepositoryTest {
 
-    private ConfigEventConsumer configEventConsumer = new ConfigEventConsumer();
+    private final ConfigEventConsumer configEventConsumer = new ConfigEventConsumer();
 
     public CacheableSimpleConfigRepositoryTest() {
         DomainEventPublisher.instance().subscribe(configEventConsumer);
