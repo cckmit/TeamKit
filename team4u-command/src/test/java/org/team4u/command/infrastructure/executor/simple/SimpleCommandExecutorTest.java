@@ -6,6 +6,7 @@ import org.team4u.command.domain.executor.handler.log.CommandLogHandler;
 import org.team4u.command.infrastructure.executor.AbstractCommandExecutorTest;
 import org.team4u.command.infrastructure.executor.MockCommandLogRepository;
 import org.team4u.command.infrastructure.executor.MockHttpCommandRequester;
+import org.team4u.command.infrastructure.executor.MockHttpRequester;
 
 public class SimpleCommandExecutorTest extends AbstractCommandExecutorTest {
 
@@ -18,7 +19,7 @@ public class SimpleCommandExecutorTest extends AbstractCommandExecutorTest {
 
         public MockRoutersBuilder() {
             super(
-                    new MockHttpCommandRequester(null),
+                    new MockHttpCommandRequester(new MockHttpRequester()),
                     new CommandLogHandler(new MockCommandLogRepository())
             );
         }

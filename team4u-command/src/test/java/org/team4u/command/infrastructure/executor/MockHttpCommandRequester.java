@@ -23,19 +23,16 @@ public class MockHttpCommandRequester extends HttpCommandRequester {
     }
 
     @Override
-    public HttpRequester.HttpResponse execute(HttpRequester.HttpRequest request) {
-        return null;
-    }
-
-    @Override
     protected HttpRequester.HttpRequest toRequest(Context context) {
         this.config = context.getConfig();
         this.request = context.getRequest();
-        return null;
+        return new HttpRequester.HttpRequest().setBody(context.getCommandId());
     }
 
     @Override
     protected Object toCommandResponse(Context context, HttpRequester.HttpResponse httpResponse) {
-        return new MockCommandResponse().setChannelCode(context.getCommandId());
+        return new MockCommandResponse()
+                .setChannelCode(context.getCommandId())
+                .setChannelRawBody(context.getCommandId());
     }
 }

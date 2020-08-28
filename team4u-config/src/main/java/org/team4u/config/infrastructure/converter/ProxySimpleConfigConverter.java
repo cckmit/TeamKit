@@ -51,6 +51,16 @@ public class ProxySimpleConfigConverter implements SimpleConfigConverter {
     }
 
     @Override
+    public <T> T to(Type toType, String configType, String configKey) {
+        SimpleConfig config = filterConfig(allConfigs(), configType, configKey);
+        if (config == null || config.getConfigValue() == null) {
+            return null;
+        }
+
+        return JSONUtil.toBean(config.getConfigValue(), toType, false);
+    }
+
+    @Override
     public String to(String configType, String configKey) {
         SimpleConfig config = filterConfig(allConfigs(), configType, configKey);
         if (config == null) {

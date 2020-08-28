@@ -4,6 +4,8 @@ import org.team4u.config.domain.SimpleConfigConverter;
 import org.team4u.config.domain.SimpleConfigRepository;
 import org.team4u.config.infrastructure.converter.ProxySimpleConfigConverter;
 
+import java.lang.reflect.Type;
+
 public class SimpleConfigAppService {
 
     private final SimpleConfigConverter simpleConfigConverter;
@@ -17,6 +19,10 @@ public class SimpleConfigAppService {
     }
 
     public <T> T to(Class<T> toType, String configType, String configKey) {
+        return simpleConfigConverter.to(toType, configType, configKey);
+    }
+
+    public <T> T to(Type toType, String configType, String configKey) {
         return simpleConfigConverter.to(toType, configType, configKey);
     }
 

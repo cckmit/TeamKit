@@ -80,4 +80,16 @@ public class MockCommandResponse {
         this.channelRawBody = channelRawBody;
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "MockCommandResponse{" +
+                "standardCode='" + standardCode + '\'' +
+                ", channelCode='" + channelCode + '\'' +
+                ", channelMessage='" + channelMessage + '\'' +
+                ", subChannelCode='" + subChannelCode + '\'' +
+                ", subChannelMessage='" + subChannelMessage + '\'' +
+                ", channelRawBody=" + channelRawBody +
+                '}';
+    }
 }
