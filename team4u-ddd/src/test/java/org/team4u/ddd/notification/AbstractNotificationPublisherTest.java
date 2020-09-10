@@ -1,9 +1,6 @@
 package org.team4u.ddd.notification;
 
 import cn.hutool.core.collection.CollUtil;
-import org.team4u.ddd.event.EventSerializer;
-import org.team4u.ddd.event.EventStore;
-import org.team4u.ddd.event.StoredEvent;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,6 +8,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.team4u.ddd.TestUtil;
+import org.team4u.ddd.event.EventSerializer;
+import org.team4u.ddd.event.EventStore;
+import org.team4u.ddd.event.StoredEvent;
 
 import java.util.Date;
 import java.util.List;
@@ -28,8 +28,11 @@ public class AbstractNotificationPublisherTest {
     public void publish() {
         List<StoredEvent> storedEvents = CollUtil.newArrayList(
                 new StoredEvent(
-                        FakeDomainEvent.class.getName(), new Date(),
-                        EventSerializer.instance().serialize(new FakeDomainEvent(TestUtil.TEST_ID)), 10
+                        10,
+                        TestUtil.TEST_ID,
+                        FakeDomainEvent.class.getName(),
+                        new Date(),
+                        EventSerializer.instance().serialize(new FakeDomainEvent(TestUtil.TEST_ID))
                 )
         );
         Mockito.when(eventStore.allStoredEventsSince(0)).thenReturn(storedEvents);

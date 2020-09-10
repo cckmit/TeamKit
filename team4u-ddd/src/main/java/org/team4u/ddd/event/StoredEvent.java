@@ -9,16 +9,22 @@ import java.util.Date;
 
 public class StoredEvent extends IdentifiedValueObject {
 
-    private String eventBody;
     private long eventId;
+    private String domainId;
+    private String eventBody;
     private Date occurredOn;
     private String typeName;
 
-    public StoredEvent(String typeName, Date occurredOn, String eventBody, long eventId) {
+    public StoredEvent(long eventId,
+                       String domainId,
+                       String typeName,
+                       Date occurredOn,
+                       String eventBody) {
+        this.setEventId(eventId);
+        this.setDomainId(domainId);
         this.setTypeName(typeName);
         this.setOccurredOn(occurredOn);
         this.setEventBody(eventBody);
-        this.setEventId(eventId);
     }
 
     public String eventBody() {
@@ -81,5 +87,14 @@ public class StoredEvent extends IdentifiedValueObject {
     protected void setTypeName(String aTypeName) {
         Assert.notEmpty(aTypeName, "The event type name is required.");
         this.typeName = aTypeName;
+    }
+
+    public String domainId() {
+        return domainId;
+    }
+
+    protected StoredEvent setDomainId(String domainId) {
+        this.domainId = domainId;
+        return this;
     }
 }

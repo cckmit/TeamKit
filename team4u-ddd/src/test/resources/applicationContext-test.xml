@@ -7,5 +7,10 @@
        default-lazy-init="false">
 
     <context:annotation-config/>
-    <context:component-scan base-package="org.team4u.ddd.infrastructure"/>
+    <context:component-scan base-package="org.team4u.ddd.infrastructure.process"/>
+    <context:component-scan base-package="org.team4u.ddd.infrastructure.persistence"/>
+    <context:component-scan base-package="org.team4u.ddd.infrastructure.message"/>
+
+    <bean class="org.team4u.ddd.infrastructure.BeanConfig"/>
+
 </beans>

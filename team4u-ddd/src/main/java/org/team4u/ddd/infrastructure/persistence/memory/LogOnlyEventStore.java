@@ -20,6 +20,11 @@ public class LogOnlyEventStore implements EventStore {
     private final Log log = LogFactory.get();
 
     @Override
+    public List<StoredEvent> allStoredEventsOf(String domainId) {
+        return Collections.emptyList();
+    }
+
+    @Override
     public List<StoredEvent> allStoredEventsBetween(long lowStoredEventId, long highStoredEventId) {
         return Collections.emptyList();
     }

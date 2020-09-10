@@ -1,13 +1,13 @@
 package org.team4u.ddd.infrastructure.persistence.mybatis;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import org.springframework.dao.DuplicateKeyException;
+import org.team4u.base.error.IdempotentException;
+import org.team4u.base.id.IdentityFactory;
 import org.team4u.ddd.domain.model.DomainEvent;
 import org.team4u.ddd.event.EventSerializer;
 import org.team4u.ddd.event.EventStore;
 import org.team4u.ddd.event.StoredEvent;
-import org.springframework.dao.DuplicateKeyException;
-import org.team4u.base.error.IdempotentException;
-import org.team4u.base.id.IdentityFactory;
 
 import java.util.Date;
 import java.util.List;
@@ -23,6 +23,13 @@ public class MybatisEventStore implements EventStore {
 
         this.mapper = mapper;
         this.identityFactory = identityFactory;
+    }
+
+    @Override
+    public List<StoredEvent> allStoredEventsOf(String domainId) {
+        return storedEventsFrom(mapper.selectList(new LambdaQueryWrapper<StoredEventEntity>()
+                .eq(StoredEventEntity::getDomainId, domainId)
+                .orderByAsc(StoredEventEntity::getEventId)));
     }
 
     @Override
@@ -49,10 +56,11 @@ public class MybatisEventStore implements EventStore {
 
     private StoredEvent storedEventFrom(StoredEventEntity entity) {
         return new StoredEvent(
+                entity.getEventId(),
+                entity.getDomainId(),
                 entity.getTypeName(),
                 entity.getOccurredOn(),
-                entity.getEventBody(),
-                entity.getEventId()
+                entity.getEventBody()
         );
     }
 
@@ -62,10 +70,11 @@ public class MybatisEventStore implements EventStore {
 
         StoredEvent storedEvent =
                 new StoredEvent(
+                        identityFactory.create(),
+                        domainEvent.getDomainId(),
                         domainEvent.getClass().getName(),
                         domainEvent.getOccurredOn(),
-                        eventSerialization,
-                        identityFactory.create()
+                        eventSerialization
                 );
 
         try {
@@ -82,6 +91,7 @@ public class MybatisEventStore implements EventStore {
     private StoredEventEntity storedEventEntityFrom(StoredEvent event) {
         StoredEventEntity entity = new StoredEventEntity();
         entity.setEventId(event.eventId());
+        entity.setDomainId(event.domainId());
         entity.setTypeName(event.typeName());
         entity.setEventBody(event.eventBody());
         entity.setOccurredOn(event.occurredOn());

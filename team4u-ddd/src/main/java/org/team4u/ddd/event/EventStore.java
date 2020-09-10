@@ -13,6 +13,14 @@ import java.util.List;
 public interface EventStore extends Closeable {
 
     /**
+     * 获取指定领域对象的所有存储事件集合
+     *
+     * @param domainId 领域对象标识
+     * @return 存储事件集合
+     */
+    List<StoredEvent> allStoredEventsOf(String domainId);
+
+    /**
      * 获取已存储的事件集合
      *
      * @param lowStoredEventId  最小存储的事件标识（包含）

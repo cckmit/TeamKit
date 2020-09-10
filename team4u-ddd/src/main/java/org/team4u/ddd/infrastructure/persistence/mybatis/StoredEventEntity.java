@@ -7,9 +7,11 @@ import java.util.Date;
 @TableName("stored_event")
 public class StoredEventEntity {
 
-    private String eventBody;
-
     private long eventId;
+
+    private String domainId;
+
+    private String eventBody;
 
     private Date occurredOn;
 
@@ -18,6 +20,15 @@ public class StoredEventEntity {
     private Date createTime;
 
     private Date updateTime;
+
+    public String getDomainId() {
+        return domainId;
+    }
+
+    public StoredEventEntity setDomainId(String domainId) {
+        this.domainId = domainId;
+        return this;
+    }
 
     public String getEventBody() {
         return eventBody;

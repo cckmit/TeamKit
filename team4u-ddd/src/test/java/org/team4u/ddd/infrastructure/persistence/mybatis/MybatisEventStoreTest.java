@@ -1,14 +1,15 @@
 package org.team4u.ddd.infrastructure.persistence.mybatis;
 
-import org.team4u.ddd.DbTest;
-import org.team4u.ddd.FakeLongIdentityFactory;
-import org.team4u.ddd.domain.model.AbstractDomainEvent;
-import org.team4u.ddd.event.EventStore;
-import org.team4u.ddd.event.StoredEvent;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.team4u.ddd.DbTest;
+import org.team4u.ddd.FakeLongIdentityFactory;
+import org.team4u.ddd.TestUtil;
+import org.team4u.ddd.domain.model.AbstractDomainEvent;
+import org.team4u.ddd.event.EventStore;
+import org.team4u.ddd.event.StoredEvent;
 
 import java.util.List;
 
@@ -20,6 +21,16 @@ public class MybatisEventStoreTest extends DbTest {
     @Before
     public void setUp() throws Exception {
         eventStore.removeStoredEventsBefore(Long.MAX_VALUE);
+    }
+
+    @Test
+    public void allStoredEventsOf() {
+        FakeLongIdentityFactory.getInstance().setId(1L);
+        appendEvent();
+
+        List<StoredEvent> events = eventStore.allStoredEventsOf(TestUtil.TEST_ID);
+        Assert.assertEquals(1, events.size());
+        checkEvent(events.get(0));
     }
 
     @Test
@@ -77,9 +88,10 @@ public class MybatisEventStoreTest extends DbTest {
     }
 
     private void checkEvent(StoredEvent storedEvent) {
+        Assert.assertEquals(TestUtil.TEST_ID, storedEvent.domainId());
         Assert.assertEquals(1L, storedEvent.eventId());
         Assert.assertEquals(TestEvent.class.getName(), storedEvent.typeName());
-        Assert.assertEquals("TEST_ID", storedEvent.toDomainEvent().getDomainId());
+        Assert.assertEquals(TestUtil.TEST_ID, storedEvent.toDomainEvent().getDomainId());
     }
 
     private StoredEvent appendEvent() {
@@ -89,7 +101,7 @@ public class MybatisEventStoreTest extends DbTest {
     public static class TestEvent extends AbstractDomainEvent {
 
         public TestEvent() {
-            super("TEST_ID");
+            super(TestUtil.TEST_ID);
         }
     }
 }
