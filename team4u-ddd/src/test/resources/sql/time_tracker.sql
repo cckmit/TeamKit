@@ -9,7 +9,7 @@ CREATE TABLE `time_constrained_process_tracker`
     `process_timed_out_event_type` VARCHAR(255)        NOT NULL DEFAULT '' COMMENT '超时时间类型',
     `timeout_occurs_on`            TIMESTAMP           NOT NULL DEFAULT '1970-01-01 23:59:59' COMMENT '超时时间',
     `retry_strategy_id`            VARCHAR(100)        NOT NULL DEFAULT '60' COMMENT '重试策略标识',
-    `retry_Count`                  INT(11)             NOT NULL DEFAULT '0' COMMENT '已重试次数',
+    `retry_count`                  INT(11)             NOT NULL DEFAULT '0' COMMENT '已重试次数',
     `version`                      BIGINT(20) unsigned NOT NULL DEFAULT 0 COMMENT '乐观锁版本',
     `create_time`                  TIMESTAMP           NOT NULL DEFAULT '1970-01-01 23:59:59' COMMENT '创建时间',
     `update_time`                  TIMESTAMP           NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
