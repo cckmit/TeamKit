@@ -1,15 +1,15 @@
 package org.team4u.ddd.infrastructure.persistence.mybatis;
 
 import cn.hutool.core.date.DateUtil;
+import org.junit.Assert;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.team4u.ddd.DbTest;
+import org.team4u.ddd.TestUtil;
 import org.team4u.ddd.process.ProcessTimedOutEvent;
 import org.team4u.ddd.process.TimeConstrainedProcessTracker;
 import org.team4u.ddd.process.TimeConstrainedProcessTrackerRepository;
 import org.team4u.ddd.process.strategy.FixedRetryStrategy;
-import org.junit.Assert;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.team4u.ddd.TestUtil;
 
 public class MybatisTimeConstrainedProcessTrackerRepositoryTest extends DbTest {
 
@@ -70,10 +70,10 @@ public class MybatisTimeConstrainedProcessTrackerRepositoryTest extends DbTest {
         Assert.assertEquals(TestUtil.TEST_ID, tracker.processId());
         Assert.assertEquals(TestUtil.TEST_ID, tracker.description());
         Assert.assertEquals(ProcessTimedOutEvent.class.getName(), tracker.processTimedOutEventType());
-        Assert.assertEquals(0, tracker.retryCount());
+        Assert.assertEquals(1, tracker.retryCount());
         Assert.assertNotNull(tracker.retryStrategy());
         Assert.assertEquals(1, tracker.retryIntervalSec());
-        Assert.assertEquals(DateUtil.parse("2020-04-07 00:00:01"), tracker.timeoutOccursOn());
+        Assert.assertEquals(DateUtil.parse("2020-04-07 00:00:02"), tracker.timeoutOccursOn());
         Assert.assertFalse(tracker.isProcessInformedOfTimeout());
         Assert.assertTrue(tracker.hasTimedOut());
         Assert.assertFalse(tracker.isCompleted());
@@ -90,7 +90,7 @@ public class MybatisTimeConstrainedProcessTrackerRepositoryTest extends DbTest {
     }
 
     private TimeConstrainedProcessTracker tracker(int intervalSec) {
-        return new TimeConstrainedProcessTracker(
+        TimeConstrainedProcessTracker tracker = new TimeConstrainedProcessTracker(
                 TestUtil.TEST_ID,
                 TestUtil.TEST_ID,
                 TestUtil.TEST_ID,
@@ -99,6 +99,8 @@ public class MybatisTimeConstrainedProcessTrackerRepositoryTest extends DbTest {
                         .setIntervalSec(intervalSec)
                         .setId("FIXED_" + intervalSec)),
                 ProcessTimedOutEvent.class.getName());
+        tracker.informProcessTimedOut();
+        return tracker;
     }
 
     @Override

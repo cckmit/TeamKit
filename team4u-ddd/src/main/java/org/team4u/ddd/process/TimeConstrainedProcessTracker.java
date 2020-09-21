@@ -85,7 +85,7 @@ public class TimeConstrainedProcessTracker extends ConcurrencySafeAggregateRoot 
     }
 
     public void completed() {
-        completed = true;
+        setCompleted(true);
     }
 
     public boolean isCompleted() {
@@ -172,7 +172,7 @@ public class TimeConstrainedProcessTracker extends ConcurrencySafeAggregateRoot 
     }
 
     private void incrementRetryCount() {
-        retryCount++;
+        setRetryCount(retryCount + 1);
     }
 
     public TimeConstrainedProcessTracker setRetryStrategy(RetryStrategy retryStrategy) {
@@ -241,5 +241,13 @@ public class TimeConstrainedProcessTracker extends ConcurrencySafeAggregateRoot 
 
     private boolean totalRetriesReached() {
         return retryCount() >= maxRetriesPermitted();
+    }
+
+    private void setCompleted(boolean completed) {
+        this.completed = completed;
+    }
+
+    private void setRetryCount(int retryCount) {
+        this.retryCount = retryCount;
     }
 }
