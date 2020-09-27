@@ -24,6 +24,8 @@ public interface RetryStrategy {
 
     /**
      * 获取最大允许重试次数
+     * <p>
+     * -1代表永久重试
      *
      * @return 最大允许重试次数
      */

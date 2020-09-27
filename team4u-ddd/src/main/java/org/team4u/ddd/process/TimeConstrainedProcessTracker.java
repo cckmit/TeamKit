@@ -240,6 +240,10 @@ public class TimeConstrainedProcessTracker extends ConcurrencySafeAggregateRoot 
     }
 
     private boolean totalRetriesReached() {
+        if (maxRetriesPermitted() == -1) {
+            return false;
+        }
+
         return retryCount() >= maxRetriesPermitted();
     }
 

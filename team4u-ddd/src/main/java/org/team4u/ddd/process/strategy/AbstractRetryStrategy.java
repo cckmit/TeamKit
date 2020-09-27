@@ -36,7 +36,7 @@ public abstract class AbstractRetryStrategy implements RetryStrategy {
         /**
          * 允许最大重试次数
          */
-        private int maxRetriesPermitted = Integer.MAX_VALUE;
+        private int maxRetriesPermitted = -1;
 
         public String getId() {
             return id;
