@@ -40,7 +40,7 @@ public class TrackerBeanConfig {
         RetryStrategyRepository retryStrategyRepository = FirstAvailableObjectProxy.newProxyInstance(
                 RetryStrategyRepository.class,
                 retryStrategyRepositories,
-                false
+                true
         );
         return new TimeConstrainedProcessTrackerAppService(
                 new MybatisTimeConstrainedProcessTrackerRepository(eventStore, mapper, retryStrategyRepository),
