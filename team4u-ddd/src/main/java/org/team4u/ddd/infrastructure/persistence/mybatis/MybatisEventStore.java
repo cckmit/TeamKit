@@ -66,15 +66,13 @@ public class MybatisEventStore implements EventStore {
 
     @Override
     public StoredEvent append(DomainEvent domainEvent) {
-        String eventSerialization = EventSerializer.instance().serialize(domainEvent);
-
         StoredEvent storedEvent =
                 new StoredEvent(
                         identityFactory.create(),
                         domainEvent.getDomainId(),
                         domainEvent.getClass().getName(),
                         domainEvent.getOccurredOn(),
-                        eventSerialization
+                        serializeDomainEvent(domainEvent)
                 );
 
         try {
@@ -98,6 +96,10 @@ public class MybatisEventStore implements EventStore {
         entity.setCreateTime(event.occurredOn());
         entity.setUpdateTime(event.occurredOn());
         return entity;
+    }
+
+    protected String serializeDomainEvent(DomainEvent domainEvent) {
+        return EventSerializer.instance().serialize(domainEvent);
     }
 
     @Override
