@@ -6,11 +6,11 @@ import org.team4u.ddd.serializer.Serializer;
 
 public class NotificationSerializer implements Serializer {
 
-    public static final NotificationSerializer instance = new NotificationSerializer();
+    public static final NotificationSerializer INSTANCE = new NotificationSerializer();
 
 
     public static NotificationSerializer instance() {
-        return instance;
+        return INSTANCE;
     }
 
     @Override
