@@ -1,0 +1,45 @@
+[
+  {
+    "nodeId": "created",
+    "nodeName": "已保存",
+    "nextNodeId": "createdActionNode"
+  },
+  {
+    "nodeId": "createdActionNode",
+    "nodeType": "ProcessActionChoiceNode",
+    "nodeName": "已保存动作选择器",
+    "actionNodes": [
+      {
+        "actionId": "save",
+        "nodeId": "created"
+      },
+      {
+        "actionId": "submit",
+        "nodeId": "pending"
+      }
+    ]
+  },
+  {
+    "nodeId": "pending",
+    "nodeName": "待审核",
+    "nodeType": "ProcessAssigneeNode",
+    "ruleType": "role",
+    "ruleExpression": "test",
+    "nextNodeId": "pendingActionNode"
+  },
+  {
+    "nodeId": "pendingActionNode",
+    "nodeType": "ProcessActionChoiceNode",
+    "nodeName": "待审核动作选择器",
+    "actionNodes": [
+      {
+        "actionId": "reject",
+        "nodeId": "rejected"
+      },
+      {
+        "actionId": "approve",
+        "nodeId": "completed"
+      }
+    ]
+  }
+]
