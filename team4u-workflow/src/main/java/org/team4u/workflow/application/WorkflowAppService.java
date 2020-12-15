@@ -9,6 +9,7 @@ import org.team4u.workflow.domain.definition.ProcessDefinition;
 import org.team4u.workflow.domain.definition.ProcessDefinitionRepository;
 import org.team4u.workflow.domain.definition.ProcessNode;
 import org.team4u.workflow.domain.definition.node.ActionChoiceNode;
+import org.team4u.workflow.domain.definition.node.StaticNode;
 import org.team4u.workflow.domain.instance.ProcessInstance;
 import org.team4u.workflow.domain.instance.ProcessInstanceRepository;
 import org.team4u.workflow.domain.instance.ProcessNodeHandlers;
@@ -66,21 +67,7 @@ public class WorkflowAppService {
      */
     public ProcessInstance start(StartProcessInstanceCommand command) {
         ProcessDefinition definition = processDefinitionRepository.domainOf(command.getProcessDefinitionId());
-        ProcessInstance instance;
-
-        if (StrUtil.isBlank(command.getProcessInstanceId())) {
-            // 新建流程
-            instance = ProcessInstance.create(
-                    IdUtil.fastUUID(),
-                    command.getProcessInstanceName(),
-                    command.getProcessDefinitionId(),
-                    command.getOperatorId(),
-                    definition.rootNode()
-            );
-        } else {
-            // 已有流程
-            instance = processInstanceOf(command.getProcessInstanceId());
-        }
+        ProcessInstance instance = toProcessInstance(command, definition.rootNode());
 
         Set<String> permissions = processPermissionService.operatorPermissionsOf(
                 new ProcessPermissionService.Context(
@@ -98,6 +85,22 @@ public class WorkflowAppService {
 
         processInstanceRepository.save(instance);
         return instance;
+    }
+
+    private ProcessInstance toProcessInstance(StartProcessInstanceCommand command, StaticNode rootNode) {
+        // 新建流程
+        if (StrUtil.isBlank(command.getProcessInstanceId())) {
+            return ProcessInstance.create(
+                    IdUtil.fastUUID(),
+                    command.getProcessInstanceName(),
+                    command.getProcessDefinitionId(),
+                    command.getOperatorId(),
+                    rootNode
+            );
+        }
+
+        // 已有流程
+        return processInstanceOf(command.getProcessInstanceId());
     }
 
     /**
