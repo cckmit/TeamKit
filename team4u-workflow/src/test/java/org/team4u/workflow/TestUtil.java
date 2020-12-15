@@ -17,6 +17,7 @@ import org.team4u.workflow.infrastructure.persistence.LocalConfigService;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -57,7 +58,7 @@ public class TestUtil {
                 definition,
                 action,
                 TEST,
-                Arrays.asList(permissions),
+                new HashSet<>(CollUtil.toList(permissions)),
                 TEST
         ).setNode(node);
     }

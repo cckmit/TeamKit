@@ -5,28 +5,28 @@
       "actionId": "save",
       "actionName": "保存",
       "requiredPermissions": [
-        "edit"
+        "EDIT"
       ]
     },
     {
       "actionId": "submit",
       "actionName": "提交",
       "requiredPermissions": [
-        "edit"
+        "EDIT"
       ]
     },
     {
       "actionId": "approve",
       "actionName": "同意",
       "requiredPermissions": [
-        "operator"
+        "REVIEW"
       ]
     },
     {
       "actionId": "reject",
       "actionName": "同意",
       "requiredPermissions": [
-        "operator"
+        "REVIEW"
       ]
     }
   ],

@@ -18,22 +18,45 @@ public class DefaultProcessPermissionService implements ProcessPermissionService
     public Set<String> operatorPermissionsOf(Context context) {
         Set<String> permissions = new HashSet<>();
 
-        if (context.getInstance().getLogs()
-                .stream()
-                .anyMatch(it -> StrUtil.equals(it.getCreateBy(), context.getOperatorId()))) {
+        if (canView(context)) {
             permissions.add(VIEW.name());
         }
 
-        if (StrUtil.equals(context.getInstance().getCreateBy(), context.getOperatorId())) {
+        if (canEdit(context)) {
             permissions.add(EDIT.name());
         }
 
-        if (context.getInstance().getAssignees()
-                .stream()
-                .anyMatch(it -> StrUtil.equals(it.getAssignee(), context.getOperatorId()))) {
+        if (canReview(context)) {
             permissions.add(REVIEW.name());
         }
 
+        return customPermissions(context, permissions);
+    }
+
+    /**
+     * 自定义权限
+     *
+     * @param context     上下文
+     * @param permissions 已有权限集合
+     * @return 新权限结合
+     */
+    protected Set<String> customPermissions(Context context, Set<String> permissions) {
         return permissions;
+    }
+
+    protected boolean canView(Context context) {
+        return context.getInstance().getLogs()
+                .stream()
+                .anyMatch(it -> StrUtil.equals(it.getCreateBy(), context.getOperatorId()));
+    }
+
+    protected boolean canEdit(Context context) {
+        return StrUtil.equals(context.getInstance().getCreateBy(), context.getOperatorId());
+    }
+
+    protected boolean canReview(Context context) {
+        return context.getInstance().getAssignees()
+                .stream()
+                .anyMatch(it -> StrUtil.equals(it.getAssignee(), context.getOperatorId()));
     }
 }
