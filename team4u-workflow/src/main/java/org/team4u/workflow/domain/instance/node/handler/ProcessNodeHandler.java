@@ -6,6 +6,8 @@ import org.team4u.workflow.domain.definition.ProcessDefinition;
 import org.team4u.workflow.domain.definition.ProcessNode;
 import org.team4u.workflow.domain.instance.ProcessInstance;
 
+import java.util.List;
+
 /**
  * 流程节点处理器
  *
@@ -17,27 +19,29 @@ public interface ProcessNodeHandler extends IdObject<String> {
      * 处理节点
      *
      * @param context 上下文
-     * @return 下一个流程节点
+     * @return 下一个流程节点标识
      */
-    ProcessNode handle(Context context);
+    String handle(Context context);
 
     class Context {
         private final ProcessInstance instance;
         private final ProcessDefinition definition;
         private final ProcessAction action;
-        private final String operator;
+        private final String operatorId;
+        private final List<String> operatorPermissions;
         private final String remark;
         private ProcessNode node;
 
         public Context(ProcessInstance instance,
                        ProcessDefinition definition,
                        ProcessAction action,
-                       String operator,
-                       String remark) {
+                       String operatorId,
+                       List<String> operatorPermissions, String remark) {
             this.instance = instance;
             this.definition = definition;
             this.action = action;
-            this.operator = operator;
+            this.operatorId = operatorId;
+            this.operatorPermissions = operatorPermissions;
             this.remark = remark;
         }
 
@@ -63,8 +67,12 @@ public interface ProcessNodeHandler extends IdObject<String> {
             return action;
         }
 
-        public String getOperator() {
-            return operator;
+        public String getOperatorId() {
+            return operatorId;
+        }
+
+        public List<String> getOperatorPermissions() {
+            return operatorPermissions;
         }
 
         public String getRemark() {

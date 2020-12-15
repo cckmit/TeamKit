@@ -1,7 +1,5 @@
 package org.team4u.workflow.domain.instance.node.handler;
 
-import org.team4u.workflow.domain.definition.ProcessNode;
-
 /**
  * 抽象静态节点处理器
  *
@@ -10,7 +8,7 @@ import org.team4u.workflow.domain.definition.ProcessNode;
 public abstract class AbstractStaticProcessNodeHandler implements ProcessNodeHandler {
 
     @Override
-    public ProcessNode handle(Context context) {
+    public String handle(Context context) {
         internalHandle(context);
 
         changeCurrentNodeTo(context);
@@ -22,7 +20,7 @@ public abstract class AbstractStaticProcessNodeHandler implements ProcessNodeHan
         context.getInstance().changeCurrentNodeTo(
                 context.getAction(),
                 context.getNode(),
-                context.getOperator(),
+                context.getOperatorId(),
                 context.getRemark()
         );
     }

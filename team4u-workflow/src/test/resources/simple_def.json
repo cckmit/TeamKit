@@ -1,0 +1,90 @@
+{
+  "processDefinitionId": "test",
+  "actions": [
+    {
+      "actionId": "save",
+      "actionName": "保存",
+      "requiredPermissions": [
+        "owner"
+      ]
+    },
+    {
+      "actionId": "submit",
+      "actionName": "提交",
+      "requiredPermissions": [
+        "owner"
+      ]
+    },
+    {
+      "actionId": "approve",
+      "actionName": "同意",
+      "requiredPermissions": [
+        "operator"
+      ]
+    },
+    {
+      "actionId": "reject",
+      "actionName": "同意",
+      "requiredPermissions": [
+        "operator"
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "@type": "org.team4u.workflow.domain.definition.node.StaticNode",
+      "nodeId": "created",
+      "nodeName": "已保存",
+      "nextNodeId": "createdActionNode"
+    },
+    {
+      "@type": "org.team4u.workflow.domain.definition.node.ActionChoiceNode",
+      "nodeId": "createdActionNode",
+      "nodeName": "已保存动作选择器",
+      "actionNodes": [
+        {
+          "actionId": "save",
+          "nodeId": "created"
+        },
+        {
+          "actionId": "submit",
+          "nodeId": "pending"
+        }
+      ]
+    },
+    {
+      "@type": "org.team4u.workflow.domain.definition.node.AssigneeNode",
+      "nodeId": "pending",
+      "nodeName": "待审核",
+      "ruleType": "user",
+      "ruleExpression": "test",
+      "nextNodeId": "pendingActionNode"
+    },
+    {
+      "@type": "org.team4u.workflow.domain.definition.node.AssigneeActionChoiceNode",
+      "nodeId": "pendingActionNode",
+      "nodeName": "待审核动作选择器",
+      "choiceType": "ANY",
+      "actionNodes": [
+        {
+          "actionId": "reject",
+          "nodeId": "rejected"
+        },
+        {
+          "actionId": "approve",
+          "nodeId": "completed"
+        }
+      ]
+    },
+    {
+      "@type": "org.team4u.workflow.domain.definition.node.StaticNode",
+      "nodeId": "rejected",
+      "nodeName": "审批拒绝"
+    },
+    {
+      "@type": "org.team4u.workflow.domain.definition.node.StaticNode",
+      "nodeId": "completed",
+      "nodeName": "审批完成"
+    }
+  ]
+}

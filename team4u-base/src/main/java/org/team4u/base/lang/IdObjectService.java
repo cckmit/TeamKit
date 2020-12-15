@@ -66,7 +66,7 @@ public abstract class IdObjectService<K, V extends IdObject<K>> {
         V object = objectOfId(id);
 
         if (object == null) {
-            throw new SystemDataNotExistException(valueType().getSimpleName() + "=" + id);
+            throw new SystemDataNotExistException(valueType().getSimpleName() + "/" + id);
         }
 
         return object;

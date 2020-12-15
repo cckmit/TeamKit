@@ -5,6 +5,8 @@ import org.team4u.ddd.domain.model.AggregateRoot;
 import org.team4u.workflow.domain.definition.ProcessAction;
 import org.team4u.workflow.domain.definition.ProcessNode;
 import org.team4u.workflow.domain.definition.node.StaticNode;
+import org.team4u.workflow.domain.instance.event.ProcessInstanceCreatedEvent;
+import org.team4u.workflow.domain.instance.event.ProcessNodeChangedEvent;
 
 import java.util.*;
 
@@ -79,18 +81,14 @@ public class ProcessInstance extends AggregateRoot {
      * @param processInstanceName 流程名称
      * @param processDefinitionId 流程定义标识
      * @param createdBy           创建人
-     * @param startAction         开始动作
      * @param startNode           开始节点
-     * @param remark              备注
      * @return 流程实例
      */
     public static ProcessInstance create(String processInstanceId,
                                          String processInstanceName,
                                          String processDefinitionId,
                                          String createdBy,
-                                         ProcessAction startAction,
-                                         StaticNode startNode,
-                                         String remark) {
+                                         StaticNode startNode) {
         ProcessInstance instance = new ProcessInstance(
                 processInstanceId,
                 processInstanceName,
@@ -98,12 +96,11 @@ public class ProcessInstance extends AggregateRoot {
                 startNode,
                 createdBy);
 
-        instance.changeCurrentNodeTo(
-                startAction,
-                startNode,
-                createdBy,
-                remark
-        );
+        instance.publishEvent(new ProcessInstanceCreatedEvent(
+                processDefinitionId,
+                instance.getCreateTime(),
+                instance
+        ));
 
         return instance;
     }
@@ -116,9 +113,9 @@ public class ProcessInstance extends AggregateRoot {
                                     String operator,
                                     String remark) {
         ProcessNode oldNode = getCurrentNode();
-
         setCurrentNode(newNode);
-        refreshUpdateTime();
+
+        refreshUpdateTimeAndOperator(operator);
 
         ProcessInstanceLog instanceLog = new ProcessInstanceLog()
                 .setProcessInstanceId(getProcessInstanceId())
@@ -131,11 +128,22 @@ public class ProcessInstance extends AggregateRoot {
         getLogs().add(instanceLog);
 
         publishEvent(new ProcessNodeChangedEvent(
-                getProcessDefinitionId(),
+                getProcessInstanceId(),
                 getUpdateTime(),
                 this,
                 instanceLog
         ));
+    }
+
+    /**
+     * 流程是否已完成
+     */
+    public boolean isCompleted() {
+        if (getCurrentNode() == null) {
+            return false;
+        }
+
+        return getCurrentNode().getNextNodeId() == null;
     }
 
     /**
@@ -151,8 +159,9 @@ public class ProcessInstance extends AggregateRoot {
                 .orElse(null);
     }
 
-    private void refreshUpdateTime() {
+    private void refreshUpdateTimeAndOperator(String operator) {
         setUpdateTime(new Date());
+        setUpdateBy(operator);
     }
 
     public String getProcessInstanceId() {
@@ -243,5 +252,10 @@ public class ProcessInstance extends AggregateRoot {
     public ProcessInstance setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return processInstanceId + '/' + processInstanceName;
     }
 }

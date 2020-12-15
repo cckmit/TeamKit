@@ -14,41 +14,32 @@ public class ProcessAction extends ValueObject {
     /**
      * 动作标识
      */
-    private String actionId;
+    private final String actionId;
     /**
      * 动作名称
      */
-    private String actionName;
+    private final String actionName;
     /**
      * 动作所需权限集合
      */
-    private List<String> requiredPermissions;
+    private final List<String> requiredPermissions;
+
+    public ProcessAction(String actionId, String actionName, List<String> requiredPermissions) {
+        this.actionId = actionId;
+        this.actionName = actionName;
+        this.requiredPermissions = requiredPermissions;
+    }
 
     public String getActionId() {
         return actionId;
-    }
-
-    public ProcessAction setActionId(String actionId) {
-        this.actionId = actionId;
-        return this;
     }
 
     public String getActionName() {
         return actionName;
     }
 
-    public ProcessAction setActionName(String actionName) {
-        this.actionName = actionName;
-        return this;
-    }
-
     public List<String> getRequiredPermissions() {
         return requiredPermissions;
-    }
-
-    public ProcessAction setRequiredPermissions(List<String> requiredPermissions) {
-        this.requiredPermissions = requiredPermissions;
-        return this;
     }
 
     @Override

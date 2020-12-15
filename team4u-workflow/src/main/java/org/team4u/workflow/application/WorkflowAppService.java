@@ -57,27 +57,28 @@ public class WorkflowAppService {
         ProcessDefinition definition = processDefinitionRepository.domainOf(command.getProcessDefinitionId());
         ProcessInstance processInstance;
 
-        // 新建流程
-        if (StrUtil.isBlank(command.getProcessDefinitionId())) {
+        if (StrUtil.isBlank(command.getProcessInstanceId())) {
+            // 新建流程
             processInstance = ProcessInstance.create(
                     IdUtil.fastUUID(),
                     command.getProcessInstanceName(),
                     command.getProcessDefinitionId(),
                     command.getOperator(),
-                    command.getAction(),
-                    definition.rootNode(),
-                    command.getRemark()
+                    definition.rootNode()
             );
         } else {
+            // 已有流程
             processInstance = processInstanceOf(command.getProcessInstanceId());
-            processNodeHandlers.handle(new ProcessNodeHandler.Context(
-                    processInstance,
-                    definition,
-                    command.getAction(),
-                    command.getOperator(),
-                    command.getRemark()
-            ));
         }
+
+        processNodeHandlers.handle(new ProcessNodeHandler.Context(
+                processInstance,
+                definition,
+                command.getAction(),
+                command.getOperator(),
+                command.getOperatorPermissions(),
+                command.getRemark()
+        ));
 
         processInstanceRepository.save(processInstance);
         return processInstance;

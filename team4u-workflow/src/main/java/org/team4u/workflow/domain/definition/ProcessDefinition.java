@@ -14,8 +14,10 @@ import java.util.List;
  */
 public class ProcessDefinition extends AggregateRoot {
 
+    /**
+     * 流程定义标识
+     */
     private final String processDefinitionId;
-
     /**
      * 动作集合
      */
@@ -74,5 +76,10 @@ public class ProcessDefinition extends AggregateRoot {
     public ProcessDefinition setNodes(List<ProcessNode> nodes) {
         this.nodes = nodes;
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return processDefinitionId;
     }
 }

@@ -1,6 +1,8 @@
-package org.team4u.workflow.domain.instance;
+package org.team4u.workflow.domain.instance.event;
 
 import org.team4u.ddd.domain.model.AbstractDomainEvent;
+import org.team4u.workflow.domain.instance.ProcessInstance;
+import org.team4u.workflow.domain.instance.ProcessInstanceLog;
 
 import java.util.Date;
 

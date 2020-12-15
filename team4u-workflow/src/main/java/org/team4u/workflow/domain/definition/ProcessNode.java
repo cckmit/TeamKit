@@ -2,6 +2,8 @@ package org.team4u.workflow.domain.definition;
 
 import org.team4u.ddd.domain.model.ValueObject;
 
+import java.util.Objects;
+
 /**
  * 流程节点
  *
@@ -34,5 +36,18 @@ public abstract class ProcessNode extends ValueObject {
     @Override
     public String toString() {
         return nodeId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ProcessNode that = (ProcessNode) o;
+        return nodeId.equals(that.nodeId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(nodeId);
     }
 }

@@ -1,9 +1,12 @@
 package org.team4u.workflow.domain.instance;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.log.Log;
 import org.team4u.base.error.SystemDataNotExistException;
 import org.team4u.base.lang.IdObjectService;
+import org.team4u.base.log.LogMessage;
 import org.team4u.workflow.domain.definition.ProcessNode;
-import org.team4u.workflow.domain.instance.node.handler.ProcessNodeHandler;
+import org.team4u.workflow.domain.instance.node.handler.*;
 
 import java.util.List;
 
@@ -14,7 +17,15 @@ import java.util.List;
  */
 public class ProcessNodeHandlers extends IdObjectService<String, ProcessNodeHandler> {
 
+    private final Log log = Log.get();
+
     public ProcessNodeHandlers() {
+        this(CollUtil.newArrayList(
+                new StaticNodeHandler(),
+                new AssigneeNodeHandler(),
+                new ActionChoiceNodeHandler(),
+                new AssigneeActionChoiceNodeHandler()
+        ));
     }
 
     public ProcessNodeHandlers(List<ProcessNodeHandler> objects) {
@@ -22,6 +33,14 @@ public class ProcessNodeHandlers extends IdObjectService<String, ProcessNodeHand
     }
 
     public void handle(ProcessNodeHandler.Context context) {
+        LogMessage lm = LogMessage.create(this.getClass().getSimpleName(), "handle")
+                .append("instance", context.getInstance().toString())
+                .append("operatorId", context.getOperatorId())
+                .append("action", context.getAction().toString())
+                .append("startNode", context.getInstance().getCurrentNode())
+                .append("definition", context.getDefinition())
+                .append("operatorPermissions", context.getOperatorPermissions());
+
         ProcessNode nextNode = context.getDefinition().processNodeOf(
                 context.getInstance()
                         .getCurrentNode()
@@ -29,15 +48,17 @@ public class ProcessNodeHandlers extends IdObjectService<String, ProcessNodeHand
         );
 
         if (nextNode == null) {
-            throw new SystemDataNotExistException(String.format(
-                    "NextNode|processInstanceId=%s|currentNodeId=%s",
-                    context.getInstance().getProcessInstanceId(),
-                    context.getInstance().getCurrentNode().getNodeId()
-            ));
+            throw new SystemDataNotExistException(lm.fail("nextNode is null").toString());
         }
 
         while (nextNode != null) {
-            nextNode = availableObjectOfId(nextNode.getNodeId()).handle(context.setNode(nextNode));
+            lm.append("nextNode", nextNode);
+            log.info(lm.success().toString());
+
+            nextNode = context.getDefinition().processNodeOf(
+                    availableObjectOfId(nextNode.getClass().getSimpleName())
+                            .handle(context.setNode(nextNode))
+            );
         }
     }
 }
