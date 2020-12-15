@@ -35,7 +35,7 @@ public class ActionChoiceNodeHandler implements ProcessNodeHandler {
     }
 
     private void checkOperatorPermissions(Context context) {
-        if (context.getOperatorPermissions().containsAll(context.getAction().getRequiredPermissions())) {
+        if (context.getAction().matchPermissions(context.getOperatorPermissions())) {
             return;
         }
 

@@ -1,9 +1,10 @@
 package org.team4u.workflow.domain.definition;
 
+import cn.hutool.core.collection.CollUtil;
 import org.team4u.ddd.domain.model.ValueObject;
 
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * 流程动作
@@ -22,12 +23,22 @@ public class ProcessAction extends ValueObject {
     /**
      * 动作所需权限集合
      */
-    private final List<String> requiredPermissions;
+    private final Set<String> requiredPermissions;
 
-    public ProcessAction(String actionId, String actionName, List<String> requiredPermissions) {
+    public ProcessAction(String actionId, String actionName, Set<String> requiredPermissions) {
         this.actionId = actionId;
         this.actionName = actionName;
         this.requiredPermissions = requiredPermissions;
+    }
+
+    /**
+     * 判断给定权限是否满足动作所需权限
+     *
+     * @param permissions 给定权限
+     * @return true：满足，false：不满足
+     */
+    public boolean matchPermissions(Set<String> permissions) {
+        return CollUtil.containsAll(permissions, getRequiredPermissions());
     }
 
     public String getActionId() {
@@ -38,7 +49,7 @@ public class ProcessAction extends ValueObject {
         return actionName;
     }
 
-    public List<String> getRequiredPermissions() {
+    public Set<String> getRequiredPermissions() {
         return requiredPermissions;
     }
 

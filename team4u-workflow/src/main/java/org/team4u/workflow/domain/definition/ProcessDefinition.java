@@ -6,6 +6,7 @@ import org.team4u.ddd.domain.model.AggregateRoot;
 import org.team4u.workflow.domain.definition.node.StaticNode;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 流程定义
@@ -54,6 +55,19 @@ public class ProcessDefinition extends AggregateRoot {
                 .filter(it -> StrUtil.equals(it.getNodeId(), nodeId))
                 .findFirst()
                 .orElse(null);
+    }
+
+    public ProcessAction actionOf(String actionId) {
+        return actions.stream()
+                .filter(it -> StrUtil.equals(it.getActionId(), actionId))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public List<ProcessAction> actionsOf(List<String> permissions) {
+        return actions.stream()
+                .filter(it -> CollUtil.contains(permissions, it.getRequiredPermissions()))
+                .collect(Collectors.toList());
     }
 
     public String getProcessDefinitionId() {

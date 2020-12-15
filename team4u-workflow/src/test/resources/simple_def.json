@@ -24,7 +24,7 @@
     },
     {
       "actionId": "reject",
-      "actionName": "同意",
+      "actionName": "拒绝",
       "requiredPermissions": [
         "REVIEW"
       ]

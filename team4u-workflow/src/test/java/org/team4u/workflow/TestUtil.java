@@ -68,7 +68,7 @@ public class TestUtil {
     }
 
     public static ProcessAction action(String actionId, String... requiredPermissions) {
-        return new ProcessAction(actionId, actionId, CollUtil.toList(requiredPermissions));
+        return new ProcessAction(actionId, actionId, new HashSet<>(CollUtil.toList(requiredPermissions)));
     }
 
     public static StaticNode staticNode(String nodeId) {

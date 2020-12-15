@@ -4,15 +4,21 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import org.team4u.base.error.SystemDataNotExistException;
 import org.team4u.workflow.application.command.StartProcessInstanceCommand;
+import org.team4u.workflow.domain.definition.ProcessAction;
 import org.team4u.workflow.domain.definition.ProcessDefinition;
 import org.team4u.workflow.domain.definition.ProcessDefinitionRepository;
+import org.team4u.workflow.domain.definition.ProcessNode;
+import org.team4u.workflow.domain.definition.node.ActionChoiceNode;
 import org.team4u.workflow.domain.instance.ProcessInstance;
 import org.team4u.workflow.domain.instance.ProcessInstanceRepository;
 import org.team4u.workflow.domain.instance.ProcessNodeHandlers;
 import org.team4u.workflow.domain.instance.ProcessPermissionService;
 import org.team4u.workflow.domain.instance.node.handler.ProcessNodeHandler;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 工作流应用服务
@@ -60,11 +66,11 @@ public class WorkflowAppService {
      */
     public ProcessInstance start(StartProcessInstanceCommand command) {
         ProcessDefinition definition = processDefinitionRepository.domainOf(command.getProcessDefinitionId());
-        ProcessInstance processInstance;
+        ProcessInstance instance;
 
         if (StrUtil.isBlank(command.getProcessInstanceId())) {
             // 新建流程
-            processInstance = ProcessInstance.create(
+            instance = ProcessInstance.create(
                     IdUtil.fastUUID(),
                     command.getProcessInstanceName(),
                     command.getProcessDefinitionId(),
@@ -73,16 +79,16 @@ public class WorkflowAppService {
             );
         } else {
             // 已有流程
-            processInstance = processInstanceOf(command.getProcessInstanceId());
+            instance = processInstanceOf(command.getProcessInstanceId());
         }
 
         Set<String> permissions = processPermissionService.operatorPermissionsOf(
                 new ProcessPermissionService.Context(
-                        processInstance, command.getAction(), command.getOperatorId()
+                        instance, command.getAction(), command.getOperatorId()
                 )
         );
         processNodeHandlers.handle(new ProcessNodeHandler.Context(
-                processInstance,
+                instance,
                 definition,
                 command.getAction(),
                 command.getOperatorId(),
@@ -90,8 +96,8 @@ public class WorkflowAppService {
                 command.getRemark()
         ));
 
-        processInstanceRepository.save(processInstance);
-        return processInstance;
+        processInstanceRepository.save(instance);
+        return instance;
     }
 
     /**
@@ -107,6 +113,31 @@ public class WorkflowAppService {
             throw new SystemDataNotExistException("ProcessInstance|id=" + processInstanceId);
         }
 
+
         return instance;
+    }
+
+    /**
+     * 当前流程实例可用的动作集合
+     */
+    public List<ProcessAction> availableActionsOf(ProcessInstance instance, String operatorId) {
+        ProcessDefinition definition = processDefinitionRepository.domainOf(instance.getProcessDefinitionId());
+        ProcessNode nextNode = definition.processNodeOf(instance.getCurrentNode().getNextNodeId());
+
+        if (!(nextNode instanceof ActionChoiceNode)) {
+            return Collections.emptyList();
+        }
+
+        Set<String> permissions = processPermissionService.operatorPermissionsOf(
+                new ProcessPermissionService.Context(
+                        instance, null, operatorId
+                )
+        );
+
+        return ((ActionChoiceNode) nextNode).getActionNodes()
+                .stream()
+                .map(it -> definition.actionOf(it.getActionId()))
+                .filter(it -> it.matchPermissions(permissions))
+                .collect(Collectors.toList());
     }
 }
