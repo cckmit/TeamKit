@@ -33,6 +33,10 @@ public class ProcessNodeHandlers extends IdObjectService<String, ProcessNodeHand
     }
 
     public void handle(ProcessNodeHandler.Context context) {
+        if (context.getInstance() == null) {
+            throw new SystemDataNotExistException("无法找到当前流程实例");
+        }
+
         LogMessage lm = LogMessage.create(this.getClass().getSimpleName(), "handle")
                 .append("instance", context.getInstance().toString())
                 .append("operatorId", context.getOperatorId())

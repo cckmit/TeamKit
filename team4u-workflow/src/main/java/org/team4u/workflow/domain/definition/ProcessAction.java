@@ -59,4 +59,19 @@ public class ProcessAction extends ValueObject {
     public String toString() {
         return actionId;
     }
+
+    public enum Permission {
+        /**
+         * 创建者
+         */
+        EDIT,
+        /**
+         * 审批权限
+         */
+        REVIEW,
+        /**
+         * 查看权限
+         */
+        VIEW
+    }
 }

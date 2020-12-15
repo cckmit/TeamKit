@@ -44,38 +44,34 @@ public class ProcessNodeHandlersTest {
 
     @Test
     public void reject() {
-        ProcessInstance instance = submit();
-        handles.handle(TestUtil.context(
-                instance,
-                TestUtil.action("reject"),
-                definition,
-                null
-        ));
-
-        Assert.assertEquals(TestUtil.staticNode("rejected"), instance.getCurrentNode());
-
-        Assert.assertEquals(
-                "node=pending,action=reject,nextNode=rejected,remark='test',createBy='test'",
-                instance.getLogs().get(1).toString()
-        );
+        checkIsCompleted("reject", "rejected");
     }
 
     @Test
     public void approve() {
+        checkIsCompleted("approve", "completed");
+    }
+
+    private void checkIsCompleted(String actionId, String expectedNodeId) {
         ProcessInstance instance = submit();
+
         handles.handle(TestUtil.context(
                 instance,
-                TestUtil.action("approve"),
+                TestUtil.action(actionId),
                 definition,
                 null
         ));
 
-        Assert.assertEquals(TestUtil.staticNode("completed"), instance.getCurrentNode());
+        Assert.assertEquals(TestUtil.staticNode(expectedNodeId), instance.getCurrentNode());
 
         Assert.assertEquals(
-                "node=pending,action=approve,nextNode=completed,remark='test',createBy='test'",
+                "node=pending,action=" + actionId +
+                        ",nextNode=" + expectedNodeId +
+                        ",remark='test',createBy='test'",
                 instance.getLogs().get(1).toString()
         );
+
+        Assert.assertTrue(instance.isCompleted());
     }
 
     private ProcessInstance submit() {
