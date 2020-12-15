@@ -63,4 +63,9 @@ public class ProcessAction extends ValueObject {
     public int hashCode() {
         return Objects.hash(actionId, actionName, requiredPermissions);
     }
+
+    @Override
+    public String toString() {
+        return actionId;
+    }
 }

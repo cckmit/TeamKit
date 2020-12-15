@@ -11,28 +11,28 @@ public abstract class ProcessNode extends ValueObject {
     /**
      * 节点标识
      */
-    private String nodeId;
+    private final String nodeId;
     /**
      * 节点名称
      */
-    private String nodeName;
+    private final String nodeName;
 
+    public ProcessNode(String nodeId, String nodeName) {
+        this.nodeId = nodeId;
+        this.nodeName = nodeName;
+    }
 
     public String getNodeId() {
         return nodeId;
     }
 
-    public ProcessNode setNodeId(String nodeId) {
-        this.nodeId = nodeId;
-        return this;
-    }
 
     public String getNodeName() {
         return nodeName;
     }
 
-    public ProcessNode setNodeName(String nodeName) {
-        this.nodeName = nodeName;
-        return this;
+    @Override
+    public String toString() {
+        return nodeId;
     }
 }

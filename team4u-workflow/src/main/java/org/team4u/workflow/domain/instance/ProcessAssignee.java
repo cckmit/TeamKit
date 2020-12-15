@@ -4,6 +4,7 @@ import org.team4u.ddd.domain.model.ValueObject;
 import org.team4u.workflow.domain.definition.ProcessAction;
 
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * 流程处理人
@@ -88,5 +89,25 @@ public class ProcessAssignee extends ValueObject {
     public ProcessAssignee setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ProcessAssignee that = (ProcessAssignee) o;
+        return processInstanceId.equals(that.processInstanceId) && assignee.equals(that.assignee);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(processInstanceId, assignee);
+    }
+
+    @Override
+    public String toString() {
+        return processInstanceId + ',' +
+                assignee + ',' +
+                action;
     }
 }

@@ -3,6 +3,7 @@ package org.team4u.workflow.domain.definition;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import org.team4u.ddd.domain.model.AggregateRoot;
+import org.team4u.workflow.domain.definition.node.StaticNode;
 
 import java.util.List;
 
@@ -37,16 +38,17 @@ public class ProcessDefinition extends AggregateRoot {
      *
      * @return 理财节点
      */
-    public ProcessNode rootProcessNode() {
-        return CollUtil.getFirst(nodes);
+    public StaticNode rootNode() {
+        return (StaticNode) CollUtil.getFirst(nodes);
     }
 
-    public ProcessNode processNodeOf(String nodeId) {
-        if (nodes == null) {
+    @SuppressWarnings("unchecked")
+    public <T extends ProcessNode> T processNodeOf(String nodeId) {
+        if (nodes == null || StrUtil.isBlank(nodeId)) {
             return null;
         }
 
-        return nodes.stream()
+        return (T) nodes.stream()
                 .filter(it -> StrUtil.equals(it.getNodeId(), nodeId))
                 .findFirst()
                 .orElse(null);

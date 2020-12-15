@@ -25,9 +25,9 @@ public class StartProcessInstanceCommand {
      */
     private String operator;
     /**
-     * 开始动作
+     * 触发动作
      */
-    private ProcessAction startAction;
+    private ProcessAction action;
     /**
      * 备注
      */
@@ -69,12 +69,12 @@ public class StartProcessInstanceCommand {
         return this;
     }
 
-    public ProcessAction getStartAction() {
-        return startAction;
+    public ProcessAction getAction() {
+        return action;
     }
 
-    public StartProcessInstanceCommand setStartAction(ProcessAction startAction) {
-        this.startAction = startAction;
+    public StartProcessInstanceCommand setAction(ProcessAction action) {
+        this.action = action;
         return this;
     }
 

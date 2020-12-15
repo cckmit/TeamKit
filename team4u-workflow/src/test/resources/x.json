@@ -6,7 +6,7 @@
   },
   {
     "nodeId": "createdActionNode",
-    "nodeType": "ProcessActionChoiceNode",
+    "nodeType": "ActionChoiceNode",
     "nodeName": "已保存动作选择器",
     "actionNodes": [
       {
@@ -22,15 +22,16 @@
   {
     "nodeId": "pending",
     "nodeName": "待审核",
-    "nodeType": "ProcessAssigneeNode",
+    "nodeType": "AssigneeNode",
     "ruleType": "role",
     "ruleExpression": "test",
     "nextNodeId": "pendingActionNode"
   },
   {
     "nodeId": "pendingActionNode",
-    "nodeType": "ProcessActionChoiceNode",
+    "nodeType": "AssigneeActionChoiceNode",
     "nodeName": "待审核动作选择器",
+    "choiceType": "ANY",
     "actionNodes": [
       {
         "actionId": "reject",

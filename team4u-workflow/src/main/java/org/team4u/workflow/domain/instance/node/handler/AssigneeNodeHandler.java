@@ -1,49 +1,39 @@
 package org.team4u.workflow.domain.instance.node.handler;
 
 import cn.hutool.core.util.StrUtil;
-import org.team4u.workflow.domain.definition.ProcessNode;
 import org.team4u.workflow.domain.definition.node.AssigneeNode;
 import org.team4u.workflow.domain.instance.ProcessAssignee;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 处理人节点处理器
  *
  * @author jay.wu
  */
-public class AssigneeNodeHandler implements ProcessNodeHandler {
+public class AssigneeNodeHandler extends AbstractStaticProcessNodeHandler {
 
     @Override
-    public ProcessNode handle(Context context) {
+    public void internalHandle(Context context) {
         AssigneeNode node = context.getNode();
-        List<String> assignees = new ArrayList<>();
+        List<String> assignees;
 
-        switch (node.getRuleType()) {
-            case AssigneeNode.RULE_TYPE_USER:
-                assignees.add(node.getRuleExpression());
-                break;
-
-            case AssigneeNode.RULE_TYPE_ROLE:
-                assignees = StrUtil.splitTrim(node.getRuleExpression(), ",");
-                break;
-
-            default:
-                assignees = assigneesOf(node);
-                break;
+        if (AssigneeNode.RULE_TYPE_USER.equals(node.getRuleType())) {
+            assignees = StrUtil.splitTrim(node.getRuleExpression(), ",");
+        } else {
+            assignees = assigneesOf(node);
         }
 
-        for (String assignee : assignees) {
-            context.getInstance().getAssignees()
-                    .add(new ProcessAssignee(
-                            context.getInstance().getProcessInstanceId(),
-                            assignee
-                    ));
-        }
-
-        return null;
+        context.getInstance().setAssignees(
+                assignees.stream()
+                        .map(it -> new ProcessAssignee(
+                                context.getInstance().getProcessInstanceId(),
+                                it
+                        ))
+                        .collect(Collectors.toSet())
+        );
     }
 
     protected List<String> assigneesOf(AssigneeNode node) {

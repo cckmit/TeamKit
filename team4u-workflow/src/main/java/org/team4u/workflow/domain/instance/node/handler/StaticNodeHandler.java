@@ -1,6 +1,5 @@
 package org.team4u.workflow.domain.instance.node.handler;
 
-import org.team4u.workflow.domain.definition.ProcessNode;
 import org.team4u.workflow.domain.definition.node.StaticNode;
 
 /**
@@ -8,24 +7,15 @@ import org.team4u.workflow.domain.definition.node.StaticNode;
  *
  * @author jay.wu
  */
-public class StaticNodeHandler implements ProcessNodeHandler {
-
-    @Override
-    public ProcessNode handle(Context context) {
-        StaticNode node = context.getNode();
-
-        context.getInstance().changeCurrentNodeTo(
-                context.getAction(),
-                context.getNode(),
-                context.getOperator(),
-                context.getRemark()
-        );
-
-        return context.getDefinition().processNodeOf(node.getNextNodeId());
-    }
+public class StaticNodeHandler extends AbstractStaticProcessNodeHandler {
 
     @Override
     public String id() {
         return StaticNode.class.getSimpleName();
+    }
+
+    @Override
+    protected void internalHandle(Context context) {
+
     }
 }

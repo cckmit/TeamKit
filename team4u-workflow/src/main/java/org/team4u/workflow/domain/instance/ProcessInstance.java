@@ -1,12 +1,12 @@
 package org.team4u.workflow.domain.instance;
 
+import cn.hutool.core.util.StrUtil;
 import org.team4u.ddd.domain.model.AggregateRoot;
 import org.team4u.workflow.domain.definition.ProcessAction;
 import org.team4u.workflow.domain.definition.ProcessNode;
+import org.team4u.workflow.domain.definition.node.StaticNode;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * 流程实例
@@ -30,11 +30,11 @@ public class ProcessInstance extends AggregateRoot {
     /**
      * 当前流程节点
      */
-    private ProcessNode currentNode;
+    private StaticNode currentNode;
     /**
      * 当前流程人集合
      */
-    private List<ProcessAssignee> assignees;
+    private Set<ProcessAssignee> assignees;
     /**
      * 流程日志集合
      */
@@ -59,7 +59,7 @@ public class ProcessInstance extends AggregateRoot {
     public ProcessInstance(String processInstanceId,
                            String processInstanceName,
                            String processDefinitionId,
-                           ProcessNode currentNode,
+                           StaticNode currentNode,
                            String createdBy) {
         setProcessInstanceId(processInstanceId);
         setProcessInstanceName(processInstanceName);
@@ -68,7 +68,7 @@ public class ProcessInstance extends AggregateRoot {
         setCreateBy(createdBy);
 
         setLogs(new ArrayList<>());
-        setAssignees(new ArrayList<>());
+        setAssignees(new HashSet<>());
         setCreateTime(new Date());
     }
 
@@ -84,13 +84,13 @@ public class ProcessInstance extends AggregateRoot {
      * @param remark              备注
      * @return 流程实例
      */
-    public static ProcessInstance start(String processInstanceId,
-                                        String processInstanceName,
-                                        String processDefinitionId,
-                                        String createdBy,
-                                        ProcessAction startAction,
-                                        ProcessNode startNode,
-                                        String remark) {
+    public static ProcessInstance create(String processInstanceId,
+                                         String processInstanceName,
+                                         String processDefinitionId,
+                                         String createdBy,
+                                         ProcessAction startAction,
+                                         StaticNode startNode,
+                                         String remark) {
         ProcessInstance instance = new ProcessInstance(
                 processInstanceId,
                 processInstanceName,
@@ -112,7 +112,7 @@ public class ProcessInstance extends AggregateRoot {
      * 更改当前节点
      */
     public void changeCurrentNodeTo(ProcessAction action,
-                                    ProcessNode newNode,
+                                    StaticNode newNode,
                                     String operator,
                                     String remark) {
         ProcessNode oldNode = getCurrentNode();
@@ -136,6 +136,19 @@ public class ProcessInstance extends AggregateRoot {
                 this,
                 instanceLog
         ));
+    }
+
+    /**
+     * 查询处理人
+     *
+     * @param assigneeId 处理人标识
+     * @return 流程处理人
+     */
+    public ProcessAssignee assigneeOf(String assigneeId) {
+        return getAssignees().stream()
+                .filter(it -> StrUtil.equals(it.getAssignee(), assigneeId))
+                .findFirst()
+                .orElse(null);
     }
 
     private void refreshUpdateTime() {
@@ -169,20 +182,20 @@ public class ProcessInstance extends AggregateRoot {
         return this;
     }
 
-    public ProcessNode getCurrentNode() {
+    public StaticNode getCurrentNode() {
         return currentNode;
     }
 
-    public ProcessInstance setCurrentNode(ProcessNode currentNode) {
+    public ProcessInstance setCurrentNode(StaticNode currentNode) {
         this.currentNode = currentNode;
         return this;
     }
 
-    public List<ProcessAssignee> getAssignees() {
+    public Set<ProcessAssignee> getAssignees() {
         return assignees;
     }
 
-    public ProcessInstance setAssignees(List<ProcessAssignee> assignees) {
+    public ProcessInstance setAssignees(Set<ProcessAssignee> assignees) {
         this.assignees = assignees;
         return this;
     }

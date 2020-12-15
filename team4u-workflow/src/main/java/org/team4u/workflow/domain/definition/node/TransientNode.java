@@ -10,4 +10,7 @@ import org.team4u.workflow.domain.definition.ProcessNode;
  * @author jay.wu
  */
 public class TransientNode extends ProcessNode {
+    public TransientNode(String nodeId, String nodeName) {
+        super(nodeId, nodeName);
+    }
 }

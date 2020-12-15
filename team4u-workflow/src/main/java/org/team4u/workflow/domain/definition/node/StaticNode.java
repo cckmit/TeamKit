@@ -11,14 +11,14 @@ public class StaticNode extends ProcessNode {
     /**
      * 下一个流转节点
      */
-    private String nextNodeId;
+    private final String nextNodeId;
+
+    public StaticNode(String nodeId, String nodeName, String nextNodeId) {
+        super(nodeId, nodeName);
+        this.nextNodeId = nextNodeId;
+    }
 
     public String getNextNodeId() {
         return nextNodeId;
-    }
-
-    public StaticNode setNextNodeId(String nextNodeId) {
-        this.nextNodeId = nextNodeId;
-        return this;
     }
 }

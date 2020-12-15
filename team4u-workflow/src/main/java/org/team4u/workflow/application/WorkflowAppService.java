@@ -6,10 +6,10 @@ import org.team4u.base.error.SystemDataNotExistException;
 import org.team4u.workflow.application.command.StartProcessInstanceCommand;
 import org.team4u.workflow.domain.definition.ProcessDefinition;
 import org.team4u.workflow.domain.definition.ProcessDefinitionRepository;
-import org.team4u.workflow.domain.definition.ProcessNode;
 import org.team4u.workflow.domain.instance.ProcessInstance;
 import org.team4u.workflow.domain.instance.ProcessInstanceRepository;
-import org.team4u.workflow.domain.instance.node.handler.ProcessNodeHandlers;
+import org.team4u.workflow.domain.instance.ProcessNodeHandlers;
+import org.team4u.workflow.domain.instance.node.handler.ProcessNodeHandler;
 
 /**
  * 工作流应用服务
@@ -54,21 +54,29 @@ public class WorkflowAppService {
      * @return 流程实例
      */
     public ProcessInstance start(StartProcessInstanceCommand command) {
-        ProcessInstance processInstance = null;
         ProcessDefinition definition = processDefinitionRepository.domainOf(command.getProcessDefinitionId());
+        ProcessInstance processInstance;
+
+        // 新建流程
         if (StrUtil.isBlank(command.getProcessDefinitionId())) {
-            ProcessNode rootNode = definition.rootProcessNode();
-            return ProcessInstance.start(
+            processInstance = ProcessInstance.create(
                     IdUtil.fastUUID(),
                     command.getProcessInstanceName(),
-                    definition.getProcessDefinitionId(),
+                    command.getProcessDefinitionId(),
                     command.getOperator(),
-                    command.getStartAction(),
-                    rootNode,
+                    command.getAction(),
+                    definition.rootNode(),
                     command.getRemark()
             );
         } else {
-
+            processInstance = processInstanceOf(command.getProcessInstanceId());
+            processNodeHandlers.handle(new ProcessNodeHandler.Context(
+                    processInstance,
+                    definition,
+                    command.getAction(),
+                    command.getOperator(),
+                    command.getRemark()
+            ));
         }
 
         processInstanceRepository.save(processInstance);

@@ -15,7 +15,14 @@ public class ActionChoiceNode extends ChoiceNode {
     /**
      * 动作节点映射集合
      */
-    private List<ActionNode> actionNodes;
+    private final List<ActionNode> actionNodes;
+
+    public ActionChoiceNode(String nodeId,
+                            String nodeName,
+                            List<ActionNode> actionNodes) {
+        super(nodeId, nodeName);
+        this.actionNodes = actionNodes;
+    }
 
     public ProcessNode nextNodeOfAction(ProcessAction action) {
         if (actionNodes == null) {
@@ -31,11 +38,6 @@ public class ActionChoiceNode extends ChoiceNode {
 
     public List<ActionNode> getActionNodes() {
         return actionNodes;
-    }
-
-    public ActionChoiceNode setActionNodes(List<ActionNode> actionNodes) {
-        this.actionNodes = actionNodes;
-        return this;
     }
 
     /**

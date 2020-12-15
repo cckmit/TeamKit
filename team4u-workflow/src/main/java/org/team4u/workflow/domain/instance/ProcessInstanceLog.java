@@ -104,4 +104,13 @@ public class ProcessInstanceLog extends ValueObject {
         this.createTime = createTime;
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "node=" + node +
+                ",action=" + action +
+                ",nextNode=" + nextNode +
+                ",remark='" + remark + '\'' +
+                ",createBy='" + createBy + '\'';
+    }
 }

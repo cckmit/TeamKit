@@ -22,5 +22,10 @@
             <artifactId>team4u-selector</artifactId>
             <version>${parent.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.74</version>
+        </dependency>
     </dependencies>
 </project>
