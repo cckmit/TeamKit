@@ -5,14 +5,14 @@
       "actionId": "save",
       "actionName": "保存",
       "requiredPermissions": [
-        "owner"
+        "edit"
       ]
     },
     {
       "actionId": "submit",
       "actionName": "提交",
       "requiredPermissions": [
-        "owner"
+        "edit"
       ]
     },
     {

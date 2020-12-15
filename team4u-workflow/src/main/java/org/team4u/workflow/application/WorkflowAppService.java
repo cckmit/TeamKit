@@ -9,7 +9,10 @@ import org.team4u.workflow.domain.definition.ProcessDefinitionRepository;
 import org.team4u.workflow.domain.instance.ProcessInstance;
 import org.team4u.workflow.domain.instance.ProcessInstanceRepository;
 import org.team4u.workflow.domain.instance.ProcessNodeHandlers;
+import org.team4u.workflow.domain.instance.ProcessPermissionService;
 import org.team4u.workflow.domain.instance.node.handler.ProcessNodeHandler;
+
+import java.util.Set;
 
 /**
  * 工作流应用服务
@@ -19,14 +22,16 @@ import org.team4u.workflow.domain.instance.node.handler.ProcessNodeHandler;
 public class WorkflowAppService {
 
     private final ProcessNodeHandlers processNodeHandlers;
+    private final ProcessPermissionService processPermissionService;
     private final ProcessInstanceRepository processInstanceRepository;
     private final ProcessDefinitionRepository processDefinitionRepository;
 
     public WorkflowAppService(ProcessNodeHandlers processNodeHandlers,
+                              ProcessPermissionService processPermissionService,
                               ProcessInstanceRepository processInstanceRepository,
-                              ProcessDefinitionRepository processDefinitionRepository
-    ) {
+                              ProcessDefinitionRepository processDefinitionRepository) {
         this.processNodeHandlers = processNodeHandlers;
+        this.processPermissionService = processPermissionService;
         this.processInstanceRepository = processInstanceRepository;
         this.processDefinitionRepository = processDefinitionRepository;
     }
@@ -63,7 +68,7 @@ public class WorkflowAppService {
                     IdUtil.fastUUID(),
                     command.getProcessInstanceName(),
                     command.getProcessDefinitionId(),
-                    command.getOperator(),
+                    command.getOperatorId(),
                     definition.rootNode()
             );
         } else {
@@ -71,12 +76,17 @@ public class WorkflowAppService {
             processInstance = processInstanceOf(command.getProcessInstanceId());
         }
 
+        Set<String> permissions = processPermissionService.operatorPermissionsOf(
+                new ProcessPermissionService.Context(
+                        processInstance, command.getAction(), command.getOperatorId()
+                )
+        );
         processNodeHandlers.handle(new ProcessNodeHandler.Context(
                 processInstance,
                 definition,
                 command.getAction(),
-                command.getOperator(),
-                command.getOperatorPermissions(),
+                command.getOperatorId(),
+                permissions,
                 command.getRemark()
         ));
 

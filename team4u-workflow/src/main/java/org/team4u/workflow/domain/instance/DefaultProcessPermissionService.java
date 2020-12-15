@@ -1,7 +1,6 @@
 package org.team4u.workflow.domain.instance;
 
 import cn.hutool.core.util.StrUtil;
-import org.team4u.workflow.domain.instance.node.handler.ProcessNodeHandler;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -16,7 +15,7 @@ import static org.team4u.workflow.domain.definition.ProcessAction.Permission.*;
 public class DefaultProcessPermissionService implements ProcessPermissionService {
 
     @Override
-    public Set<String> operatorPermissionsOf(ProcessNodeHandler.Context context) {
+    public Set<String> operatorPermissionsOf(Context context) {
         Set<String> permissions = new HashSet<>();
 
         if (context.getInstance().getLogs()

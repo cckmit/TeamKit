@@ -6,7 +6,7 @@ import org.team4u.workflow.domain.definition.ProcessDefinition;
 import org.team4u.workflow.domain.definition.ProcessNode;
 import org.team4u.workflow.domain.instance.ProcessInstance;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * 流程节点处理器
@@ -28,7 +28,7 @@ public interface ProcessNodeHandler extends IdObject<String> {
         private final ProcessDefinition definition;
         private final ProcessAction action;
         private final String operatorId;
-        private final List<String> operatorPermissions;
+        private final Set<String> operatorPermissions;
         private final String remark;
         private ProcessNode node;
 
@@ -36,7 +36,7 @@ public interface ProcessNodeHandler extends IdObject<String> {
                        ProcessDefinition definition,
                        ProcessAction action,
                        String operatorId,
-                       List<String> operatorPermissions, String remark) {
+                       Set<String> operatorPermissions, String remark) {
             this.instance = instance;
             this.definition = definition;
             this.action = action;
@@ -71,7 +71,7 @@ public interface ProcessNodeHandler extends IdObject<String> {
             return operatorId;
         }
 
-        public List<String> getOperatorPermissions() {
+        public Set<String> getOperatorPermissions() {
             return operatorPermissions;
         }
 

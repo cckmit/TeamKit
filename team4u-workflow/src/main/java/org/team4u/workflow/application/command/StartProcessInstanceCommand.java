@@ -2,8 +2,6 @@ package org.team4u.workflow.application.command;
 
 import org.team4u.workflow.domain.definition.ProcessAction;
 
-import java.util.List;
-
 /**
  * 开始流程实例命令
  *
@@ -25,11 +23,7 @@ public class StartProcessInstanceCommand {
     /**
      * 当前处理人
      */
-    private String operator;
-    /**
-     * 动作当前处理人权限集合
-     */
-    private List<String> operatorPermissions;
+    private String operatorId;
     /**
      * 触发动作
      */
@@ -66,21 +60,12 @@ public class StartProcessInstanceCommand {
         return this;
     }
 
-    public String getOperator() {
-        return operator;
+    public String getOperatorId() {
+        return operatorId;
     }
 
-    public StartProcessInstanceCommand setOperator(String operator) {
-        this.operator = operator;
-        return this;
-    }
-
-    public List<String> getOperatorPermissions() {
-        return operatorPermissions;
-    }
-
-    public StartProcessInstanceCommand setOperatorPermissions(List<String> operatorPermissions) {
-        this.operatorPermissions = operatorPermissions;
+    public StartProcessInstanceCommand setOperatorId(String operatorId) {
+        this.operatorId = operatorId;
         return this;
     }
 
