@@ -2,6 +2,7 @@ package org.team4u.workflow.application;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.team4u.ddd.infrastructure.persistence.memory.LogOnlyEventStore;
 import org.team4u.workflow.TestUtil;
 import org.team4u.workflow.domain.definition.ProcessAction;
 import org.team4u.workflow.domain.definition.ProcessDefinition;
@@ -23,6 +24,7 @@ public class WorkflowAppServiceTest {
 
     private void checkAvailableActions(String operator, String expectedActions) {
         WorkflowAppService service = new WorkflowAppService(
+                new LogOnlyEventStore(),
                 null,
                 new DefaultProcessPermissionService(),
                 null,

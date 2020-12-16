@@ -45,9 +45,9 @@ public class DefaultProcessPermissionService implements ProcessPermissionService
     }
 
     protected boolean canView(Context context) {
-        return context.getInstance().getLogs()
+        return context.getChangedEvents()
                 .stream()
-                .anyMatch(it -> StrUtil.equals(it.getCreateBy(), context.getOperatorId()));
+                .anyMatch(it -> StrUtil.equals(it.getOperator(), context.getOperatorId()));
     }
 
     protected boolean canEdit(Context context) {

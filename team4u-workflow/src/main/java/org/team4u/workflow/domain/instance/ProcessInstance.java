@@ -1,5 +1,6 @@
 package org.team4u.workflow.domain.instance;
 
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import org.team4u.ddd.domain.model.AggregateRoot;
 import org.team4u.workflow.domain.definition.ProcessAction;
@@ -8,7 +9,9 @@ import org.team4u.workflow.domain.definition.node.StaticNode;
 import org.team4u.workflow.domain.instance.event.ProcessInstanceCreatedEvent;
 import org.team4u.workflow.domain.instance.event.ProcessNodeChangedEvent;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 流程实例
@@ -38,10 +41,6 @@ public class ProcessInstance extends AggregateRoot {
      */
     private Set<ProcessAssignee> assignees;
     /**
-     * 流程日志集合
-     */
-    private List<ProcessInstanceLog> logs;
-    /**
      * 创建人
      */
     private String createBy;
@@ -69,7 +68,6 @@ public class ProcessInstance extends AggregateRoot {
         setCurrentNode(currentNode);
         setCreateBy(createdBy);
 
-        setLogs(new ArrayList<>());
         setAssignees(new HashSet<>());
         setCreateTime(new Date());
     }
@@ -112,26 +110,22 @@ public class ProcessInstance extends AggregateRoot {
                                     StaticNode newNode,
                                     String operator,
                                     String remark) {
-        ProcessNode oldNode = getCurrentNode();
+        ProcessNode oldNode = ObjectUtil.defaultIfNull(getCurrentNode(), newNode);
         setCurrentNode(newNode);
 
         refreshUpdateTimeAndOperator(operator);
 
-        ProcessInstanceLog instanceLog = new ProcessInstanceLog()
-                .setProcessInstanceId(getProcessInstanceId())
-                .setNode(oldNode)
-                .setNextNode(newNode)
-                .setAction(action)
-                .setCreateTime(getUpdateTime())
-                .setCreateBy(operator)
-                .setRemark(remark);
-        getLogs().add(instanceLog);
-
         publishEvent(new ProcessNodeChangedEvent(
                 getProcessInstanceId(),
                 getUpdateTime(),
-                this,
-                instanceLog
+                oldNode.getNodeId(),
+                oldNode.getNodeName(),
+                action.getActionId(),
+                action.getActionName(),
+                newNode.getNodeId(),
+                newNode.getNodeName(),
+                remark,
+                operator
         ));
     }
 
@@ -206,15 +200,6 @@ public class ProcessInstance extends AggregateRoot {
 
     public ProcessInstance setAssignees(Set<ProcessAssignee> assignees) {
         this.assignees = assignees;
-        return this;
-    }
-
-    public List<ProcessInstanceLog> getLogs() {
-        return logs;
-    }
-
-    public ProcessInstance setLogs(List<ProcessInstanceLog> logs) {
-        this.logs = logs;
         return this;
     }
 

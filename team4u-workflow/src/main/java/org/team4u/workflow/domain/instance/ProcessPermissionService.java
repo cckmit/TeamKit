@@ -1,7 +1,9 @@
 package org.team4u.workflow.domain.instance;
 
 import org.team4u.workflow.domain.definition.ProcessAction;
+import org.team4u.workflow.domain.instance.event.ProcessNodeChangedEvent;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -21,17 +23,26 @@ public interface ProcessPermissionService {
 
     class Context {
         private final ProcessInstance instance;
+        private final List<ProcessNodeChangedEvent> changedEvents;
         private final ProcessAction action;
         private final String operatorId;
 
-        public Context(ProcessInstance instance, ProcessAction action, String operatorId) {
+        public Context(ProcessInstance instance,
+                       List<ProcessNodeChangedEvent> changedEvents,
+                       ProcessAction action,
+                       String operatorId) {
             this.instance = instance;
+            this.changedEvents = changedEvents;
             this.action = action;
             this.operatorId = operatorId;
         }
 
         public ProcessInstance getInstance() {
             return instance;
+        }
+
+        public List<ProcessNodeChangedEvent> getChangedEvents() {
+            return changedEvents;
         }
 
         public ProcessAction getAction() {

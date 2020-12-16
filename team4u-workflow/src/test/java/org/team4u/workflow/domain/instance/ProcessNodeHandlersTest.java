@@ -22,8 +22,8 @@ public class ProcessNodeHandlersTest {
 
         Assert.assertEquals(TestUtil.staticNode("created"), instance.getCurrentNode());
         Assert.assertEquals(
-                "[node=created,action=save,nextNode=created,remark='test',createBy='test']",
-                instance.getLogs().toString()
+                "[node=created,action=save,nextNode=created,remark='test',operator='test']",
+                instance.events().toString()
         );
     }
 
@@ -37,8 +37,8 @@ public class ProcessNodeHandlersTest {
         );
 
         Assert.assertEquals(
-                "[node=created,action=submit,nextNode=pending,remark='test',createBy='test']",
-                instance.getLogs().toString()
+                "[node=created,action=submit,nextNode=pending,remark='test',operator='test']",
+                instance.events().toString()
         );
     }
 
@@ -67,8 +67,8 @@ public class ProcessNodeHandlersTest {
         Assert.assertEquals(
                 "node=pending,action=" + actionId +
                         ",nextNode=" + expectedNodeId +
-                        ",remark='test',createBy='test'",
-                instance.getLogs().get(1).toString()
+                        ",remark='test',operator='test'",
+                instance.events().get(1).toString()
         );
 
         Assert.assertTrue(instance.isCompleted());

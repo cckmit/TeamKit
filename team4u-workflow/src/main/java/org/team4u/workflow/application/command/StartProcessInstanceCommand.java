@@ -1,7 +1,5 @@
 package org.team4u.workflow.application.command;
 
-import org.team4u.workflow.domain.definition.ProcessAction;
-
 /**
  * 开始流程实例命令
  *
@@ -25,9 +23,9 @@ public class StartProcessInstanceCommand {
      */
     private String operatorId;
     /**
-     * 触发动作
+     * 触发动作标识
      */
-    private ProcessAction action;
+    private String actionId;
     /**
      * 备注
      */
@@ -69,12 +67,12 @@ public class StartProcessInstanceCommand {
         return this;
     }
 
-    public ProcessAction getAction() {
-        return action;
+    public String getActionId() {
+        return actionId;
     }
 
-    public StartProcessInstanceCommand setAction(ProcessAction action) {
-        this.action = action;
+    public StartProcessInstanceCommand setActionId(String actionId) {
+        this.actionId = actionId;
         return this;
     }
 
