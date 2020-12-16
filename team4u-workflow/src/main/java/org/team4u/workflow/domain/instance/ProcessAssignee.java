@@ -14,9 +14,9 @@ import java.util.Objects;
 public class ProcessAssignee extends ValueObject {
 
     /**
-     * 流程实例标识
+     * 节点标识
      */
-    private String processInstanceId;
+    private String nodeId;
     /**
      * 处理人
      */
@@ -30,8 +30,8 @@ public class ProcessAssignee extends ValueObject {
 
     private Date updateTime;
 
-    public ProcessAssignee(String processInstanceId, String assignee) {
-        setProcessInstanceId(processInstanceId);
+    public ProcessAssignee(String nodeId, String assignee) {
+        setNodeId(nodeId);
         setAssignee(assignee);
         setCreateTime(new Date());
         setUpdateTime(getCreateTime());
@@ -46,12 +46,12 @@ public class ProcessAssignee extends ValueObject {
         setUpdateTime(new Date());
     }
 
-    public String getProcessInstanceId() {
-        return processInstanceId;
+    public String getNodeId() {
+        return nodeId;
     }
 
-    public ProcessAssignee setProcessInstanceId(String processInstanceId) {
-        this.processInstanceId = processInstanceId;
+    public ProcessAssignee setNodeId(String nodeId) {
+        this.nodeId = nodeId;
         return this;
     }
 
@@ -96,17 +96,17 @@ public class ProcessAssignee extends ValueObject {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ProcessAssignee that = (ProcessAssignee) o;
-        return processInstanceId.equals(that.processInstanceId) && assignee.equals(that.assignee);
+        return nodeId.equals(that.nodeId) && assignee.equals(that.assignee);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(processInstanceId, assignee);
+        return Objects.hash(nodeId, assignee);
     }
 
     @Override
     public String toString() {
-        return processInstanceId + ',' +
+        return nodeId + ',' +
                 assignee + ',' +
                 action;
     }

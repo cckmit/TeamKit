@@ -29,7 +29,7 @@ public class ProcessInstance extends AggregateRoot {
      */
     private String processInstanceName;
     /**
-     * 流程流程定义
+     * 流程流程定义标识
      */
     private String processDefinitionId;
     /**
