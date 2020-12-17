@@ -1,6 +1,6 @@
 {
   "processDefinitionId": {
-    "id": "test"
+    "id": "simple"
   },
   "actions": [
     {

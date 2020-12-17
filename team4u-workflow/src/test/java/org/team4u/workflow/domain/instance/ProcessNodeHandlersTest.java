@@ -10,7 +10,7 @@ import static org.team4u.workflow.TestUtil.selectorAppService;
 
 public class ProcessNodeHandlersTest {
 
-    private final ProcessDefinition definition = TestUtil.definitionOf("simple_def.json");
+    private final ProcessDefinition definition = TestUtil.definitionOf("simple.json");
     private final ProcessNodeHandlers handles = new ProcessNodeHandlers();
 
     @Test

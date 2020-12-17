@@ -59,6 +59,10 @@ public class ProcessDefinition extends AggregateRoot {
     }
 
     public ProcessAction actionOf(String actionId) {
+        if (StrUtil.isBlank(actionId)) {
+            return null;
+        }
+
         return actions.stream()
                 .filter(it -> StrUtil.equals(it.getActionId(), actionId))
                 .findFirst()

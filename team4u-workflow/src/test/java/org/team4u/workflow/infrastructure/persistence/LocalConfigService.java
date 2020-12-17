@@ -9,7 +9,7 @@ public class LocalConfigService implements ConfigService {
 
     @Override
     public String get(String key) {
-        return FileUtil.readUtf8String(key);
+        return FileUtil.readUtf8String(key + ".json");
     }
 
     @SuppressWarnings("unchecked")

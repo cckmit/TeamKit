@@ -1,4 +1,4 @@
-package org.team4u.workflow.infrastructure.persistence;
+package org.team4u.workflow.infrastructure.persistence.instance;
 
 import org.team4u.workflow.domain.instance.ProcessInstance;
 import org.team4u.workflow.domain.instance.ProcessInstanceRepository;

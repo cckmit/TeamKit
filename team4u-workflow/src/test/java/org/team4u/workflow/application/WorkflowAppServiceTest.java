@@ -32,12 +32,12 @@ public class WorkflowAppServiceTest {
                 TestUtil.processDefinitionRepository
         );
 
-        ProcessDefinition definition = TestUtil.definitionOf("simple_def.json");
+        ProcessDefinition definition = TestUtil.definitionOf("simple.json");
 
         List<ProcessAction> actions = service.availableActionsOf(
                 TestUtil.newInstance()
                         .setCurrentNode(definition.processNodeOf("created"))
-                        .setProcessDefinitionId(ProcessDefinitionId.of("simple_def.json")),
+                        .setProcessDefinitionId(ProcessDefinitionId.of("simple.json")),
                 operator
         );
         Assert.assertEquals(expectedActions, actions.toString());

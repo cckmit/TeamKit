@@ -1,4 +1,4 @@
-package org.team4u.workflow.infrastructure.persistence;
+package org.team4u.workflow.infrastructure.persistence.definition;
 
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
@@ -27,7 +27,7 @@ public class JsonProcessDefinitionRepository implements ProcessDefinitionReposit
         ProcessDefinitionId processDefinitionId = ProcessDefinitionId.of(domainId);
 
         String json;
-        if (processDefinitionId.getVersion() < 0) {
+        if (processDefinitionId.getVersion() < 1) {
             json = configService.get(processDefinitionId.getId());
         } else {
             json = configService.get(domainId);

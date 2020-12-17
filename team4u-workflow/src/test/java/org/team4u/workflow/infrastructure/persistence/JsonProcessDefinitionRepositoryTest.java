@@ -10,8 +10,7 @@ public class JsonProcessDefinitionRepositoryTest {
 
     @Test
     public void domainOf() {
-        String path = "simple_def.json";
-        ProcessDefinition definition = definitionOf(path);
+        ProcessDefinition definition = definitionOf("simple");
 
         Assert.assertEquals(
                 "[save, submit, test, approve, reject]",

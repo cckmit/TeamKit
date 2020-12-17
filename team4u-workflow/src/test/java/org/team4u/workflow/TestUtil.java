@@ -13,8 +13,8 @@ import org.team4u.workflow.domain.definition.node.StaticNode;
 import org.team4u.workflow.domain.instance.ProcessAssignee;
 import org.team4u.workflow.domain.instance.ProcessInstance;
 import org.team4u.workflow.domain.instance.node.handler.ProcessNodeHandler;
-import org.team4u.workflow.infrastructure.persistence.JsonProcessDefinitionRepository;
 import org.team4u.workflow.infrastructure.persistence.LocalConfigService;
+import org.team4u.workflow.infrastructure.persistence.definition.JsonProcessDefinitionRepository;
 
 import java.util.Arrays;
 import java.util.Collections;

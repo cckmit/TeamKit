@@ -1,6 +1,6 @@
 package org.team4u.workflow.domain.instance;
 
-import org.team4u.ddd.domain.model.ValueObject;
+import org.team4u.ddd.domain.model.IdentifiedValueObject;
 import org.team4u.workflow.domain.definition.ProcessAction;
 
 import java.util.Date;
@@ -11,7 +11,7 @@ import java.util.Objects;
  *
  * @author jay.wu
  */
-public class ProcessAssignee extends ValueObject {
+public class ProcessAssignee extends IdentifiedValueObject {
 
     /**
      * 节点标识
