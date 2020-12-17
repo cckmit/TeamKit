@@ -71,10 +71,10 @@
         "type": "expression",
         "body": [
           {
-            "created": "${c.ext.a == 1}"
+            "created": "${ext.a == 1}"
           },
           {
-            "pending": "${c.ext.a == 2}"
+            "pending": "${ext.a == 2}"
           }
         ]
       }
