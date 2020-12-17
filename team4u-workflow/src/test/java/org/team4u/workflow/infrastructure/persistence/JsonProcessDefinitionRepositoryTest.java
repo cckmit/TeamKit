@@ -14,12 +14,12 @@ public class JsonProcessDefinitionRepositoryTest {
         ProcessDefinition definition = definitionOf(path);
 
         Assert.assertEquals(
-                "[save, submit, approve, reject]",
+                "[save, submit, test, approve, reject]",
                 definition.getActions().toString()
         );
 
         Assert.assertEquals(
-                "[created, createdActionNode, pending, pendingActionNode, rejected, completed]",
+                "[created, createdActionNode, dynamic, pending, pendingActionNode, rejected, completed]",
                 definition.getNodes().toString()
         );
     }

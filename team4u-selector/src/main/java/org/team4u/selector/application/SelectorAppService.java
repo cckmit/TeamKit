@@ -4,6 +4,8 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
+import org.team4u.base.log.LogMessage;
+import org.team4u.base.log.LogMessageContext;
 import org.team4u.selector.domain.config.entity.SelectorConfig;
 import org.team4u.selector.domain.config.repository.SelectorConfigRepository;
 import org.team4u.selector.domain.interceptor.entity.SelectorInterceptor;
@@ -14,7 +16,6 @@ import org.team4u.selector.domain.selector.entity.Selector;
 import org.team4u.selector.domain.selector.entity.SelectorFactory;
 import org.team4u.selector.domain.selector.entity.binding.SelectorBinding;
 import org.team4u.selector.domain.selector.service.SelectorFactoryService;
-import org.team4u.base.log.LogMessage;
 
 import java.util.Collections;
 import java.util.List;
@@ -33,6 +34,10 @@ public class SelectorAppService {
     private final SelectorFactoryService selectorFactoryService;
     private final SelectorInterceptorFactoryService selectorInterceptorFactoryService;
     private final SelectorInterceptorService selectorInterceptorService;
+
+    public SelectorAppService() {
+        this(null);
+    }
 
     public SelectorAppService(SelectorConfigRepository selectorConfigRepository) {
         this.selectorConfigRepository = selectorConfigRepository;
@@ -53,15 +58,25 @@ public class SelectorAppService {
      * 根据选择标识、绑定值最终结果
      */
     public String select(String selectorConfigId, SelectorBinding binding) {
-        LogMessage lm = LogMessage.create(this.getClass().getSimpleName(), "select")
+        LogMessageContext.createAndSet(this.getClass().getSimpleName(), "select")
                 .append("selectorConfigId", selectorConfigId);
 
         // 获取选择器配置
         SelectorConfig selectorConfig = selectorConfigOfId(selectorConfigId);
+        // 处理后置拦截
+        return select(selectorConfig, binding);
+    }
+
+
+    public String select(SelectorConfig selectorConfig, SelectorBinding binding) {
+        LogMessage lm = LogMessageContext.getOrCreate(this.getClass().getSimpleName(), "select");
+
         if (selectorConfig == null) {
             log.warn(lm.fail("selectorConfig is null").toString());
             return Selector.NONE;
         }
+
+        lm.append("selectorConfigId", selectorConfig.getId());
 
         // 获取拦截器集合
         List<SelectorInterceptor> interceptors = interceptorsOfConfig(selectorConfig);

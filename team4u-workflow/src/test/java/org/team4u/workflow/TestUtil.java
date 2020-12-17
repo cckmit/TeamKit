@@ -1,6 +1,10 @@
 package org.team4u.workflow;
 
 import cn.hutool.core.collection.CollUtil;
+import org.team4u.selector.application.SelectorAppService;
+import org.team4u.selector.domain.selector.entity.expression.ExpressionSelectorFactory;
+import org.team4u.template.TemplateFunctionService;
+import org.team4u.template.infrastructure.BeetlTemplateEngine;
 import org.team4u.workflow.domain.definition.ProcessAction;
 import org.team4u.workflow.domain.definition.ProcessDefinition;
 import org.team4u.workflow.domain.definition.ProcessDefinitionRepository;
@@ -59,7 +63,8 @@ public class TestUtil {
                 action,
                 TEST,
                 new HashSet<>(CollUtil.toList(permissions)),
-                TEST
+                TEST,
+                null
         ).setNode(node);
     }
 
@@ -94,6 +99,14 @@ public class TestUtil {
                 TEST,
                 CHOICE_TYPE_ANY,
                 Arrays.asList(actionNodes.clone())
+        );
+    }
+
+    public static SelectorAppService selectorAppService() {
+        return new SelectorAppService().registerSelectorFactory(
+                new ExpressionSelectorFactory(
+                        new BeetlTemplateEngine(new TemplateFunctionService())
+                )
         );
     }
 }

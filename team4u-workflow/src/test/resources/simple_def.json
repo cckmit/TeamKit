@@ -16,6 +16,13 @@
       ]
     },
     {
+      "actionId": "test",
+      "actionName": "表达式测试",
+      "requiredPermissions": [
+        "EDIT"
+      ]
+    },
+    {
       "actionId": "approve",
       "actionName": "同意",
       "requiredPermissions": [
@@ -49,8 +56,28 @@
         {
           "actionId": "submit",
           "nodeId": "pending"
+        },
+        {
+          "actionId": "test",
+          "nodeId": "dynamic"
         }
       ]
+    },
+    {
+      "@type": "org.team4u.workflow.domain.definition.node.DynamicChoiceNode",
+      "nodeId": "dynamic",
+      "nodeName": "表达式选择器",
+      "rule": {
+        "type": "expression",
+        "body": [
+          {
+            "created": "${c.ext.a == 1}"
+          },
+          {
+            "pending": "${c.ext.a == 2}"
+          }
+        ]
+      }
     },
     {
       "@type": "org.team4u.workflow.domain.definition.node.AssigneeNode",

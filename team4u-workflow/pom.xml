@@ -21,11 +21,19 @@
             <groupId>org.team4u</groupId>
             <artifactId>team4u-selector</artifactId>
             <version>${parent.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>1.2.74</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.ibeetl</groupId>
+            <artifactId>beetl</artifactId>
+            <version>3.0.11.RELEASE</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

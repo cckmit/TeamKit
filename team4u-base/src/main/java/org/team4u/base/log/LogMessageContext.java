@@ -37,4 +37,17 @@ public class LogMessageContext {
     public static LogMessage createAndSet(String module, String eventName) {
         return set(LogMessage.create(module, eventName));
     }
+
+    /**
+     * 从当前线程中获取消息日志，若不存在则创建后返回
+     */
+    public static LogMessage getOrCreate(String module, String eventName) {
+        LogMessage lm = get();
+
+        if (lm != null) {
+            return lm;
+        }
+
+        return LogMessage.create(module, eventName);
+    }
 }

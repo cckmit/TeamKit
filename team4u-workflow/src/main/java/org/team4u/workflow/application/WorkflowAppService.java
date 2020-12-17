@@ -83,7 +83,8 @@ public class WorkflowAppService {
                 action,
                 command.getOperatorId(),
                 operatorPermissionsOf(instance, action, command.getOperatorId()),
-                command.getRemark()
+                command.getRemark(),
+                null
         ));
 
         processInstanceRepository.save(instance);

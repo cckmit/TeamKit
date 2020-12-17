@@ -2,6 +2,7 @@ package org.team4u.workflow.domain.definition;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
+import org.team4u.base.error.DataNotExistException;
 import org.team4u.ddd.domain.model.AggregateRoot;
 import org.team4u.workflow.domain.definition.node.StaticNode;
 
@@ -61,7 +62,7 @@ public class ProcessDefinition extends AggregateRoot {
         return actions.stream()
                 .filter(it -> StrUtil.equals(it.getActionId(), actionId))
                 .findFirst()
-                .orElse(null);
+                .orElseThrow(() -> new DataNotExistException("action is null|actionId=" + actionId));
     }
 
     public List<ProcessAction> actionsOf(List<String> permissions) {

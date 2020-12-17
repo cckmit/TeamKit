@@ -4,6 +4,9 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.team4u.workflow.TestUtil;
 import org.team4u.workflow.domain.definition.ProcessDefinition;
+import org.team4u.workflow.domain.instance.node.handler.DynamicChoiceNodeHandler;
+
+import static org.team4u.workflow.TestUtil.selectorAppService;
 
 public class ProcessNodeHandlersTest {
 
@@ -23,6 +26,25 @@ public class ProcessNodeHandlersTest {
         Assert.assertEquals(TestUtil.staticNode("created"), instance.getCurrentNode());
         Assert.assertEquals(
                 "[node=created,action=save,nextNode=created,remark='test',operator='test']",
+                instance.events().toString()
+        );
+    }
+
+    @Test
+    public void dynamic() {
+        ProcessInstance instance = TestUtil.newInstance().setCurrentNode(definition.rootNode());
+        handles.saveIdObject(new DynamicChoiceNodeHandler(selectorAppService()));
+
+        handles.handle(TestUtil.context(
+                instance,
+                TestUtil.action("test"),
+                definition,
+                null
+        ).putExt("a", 1));
+
+        Assert.assertEquals(TestUtil.staticNode("created"), instance.getCurrentNode());
+        Assert.assertEquals(
+                "[node=created,action=test,nextNode=created,remark='test',operator='test']",
                 instance.events().toString()
         );
     }

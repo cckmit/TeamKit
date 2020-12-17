@@ -14,7 +14,7 @@ public class WorkflowAppServiceTest {
 
     @Test
     public void hasAvailableActions() {
-        checkAvailableActions(TestUtil.TEST, "[save, submit]");
+        checkAvailableActions(TestUtil.TEST, "[save, submit, test]");
     }
 
     @Test
