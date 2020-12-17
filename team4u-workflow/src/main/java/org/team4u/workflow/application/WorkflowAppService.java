@@ -6,10 +6,7 @@ import org.team4u.base.error.SystemDataNotExistException;
 import org.team4u.ddd.event.EventStore;
 import org.team4u.ddd.event.StoredEvent;
 import org.team4u.workflow.application.command.StartProcessInstanceCommand;
-import org.team4u.workflow.domain.definition.ProcessAction;
-import org.team4u.workflow.domain.definition.ProcessDefinition;
-import org.team4u.workflow.domain.definition.ProcessDefinitionRepository;
-import org.team4u.workflow.domain.definition.ProcessNode;
+import org.team4u.workflow.domain.definition.*;
 import org.team4u.workflow.domain.definition.node.ActionChoiceNode;
 import org.team4u.workflow.domain.definition.node.StaticNode;
 import org.team4u.workflow.domain.instance.ProcessInstance;
@@ -121,7 +118,7 @@ public class WorkflowAppService {
             return ProcessInstance.create(
                     IdUtil.fastUUID(),
                     command.getProcessInstanceName(),
-                    command.getProcessDefinitionId(),
+                    ProcessDefinitionId.of(command.getProcessDefinitionId()),
                     command.getOperatorId(),
                     rootNode
             );
@@ -152,7 +149,9 @@ public class WorkflowAppService {
      * 当前流程实例可用的动作集合
      */
     public List<ProcessAction> availableActionsOf(ProcessInstance instance, String operatorId) {
-        ProcessDefinition definition = processDefinitionRepository.domainOf(instance.getProcessDefinitionId());
+        ProcessDefinition definition = processDefinitionRepository.domainOf(
+                instance.getProcessDefinitionId().toString()
+        );
         ProcessNode nextNode = definition.processNodeOf(instance.getCurrentNode().getNextNodeId());
 
         if (!(nextNode instanceof ActionChoiceNode)) {

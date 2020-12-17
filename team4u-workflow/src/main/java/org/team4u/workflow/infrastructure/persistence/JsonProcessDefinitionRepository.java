@@ -6,6 +6,7 @@ import com.alibaba.fastjson.parser.Feature;
 import org.team4u.base.config.ConfigService;
 import org.team4u.base.error.SystemDataNotExistException;
 import org.team4u.workflow.domain.definition.ProcessDefinition;
+import org.team4u.workflow.domain.definition.ProcessDefinitionId;
 import org.team4u.workflow.domain.definition.ProcessDefinitionRepository;
 
 /**
@@ -23,7 +24,14 @@ public class JsonProcessDefinitionRepository implements ProcessDefinitionReposit
 
     @Override
     public ProcessDefinition domainOf(String domainId) {
-        String json = configService.get(domainId);
+        ProcessDefinitionId processDefinitionId = ProcessDefinitionId.of(domainId);
+
+        String json;
+        if (processDefinitionId.getVersion() < 0) {
+            json = configService.get(processDefinitionId.getId());
+        } else {
+            json = configService.get(domainId);
+        }
 
         if (StrUtil.isBlank(json)) {
             throw new SystemDataNotExistException("ProcessDefinition json is null|id=" + domainId);

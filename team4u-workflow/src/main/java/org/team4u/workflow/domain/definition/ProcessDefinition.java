@@ -19,7 +19,7 @@ public class ProcessDefinition extends AggregateRoot {
     /**
      * 流程定义标识
      */
-    private final String processDefinitionId;
+    private final ProcessDefinitionId processDefinitionId;
     /**
      * 动作集合
      */
@@ -29,7 +29,7 @@ public class ProcessDefinition extends AggregateRoot {
      */
     private List<ProcessNode> nodes;
 
-    public ProcessDefinition(String processDefinitionId,
+    public ProcessDefinition(ProcessDefinitionId processDefinitionId,
                              List<ProcessAction> actions,
                              List<ProcessNode> nodes) {
         this.processDefinitionId = processDefinitionId;
@@ -71,7 +71,7 @@ public class ProcessDefinition extends AggregateRoot {
                 .collect(Collectors.toList());
     }
 
-    public String getProcessDefinitionId() {
+    public ProcessDefinitionId getProcessDefinitionId() {
         return processDefinitionId;
     }
 
@@ -95,6 +95,6 @@ public class ProcessDefinition extends AggregateRoot {
 
     @Override
     public String toString() {
-        return processDefinitionId;
+        return processDefinitionId.toString();
     }
 }

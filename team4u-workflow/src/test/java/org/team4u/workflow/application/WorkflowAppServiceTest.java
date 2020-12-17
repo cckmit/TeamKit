@@ -6,6 +6,7 @@ import org.team4u.ddd.infrastructure.persistence.memory.LogOnlyEventStore;
 import org.team4u.workflow.TestUtil;
 import org.team4u.workflow.domain.definition.ProcessAction;
 import org.team4u.workflow.domain.definition.ProcessDefinition;
+import org.team4u.workflow.domain.definition.ProcessDefinitionId;
 import org.team4u.workflow.domain.instance.DefaultProcessPermissionService;
 
 import java.util.List;
@@ -36,7 +37,7 @@ public class WorkflowAppServiceTest {
         List<ProcessAction> actions = service.availableActionsOf(
                 TestUtil.newInstance()
                         .setCurrentNode(definition.processNodeOf("created"))
-                        .setProcessDefinitionId("simple_def.json"),
+                        .setProcessDefinitionId(ProcessDefinitionId.of("simple_def.json")),
                 operator
         );
         Assert.assertEquals(expectedActions, actions.toString());

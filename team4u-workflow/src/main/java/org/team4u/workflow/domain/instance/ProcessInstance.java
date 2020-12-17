@@ -4,6 +4,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import org.team4u.ddd.domain.model.AggregateRoot;
 import org.team4u.workflow.domain.definition.ProcessAction;
+import org.team4u.workflow.domain.definition.ProcessDefinitionId;
 import org.team4u.workflow.domain.definition.ProcessNode;
 import org.team4u.workflow.domain.definition.node.StaticNode;
 import org.team4u.workflow.domain.instance.event.ProcessInstanceCreatedEvent;
@@ -31,7 +32,7 @@ public class ProcessInstance extends AggregateRoot {
     /**
      * 流程流程定义标识
      */
-    private String processDefinitionId;
+    private ProcessDefinitionId processDefinitionId;
     /**
      * 当前流程节点
      */
@@ -59,7 +60,7 @@ public class ProcessInstance extends AggregateRoot {
 
     public ProcessInstance(String processInstanceId,
                            String processInstanceName,
-                           String processDefinitionId,
+                           ProcessDefinitionId processDefinitionId,
                            StaticNode currentNode,
                            String createdBy) {
         setProcessInstanceId(processInstanceId);
@@ -84,7 +85,7 @@ public class ProcessInstance extends AggregateRoot {
      */
     public static ProcessInstance create(String processInstanceId,
                                          String processInstanceName,
-                                         String processDefinitionId,
+                                         ProcessDefinitionId processDefinitionId,
                                          String createdBy,
                                          StaticNode startNode) {
         ProcessInstance instance = new ProcessInstance(
@@ -95,7 +96,7 @@ public class ProcessInstance extends AggregateRoot {
                 createdBy);
 
         instance.publishEvent(new ProcessInstanceCreatedEvent(
-                processDefinitionId,
+                processDefinitionId.toString(),
                 instance.getCreateTime(),
                 instance
         ));
@@ -176,11 +177,11 @@ public class ProcessInstance extends AggregateRoot {
         return this;
     }
 
-    public String getProcessDefinitionId() {
+    public ProcessDefinitionId getProcessDefinitionId() {
         return processDefinitionId;
     }
 
-    public ProcessInstance setProcessDefinitionId(String processDefinitionId) {
+    public ProcessInstance setProcessDefinitionId(ProcessDefinitionId processDefinitionId) {
         this.processDefinitionId = processDefinitionId;
         return this;
     }

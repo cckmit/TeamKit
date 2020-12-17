@@ -5,10 +5,7 @@ import org.team4u.selector.application.SelectorAppService;
 import org.team4u.selector.domain.selector.entity.expression.ExpressionSelectorFactory;
 import org.team4u.template.TemplateFunctionService;
 import org.team4u.template.infrastructure.BeetlTemplateEngine;
-import org.team4u.workflow.domain.definition.ProcessAction;
-import org.team4u.workflow.domain.definition.ProcessDefinition;
-import org.team4u.workflow.domain.definition.ProcessDefinitionRepository;
-import org.team4u.workflow.domain.definition.ProcessNode;
+import org.team4u.workflow.domain.definition.*;
 import org.team4u.workflow.domain.definition.node.ActionChoiceNode;
 import org.team4u.workflow.domain.definition.node.AssigneeActionChoiceNode;
 import org.team4u.workflow.domain.definition.node.AssigneeNode;
@@ -40,7 +37,7 @@ public class TestUtil {
         return new ProcessInstance(
                 TEST,
                 TEST,
-                TEST,
+                ProcessDefinitionId.of(TEST),
                 null,
                 TEST
         ).setAssignees(

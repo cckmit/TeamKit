@@ -1,5 +1,7 @@
 {
-  "processDefinitionId": "test",
+  "processDefinitionId": {
+    "id": "test"
+  },
   "actions": [
     {
       "actionId": "save",

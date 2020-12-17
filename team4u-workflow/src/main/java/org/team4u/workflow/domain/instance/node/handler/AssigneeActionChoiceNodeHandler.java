@@ -2,7 +2,7 @@ package org.team4u.workflow.domain.instance.node.handler;
 
 import cn.hutool.core.util.StrUtil;
 import org.team4u.workflow.domain.definition.node.AssigneeActionChoiceNode;
-import org.team4u.workflow.domain.instance.NoPermissionHandlerException;
+import org.team4u.workflow.domain.instance.NoPermissionException;
 import org.team4u.workflow.domain.instance.ProcessAssignee;
 
 import static org.team4u.workflow.domain.definition.node.AssigneeActionChoiceNode.CHOICE_TYPE_ANY;
@@ -19,7 +19,7 @@ public class AssigneeActionChoiceNodeHandler extends ActionChoiceNodeHandler {
         ProcessAssignee assignee = context.getInstance().assigneeOf(context.getOperatorId());
 
         if (assignee == null) {
-            throw new NoPermissionHandlerException(
+            throw new NoPermissionException(
                     String.format("processInstanceId=%s|operator=%s",
                             context.getInstance().getProcessInstanceId(),
                             context.getOperatorId()

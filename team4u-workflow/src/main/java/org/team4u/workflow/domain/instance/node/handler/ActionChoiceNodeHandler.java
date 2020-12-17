@@ -2,7 +2,7 @@ package org.team4u.workflow.domain.instance.node.handler;
 
 import org.team4u.base.error.SystemDataNotExistException;
 import org.team4u.workflow.domain.definition.node.ActionChoiceNode;
-import org.team4u.workflow.domain.instance.NoPermissionHandlerException;
+import org.team4u.workflow.domain.instance.NoPermissionException;
 
 /**
  * 动作选择器节点处理器
@@ -39,7 +39,7 @@ public class ActionChoiceNodeHandler implements ProcessNodeHandler {
             return;
         }
 
-        throw new NoPermissionHandlerException(
+        throw new NoPermissionException(
                 String.format("processInstanceId=%s|operator=%s|operatorPermissions=%s",
                         context.getInstance().getProcessInstanceId(),
                         context.getOperatorId(),

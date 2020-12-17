@@ -3,7 +3,7 @@ package org.team4u.workflow.domain.instance.node.handler;
 import org.junit.Assert;
 import org.junit.Test;
 import org.team4u.base.error.SystemDataNotExistException;
-import org.team4u.workflow.domain.instance.NoPermissionHandlerException;
+import org.team4u.workflow.domain.instance.NoPermissionException;
 import org.team4u.workflow.domain.instance.ProcessInstance;
 
 import static org.team4u.workflow.TestUtil.*;
@@ -42,7 +42,7 @@ public class AssigneeActionChoiceNodeHandlerTest {
             ));
 
             Assert.fail();
-        } catch (NoPermissionHandlerException e) {
+        } catch (NoPermissionException e) {
             Assert.assertEquals("processInstanceId=test|operator=test", e.getMessage());
         }
     }
@@ -59,7 +59,7 @@ public class AssigneeActionChoiceNodeHandlerTest {
                     assigneeActionChoiceNode(actionNode(TEST, TEST1))
             ));
             Assert.fail();
-        } catch (NoPermissionHandlerException e) {
+        } catch (NoPermissionException e) {
             Assert.assertEquals(
                     "processInstanceId=test|operator=test|operatorPermissions=[]",
                     e.getMessage()

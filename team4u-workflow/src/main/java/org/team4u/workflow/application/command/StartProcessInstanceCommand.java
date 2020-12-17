@@ -1,5 +1,7 @@
 package org.team4u.workflow.application.command;
 
+import java.util.Map;
+
 /**
  * 开始流程实例命令
  *
@@ -11,11 +13,11 @@ public class StartProcessInstanceCommand {
      */
     private String processInstanceId;
     /**
-     * 流程实例名称
+     * 流程实例名称（新建时必填）
      */
     private String processInstanceName;
     /**
-     * 流程定义标识
+     * 流程定义标识（新建时必填）
      */
     private String processDefinitionId;
     /**
@@ -30,6 +32,10 @@ public class StartProcessInstanceCommand {
      * 备注
      */
     private String remark;
+    /**
+     * 附加信息
+     */
+    private Map<String, Object> ext;
 
     public String getProcessInstanceId() {
         return processInstanceId;
@@ -82,6 +88,15 @@ public class StartProcessInstanceCommand {
 
     public StartProcessInstanceCommand setRemark(String remark) {
         this.remark = remark;
+        return this;
+    }
+
+    public Map<String, Object> getExt() {
+        return ext;
+    }
+
+    public StartProcessInstanceCommand setExt(Map<String, Object> ext) {
+        this.ext = ext;
         return this;
     }
 }
