@@ -14,7 +14,6 @@ import org.team4u.workflow.infrastructure.DbTest;
 public class MybatisProcessFormRepositoryTest extends DbTest {
     @Autowired
     private TestFormMapper testFormMapper;
-
     @Autowired
     private ProcessFormItemMapper formItemMapper;
 

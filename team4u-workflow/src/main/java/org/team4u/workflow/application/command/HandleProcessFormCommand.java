@@ -3,19 +3,19 @@ package org.team4u.workflow.application.command;
 import org.team4u.workflow.domain.form.ProcessForm;
 
 /**
- * 保存流程表单命令
+ * 处理流程表单命令
  *
  * @author jay.wu
  */
 public class HandleProcessFormCommand {
 
-    private final StartProcessInstanceCommand startProcessInstanceCommand;
     private final ProcessForm processForm;
+    private final StartProcessInstanceCommand startProcessInstanceCommand;
 
-    public HandleProcessFormCommand(StartProcessInstanceCommand startProcessInstanceCommand,
-                                    ProcessForm processForm) {
-        this.startProcessInstanceCommand = startProcessInstanceCommand;
+    public HandleProcessFormCommand(ProcessForm processForm,
+                                    StartProcessInstanceCommand startProcessInstanceCommand) {
         this.processForm = processForm;
+        this.startProcessInstanceCommand = startProcessInstanceCommand;
     }
 
     public StartProcessInstanceCommand getStartProcessInstanceCommand() {

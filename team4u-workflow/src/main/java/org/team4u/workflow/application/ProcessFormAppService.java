@@ -63,7 +63,7 @@ public class ProcessFormAppService {
                 command.getStartProcessInstanceCommand()
         );
 
-        if (shouldSaveProcessForm(commandActionOf(
+        if (shouldSaveProcessForm(actionOf(
                 instance,
                 command.getStartProcessInstanceCommand()
         ))) {
@@ -71,8 +71,8 @@ public class ProcessFormAppService {
         }
     }
 
-    private ProcessAction commandActionOf(ProcessInstance instance,
-                                          StartProcessInstanceCommand command) {
+    private ProcessAction actionOf(ProcessInstance instance,
+                                   StartProcessInstanceCommand command) {
         ProcessDefinition definition = processAppService.processDefinitionOf(
                 instance.getProcessDefinitionId().toString()
         );
