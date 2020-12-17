@@ -3,6 +3,7 @@ package org.team4u.workflow.infrastructure.persistence.form;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 
 import java.util.Date;
 
@@ -11,6 +12,7 @@ import java.util.Date;
  *
  * @author jay.wu
  */
+@TableName("form_item")
 public class ProcessFormItemDo {
     @TableId(type = IdType.AUTO)
     private Long id;

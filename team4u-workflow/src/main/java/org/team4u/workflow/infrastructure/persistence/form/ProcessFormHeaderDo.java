@@ -11,7 +11,7 @@ import java.util.Date;
  *
  * @author jay.wu
  */
-public abstract class FormDo implements ProcessFormHeader {
+public abstract class ProcessFormHeaderDo implements ProcessFormHeader {
     @TableId(type = IdType.AUTO)
     private Long id;
     /**

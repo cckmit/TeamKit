@@ -1,6 +1,7 @@
 package org.team4u.workflow.infrastructure.persistence.form;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.util.ReflectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -9,6 +10,8 @@ import org.team4u.workflow.domain.form.ProcessForm;
 import org.team4u.workflow.domain.form.ProcessFormHeader;
 import org.team4u.workflow.domain.form.ProcessFormItem;
 import org.team4u.workflow.domain.form.ProcessFormRepository;
+
+import java.util.Date;
 
 /**
  * 基于数据库的流程表单资源库
@@ -40,6 +43,10 @@ public class MybatisProcessFormRepository<H extends ProcessFormHeader> implement
                         .eq(ProcessFormItemDo::getFormId, formId)
         );
 
+        if (formItemDo == null) {
+            return null;
+        }
+
         ProcessFormItem formItem = new ProcessFormItem();
         BeanUtil.copyProperties(formItemDo, formItem);
         return formItem;
@@ -47,7 +54,7 @@ public class MybatisProcessFormRepository<H extends ProcessFormHeader> implement
 
     private ProcessFormHeader formHeaderOf(String formId) {
         return formHeaderMapper.selectOne(
-                new QueryWrapper<H>().eq("formId", formId)
+                new QueryWrapper<H>().eq("form_id", formId)
         );
     }
 
@@ -60,11 +67,18 @@ public class MybatisProcessFormRepository<H extends ProcessFormHeader> implement
     }
 
     private void saveBody(ProcessFormItem formItem) {
+        if (formItem == null) {
+            return;
+        }
+
         ProcessFormItemDo formItemDo = toProcessFormItemDo(formItem);
         if (formItemDo.getId() == null) {
+            formItemDo.setCreateTime(new Date());
+            formItemDo.setUpdateTime(new Date());
             formItemMapper.insert(formItemDo);
             formItem.setId(formItemDo.getId());
         } else {
+            formItemDo.setUpdateTime(new Date());
             formItemMapper.updateById(formItemDo);
         }
     }
@@ -77,8 +91,11 @@ public class MybatisProcessFormRepository<H extends ProcessFormHeader> implement
 
     private void saveHeader(H formHeader) {
         if (formHeader.getId() == null) {
+            ReflectUtil.setFieldValue(formHeader, "createTime", new Date());
+            ReflectUtil.setFieldValue(formHeader, "updateTime", new Date());
             formHeaderMapper.insert(formHeader);
         } else {
+            ReflectUtil.setFieldValue(formHeader, "updateTime", new Date());
             formHeaderMapper.updateById(formHeader);
         }
     }

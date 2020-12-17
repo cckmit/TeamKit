@@ -2,6 +2,7 @@ package org.team4u.workflow.domain.form;
 
 import cn.hutool.core.util.ClassUtil;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import org.team4u.ddd.domain.model.IdentifiedValueObject;
 
 import static com.alibaba.fastjson.parser.Feature.SupportAutoType;
@@ -25,7 +26,16 @@ public class ProcessFormItem extends IdentifiedValueObject {
      */
     private String formBody;
 
-    public <T> T toFormBody() {
+    public void toFormBody(Object formBody) {
+        if (formBody == null) {
+            return;
+        }
+
+        this.formBody = JSON.toJSONString(formBody, SerializerFeature.WriteClassName);
+        setFormBodyType(formBody.getClass().getName());
+    }
+
+    public <T> T toFormItem() {
         Class<T> bodyClass = ClassUtil.loadClass(getFormBodyType());
         return JSON.parseObject(getFormBody(), bodyClass, SupportAutoType);
     }
