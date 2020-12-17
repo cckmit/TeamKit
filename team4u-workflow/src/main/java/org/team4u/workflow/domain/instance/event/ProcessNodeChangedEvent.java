@@ -99,9 +99,9 @@ public class ProcessNodeChangedEvent extends AbstractDomainEvent {
 
     @Override
     public String toString() {
-        return "node=" + getNodeId() +
-                ",action=" + getActionId() +
-                ",nextNode=" + getNextNodeId() +
+        return "nodeId=" + getNodeId() +
+                ",actionId=" + getActionId() +
+                ",nextNodeId=" + getNextNodeId() +
                 ",remark='" + getRemark() + '\'' +
                 ",operator='" + getOperator() + '\'';
     }
