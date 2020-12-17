@@ -41,6 +41,13 @@ public class ProcessAction extends ValueObject {
         return CollUtil.containsAll(permissions, getRequiredPermissions());
     }
 
+    /**
+     * 判断是否存在所需权限
+     */
+    public boolean hasPermission(String permission) {
+        return CollUtil.contains(getRequiredPermissions(), permission);
+    }
+
     public String getActionId() {
         return actionId;
     }

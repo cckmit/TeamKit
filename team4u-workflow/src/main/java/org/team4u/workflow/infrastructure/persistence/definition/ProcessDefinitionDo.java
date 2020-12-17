@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import java.util.Date;
 
 /**
- * 流程定义数据对象
+ * 流程定义数据
  *
  * @author jay.wu
  */

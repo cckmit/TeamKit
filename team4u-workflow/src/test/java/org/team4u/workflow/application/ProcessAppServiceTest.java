@@ -11,7 +11,7 @@ import org.team4u.workflow.domain.instance.DefaultProcessPermissionService;
 
 import java.util.List;
 
-public class WorkflowAppServiceTest {
+public class ProcessAppServiceTest {
 
     @Test
     public void hasAvailableActions() {
@@ -24,7 +24,7 @@ public class WorkflowAppServiceTest {
     }
 
     private void checkAvailableActions(String operator, String expectedActions) {
-        WorkflowAppService service = new WorkflowAppService(
+        ProcessAppService service = new ProcessAppService(
                 new LogOnlyEventStore(),
                 null,
                 new DefaultProcessPermissionService(),

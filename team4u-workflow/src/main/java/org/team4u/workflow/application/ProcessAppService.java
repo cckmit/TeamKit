@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
  *
  * @author jay.wu
  */
-public class WorkflowAppService {
+public class ProcessAppService {
 
     private final EventStore eventStore;
 
@@ -35,11 +35,11 @@ public class WorkflowAppService {
     private final ProcessInstanceRepository processInstanceRepository;
     private final ProcessDefinitionRepository processDefinitionRepository;
 
-    public WorkflowAppService(EventStore eventStore,
-                              ProcessNodeHandlers processNodeHandlers,
-                              ProcessPermissionService processPermissionService,
-                              ProcessInstanceRepository processInstanceRepository,
-                              ProcessDefinitionRepository processDefinitionRepository) {
+    public ProcessAppService(EventStore eventStore,
+                             ProcessNodeHandlers processNodeHandlers,
+                             ProcessPermissionService processPermissionService,
+                             ProcessInstanceRepository processInstanceRepository,
+                             ProcessDefinitionRepository processDefinitionRepository) {
         this.eventStore = eventStore;
         this.processNodeHandlers = processNodeHandlers;
         this.processPermissionService = processPermissionService;
@@ -101,7 +101,7 @@ public class WorkflowAppService {
         );
     }
 
-    private List<ProcessNodeChangedEvent> processNodeChangedEventsOf(String processInstanceId) {
+    public List<ProcessNodeChangedEvent> processNodeChangedEventsOf(String processInstanceId) {
         if (StrUtil.isBlank(processInstanceId)) {
             return Collections.emptyList();
         }
