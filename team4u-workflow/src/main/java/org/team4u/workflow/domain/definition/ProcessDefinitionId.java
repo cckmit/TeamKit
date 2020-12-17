@@ -3,13 +3,14 @@ package org.team4u.workflow.domain.definition;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.StrUtil;
 import org.team4u.base.error.DataNotExistException;
+import org.team4u.ddd.domain.model.ValueObject;
 
 /**
  * 流程定义标识
  *
  * @author jay.wu
  */
-public class ProcessDefinitionId {
+public class ProcessDefinitionId extends ValueObject {
     /**
      * 标识
      */

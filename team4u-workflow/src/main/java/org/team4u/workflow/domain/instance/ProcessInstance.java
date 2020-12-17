@@ -142,14 +142,19 @@ public class ProcessInstance extends AggregateRoot {
     }
 
     /**
-     * 查询处理人
+     * 查询当前处理人
      *
      * @param assigneeId 处理人标识
      * @return 流程处理人
      */
-    public ProcessAssignee assigneeOf(String assigneeId) {
+    public ProcessAssignee currentAssigneeOf(String assigneeId) {
+        if (getCurrentNode() == null) {
+            return null;
+        }
+
         return getAssignees().stream()
                 .filter(it -> StrUtil.equals(it.getAssignee(), assigneeId))
+                .filter(it -> StrUtil.equals(it.getNodeId(), getCurrentNode().getNodeId()))
                 .findFirst()
                 .orElse(null);
     }

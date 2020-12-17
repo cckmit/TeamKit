@@ -14,7 +14,7 @@ public class AssigneeActionChoiceNodeHandlerTest {
     public void any() {
         AssigneeActionChoiceNodeHandler handler = new AssigneeActionChoiceNodeHandler();
 
-        ProcessInstance instance = newInstance(TEST);
+        ProcessInstance instance = newInstance(TEST).setCurrentNode(staticNode(TEST));
 
         String nextNodeId = handler.handle(context(
                 instance,
@@ -24,14 +24,14 @@ public class AssigneeActionChoiceNodeHandlerTest {
         ));
 
         Assert.assertEquals(TEST1, nextNodeId);
-        Assert.assertEquals(TEST, instance.assigneeOf(TEST).getAction().getActionId());
+        Assert.assertEquals(TEST, instance.currentAssigneeOf(TEST).getAction().getActionId());
     }
 
     @Test
     public void noMatchAssignee() {
         AssigneeActionChoiceNodeHandler handler = new AssigneeActionChoiceNodeHandler();
 
-        ProcessInstance instance = newInstance();
+        ProcessInstance instance = newInstance().setCurrentNode(staticNode(TEST));
 
         try {
             handler.handle(context(
@@ -50,7 +50,7 @@ public class AssigneeActionChoiceNodeHandlerTest {
     @Test
     public void noMatchActonPermission() {
         AssigneeActionChoiceNodeHandler handler = new AssigneeActionChoiceNodeHandler();
-        ProcessInstance instance = newInstance(TEST);
+        ProcessInstance instance = newInstance(TEST).setCurrentNode(staticNode(TEST));
         try {
             handler.handle(context(
                     instance,
@@ -71,7 +71,7 @@ public class AssigneeActionChoiceNodeHandlerTest {
     public void noAction() {
         AssigneeActionChoiceNodeHandler handler = new AssigneeActionChoiceNodeHandler();
 
-        ProcessInstance instance = newInstance(TEST);
+        ProcessInstance instance = newInstance(TEST).setCurrentNode(staticNode(TEST));
 
         try {
             handler.handle(context(

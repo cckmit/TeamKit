@@ -26,7 +26,7 @@ public class AssigneeNodeHandler extends AbstractStaticProcessNodeHandler {
             assignees = assigneesOf(node);
         }
 
-        context.getInstance().setAssignees(
+        context.getInstance().getAssignees().addAll(
                 assignees.stream()
                         .map(it -> new ProcessAssignee(
                                 node.getNodeId(),

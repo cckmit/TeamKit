@@ -16,7 +16,7 @@ public class AssigneeActionChoiceNodeHandler extends ActionChoiceNodeHandler {
 
     @Override
     public String handle(Context context) {
-        ProcessAssignee assignee = context.getInstance().assigneeOf(context.getOperatorId());
+        ProcessAssignee assignee = context.getInstance().currentAssigneeOf(context.getOperatorId());
 
         if (assignee == null) {
             throw new NoPermissionException(
@@ -27,7 +27,7 @@ public class AssigneeActionChoiceNodeHandler extends ActionChoiceNodeHandler {
             );
         }
 
-        assignee.setAction(context.getAction());
+        assignee.handle(context.getAction());
 
         if (!canJumpToNextNode(context)) {
             return null;

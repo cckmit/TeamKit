@@ -37,6 +37,9 @@ public class ProcessAssignee extends ValueObject {
         setUpdateTime(getCreateTime());
     }
 
+    /**
+     * 进行审批
+     */
     public void handle(ProcessAction action) {
         refreshUpdateTime();
         setAction(action);
@@ -50,27 +53,24 @@ public class ProcessAssignee extends ValueObject {
         return nodeId;
     }
 
-    public ProcessAssignee setNodeId(String nodeId) {
+    private void setNodeId(String nodeId) {
         this.nodeId = nodeId;
-        return this;
     }
 
     public String getAssignee() {
         return assignee;
     }
 
-    public ProcessAssignee setAssignee(String assignee) {
+    private void setAssignee(String assignee) {
         this.assignee = assignee;
-        return this;
     }
 
     public ProcessAction getAction() {
         return action;
     }
 
-    public ProcessAssignee setAction(ProcessAction action) {
+    private void setAction(ProcessAction action) {
         this.action = action;
-        return this;
     }
 
     public Date getCreateTime() {
@@ -86,9 +86,8 @@ public class ProcessAssignee extends ValueObject {
         return updateTime;
     }
 
-    public ProcessAssignee setUpdateTime(Date updateTime) {
+    private void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
-        return this;
     }
 
     @Override
