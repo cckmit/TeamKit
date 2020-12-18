@@ -1,11 +1,15 @@
-package org.team4u.workflow.infrastructure.persistence;
+package org.team4u.base.config;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ObjectUtil;
-import org.team4u.base.config.ConfigService;
 
-public class LocalConfigService implements ConfigService {
+/**
+ * 本地Json文件配置服务
+ *
+ * @author jay.wu
+ */
+public class LocalJsonConfigService implements ConfigService {
 
     @Override
     public String get(String key) {

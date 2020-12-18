@@ -10,10 +10,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Repository;
+import org.team4u.base.config.LocalJsonConfigService;
 import org.team4u.ddd.event.EventStore;
 import org.team4u.ddd.infrastructure.persistence.memory.LogOnlyEventStore;
 import org.team4u.workflow.domain.instance.ProcessInstanceRepository;
-import org.team4u.workflow.infrastructure.persistence.LocalConfigService;
 import org.team4u.workflow.infrastructure.persistence.definition.JsonProcessDefinitionRepository;
 import org.team4u.workflow.infrastructure.persistence.instance.MybatisProcessInstanceRepository;
 import org.team4u.workflow.infrastructure.persistence.instance.ProcessAssigneeMapper;
@@ -74,7 +74,7 @@ public class BeanConfig {
                 eventStore,
                 instanceMapper,
                 assigneeMapper,
-                new JsonProcessDefinitionRepository(new LocalConfigService())
+                new JsonProcessDefinitionRepository(new LocalJsonConfigService())
         );
     }
 }

@@ -2,11 +2,11 @@ package org.team4u.workflow.application;
 
 import org.junit.Test;
 import org.team4u.base.config.ConfigService;
+import org.team4u.base.config.LocalJsonConfigService;
 import org.team4u.ddd.infrastructure.persistence.memory.LogOnlyEventStore;
 import org.team4u.workflow.domain.instance.DefaultProcessPermissionService;
 import org.team4u.workflow.domain.instance.ProcessNodeHandlers;
 import org.team4u.workflow.domain.instance.node.handler.DynamicChoiceNodeHandler;
-import org.team4u.workflow.infrastructure.persistence.LocalConfigService;
 import org.team4u.workflow.infrastructure.persistence.definition.JsonProcessDefinitionRepository;
 import org.team4u.workflow.infrastructure.persistence.emulator.JsonProcessEmulatorScriptRepository;
 import org.team4u.workflow.infrastructure.persistence.instance.InMemoryProcessInstanceRepository;
@@ -24,7 +24,7 @@ public class ProcessEmulatorAppServiceTest {
 
     private ProcessEmulatorAppService emulatorAppService() {
         LogOnlyEventStore eventStore = new LogOnlyEventStore();
-        ConfigService configService = new LocalConfigService();
+        ConfigService configService = new LocalJsonConfigService();
         ProcessNodeHandlers handlers = new ProcessNodeHandlers();
 
         handlers.saveIdObject(new DynamicChoiceNodeHandler(selectorAppService()));

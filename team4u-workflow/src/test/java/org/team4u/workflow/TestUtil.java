@@ -1,6 +1,7 @@
 package org.team4u.workflow;
 
 import cn.hutool.core.collection.CollUtil;
+import org.team4u.base.config.LocalJsonConfigService;
 import org.team4u.selector.application.SelectorAppService;
 import org.team4u.selector.domain.selector.entity.expression.ExpressionSelectorFactory;
 import org.team4u.template.TemplateFunctionService;
@@ -13,7 +14,6 @@ import org.team4u.workflow.domain.definition.node.StaticNode;
 import org.team4u.workflow.domain.instance.ProcessAssignee;
 import org.team4u.workflow.domain.instance.ProcessInstance;
 import org.team4u.workflow.domain.instance.node.handler.ProcessNodeHandler;
-import org.team4u.workflow.infrastructure.persistence.LocalConfigService;
 import org.team4u.workflow.infrastructure.persistence.definition.JsonProcessDefinitionRepository;
 
 import java.util.Arrays;
@@ -29,9 +29,8 @@ public class TestUtil {
     public static final String TEST = "test";
     public static final String TEST1 = "test1";
 
-    public static final ProcessDefinitionRepository processDefinitionRepository = new JsonProcessDefinitionRepository(
-            new LocalConfigService()
-    );
+    public static final ProcessDefinitionRepository processDefinitionRepository =
+            new JsonProcessDefinitionRepository(new LocalJsonConfigService());
 
     public static ProcessInstance newInstance(String... assignees) {
         return new ProcessInstance(
