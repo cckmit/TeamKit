@@ -1,5 +1,7 @@
 package org.team4u.workflow.infrastructure.persistence.instance;
 
+import org.team4u.ddd.domain.model.DomainEventAwareRepository;
+import org.team4u.ddd.event.EventStore;
 import org.team4u.workflow.domain.instance.ProcessInstance;
 import org.team4u.workflow.domain.instance.ProcessInstanceRepository;
 
@@ -11,9 +13,15 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @author jay.wu
  */
-public class InMemoryProcessInstanceRepository implements ProcessInstanceRepository {
+public class InMemoryProcessInstanceRepository
+        extends DomainEventAwareRepository<ProcessInstance>
+        implements ProcessInstanceRepository {
 
     private final Map<String, ProcessInstance> instanceMap = new ConcurrentHashMap<>();
+
+    public InMemoryProcessInstanceRepository(EventStore eventStore) {
+        super(eventStore);
+    }
 
     @Override
     public ProcessInstance domainOf(String domainId) {
@@ -21,7 +29,7 @@ public class InMemoryProcessInstanceRepository implements ProcessInstanceReposit
     }
 
     @Override
-    public void save(ProcessInstance domain) {
+    protected void doSave(ProcessInstance domain) {
         instanceMap.put(domain.getProcessInstanceId(), domain);
     }
 }

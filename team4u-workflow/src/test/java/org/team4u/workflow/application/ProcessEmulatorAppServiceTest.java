@@ -23,17 +23,18 @@ public class ProcessEmulatorAppServiceTest {
     }
 
     private ProcessEmulatorAppService emulatorAppService() {
-        ProcessNodeHandlers handlers = new ProcessNodeHandlers();
-        handlers.saveIdObject(new DynamicChoiceNodeHandler(selectorAppService()));
-
+        LogOnlyEventStore eventStore = new LogOnlyEventStore();
         ConfigService configService = new LocalConfigService();
+        ProcessNodeHandlers handlers = new ProcessNodeHandlers();
+
+        handlers.saveIdObject(new DynamicChoiceNodeHandler(selectorAppService()));
 
         return new ProcessEmulatorAppService(
                 new ProcessAppService(
-                        new LogOnlyEventStore(),
+                        eventStore,
                         handlers,
                         new DefaultProcessPermissionService(),
-                        new InMemoryProcessInstanceRepository(),
+                        new InMemoryProcessInstanceRepository(eventStore),
                         new JsonProcessDefinitionRepository(configService)
                 ),
                 new JsonProcessEmulatorScriptRepository(configService)
