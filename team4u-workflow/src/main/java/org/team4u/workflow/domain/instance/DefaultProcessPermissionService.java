@@ -23,10 +23,12 @@ public class DefaultProcessPermissionService implements ProcessPermissionService
         }
 
         if (canEdit(context)) {
+            permissions.add(VIEW.name());
             permissions.add(EDIT.name());
         }
 
         if (canReview(context)) {
+            permissions.add(VIEW.name());
             permissions.add(REVIEW.name());
         }
 
