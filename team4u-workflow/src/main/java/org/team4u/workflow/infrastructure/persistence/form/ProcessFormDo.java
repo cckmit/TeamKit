@@ -2,7 +2,6 @@ package org.team4u.workflow.infrastructure.persistence.form;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import org.team4u.workflow.domain.form.ProcessFormHeader;
 
 import java.util.Date;
 
@@ -11,11 +10,11 @@ import java.util.Date;
  *
  * @author jay.wu
  */
-public abstract class ProcessFormHeaderDo implements ProcessFormHeader {
+public abstract class ProcessFormDo {
     @TableId(type = IdType.AUTO)
     private Long id;
     /**
-     * 表单标识
+     * 流程表单标识
      */
     private String formId;
     /**
@@ -31,7 +30,6 @@ public abstract class ProcessFormHeaderDo implements ProcessFormHeader {
      */
     private Date updateTime;
 
-    @Override
     public Long getId() {
         return id;
     }
@@ -48,7 +46,6 @@ public abstract class ProcessFormHeaderDo implements ProcessFormHeader {
         this.formId = formId;
     }
 
-    @Override
     public String getProcessInstanceId() {
         return processInstanceId;
     }

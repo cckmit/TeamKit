@@ -19,8 +19,9 @@ public class ProcessFormModel {
     private List<ProcessAction> actions;
     private List<ProcessNodeChangedEvent> events;
 
-    public ProcessForm getForm() {
-        return form;
+    @SuppressWarnings("unchecked")
+    public <F extends ProcessForm> F getForm() {
+        return (F) form;
     }
 
     public void setForm(ProcessForm form) {

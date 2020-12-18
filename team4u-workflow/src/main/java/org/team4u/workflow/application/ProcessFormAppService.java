@@ -39,7 +39,7 @@ public class ProcessFormAppService {
         formModel.setForm(processFormRepository.formOf(formId));
 
         formModel.setInstance(processAppService.processInstanceOf(
-                formModel.getForm().getFormHeader().getProcessInstanceId()
+                formModel.getForm().getProcessInstanceId()
         ));
 
         formModel.setActions(processAppService.availableActionsOf(

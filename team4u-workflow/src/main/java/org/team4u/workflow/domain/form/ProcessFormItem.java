@@ -14,10 +14,6 @@ import static com.alibaba.fastjson.parser.Feature.SupportAutoType;
  */
 public class ProcessFormItem extends IdentifiedValueObject {
     /**
-     * 流程表单标识
-     */
-    private String formId;
-    /**
      * 表单内容类型
      */
     private String formBodyType;
@@ -38,14 +34,6 @@ public class ProcessFormItem extends IdentifiedValueObject {
     public <T> T toFormItem() {
         Class<T> bodyClass = ClassUtil.loadClass(getFormBodyType());
         return JSON.parseObject(getFormBody(), bodyClass, SupportAutoType);
-    }
-
-    public String getFormId() {
-        return formId;
-    }
-
-    public void setFormId(String formId) {
-        this.formId = formId;
     }
 
     public String getFormBodyType() {

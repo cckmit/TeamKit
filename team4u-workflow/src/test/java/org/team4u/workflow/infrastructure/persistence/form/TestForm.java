@@ -1,9 +1,8 @@
 package org.team4u.workflow.infrastructure.persistence.form;
 
-import com.baomidou.mybatisplus.annotation.TableName;
+import org.team4u.workflow.domain.form.ProcessForm;
 
-@TableName("test_form")
-public class TestFormDo extends ProcessFormDo {
+public class TestForm extends ProcessForm {
 
     private String name;
 

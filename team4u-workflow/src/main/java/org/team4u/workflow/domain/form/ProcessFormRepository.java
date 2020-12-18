@@ -5,15 +5,15 @@ package org.team4u.workflow.domain.form;
  *
  * @author jay.wu
  */
-public interface ProcessFormRepository {
+public interface ProcessFormRepository<F extends ProcessForm> {
 
     /**
-     * 查询流程表单明细
+     * 查询流程表单
      *
      * @param formId 表单标识
      * @return 流程表单对象
      */
-    ProcessForm formOf(String formId);
+    F formOf(String formId);
 
     /**
      * 保存流程表单

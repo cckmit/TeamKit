@@ -12,7 +12,7 @@ import java.util.Date;
  *
  * @author jay.wu
  */
-@TableName("form_item")
+@TableName("process_form_item")
 public class ProcessFormItemDo {
     @TableId(type = IdType.AUTO)
     private Long id;
