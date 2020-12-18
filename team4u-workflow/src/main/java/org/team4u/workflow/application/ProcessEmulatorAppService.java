@@ -5,6 +5,8 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import org.team4u.base.log.LogMessage;
 import org.team4u.base.log.LogMessages;
+import org.team4u.workflow.application.command.CreateProcessInstanceCommand;
+import org.team4u.workflow.application.command.HandleProcessInstanceCommand;
 import org.team4u.workflow.application.command.StartProcessInstanceCommand;
 import org.team4u.workflow.domain.emulator.ProcessEmulatorScript;
 import org.team4u.workflow.domain.emulator.ProcessEmulatorScriptRepository;
@@ -66,17 +68,30 @@ public class ProcessEmulatorAppService {
     private ProcessInstance doStep(String processInstanceId,
                                    String processDefinitionId,
                                    ProcessEmulatorScriptStep step) {
-        ProcessInstance instance = processAppService.start(new StartProcessInstanceCommand()
-                .setActionId(step.getActionId())
-                .setProcessInstanceId(processInstanceId)
-                .setExt(step.getExt())
-                .setOperatorId(step.getOperatorId())
-                .setProcessDefinitionId(processDefinitionId)
-        );
+        ProcessInstance instance;
+
+        if (processInstanceId == null) {
+            CreateProcessInstanceCommand command = new CreateProcessInstanceCommand()
+                    .setProcessDefinitionId(processDefinitionId);
+            initProcessInstanceCommand(command, step);
+            instance = processAppService.create(command);
+        } else {
+            StartProcessInstanceCommand command = new StartProcessInstanceCommand()
+                    .setProcessInstanceId(processInstanceId);
+            initProcessInstanceCommand(command, step);
+            instance = processAppService.start(command);
+        }
 
         checkStepExpected(step, instance);
 
         return instance;
+    }
+
+    private void initProcessInstanceCommand(HandleProcessInstanceCommand command,
+                                            ProcessEmulatorScriptStep step) {
+        command.setActionId(step.getActionId())
+                .setExt(step.getExt())
+                .setOperatorId(step.getOperatorId());
     }
 
     private void checkStepExpected(ProcessEmulatorScriptStep step, ProcessInstance instance) {

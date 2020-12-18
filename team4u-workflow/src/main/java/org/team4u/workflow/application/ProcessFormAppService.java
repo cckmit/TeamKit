@@ -1,8 +1,8 @@
 package org.team4u.workflow.application;
 
 import org.springframework.transaction.annotation.Transactional;
-import org.team4u.workflow.application.command.HandleProcessFormCommand;
-import org.team4u.workflow.application.command.StartProcessInstanceCommand;
+import org.team4u.workflow.application.command.CreateProcessFormCommand;
+import org.team4u.workflow.application.command.StartProcessFormCommand;
 import org.team4u.workflow.application.model.ProcessFormModel;
 import org.team4u.workflow.domain.definition.ProcessAction;
 import org.team4u.workflow.domain.definition.ProcessDefinition;
@@ -53,31 +53,46 @@ public class ProcessFormAppService {
     }
 
     /**
-     * 处理流程表单
+     * 创建流程表单
      *
-     * @param command 处理流程表单命令
+     * @param command 流程表单命令
      */
     @Transactional(rollbackFor = Exception.class)
-    public void handle(HandleProcessFormCommand command) {
-        ProcessInstance instance = processAppService.start(
-                command.getStartProcessInstanceCommand()
-        );
+    public void create(CreateProcessFormCommand command) {
+        ProcessInstance instance = processAppService.create(command);
 
         if (shouldSaveProcessForm(actionOf(
                 instance,
-                command.getStartProcessInstanceCommand()
+                command.getActionId()
+        ))) {
+            processFormRepository.save(command.getProcessForm());
+        }
+    }
+
+    /**
+     * 处理流程表单
+     *
+     * @param command 流程表单命令
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void start(StartProcessFormCommand command) {
+        ProcessInstance instance = processAppService.start(command);
+
+        if (shouldSaveProcessForm(actionOf(
+                instance,
+                command.getActionId()
         ))) {
             processFormRepository.save(command.getProcessForm());
         }
     }
 
     private ProcessAction actionOf(ProcessInstance instance,
-                                   StartProcessInstanceCommand command) {
+                                   String actionId) {
         ProcessDefinition definition = processAppService.processDefinitionOf(
                 instance.getProcessDefinitionId().toString()
         );
 
-        return definition.actionOf(command.getActionId());
+        return definition.actionOf(actionId);
     }
 
     /**

@@ -5,10 +5,11 @@ import cn.hutool.core.util.StrUtil;
 import org.team4u.base.error.SystemDataNotExistException;
 import org.team4u.ddd.event.EventStore;
 import org.team4u.ddd.event.StoredEvent;
+import org.team4u.workflow.application.command.CreateProcessInstanceCommand;
+import org.team4u.workflow.application.command.HandleProcessInstanceCommand;
 import org.team4u.workflow.application.command.StartProcessInstanceCommand;
 import org.team4u.workflow.domain.definition.*;
 import org.team4u.workflow.domain.definition.node.ActionChoiceNode;
-import org.team4u.workflow.domain.definition.node.StaticNode;
 import org.team4u.workflow.domain.instance.ProcessInstance;
 import org.team4u.workflow.domain.instance.ProcessInstanceRepository;
 import org.team4u.workflow.domain.instance.ProcessNodeHandlers;
@@ -64,14 +65,50 @@ public class ProcessAppService {
     }
 
     /**
+     * 创建流程实例
+     *
+     * @param command 开始命令参数
+     * @return 流程实例
+     */
+    public ProcessInstance create(CreateProcessInstanceCommand command) {
+        ProcessDefinition definition = processDefinitionRepository.domainOf(command.getProcessDefinitionId());
+
+        ProcessInstance instance = ProcessInstance.create(
+                IdUtil.fastUUID(),
+                command.getProcessInstanceName(),
+                ProcessDefinitionId.of(command.getProcessDefinitionId()),
+                command.getOperatorId(),
+                definition.rootNode()
+        );
+
+        return handle(command, definition, instance);
+    }
+
+    /**
      * 开始流程实例
      *
      * @param command 开始命令参数
      * @return 流程实例
      */
     public ProcessInstance start(StartProcessInstanceCommand command) {
-        ProcessDefinition definition = processDefinitionRepository.domainOf(command.getProcessDefinitionId());
-        ProcessInstance instance = toProcessInstance(command, definition.rootNode());
+        ProcessInstance instance = processInstanceOf(command.getProcessInstanceId());
+
+        ProcessDefinition definition = processDefinitionRepository.domainOf(
+                instance.getProcessDefinitionId().toString()
+        );
+
+        return handle(command, definition, instance);
+    }
+
+    /**
+     * 处理流程实例
+     *
+     * @param command 开始命令参数
+     * @return 流程实例
+     */
+    public ProcessInstance handle(HandleProcessInstanceCommand command,
+                                  ProcessDefinition definition,
+                                  ProcessInstance instance) {
         ProcessAction action = definition.actionOf(command.getActionId());
 
         processNodeHandlers.handle(new ProcessNodeHandler.Context(
@@ -110,22 +147,6 @@ public class ProcessAppService {
                 .stream()
                 .map(StoredEvent::<ProcessNodeChangedEvent>toDomainEvent)
                 .collect(Collectors.toList());
-    }
-
-    private ProcessInstance toProcessInstance(StartProcessInstanceCommand command, StaticNode rootNode) {
-        // 新建流程
-        if (StrUtil.isBlank(command.getProcessInstanceId())) {
-            return ProcessInstance.create(
-                    IdUtil.fastUUID(),
-                    command.getProcessInstanceName(),
-                    ProcessDefinitionId.of(command.getProcessDefinitionId()),
-                    command.getOperatorId(),
-                    rootNode
-            );
-        }
-
-        // 已有流程
-        return processInstanceOf(command.getProcessInstanceId());
     }
 
     /**
