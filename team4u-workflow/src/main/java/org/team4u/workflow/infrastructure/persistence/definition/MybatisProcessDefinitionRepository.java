@@ -39,17 +39,17 @@ public class MybatisProcessDefinitionRepository
 
     private ProcessDefinitionDo processDefinitionDoOf(ProcessDefinitionId processDefinitionId) {
         ProcessDefinitionDo definitionDo;
-        if (processDefinitionId.getVersion() < 1) {
+        if (processDefinitionId.hasVersion()) {
             definitionDo = definitionMapper.selectOne(
                     new LambdaQueryWrapper<ProcessDefinitionDo>()
                             .eq(ProcessDefinitionDo::getProcessDefinitionId, processDefinitionId.getId())
-                            .orderByDesc(ProcessDefinitionDo::getId)
+                            .eq(ProcessDefinitionDo::getProcessDefinitionVersion, processDefinitionId.getVersion())
             );
         } else {
             definitionDo = definitionMapper.selectOne(
                     new LambdaQueryWrapper<ProcessDefinitionDo>()
                             .eq(ProcessDefinitionDo::getProcessDefinitionId, processDefinitionId.getId())
-                            .eq(ProcessDefinitionDo::getProcessDefinitionVersion, processDefinitionId.getVersion())
+                            .orderByDesc(ProcessDefinitionDo::getId)
             );
         }
 

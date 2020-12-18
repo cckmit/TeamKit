@@ -18,10 +18,10 @@ public class ProcessFormAppService {
 
     private final ProcessAppService processAppService;
 
-    private final ProcessFormRepository processFormRepository;
+    private final ProcessFormRepository<?> processFormRepository;
 
     public ProcessFormAppService(ProcessAppService processAppService,
-                                 ProcessFormRepository processFormRepository) {
+                                 ProcessFormRepository<?> processFormRepository) {
         this.processAppService = processAppService;
         this.processFormRepository = processFormRepository;
     }

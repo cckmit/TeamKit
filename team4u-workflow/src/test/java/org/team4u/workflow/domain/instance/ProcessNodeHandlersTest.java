@@ -10,7 +10,7 @@ import static org.team4u.workflow.TestUtil.selectorAppService;
 
 public class ProcessNodeHandlersTest {
 
-    private final ProcessDefinition definition = TestUtil.definitionOf("simple.json");
+    private final ProcessDefinition definition = TestUtil.definitionOf("simple");
     private final ProcessNodeHandlers handles = new ProcessNodeHandlers();
 
     @Test
@@ -25,7 +25,7 @@ public class ProcessNodeHandlersTest {
 
         Assert.assertEquals(TestUtil.staticNode("created"), instance.getCurrentNode());
         Assert.assertEquals(
-                "[node=created,action=save,nextNode=created,remark='test',operator='test']",
+                "[nodeId=created,actionId=save,nextNodeId=created,remark='test',operator='test']",
                 instance.events().toString()
         );
     }
@@ -44,7 +44,7 @@ public class ProcessNodeHandlersTest {
 
         Assert.assertEquals(TestUtil.staticNode("created"), instance.getCurrentNode());
         Assert.assertEquals(
-                "[node=created,action=test,nextNode=created,remark='test',operator='test']",
+                "[nodeId=created,actionId=test,nextNodeId=created,remark='test',operator='test']",
                 instance.events().toString()
         );
     }
@@ -59,7 +59,7 @@ public class ProcessNodeHandlersTest {
         );
 
         Assert.assertEquals(
-                "[node=created,action=submit,nextNode=pending,remark='test',operator='test']",
+                "[nodeId=created,actionId=submit,nextNodeId=pending,remark='test',operator='test']",
                 instance.events().toString()
         );
     }
@@ -87,8 +87,8 @@ public class ProcessNodeHandlersTest {
         Assert.assertEquals(TestUtil.staticNode(expectedNodeId), instance.getCurrentNode());
 
         Assert.assertEquals(
-                "node=pending,action=" + actionId +
-                        ",nextNode=" + expectedNodeId +
+                "nodeId=pending,actionId=" + actionId +
+                        ",nextNodeId=" + expectedNodeId +
                         ",remark='test',operator='test'",
                 instance.events().get(1).toString()
         );

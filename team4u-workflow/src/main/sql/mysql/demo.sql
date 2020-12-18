@@ -6,8 +6,8 @@ from process_instance pi,
 where pi.process_instance_id = f.process_instance_id
   and pi.process_instance_id = pa.process_instance_id
   and pi.current_node_id = pa.process_node_id
-  and pa.assignee = 'jay'
-  and pa.process_action != '';
+  and pa.process_action != ''
+  and pa.assignee = 'jay';
 
 # 历史审批列表
 select pi.current_node_id, pi.process_definition_id, f.*
@@ -16,8 +16,8 @@ from process_instance pi,
      test_form f
 where pi.process_instance_id = f.process_instance_id
   and pi.process_instance_id = pa.process_instance_id
-  and pa.assignee = 'jay'
-  and pa.process_action != '';
+  and pa.process_action != ''
+  and pa.assignee = 'jay';
 
 # 申请列表
 select pi.current_node_id, pi.process_definition_id, f.*

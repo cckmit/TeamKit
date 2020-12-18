@@ -140,11 +140,21 @@ public class MybatisProcessInstanceRepository
 
     private ProcessInstanceDo toProcessInstanceDo(ProcessInstance instance) {
         ProcessInstanceDo instanceDo = new ProcessInstanceDo();
-        BeanUtil.copyProperties(instance, instanceDo);
-
+        BeanUtil.copyProperties(instance, instanceDo, "processDefinitionId");
         instanceDo.setCurrentNodeId(instance.getCurrentNode().getNodeId());
-        instanceDo.setProcessDefinitionId(instance.getProcessDefinitionId().getId());
-        instanceDo.setProcessDefinitionVersion(instanceDo.getProcessDefinitionVersion());
+
+        ProcessDefinitionId processDefinitionId = instance.getProcessDefinitionId();
+
+        // 没有版本号，获取最新的流程定义标识
+        if (!instance.getProcessDefinitionId().hasVersion()) {
+            processDefinitionId = definitionRepository.domainOf(
+                    instance.getProcessDefinitionId().toString()
+            ).getProcessDefinitionId();
+        }
+
+        instanceDo.setProcessDefinitionId(processDefinitionId.getId());
+        instanceDo.setProcessDefinitionVersion(processDefinitionId.getVersion());
+
         return instanceDo;
     }
 }

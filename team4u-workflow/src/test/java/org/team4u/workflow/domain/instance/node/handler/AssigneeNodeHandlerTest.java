@@ -30,7 +30,7 @@ public class AssigneeNodeHandlerTest {
                 instance.getAssignees().toString()
         );
 
-        Assert.assertEquals("[node=test,action=test,nextNode=test,remark='test',operator='test']",
+        Assert.assertEquals("[nodeId=test,actionId=test,nextNodeId=test,remark='test',operator='test']",
                 instance.events().toString());
 
         Assert.assertEquals(1, instance.events().size());

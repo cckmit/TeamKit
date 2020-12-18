@@ -32,12 +32,12 @@ public class ProcessAppServiceTest {
                 TestUtil.processDefinitionRepository
         );
 
-        ProcessDefinition definition = TestUtil.definitionOf("simple.json");
+        ProcessDefinition definition = TestUtil.definitionOf("simple");
 
         List<ProcessAction> actions = service.availableActionsOf(
                 TestUtil.newInstance()
                         .setCurrentNode(definition.processNodeOf("created"))
-                        .setProcessDefinitionId(ProcessDefinitionId.of("simple.json")),
+                        .setProcessDefinitionId(ProcessDefinitionId.of("simple")),
                 operator
         );
         Assert.assertEquals(expectedActions, actions.toString());

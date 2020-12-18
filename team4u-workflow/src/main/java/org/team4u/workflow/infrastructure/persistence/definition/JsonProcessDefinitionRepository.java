@@ -27,10 +27,10 @@ public class JsonProcessDefinitionRepository implements ProcessDefinitionReposit
         ProcessDefinitionId processDefinitionId = ProcessDefinitionId.of(domainId);
 
         String json;
-        if (processDefinitionId.getVersion() < 1) {
-            json = configService.get(processDefinitionId.getId());
-        } else {
+        if (processDefinitionId.hasVersion()) {
             json = configService.get(domainId);
+        } else {
+            json = configService.get(processDefinitionId.getId());
         }
 
         if (StrUtil.isBlank(json)) {

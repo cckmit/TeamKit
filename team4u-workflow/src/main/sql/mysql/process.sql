@@ -72,4 +72,4 @@ create table if not exists `process_form_item`
     `update_time`    timestamp           not null default current_timestamp on update current_timestamp,
     primary key (`id`),
     unique index `idx_form_id` (`form_id`)
-) comment ='表单明细';
+) comment ='流程表单明细';

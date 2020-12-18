@@ -53,6 +53,10 @@ public class ProcessDefinitionId extends ValueObject {
         return new ProcessDefinitionId(id);
     }
 
+    public boolean hasVersion() {
+        return getVersion() > 0;
+    }
+
     public String getId() {
         return id;
     }
