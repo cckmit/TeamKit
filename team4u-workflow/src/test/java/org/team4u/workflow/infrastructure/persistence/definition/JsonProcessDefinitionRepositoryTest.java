@@ -1,4 +1,4 @@
-package org.team4u.workflow.infrastructure.persistence;
+package org.team4u.workflow.infrastructure.persistence.definition;
 
 import org.junit.Assert;
 import org.junit.Test;
