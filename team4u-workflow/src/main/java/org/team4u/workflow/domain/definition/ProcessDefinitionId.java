@@ -26,12 +26,12 @@ public class ProcessDefinitionId extends ValueObject {
         switch (idAndVersion.length) {
             case 0:
                 this.id = id;
-                this.version = -1;
+                this.version = 0;
                 break;
 
             case 1:
                 this.id = idAndVersion[0];
-                this.version = -1;
+                this.version = 0;
                 break;
             default:
                 this.id = idAndVersion[0];

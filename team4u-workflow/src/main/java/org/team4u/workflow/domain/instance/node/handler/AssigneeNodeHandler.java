@@ -1,6 +1,8 @@
 package org.team4u.workflow.domain.instance.node.handler;
 
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.log.Log;
+import org.team4u.base.log.LogMessage;
 import org.team4u.workflow.domain.definition.node.AssigneeNode;
 import org.team4u.workflow.domain.instance.ProcessAssignee;
 
@@ -14,6 +16,8 @@ import java.util.stream.Collectors;
  * @author jay.wu
  */
 public class AssigneeNodeHandler extends AbstractStaticProcessNodeHandler {
+
+    private final Log log = Log.get();
 
     @Override
     public void internalHandle(Context context) {
@@ -34,6 +38,13 @@ public class AssigneeNodeHandler extends AbstractStaticProcessNodeHandler {
                         ))
                         .collect(Collectors.toSet())
         );
+
+        log.info(LogMessage.create(this.getClass().getSimpleName(), "internalHandle")
+                .append("processInstanceId", context.getInstance().getProcessInstanceId())
+                .append("nodeId", node.getNodeId())
+                .append("assignees", assignees)
+                .success()
+                .toString());
     }
 
     protected List<String> assigneesOf(AssigneeNode node) {

@@ -1,0 +1,29 @@
+{
+  "processDefinitionId": "simple",
+  "steps": [
+    {
+      "operatorId": "a",
+      "actionId": "test",
+      "ext": {
+        "a": 1
+      },
+      "expected": {
+        "nodeId": "created"
+      }
+    },
+    {
+      "operatorId": "a",
+      "actionId": "submit",
+      "expected": {
+        "nodeId": "pending"
+      }
+    },
+    {
+      "operatorId": "test",
+      "actionId": "approve",
+      "expected": {
+        "nodeId": "completed"
+      }
+    }
+  ]
+}

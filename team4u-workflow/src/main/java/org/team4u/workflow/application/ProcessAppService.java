@@ -81,7 +81,7 @@ public class ProcessAppService {
                 command.getOperatorId(),
                 operatorPermissionsOf(instance, action, command.getOperatorId()),
                 command.getRemark(),
-                null
+                command.getExt()
         ));
 
         processInstanceRepository.save(instance);

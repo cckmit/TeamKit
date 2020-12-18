@@ -59,7 +59,10 @@ public class MybatisProcessFormRepositoryTest extends DbTest {
         ProcessFormItem item = new ProcessFormItem();
         item.toFormBody(Dict.create().set("x", 1));
         form.setFormItem(item);
+
         repository.save(form);
+
+        Assert.assertNotNull(form.getId());
     }
 
     @Override

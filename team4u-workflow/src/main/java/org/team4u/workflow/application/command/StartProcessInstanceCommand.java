@@ -9,7 +9,7 @@ import java.util.Map;
  */
 public class StartProcessInstanceCommand {
     /**
-     * 流程实例标识
+     * 流程实例标识（非新建时必填）
      */
     private String processInstanceId;
     /**
