@@ -139,7 +139,7 @@ public class ProcessFormAppServiceTest extends DbTest {
         List<ProcessAction> actions = processFormAppService.availableActionsOf(
                 null,
                 TestUtil.newInstance()
-                        .setCurrentNode(definition.availableProcessNodeOf("created"))
+                        .setCurrentNode(definition.processNodeOf("created"))
                         .setProcessDefinitionId(ProcessDefinitionId.of("simple")),
                 operator
         );

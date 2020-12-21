@@ -5,7 +5,6 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import org.team4u.ddd.domain.model.AggregateRoot;
 import org.team4u.workflow.domain.definition.exception.ProcessActionNotExistException;
-import org.team4u.workflow.domain.definition.exception.ProcessNodeNotExistException;
 import org.team4u.workflow.domain.definition.node.StaticNode;
 
 import java.util.Collections;
@@ -49,17 +48,21 @@ public class ProcessDefinition extends AggregateRoot {
     }
 
     /**
-     * 获取有效的流程节点
+     * 获取流程节点
      *
      * @param nodeId 节点标识
-     * @return 流程节点，获取失败则抛出
+     * @return 流程节点
      */
     @SuppressWarnings("unchecked")
-    public <T extends ProcessNode> T availableProcessNodeOf(String nodeId) {
+    public <T extends ProcessNode> T processNodeOf(String nodeId) {
+        if (nodeId == null) {
+            return null;
+        }
+
         return (T) nodes.stream()
                 .filter(it -> StrUtil.equals(it.getNodeId(), nodeId))
                 .findFirst()
-                .orElseThrow(() -> new ProcessNodeNotExistException(nodeId));
+                .orElse(null);
     }
 
     /**

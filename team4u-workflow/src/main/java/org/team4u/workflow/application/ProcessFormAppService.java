@@ -146,7 +146,7 @@ public class ProcessFormAppService {
         ProcessDefinition definition = processAppService.availableProcessDefinitionOf(
                 instance.getProcessDefinitionId().toString()
         );
-        ProcessNode nextNode = definition.availableProcessNodeOf(instance.getCurrentNode().getNextNodeId());
+        ProcessNode nextNode = definition.processNodeOf(instance.getCurrentNode().getNextNodeId());
         // 仅处理ActionChoiceNode
         if (!(nextNode instanceof ActionChoiceNode)) {
             return Collections.emptyList();
