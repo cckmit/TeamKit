@@ -51,4 +51,14 @@ public class ProcessFormModel {
     public void setEvents(List<ProcessNodeChangedEvent> events) {
         this.events = events;
     }
+
+    @Override
+    public String toString() {
+        return "ProcessFormModel{" +
+                "form=" + form +
+                ", instance=" + instance +
+                ", actions=" + actions +
+                ", events=" + events +
+                '}';
+    }
 }

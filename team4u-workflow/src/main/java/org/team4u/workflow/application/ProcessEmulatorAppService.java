@@ -5,8 +5,8 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import org.team4u.base.log.LogMessage;
 import org.team4u.base.log.LogMessages;
+import org.team4u.workflow.application.command.AbstractHandleProcessInstanceCommand;
 import org.team4u.workflow.application.command.CreateProcessInstanceCommand;
-import org.team4u.workflow.application.command.HandleProcessInstanceCommand;
 import org.team4u.workflow.application.command.StartProcessInstanceCommand;
 import org.team4u.workflow.domain.emulator.ProcessEmulatorScript;
 import org.team4u.workflow.domain.emulator.ProcessEmulatorScriptRepository;
@@ -87,7 +87,7 @@ public class ProcessEmulatorAppService {
         return instance;
     }
 
-    private void initProcessInstanceCommand(HandleProcessInstanceCommand command,
+    private void initProcessInstanceCommand(AbstractHandleProcessInstanceCommand command,
                                             ProcessEmulatorScriptStep step) {
         command.setActionId(step.getActionId())
                 .setExt(step.getExt())

@@ -5,8 +5,8 @@ import cn.hutool.core.util.StrUtil;
 import org.team4u.base.error.SystemDataNotExistException;
 import org.team4u.ddd.event.EventStore;
 import org.team4u.ddd.event.StoredEvent;
+import org.team4u.workflow.application.command.AbstractHandleProcessInstanceCommand;
 import org.team4u.workflow.application.command.CreateProcessInstanceCommand;
-import org.team4u.workflow.application.command.HandleProcessInstanceCommand;
 import org.team4u.workflow.application.command.StartProcessInstanceCommand;
 import org.team4u.workflow.domain.definition.*;
 import org.team4u.workflow.domain.definition.node.ActionChoiceNode;
@@ -74,7 +74,7 @@ public class ProcessAppService {
         ProcessDefinition definition = processDefinitionRepository.domainOf(command.getProcessDefinitionId());
 
         ProcessInstance instance = ProcessInstance.create(
-                IdUtil.fastUUID(),
+                IdUtil.fastSimpleUUID(),
                 command.getProcessInstanceName(),
                 ProcessDefinitionId.of(command.getProcessDefinitionId()),
                 command.getOperatorId(),
@@ -106,7 +106,7 @@ public class ProcessAppService {
      * @param command 开始命令参数
      * @return 流程实例
      */
-    public ProcessInstance handle(HandleProcessInstanceCommand command,
+    public ProcessInstance handle(AbstractHandleProcessInstanceCommand command,
                                   ProcessDefinition definition,
                                   ProcessInstance instance) {
         ProcessAction action = definition.actionOf(command.getActionId());
@@ -125,9 +125,9 @@ public class ProcessAppService {
         return instance;
     }
 
-    private Set<String> operatorPermissionsOf(ProcessInstance instance,
-                                              ProcessAction action,
-                                              String operatorId) {
+    public Set<String> operatorPermissionsOf(ProcessInstance instance,
+                                             ProcessAction action,
+                                             String operatorId) {
         return processPermissionService.operatorPermissionsOf(
                 new ProcessPermissionService.Context(
                         instance,
@@ -145,6 +145,7 @@ public class ProcessAppService {
 
         return eventStore.allStoredEventsOf(processInstanceId)
                 .stream()
+                .filter(it -> StrUtil.equals(it.typeName(), ProcessNodeChangedEvent.class.getName()))
                 .map(StoredEvent::<ProcessNodeChangedEvent>toDomainEvent)
                 .collect(Collectors.toList());
     }

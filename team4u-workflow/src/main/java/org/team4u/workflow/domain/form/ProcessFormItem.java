@@ -22,12 +22,19 @@ public class ProcessFormItem extends IdentifiedValueObject {
      */
     private String formBody;
 
-    public void toFormBody(Object formBody) {
+    public ProcessFormItem() {
+    }
+
+    public ProcessFormItem(Object formBody) {
+        initFormBodyAndType(formBody);
+    }
+
+    public void initFormBodyAndType(Object formBody) {
         if (formBody == null) {
             return;
         }
 
-        this.formBody = JSON.toJSONString(formBody, SerializerFeature.WriteClassName);
+        setFormBody(JSON.toJSONString(formBody, SerializerFeature.WriteClassName));
         setFormBodyType(formBody.getClass().getName());
     }
 

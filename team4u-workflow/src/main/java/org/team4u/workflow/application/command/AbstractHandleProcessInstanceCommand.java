@@ -7,7 +7,7 @@ import java.util.Map;
  *
  * @author jay.wu
  */
-public abstract class HandleProcessInstanceCommand {
+public abstract class AbstractHandleProcessInstanceCommand {
     /**
      * 当前处理人
      */
@@ -29,7 +29,7 @@ public abstract class HandleProcessInstanceCommand {
         return operatorId;
     }
 
-    public HandleProcessInstanceCommand setOperatorId(String operatorId) {
+    public AbstractHandleProcessInstanceCommand setOperatorId(String operatorId) {
         this.operatorId = operatorId;
         return this;
     }
@@ -38,7 +38,7 @@ public abstract class HandleProcessInstanceCommand {
         return actionId;
     }
 
-    public HandleProcessInstanceCommand setActionId(String actionId) {
+    public AbstractHandleProcessInstanceCommand setActionId(String actionId) {
         this.actionId = actionId;
         return this;
     }
@@ -47,7 +47,7 @@ public abstract class HandleProcessInstanceCommand {
         return remark;
     }
 
-    public HandleProcessInstanceCommand setRemark(String remark) {
+    public AbstractHandleProcessInstanceCommand setRemark(String remark) {
         this.remark = remark;
         return this;
     }
@@ -56,8 +56,10 @@ public abstract class HandleProcessInstanceCommand {
         return ext;
     }
 
-    public HandleProcessInstanceCommand setExt(Map<String, Object> ext) {
+    public AbstractHandleProcessInstanceCommand setExt(Map<String, Object> ext) {
         this.ext = ext;
         return this;
     }
+
+
 }

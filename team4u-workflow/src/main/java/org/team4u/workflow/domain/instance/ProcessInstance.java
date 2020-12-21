@@ -12,7 +12,9 @@ import org.team4u.workflow.domain.instance.event.ProcessNodeChangedEvent;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 流程实例
@@ -96,7 +98,7 @@ public class ProcessInstance extends AggregateRoot {
                 createdBy);
 
         instance.publishEvent(new ProcessInstanceCreatedEvent(
-                processDefinitionId.toString(),
+                instance.getProcessInstanceId(),
                 instance.getCreateTime(),
                 instance
         ));
@@ -157,6 +159,15 @@ public class ProcessInstance extends AggregateRoot {
                 .filter(it -> StrUtil.equals(it.getNodeId(), getCurrentNode().getNodeId()))
                 .findFirst()
                 .orElse(null);
+    }
+
+    /**
+     * 当前处理人集合
+     */
+    public List<ProcessAssignee> currentAssignees() {
+        return getAssignees().stream()
+                .filter(it -> StrUtil.equals(it.getNodeId(), getCurrentNode().getNodeId()))
+                .collect(Collectors.toList());
     }
 
     private void refreshUpdateTimeAndOperator(String operator) {

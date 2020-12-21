@@ -89,7 +89,7 @@ public abstract class MybatisProcessFormRepository<F extends ProcessForm, D exte
     private ProcessFormItemDo toProcessFormItemDo(ProcessForm form) {
         ProcessFormItemDo formItemDo = new ProcessFormItemDo();
         BeanUtil.copyProperties(form.getFormItem(), formItemDo);
-        formItemDo.setFormId(form.getProcessInstanceId());
+        formItemDo.setFormId(form.getFormId());
         return formItemDo;
     }
 
