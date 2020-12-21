@@ -1,6 +1,7 @@
 package org.team4u.workflow.domain.form;
 
 import org.team4u.workflow.domain.definition.ProcessAction;
+import org.team4u.workflow.domain.form.process.definition.ProcessFormAction;
 import org.team4u.workflow.domain.instance.ProcessInstance;
 import org.team4u.workflow.domain.instance.event.ProcessNodeChangedEvent;
 
@@ -21,6 +22,16 @@ public interface ProcessFormPermissionService {
      * @return 权限集合
      */
     Set<String> operatorPermissionsOf(Context context);
+
+    /**
+     * 判断是否需要保存流程表单
+     * <p>
+     * 默认只有编辑权限的动作才需要保存
+     *
+     * @param action 当前动作
+     * @return true:保存表单，反之则不保存
+     */
+    boolean shouldSaveProcessForm(ProcessFormAction action);
 
     class Context {
         private final ProcessForm form;

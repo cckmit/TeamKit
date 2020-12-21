@@ -52,14 +52,15 @@ public class ProcessFormAppServiceTest extends DbTest {
         handlers.saveIdObject(new DynamicChoiceNodeHandler(selectorAppService()));
 
         processFormAppService = new ProcessFormAppService(
+                eventStore,
                 new ProcessAppService(
-                        eventStore,
                         handlers,
                         new InMemoryProcessInstanceRepository(eventStore),
                         new JsonProcessDefinitionRepository(configService)
                 ),
                 new TestProcessFormRepository(testFormMapper, formItemMapper),
-                new DefaultProcessFormPermissionService());
+                new DefaultProcessFormPermissionService()
+        );
     }
 
     @Test
@@ -138,7 +139,7 @@ public class ProcessFormAppServiceTest extends DbTest {
         List<ProcessAction> actions = processFormAppService.availableActionsOf(
                 null,
                 TestUtil.newInstance()
-                        .setCurrentNode(definition.processNodeOf("created"))
+                        .setCurrentNode(definition.availableProcessNodeOf("created"))
                         .setProcessDefinitionId(ProcessDefinitionId.of("simple")),
                 operator
         );

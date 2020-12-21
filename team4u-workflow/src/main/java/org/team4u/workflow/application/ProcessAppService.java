@@ -1,10 +1,6 @@
 package org.team4u.workflow.application;
 
 import cn.hutool.core.util.IdUtil;
-import cn.hutool.core.util.StrUtil;
-import org.team4u.base.error.SystemDataNotExistException;
-import org.team4u.ddd.event.EventStore;
-import org.team4u.ddd.event.StoredEvent;
 import org.team4u.workflow.application.command.AbstractHandleProcessInstanceCommand;
 import org.team4u.workflow.application.command.CreateProcessInstanceCommand;
 import org.team4u.workflow.application.command.StartProcessInstanceCommand;
@@ -12,15 +8,12 @@ import org.team4u.workflow.domain.definition.ProcessAction;
 import org.team4u.workflow.domain.definition.ProcessDefinition;
 import org.team4u.workflow.domain.definition.ProcessDefinitionId;
 import org.team4u.workflow.domain.definition.ProcessDefinitionRepository;
+import org.team4u.workflow.domain.definition.exception.ProcessDefinitionNotExistException;
 import org.team4u.workflow.domain.instance.ProcessInstance;
+import org.team4u.workflow.domain.instance.ProcessInstanceNotExistException;
 import org.team4u.workflow.domain.instance.ProcessInstanceRepository;
 import org.team4u.workflow.domain.instance.ProcessNodeHandlers;
-import org.team4u.workflow.domain.instance.event.ProcessNodeChangedEvent;
 import org.team4u.workflow.domain.instance.node.handler.ProcessNodeHandler;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 工作流应用服务
@@ -29,36 +22,68 @@ import java.util.stream.Collectors;
  */
 public class ProcessAppService {
 
-    private final EventStore eventStore;
-
     private final ProcessNodeHandlers processNodeHandlers;
     private final ProcessInstanceRepository processInstanceRepository;
     private final ProcessDefinitionRepository processDefinitionRepository;
 
-    public ProcessAppService(EventStore eventStore,
-                             ProcessNodeHandlers processNodeHandlers,
+    public ProcessAppService(ProcessNodeHandlers processNodeHandlers,
                              ProcessInstanceRepository processInstanceRepository,
                              ProcessDefinitionRepository processDefinitionRepository) {
-        this.eventStore = eventStore;
         this.processNodeHandlers = processNodeHandlers;
         this.processInstanceRepository = processInstanceRepository;
         this.processDefinitionRepository = processDefinitionRepository;
     }
 
     /**
-     * 获取流程定义
+     * 获取有效的流程定义
      *
      * @param processDefinitionId 流程定义标识
      * @return 流程定义
      */
     public ProcessDefinition processDefinitionOf(String processDefinitionId) {
-        ProcessDefinition definition = processDefinitionRepository.domainOf(processDefinitionId);
+        return processDefinitionRepository.domainOf(processDefinitionId);
+    }
+
+    /**
+     * 可用的获取流程定义
+     *
+     * @param processDefinitionId 流程定义标识
+     * @return 流程定义，无法获取则返回DataNotExistException
+     */
+    public ProcessDefinition availableProcessDefinitionOf(String processDefinitionId) {
+        ProcessDefinition definition = processDefinitionOf(processDefinitionId);
 
         if (definition == null) {
-            throw new SystemDataNotExistException("ProcessDefinition|id=" + processDefinitionId);
+            throw new ProcessDefinitionNotExistException(processDefinitionId);
         }
 
         return definition;
+    }
+
+    /**
+     * 获取有效的流程实例
+     *
+     * @param processInstanceId 流程实例标识
+     * @return 流程实例，无法获取则返回DataNotExistException
+     */
+    public ProcessInstance availableProcessInstanceOf(String processInstanceId) {
+        ProcessInstance instance = processInstanceOf(processInstanceId);
+
+        if (instance == null) {
+            throw new ProcessInstanceNotExistException(processInstanceId);
+        }
+
+        return instance;
+    }
+
+    /**
+     * 获取流程实例
+     *
+     * @param processInstanceId 流程实例标识
+     * @return 流程实例
+     */
+    public ProcessInstance processInstanceOf(String processInstanceId) {
+        return processInstanceRepository.domainOf(processInstanceId);
     }
 
     /**
@@ -88,7 +113,7 @@ public class ProcessAppService {
      * @return 流程实例
      */
     public ProcessInstance start(StartProcessInstanceCommand command) {
-        ProcessInstance instance = processInstanceOf(command.getProcessInstanceId());
+        ProcessInstance instance = availableProcessInstanceOf(command.getProcessInstanceId());
 
         ProcessDefinition definition = processDefinitionRepository.domainOf(
                 instance.getProcessDefinitionId().toString()
@@ -118,36 +143,6 @@ public class ProcessAppService {
         ));
 
         processInstanceRepository.save(instance);
-        return instance;
-    }
-
-
-    public List<ProcessNodeChangedEvent> processNodeChangedEventsOf(String processInstanceId) {
-        if (StrUtil.isBlank(processInstanceId)) {
-            return Collections.emptyList();
-        }
-
-        return eventStore.allStoredEventsOf(processInstanceId)
-                .stream()
-                .filter(it -> StrUtil.equals(it.typeName(), ProcessNodeChangedEvent.class.getName()))
-                .map(StoredEvent::<ProcessNodeChangedEvent>toDomainEvent)
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * 获取流程实例
-     *
-     * @param processInstanceId 流程实例标识
-     * @return 流程实例
-     */
-    ProcessInstance processInstanceOf(String processInstanceId) {
-        ProcessInstance instance = processInstanceRepository.domainOf(processInstanceId);
-
-        if (instance == null) {
-            throw new SystemDataNotExistException("ProcessInstance|id=" + processInstanceId);
-        }
-
-
         return instance;
     }
 }

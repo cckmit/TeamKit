@@ -4,10 +4,10 @@ import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.parser.Feature;
 import org.team4u.base.config.ConfigService;
-import org.team4u.base.error.SystemDataNotExistException;
 import org.team4u.workflow.domain.definition.ProcessDefinition;
 import org.team4u.workflow.domain.definition.ProcessDefinitionId;
 import org.team4u.workflow.domain.definition.ProcessDefinitionRepository;
+import org.team4u.workflow.domain.definition.exception.ProcessDefinitionNotExistException;
 
 /**
  * 基于Json的流程定义资源库
@@ -34,7 +34,7 @@ public class JsonProcessDefinitionRepository implements ProcessDefinitionReposit
         }
 
         if (StrUtil.isBlank(json)) {
-            throw new SystemDataNotExistException("ProcessDefinition json is null|id=" + domainId);
+            throw new ProcessDefinitionNotExistException(domainId);
         }
 
         return JSON.parseObject(json, ProcessDefinition.class, Feature.SupportAutoType);

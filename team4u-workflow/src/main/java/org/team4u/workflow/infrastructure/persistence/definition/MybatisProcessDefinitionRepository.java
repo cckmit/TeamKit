@@ -5,12 +5,12 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.parser.Feature;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import org.team4u.base.error.SystemDataNotExistException;
 import org.team4u.ddd.domain.model.DomainEventAwareRepository;
 import org.team4u.ddd.event.EventStore;
 import org.team4u.workflow.domain.definition.ProcessDefinition;
 import org.team4u.workflow.domain.definition.ProcessDefinitionId;
 import org.team4u.workflow.domain.definition.ProcessDefinitionRepository;
+import org.team4u.workflow.domain.definition.exception.ProcessDefinitionNotExistException;
 
 import java.util.Date;
 
@@ -60,7 +60,7 @@ public class MybatisProcessDefinitionRepository
         String json = definitionDo.getProcessDefinitionBody();
 
         if (StrUtil.isBlank(json)) {
-            throw new SystemDataNotExistException("ProcessDefinition json is null|id=" + definitionDo.getId());
+            throw new ProcessDefinitionNotExistException(definitionDo.getProcessDefinitionId());
         }
 
         return JSON.parseObject(json, ProcessDefinition.class, Feature.SupportAutoType);

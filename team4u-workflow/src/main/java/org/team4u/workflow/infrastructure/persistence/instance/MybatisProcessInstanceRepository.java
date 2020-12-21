@@ -61,7 +61,7 @@ public class MybatisProcessInstanceRepository
                 instanceDo.getProcessInstanceId(),
                 instanceDo.getProcessInstanceName(),
                 definition.getProcessDefinitionId(),
-                definition.processNodeOf(instanceDo.getCurrentNodeId()),
+                definition.availableProcessNodeOf(instanceDo.getCurrentNodeId()),
                 instanceDo.getCreateBy()
         );
 

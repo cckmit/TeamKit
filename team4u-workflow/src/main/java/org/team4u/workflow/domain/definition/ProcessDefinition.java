@@ -1,11 +1,14 @@
 package org.team4u.workflow.domain.definition;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import org.team4u.base.error.DataNotExistException;
 import org.team4u.ddd.domain.model.AggregateRoot;
+import org.team4u.workflow.domain.definition.exception.ProcessActionNotExistException;
+import org.team4u.workflow.domain.definition.exception.ProcessNodeNotExistException;
 import org.team4u.workflow.domain.definition.node.StaticNode;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -32,8 +35,8 @@ public class ProcessDefinition extends AggregateRoot {
                              List<ProcessAction> actions,
                              List<ProcessNode> nodes) {
         this.processDefinitionId = processDefinitionId;
-        this.actions = actions;
-        this.nodes = nodes;
+        this.actions = ObjectUtil.defaultIfNull(actions, Collections.emptyList());
+        this.nodes = ObjectUtil.defaultIfNull(nodes, Collections.emptyList());
     }
 
     /**
@@ -45,33 +48,31 @@ public class ProcessDefinition extends AggregateRoot {
         return (StaticNode) CollUtil.getFirst(nodes);
     }
 
+    /**
+     * 获取有效的流程节点
+     *
+     * @param nodeId 节点标识
+     * @return 流程节点，获取失败则抛出
+     */
     @SuppressWarnings("unchecked")
-    public <T extends ProcessNode> T processNodeOf(String nodeId) {
-        if (nodes == null || StrUtil.isBlank(nodeId)) {
-            return null;
-        }
-
+    public <T extends ProcessNode> T availableProcessNodeOf(String nodeId) {
         return (T) nodes.stream()
                 .filter(it -> StrUtil.equals(it.getNodeId(), nodeId))
                 .findFirst()
-                .orElse(null);
+                .orElseThrow(() -> new ProcessNodeNotExistException(nodeId));
     }
 
     /**
-     * 获取有效流程动作
+     * 获取有效的流程动作
      *
      * @param actionId 动作标识
-     * @return 流程动作，若获取失败则抛出DataNotExistException
+     * @return 流程动作，获取失败则抛出ProcessActionNotExistException
      */
     public ProcessAction availableActionOf(String actionId) {
-        if (StrUtil.isBlank(actionId)) {
-            throw new DataNotExistException("action is null|actionId=" + actionId);
-        }
-
         return actions.stream()
                 .filter(it -> StrUtil.equals(it.getActionId(), actionId))
                 .findFirst()
-                .orElseThrow(() -> new DataNotExistException("action is null|actionId=" + actionId));
+                .orElseThrow(() -> new ProcessActionNotExistException(actionId));
     }
 
     public ProcessDefinitionId getProcessDefinitionId() {

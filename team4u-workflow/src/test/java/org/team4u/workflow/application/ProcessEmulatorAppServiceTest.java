@@ -3,7 +3,8 @@ package org.team4u.workflow.application;
 import org.junit.Test;
 import org.team4u.base.config.ConfigService;
 import org.team4u.base.config.LocalJsonConfigService;
-import org.team4u.ddd.infrastructure.persistence.memory.LogOnlyEventStore;
+import org.team4u.ddd.event.EventStore;
+import org.team4u.ddd.infrastructure.persistence.memory.InMemoryEventStore;
 import org.team4u.workflow.domain.form.DefaultProcessFormPermissionService;
 import org.team4u.workflow.domain.instance.ProcessNodeHandlers;
 import org.team4u.workflow.domain.instance.node.handler.DynamicChoiceNodeHandler;
@@ -33,7 +34,7 @@ public class ProcessEmulatorAppServiceTest {
     }
 
     private ProcessEmulatorAppService emulatorAppService() {
-        LogOnlyEventStore eventStore = new LogOnlyEventStore();
+        EventStore eventStore = new InMemoryEventStore();
         ConfigService configService = new LocalJsonConfigService();
         ProcessNodeHandlers handlers = new ProcessNodeHandlers();
 
@@ -41,8 +42,8 @@ public class ProcessEmulatorAppServiceTest {
 
         return new ProcessEmulatorAppService(
                 new ProcessFormAppService(
+                        eventStore,
                         new ProcessAppService(
-                                eventStore,
                                 handlers,
                                 new InMemoryProcessInstanceRepository(eventStore),
                                 new JsonProcessDefinitionRepository(configService)),

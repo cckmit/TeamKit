@@ -1,6 +1,7 @@
 package org.team4u.workflow.domain.form;
 
 import cn.hutool.core.util.StrUtil;
+import org.team4u.workflow.domain.form.process.definition.ProcessFormAction;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -34,6 +35,11 @@ public class DefaultProcessFormPermissionService implements ProcessFormPermissio
         }
 
         return customPermissions(context, permissions);
+    }
+
+    @Override
+    public boolean shouldSaveProcessForm(ProcessFormAction action) {
+        return action.hasPermission(ProcessFormAction.Permission.EDIT.name());
     }
 
     /**

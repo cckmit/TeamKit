@@ -9,6 +9,7 @@ import org.team4u.workflow.application.command.AbstractHandleProcessInstanceComm
 import org.team4u.workflow.application.command.CreateProcessFormCommand;
 import org.team4u.workflow.application.command.StartProcessFormCommand;
 import org.team4u.workflow.domain.emulator.ProcessEmulatorScript;
+import org.team4u.workflow.domain.emulator.ProcessEmulatorScriptNotExistException;
 import org.team4u.workflow.domain.emulator.ProcessEmulatorScriptRepository;
 import org.team4u.workflow.domain.emulator.ProcessEmulatorScriptStep;
 import org.team4u.workflow.domain.form.ProcessForm;
@@ -38,6 +39,11 @@ public class ProcessEmulatorAppService {
      */
     public void simulate(String scriptId, ProcessForm form, Map<String, Object> ext) {
         ProcessEmulatorScript script = processEmulatorScriptRepository.scriptOf(scriptId);
+
+        if (script == null) {
+            throw new ProcessEmulatorScriptNotExistException(scriptId);
+        }
+
         String processInstanceId = null;
 
         for (ProcessEmulatorScriptStep step : script.getSteps()) {

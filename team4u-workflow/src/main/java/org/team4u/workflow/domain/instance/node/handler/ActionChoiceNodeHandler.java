@@ -1,6 +1,6 @@
 package org.team4u.workflow.domain.instance.node.handler;
 
-import org.team4u.base.error.SystemDataNotExistException;
+import org.team4u.workflow.domain.definition.exception.ProcessNodeNotExistException;
 import org.team4u.workflow.domain.definition.node.ActionChoiceNode;
 
 /**
@@ -20,7 +20,7 @@ public class ActionChoiceNodeHandler implements ProcessNodeHandler {
         String nextNodeId = node.nextNodeId(context.getAction());
 
         if (nextNodeId == null) {
-            throw new SystemDataNotExistException(
+            throw new ProcessNodeNotExistException(
                     String.format("NextNode is null|instanceId=%s|nodeId=%s|action=%s",
                             context.getInstance().getProcessInstanceId(),
                             node.getNodeId(),
