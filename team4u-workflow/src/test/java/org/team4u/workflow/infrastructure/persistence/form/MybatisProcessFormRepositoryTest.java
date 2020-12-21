@@ -18,11 +18,11 @@ public class MybatisProcessFormRepositoryTest extends DbTest {
     @Autowired
     private ProcessFormItemMapper formItemMapper;
 
-    private TestProcessFormRepository repository;
+    private TestFormRepository repository;
 
     @PostConstruct
     public void repository() {
-        repository = new TestProcessFormRepository(testFormMapper, formItemMapper);
+        repository = new TestFormRepository(testFormMapper, formItemMapper);
     }
 
     @Test

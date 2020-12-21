@@ -19,9 +19,12 @@ import java.util.Date;
 public abstract class MybatisProcessFormRepository<F extends ProcessForm, D extends ProcessFormDo>
         implements ProcessFormRepository<F> {
 
+    private final BaseMapper<D> processFormMapper;
     private final ProcessFormItemMapper formItemMapper;
 
-    public MybatisProcessFormRepository(ProcessFormItemMapper formItemMapper) {
+    public MybatisProcessFormRepository(BaseMapper<D> processFormMapper,
+                                        ProcessFormItemMapper formItemMapper) {
+        this.processFormMapper = processFormMapper;
         this.formItemMapper = formItemMapper;
     }
 
@@ -32,40 +35,28 @@ public abstract class MybatisProcessFormRepository<F extends ProcessForm, D exte
         return form;
     }
 
-    private ProcessFormItem processFormItemOf(String formId) {
-        ProcessFormItemDo formItemDo = formItemMapper.selectOne(
-                new LambdaQueryWrapper<ProcessFormItemDo>()
-                        .eq(ProcessFormItemDo::getFormId, formId)
-        );
-
-        if (formItemDo == null) {
-            return null;
-        }
-
-        ProcessFormItem formItem = new ProcessFormItem();
-        BeanUtil.copyProperties(formItemDo, formItem);
-        return formItem;
-    }
-
-    private F processFormOf(String formId) {
-        D processFormDo = processFormMapper().selectOne(
-                new QueryWrapper<D>()
-                        .eq("form_id", formId)
-        );
-
-        F processForm = toProcessForm(processFormDo);
-        BeanUtil.copyProperties(processFormDo, processForm);
-        return processForm;
-    }
-
-    protected abstract F toProcessForm(D processFormDo);
-
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void save(F form) {
         saveProcessForm(form);
         saveBody(form);
     }
+
+    /**
+     * 将数据模型转换为领域对象
+     *
+     * @param processFormDo 数据模型
+     * @return 领域对象
+     */
+    protected abstract F toProcessForm(D processFormDo);
+
+    /**
+     * 将领域模型转换为数据模型
+     *
+     * @param form 领域模型
+     * @return 数据模型
+     */
+    protected abstract D toProcessFormDo(F form);
 
     private void saveBody(F form) {
         if (form.getFormItem() == null) {
@@ -101,19 +92,42 @@ public abstract class MybatisProcessFormRepository<F extends ProcessForm, D exte
 
         if (processFormDo.getId() == null) {
             processFormDo.setCreateTime(processFormDo.getUpdateTime());
-            processFormMapper().insert(processFormDo);
+            processFormMapper.insert(processFormDo);
 
             processForm.setId(processFormDo.getId());
 
             processForm.setCreateTime(processFormDo.getCreateTime());
         } else {
-            processFormMapper().updateById(processFormDo);
+            processFormMapper.updateById(processFormDo);
         }
 
         processForm.setUpdateTime(processFormDo.getUpdateTime());
     }
 
-    protected abstract BaseMapper<D> processFormMapper();
 
-    protected abstract D toProcessFormDo(ProcessForm form);
+    private ProcessFormItem processFormItemOf(String formId) {
+        ProcessFormItemDo formItemDo = formItemMapper.selectOne(
+                new LambdaQueryWrapper<ProcessFormItemDo>()
+                        .eq(ProcessFormItemDo::getFormId, formId)
+        );
+
+        if (formItemDo == null) {
+            return null;
+        }
+
+        ProcessFormItem formItem = new ProcessFormItem();
+        BeanUtil.copyProperties(formItemDo, formItem);
+        return formItem;
+    }
+
+    private F processFormOf(String formId) {
+        D processFormDo = processFormMapper.selectOne(
+                new QueryWrapper<D>()
+                        .eq("form_id", formId)
+        );
+
+        F processForm = toProcessForm(processFormDo);
+        BeanUtil.copyProperties(processFormDo, processForm);
+        return processForm;
+    }
 }

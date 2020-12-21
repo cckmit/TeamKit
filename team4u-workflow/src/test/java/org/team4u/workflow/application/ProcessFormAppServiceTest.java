@@ -26,7 +26,7 @@ import org.team4u.workflow.infrastructure.persistence.definition.JsonProcessDefi
 import org.team4u.workflow.infrastructure.persistence.form.ProcessFormItemMapper;
 import org.team4u.workflow.infrastructure.persistence.form.TestForm;
 import org.team4u.workflow.infrastructure.persistence.form.TestFormMapper;
-import org.team4u.workflow.infrastructure.persistence.form.TestProcessFormRepository;
+import org.team4u.workflow.infrastructure.persistence.form.TestFormRepository;
 import org.team4u.workflow.infrastructure.persistence.instance.InMemoryProcessInstanceRepository;
 
 import javax.annotation.PostConstruct;
@@ -58,7 +58,7 @@ public class ProcessFormAppServiceTest extends DbTest {
                         new InMemoryProcessInstanceRepository(eventStore),
                         new JsonProcessDefinitionRepository(configService)
                 ),
-                new TestProcessFormRepository(testFormMapper, formItemMapper),
+                new TestFormRepository(testFormMapper, formItemMapper),
                 new DefaultProcessFormPermissionService()
         );
     }
