@@ -17,7 +17,7 @@ import java.util.Date;
  * @author jay.wu
  */
 public abstract class MybatisProcessFormRepository<F extends ProcessForm, D extends ProcessFormDo>
-        implements ProcessFormRepository {
+        implements ProcessFormRepository<F> {
 
     private final ProcessFormItemMapper formItemMapper;
 
@@ -62,12 +62,12 @@ public abstract class MybatisProcessFormRepository<F extends ProcessForm, D exte
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void save(ProcessForm form) {
+    public void save(F form) {
         saveProcessForm(form);
         saveBody(form);
     }
 
-    private void saveBody(ProcessForm form) {
+    private void saveBody(F form) {
         if (form.getFormItem() == null) {
             return;
         }
@@ -86,14 +86,14 @@ public abstract class MybatisProcessFormRepository<F extends ProcessForm, D exte
         }
     }
 
-    private ProcessFormItemDo toProcessFormItemDo(ProcessForm form) {
+    private ProcessFormItemDo toProcessFormItemDo(F form) {
         ProcessFormItemDo formItemDo = new ProcessFormItemDo();
         BeanUtil.copyProperties(form.getFormItem(), formItemDo);
         formItemDo.setFormId(form.getFormId());
         return formItemDo;
     }
 
-    private void saveProcessForm(ProcessForm processForm) {
+    private void saveProcessForm(F processForm) {
         D processFormDo = toProcessFormDo(processForm);
 
         BeanUtil.copyProperties(processForm, processFormDo);

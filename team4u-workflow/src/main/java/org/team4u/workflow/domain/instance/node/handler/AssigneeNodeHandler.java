@@ -3,7 +3,7 @@ package org.team4u.workflow.domain.instance.node.handler;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.Log;
 import org.team4u.base.log.LogMessage;
-import org.team4u.workflow.domain.definition.node.AssigneeNode;
+import org.team4u.workflow.domain.form.process.definition.node.AssigneeNode;
 import org.team4u.workflow.domain.instance.ProcessAssignee;
 
 import java.util.Collections;

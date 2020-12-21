@@ -1,6 +1,7 @@
 package org.team4u.workflow;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.Dict;
 import org.team4u.base.config.LocalJsonConfigService;
 import org.team4u.selector.application.SelectorAppService;
 import org.team4u.selector.domain.selector.entity.expression.ExpressionSelectorFactory;
@@ -8,9 +9,11 @@ import org.team4u.template.TemplateFunctionService;
 import org.team4u.template.infrastructure.BeetlTemplateEngine;
 import org.team4u.workflow.domain.definition.*;
 import org.team4u.workflow.domain.definition.node.ActionChoiceNode;
-import org.team4u.workflow.domain.definition.node.AssigneeActionChoiceNode;
-import org.team4u.workflow.domain.definition.node.AssigneeNode;
 import org.team4u.workflow.domain.definition.node.StaticNode;
+import org.team4u.workflow.domain.form.ProcessFormContextKeys;
+import org.team4u.workflow.domain.form.process.definition.ProcessFormAction;
+import org.team4u.workflow.domain.form.process.definition.node.AssigneeActionChoiceNode;
+import org.team4u.workflow.domain.form.process.definition.node.AssigneeNode;
 import org.team4u.workflow.domain.instance.ProcessAssignee;
 import org.team4u.workflow.domain.instance.ProcessInstance;
 import org.team4u.workflow.domain.instance.node.handler.ProcessNodeHandler;
@@ -22,7 +25,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.team4u.workflow.domain.definition.node.AssigneeActionChoiceNode.CHOICE_TYPE_ANY;
+import static org.team4u.workflow.domain.form.process.definition.node.AssigneeActionChoiceNode.CHOICE_TYPE_ANY;
 
 public class TestUtil {
 
@@ -40,11 +43,11 @@ public class TestUtil {
                 null,
                 TEST
         ).setAssignees(
-                Optional.ofNullable(assignees).map(it -> {
-                    return Arrays.stream(assignees)
-                            .map(assignee -> new ProcessAssignee(assignee, assignee))
-                            .collect(Collectors.toSet());
-                }).orElse(Collections.emptySet())
+                Optional.ofNullable(assignees)
+                        .map(it -> Arrays.stream(assignees)
+                                .map(assignee -> new ProcessAssignee(assignee, assignee))
+                                .collect(Collectors.toSet()))
+                        .orElse(Collections.emptySet())
         );
     }
 
@@ -58,9 +61,11 @@ public class TestUtil {
                 definition,
                 action,
                 TEST,
-                new HashSet<>(CollUtil.toList(permissions)),
                 TEST,
-                null
+                new Dict().set(
+                        ProcessFormContextKeys.OPERATOR_ACTION_PERMISSIONS,
+                        new HashSet<>(CollUtil.toList(permissions))
+                )
         ).setNode(node);
     }
 
@@ -68,8 +73,8 @@ public class TestUtil {
         return new ActionChoiceNode.ActionNode(actionId, nodeId);
     }
 
-    public static ProcessAction action(String actionId, String... requiredPermissions) {
-        return new ProcessAction(actionId, actionId, new HashSet<>(CollUtil.toList(requiredPermissions)));
+    public static ProcessFormAction action(String actionId, String... requiredPermissions) {
+        return new ProcessFormAction(actionId, actionId, new HashSet<>(CollUtil.toList(requiredPermissions)));
     }
 
     public static StaticNode staticNode(String nodeId) {

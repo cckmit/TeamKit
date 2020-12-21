@@ -7,7 +7,6 @@ import org.team4u.ddd.domain.model.AggregateRoot;
 import org.team4u.workflow.domain.definition.node.StaticNode;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 流程定义
@@ -58,21 +57,21 @@ public class ProcessDefinition extends AggregateRoot {
                 .orElse(null);
     }
 
-    public ProcessAction actionOf(String actionId) {
+    /**
+     * 获取有效流程动作
+     *
+     * @param actionId 动作标识
+     * @return 流程动作，若获取失败则抛出DataNotExistException
+     */
+    public ProcessAction availableActionOf(String actionId) {
         if (StrUtil.isBlank(actionId)) {
-            return null;
+            throw new DataNotExistException("action is null|actionId=" + actionId);
         }
 
         return actions.stream()
                 .filter(it -> StrUtil.equals(it.getActionId(), actionId))
                 .findFirst()
                 .orElseThrow(() -> new DataNotExistException("action is null|actionId=" + actionId));
-    }
-
-    public List<ProcessAction> actionsOf(List<String> permissions) {
-        return actions.stream()
-                .filter(it -> CollUtil.contains(permissions, it.getRequiredPermissions()))
-                .collect(Collectors.toList());
     }
 
     public ProcessDefinitionId getProcessDefinitionId() {

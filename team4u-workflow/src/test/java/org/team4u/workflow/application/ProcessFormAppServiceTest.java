@@ -10,11 +10,15 @@ import org.team4u.base.config.ConfigService;
 import org.team4u.base.config.LocalJsonConfigService;
 import org.team4u.ddd.event.EventStore;
 import org.team4u.ddd.infrastructure.persistence.memory.InMemoryEventStore;
+import org.team4u.workflow.TestUtil;
 import org.team4u.workflow.application.command.CreateProcessFormCommand;
 import org.team4u.workflow.application.command.StartProcessFormCommand;
 import org.team4u.workflow.application.model.ProcessFormModel;
+import org.team4u.workflow.domain.definition.ProcessAction;
+import org.team4u.workflow.domain.definition.ProcessDefinition;
+import org.team4u.workflow.domain.definition.ProcessDefinitionId;
+import org.team4u.workflow.domain.form.DefaultProcessFormPermissionService;
 import org.team4u.workflow.domain.form.ProcessFormItem;
-import org.team4u.workflow.domain.instance.DefaultProcessPermissionService;
 import org.team4u.workflow.domain.instance.ProcessNodeHandlers;
 import org.team4u.workflow.domain.instance.node.handler.DynamicChoiceNodeHandler;
 import org.team4u.workflow.infrastructure.DbTest;
@@ -26,6 +30,7 @@ import org.team4u.workflow.infrastructure.persistence.form.TestProcessFormReposi
 import org.team4u.workflow.infrastructure.persistence.instance.InMemoryProcessInstanceRepository;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
 
 import static org.team4u.workflow.TestUtil.*;
 
@@ -50,12 +55,11 @@ public class ProcessFormAppServiceTest extends DbTest {
                 new ProcessAppService(
                         eventStore,
                         handlers,
-                        new DefaultProcessPermissionService(),
                         new InMemoryProcessInstanceRepository(eventStore),
                         new JsonProcessDefinitionRepository(configService)
                 ),
-                new TestProcessFormRepository(testFormMapper, formItemMapper)
-        );
+                new TestProcessFormRepository(testFormMapper, formItemMapper),
+                new DefaultProcessFormPermissionService());
     }
 
     @Test
@@ -116,6 +120,29 @@ public class ProcessFormAppServiceTest extends DbTest {
         Assert.assertEquals("rejected", model.getInstance().getCurrentNode().getNodeId());
         Assert.assertEquals(2, model.getEvents().size());
         Assert.assertEquals(TEST, CollUtil.getLast(model.getEvents()).getRemark());
+    }
+
+    @Test
+    public void hasAvailableActions() {
+        checkAvailableActions(TestUtil.TEST, "[save, submit, test]");
+    }
+
+    @Test
+    public void noAvailableActions() {
+        checkAvailableActions(TestUtil.TEST1, "[]");
+    }
+
+    private void checkAvailableActions(String operator, String expectedActions) {
+        ProcessDefinition definition = TestUtil.definitionOf("simple");
+
+        List<ProcessAction> actions = processFormAppService.availableActionsOf(
+                null,
+                TestUtil.newInstance()
+                        .setCurrentNode(definition.processNodeOf("created"))
+                        .setProcessDefinitionId(ProcessDefinitionId.of("simple")),
+                operator
+        );
+        Assert.assertEquals(expectedActions, actions.toString());
     }
 
     @Override

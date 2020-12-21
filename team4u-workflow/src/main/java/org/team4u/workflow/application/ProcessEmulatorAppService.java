@@ -6,11 +6,12 @@ import cn.hutool.core.util.StrUtil;
 import org.team4u.base.log.LogMessage;
 import org.team4u.base.log.LogMessages;
 import org.team4u.workflow.application.command.AbstractHandleProcessInstanceCommand;
-import org.team4u.workflow.application.command.CreateProcessInstanceCommand;
-import org.team4u.workflow.application.command.StartProcessInstanceCommand;
+import org.team4u.workflow.application.command.CreateProcessFormCommand;
+import org.team4u.workflow.application.command.StartProcessFormCommand;
 import org.team4u.workflow.domain.emulator.ProcessEmulatorScript;
 import org.team4u.workflow.domain.emulator.ProcessEmulatorScriptRepository;
 import org.team4u.workflow.domain.emulator.ProcessEmulatorScriptStep;
+import org.team4u.workflow.domain.form.ProcessForm;
 import org.team4u.workflow.domain.instance.ProcessInstance;
 
 import java.util.Map;
@@ -23,19 +24,19 @@ import java.util.Map;
  */
 public class ProcessEmulatorAppService {
 
-    private final ProcessAppService processAppService;
+    private final ProcessFormAppService formAppService;
     private final ProcessEmulatorScriptRepository processEmulatorScriptRepository;
 
-    public ProcessEmulatorAppService(ProcessAppService processAppService,
+    public ProcessEmulatorAppService(ProcessFormAppService formAppService,
                                      ProcessEmulatorScriptRepository processEmulatorScriptRepository) {
-        this.processAppService = processAppService;
+        this.formAppService = formAppService;
         this.processEmulatorScriptRepository = processEmulatorScriptRepository;
     }
 
     /**
      * 开始模拟
      */
-    public void simulate(String scriptId, Map<String, Object> ext) {
+    public void simulate(String scriptId, ProcessForm form, Map<String, Object> ext) {
         ProcessEmulatorScript script = processEmulatorScriptRepository.scriptOf(scriptId);
         String processInstanceId = null;
 
@@ -44,6 +45,7 @@ public class ProcessEmulatorAppService {
             ProcessInstance instance = doStep(
                     processInstanceId,
                     script.getProcessDefinitionId(),
+                    form,
                     step
             );
 
@@ -67,20 +69,29 @@ public class ProcessEmulatorAppService {
 
     private ProcessInstance doStep(String processInstanceId,
                                    String processDefinitionId,
+                                   ProcessForm processForm,
                                    ProcessEmulatorScriptStep step) {
-        ProcessInstance instance;
-
         if (processInstanceId == null) {
-            CreateProcessInstanceCommand command = new CreateProcessInstanceCommand()
-                    .setProcessDefinitionId(processDefinitionId);
+            CreateProcessFormCommand command = CreateProcessFormCommand.Builder
+                    .newBuilder()
+                    .withProcessForm(processForm)
+                    .withProcessDefinitionId(processDefinitionId)
+                    .build();
             initProcessInstanceCommand(command, step);
-            instance = processAppService.create(command);
+            formAppService.create(command);
         } else {
-            StartProcessInstanceCommand command = new StartProcessInstanceCommand()
-                    .setProcessInstanceId(processInstanceId);
+            StartProcessFormCommand command = StartProcessFormCommand.Builder
+                    .newBuilder()
+                    .withProcessForm(processForm)
+                    .build();
             initProcessInstanceCommand(command, step);
-            instance = processAppService.start(command);
+            formAppService.start(command);
         }
+
+        ProcessInstance instance = formAppService.formOf(
+                processForm.getFormId(),
+                step.getOperatorId()
+        ).getInstance();
 
         checkStepExpected(step, instance);
 

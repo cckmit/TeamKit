@@ -1,4 +1,6 @@
-package org.team4u.workflow.domain.definition.node;
+package org.team4u.workflow.domain.form.process.definition.node;
+
+import org.team4u.workflow.domain.definition.node.StaticNode;
 
 /**
  * 处理人节点

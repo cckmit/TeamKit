@@ -4,6 +4,7 @@
   },
   "actions": [
     {
+      "@type": "org.team4u.workflow.domain.form.process.definition.ProcessFormAction",
       "actionId": "save",
       "actionName": "保存",
       "requiredPermissions": [
@@ -11,6 +12,7 @@
       ]
     },
     {
+      "@type": "org.team4u.workflow.domain.form.process.definition.ProcessFormAction",
       "actionId": "submit",
       "actionName": "提交",
       "requiredPermissions": [
@@ -18,6 +20,7 @@
       ]
     },
     {
+      "@type": "org.team4u.workflow.domain.form.process.definition.ProcessFormAction",
       "actionId": "test",
       "actionName": "表达式测试",
       "requiredPermissions": [
@@ -25,6 +28,7 @@
       ]
     },
     {
+      "@type": "org.team4u.workflow.domain.form.process.definition.ProcessFormAction",
       "actionId": "approve",
       "actionName": "同意",
       "requiredPermissions": [
@@ -32,6 +36,7 @@
       ]
     },
     {
+      "@type": "org.team4u.workflow.domain.form.process.definition.ProcessFormAction",
       "actionId": "reject",
       "actionName": "拒绝",
       "requiredPermissions": [
@@ -82,7 +87,7 @@
       }
     },
     {
-      "@type": "org.team4u.workflow.domain.definition.node.AssigneeNode",
+      "@type": "org.team4u.workflow.domain.form.process.definition.node.AssigneeNode",
       "nodeId": "pending",
       "nodeName": "待审核",
       "ruleType": "user",
@@ -90,7 +95,7 @@
       "nextNodeId": "pendingActionNode"
     },
     {
-      "@type": "org.team4u.workflow.domain.definition.node.AssigneeActionChoiceNode",
+      "@type": "org.team4u.workflow.domain.form.process.definition.node.AssigneeActionChoiceNode",
       "nodeId": "pendingActionNode",
       "nodeName": "待审核动作选择器",
       "choiceType": "ANY",

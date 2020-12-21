@@ -1,18 +1,19 @@
-package org.team4u.workflow.domain.instance;
+package org.team4u.workflow.domain.form;
 
 import cn.hutool.core.util.StrUtil;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.team4u.workflow.domain.definition.ProcessAction.Permission.*;
+import static org.team4u.workflow.domain.form.process.definition.ProcessFormAction.Permission.*;
+
 
 /**
  * 默认流程权限服务
  *
  * @author jay.wu
  */
-public class DefaultProcessPermissionService implements ProcessPermissionService {
+public class DefaultProcessFormPermissionService implements ProcessFormPermissionService {
 
     @Override
     public Set<String> operatorPermissionsOf(Context context) {
@@ -53,10 +54,18 @@ public class DefaultProcessPermissionService implements ProcessPermissionService
     }
 
     protected boolean canEdit(Context context) {
+        if (context.getInstance() == null) {
+            return true;
+        }
+
         return StrUtil.equals(context.getInstance().getCreateBy(), context.getOperatorId());
     }
 
     protected boolean canReview(Context context) {
+        if (context.getInstance() == null) {
+            return false;
+        }
+
         return context.getInstance().getAssignees()
                 .stream()
                 .anyMatch(it -> StrUtil.equals(it.getAssignee(), context.getOperatorId()));

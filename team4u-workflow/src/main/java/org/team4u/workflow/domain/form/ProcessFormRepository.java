@@ -20,5 +20,5 @@ public interface ProcessFormRepository<F extends ProcessForm> {
      *
      * @param form 表单对象
      */
-    void save(ProcessForm form);
+    void save(F form);
 }

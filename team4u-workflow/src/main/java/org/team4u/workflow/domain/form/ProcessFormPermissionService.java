@@ -1,6 +1,7 @@
-package org.team4u.workflow.domain.instance;
+package org.team4u.workflow.domain.form;
 
 import org.team4u.workflow.domain.definition.ProcessAction;
+import org.team4u.workflow.domain.instance.ProcessInstance;
 import org.team4u.workflow.domain.instance.event.ProcessNodeChangedEvent;
 
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.Set;
  *
  * @author jay.wu
  */
-public interface ProcessPermissionService {
+public interface ProcessFormPermissionService {
 
     /**
      * 获取当前处理人权限集合
@@ -22,19 +23,26 @@ public interface ProcessPermissionService {
     Set<String> operatorPermissionsOf(Context context);
 
     class Context {
+        private final ProcessForm form;
         private final ProcessInstance instance;
         private final List<ProcessNodeChangedEvent> changedEvents;
         private final ProcessAction action;
         private final String operatorId;
 
-        public Context(ProcessInstance instance,
+        public Context(ProcessForm form,
+                       ProcessInstance instance,
                        List<ProcessNodeChangedEvent> changedEvents,
                        ProcessAction action,
                        String operatorId) {
+            this.form = form;
             this.instance = instance;
             this.changedEvents = changedEvents;
             this.action = action;
             this.operatorId = operatorId;
+        }
+
+        public ProcessForm getForm() {
+            return form;
         }
 
         public ProcessInstance getInstance() {

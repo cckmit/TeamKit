@@ -3,6 +3,7 @@ package org.team4u.workflow.domain.instance.node.handler;
 import org.junit.Assert;
 import org.junit.Test;
 import org.team4u.base.error.SystemDataNotExistException;
+import org.team4u.workflow.domain.form.process.node.handler.AssigneeActionChoiceNodeHandler;
 import org.team4u.workflow.domain.instance.NoPermissionException;
 import org.team4u.workflow.domain.instance.ProcessInstance;
 

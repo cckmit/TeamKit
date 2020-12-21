@@ -6,7 +6,11 @@ import org.team4u.base.error.SystemDataNotExistException;
 import org.team4u.base.lang.IdObjectService;
 import org.team4u.base.log.LogMessage;
 import org.team4u.workflow.domain.definition.ProcessNode;
-import org.team4u.workflow.domain.instance.node.handler.*;
+import org.team4u.workflow.domain.form.process.node.handler.AssigneeActionChoiceNodeHandler;
+import org.team4u.workflow.domain.instance.node.handler.ActionChoiceNodeHandler;
+import org.team4u.workflow.domain.instance.node.handler.AssigneeNodeHandler;
+import org.team4u.workflow.domain.instance.node.handler.ProcessNodeHandler;
+import org.team4u.workflow.domain.instance.node.handler.StaticNodeHandler;
 
 import java.util.List;
 
@@ -43,7 +47,7 @@ public class ProcessNodeHandlers extends IdObjectService<String, ProcessNodeHand
                 .append("action", context.getAction().toString())
                 .append("startNode", context.getInstance().getCurrentNode())
                 .append("definition", context.getDefinition())
-                .append("operatorPermissions", context.getOperatorPermissions());
+                .append("ext", context.getExt());
 
         ProcessNode nextNode = context.getDefinition().processNodeOf(
                 context.getInstance()

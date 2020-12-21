@@ -11,7 +11,7 @@ import java.util.Collection;
 
 public class DynamicTableNameParser implements ISqlParser {
 
-    private ITableNameHandler tableNameHandler = new KeyValueTableNameHandler();
+    private final ITableNameHandler tableNameHandler = new KeyValueTableNameHandler();
 
     @Override
     public SqlInfo parser(MetaObject metaObject, String sql) {
@@ -20,7 +20,7 @@ public class DynamicTableNameParser implements ISqlParser {
             boolean sqlParsed = false;
             String parsedSql = sql;
             for (final String table : tables) {
-                parsedSql = tableNameHandler.process(metaObject, parsedSql, table);
+                parsedSql = tableNameHandler.dynamicTableName(metaObject, parsedSql, table);
                 sqlParsed = true;
             }
 

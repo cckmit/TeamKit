@@ -8,18 +8,18 @@ import org.team4u.ddd.event.StoredEvent;
 import org.team4u.workflow.application.command.AbstractHandleProcessInstanceCommand;
 import org.team4u.workflow.application.command.CreateProcessInstanceCommand;
 import org.team4u.workflow.application.command.StartProcessInstanceCommand;
-import org.team4u.workflow.domain.definition.*;
-import org.team4u.workflow.domain.definition.node.ActionChoiceNode;
+import org.team4u.workflow.domain.definition.ProcessAction;
+import org.team4u.workflow.domain.definition.ProcessDefinition;
+import org.team4u.workflow.domain.definition.ProcessDefinitionId;
+import org.team4u.workflow.domain.definition.ProcessDefinitionRepository;
 import org.team4u.workflow.domain.instance.ProcessInstance;
 import org.team4u.workflow.domain.instance.ProcessInstanceRepository;
 import org.team4u.workflow.domain.instance.ProcessNodeHandlers;
-import org.team4u.workflow.domain.instance.ProcessPermissionService;
 import org.team4u.workflow.domain.instance.event.ProcessNodeChangedEvent;
 import org.team4u.workflow.domain.instance.node.handler.ProcessNodeHandler;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -32,18 +32,15 @@ public class ProcessAppService {
     private final EventStore eventStore;
 
     private final ProcessNodeHandlers processNodeHandlers;
-    private final ProcessPermissionService processPermissionService;
     private final ProcessInstanceRepository processInstanceRepository;
     private final ProcessDefinitionRepository processDefinitionRepository;
 
     public ProcessAppService(EventStore eventStore,
                              ProcessNodeHandlers processNodeHandlers,
-                             ProcessPermissionService processPermissionService,
                              ProcessInstanceRepository processInstanceRepository,
                              ProcessDefinitionRepository processDefinitionRepository) {
         this.eventStore = eventStore;
         this.processNodeHandlers = processNodeHandlers;
-        this.processPermissionService = processPermissionService;
         this.processInstanceRepository = processInstanceRepository;
         this.processDefinitionRepository = processDefinitionRepository;
     }
@@ -109,14 +106,13 @@ public class ProcessAppService {
     public ProcessInstance handle(AbstractHandleProcessInstanceCommand command,
                                   ProcessDefinition definition,
                                   ProcessInstance instance) {
-        ProcessAction action = definition.actionOf(command.getActionId());
+        ProcessAction action = definition.availableActionOf(command.getActionId());
 
         processNodeHandlers.handle(new ProcessNodeHandler.Context(
                 instance,
                 definition,
                 action,
                 command.getOperatorId(),
-                operatorPermissionsOf(instance, action, command.getOperatorId()),
                 command.getRemark(),
                 command.getExt()
         ));
@@ -125,18 +121,6 @@ public class ProcessAppService {
         return instance;
     }
 
-    public Set<String> operatorPermissionsOf(ProcessInstance instance,
-                                             ProcessAction action,
-                                             String operatorId) {
-        return processPermissionService.operatorPermissionsOf(
-                new ProcessPermissionService.Context(
-                        instance,
-                        processNodeChangedEventsOf(instance.getProcessInstanceId()),
-                        action,
-                        operatorId
-                )
-        );
-    }
 
     public List<ProcessNodeChangedEvent> processNodeChangedEventsOf(String processInstanceId) {
         if (StrUtil.isBlank(processInstanceId)) {
@@ -165,27 +149,5 @@ public class ProcessAppService {
 
 
         return instance;
-    }
-
-    /**
-     * 当前流程实例可用的动作集合
-     */
-    public List<ProcessAction> availableActionsOf(ProcessInstance instance, String operatorId) {
-        ProcessDefinition definition = processDefinitionRepository.domainOf(
-                instance.getProcessDefinitionId().toString()
-        );
-        ProcessNode nextNode = definition.processNodeOf(instance.getCurrentNode().getNextNodeId());
-
-        if (!(nextNode instanceof ActionChoiceNode)) {
-            return Collections.emptyList();
-        }
-
-        Set<String> permissions = operatorPermissionsOf(instance, null, operatorId);
-
-        return ((ActionChoiceNode) nextNode).getActionNodes()
-                .stream()
-                .map(it -> definition.actionOf(it.getActionId()))
-                .filter(it -> it.matchPermissions(permissions))
-                .collect(Collectors.toList());
     }
 }

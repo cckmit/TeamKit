@@ -90,7 +90,7 @@ public class MybatisProcessInstanceRepository
         );
 
         if (StrUtil.isNotBlank(assigneeDo.getActionId())) {
-            assignee.handle(definition.actionOf(assigneeDo.getActionId()));
+            assignee.handle(definition.availableActionOf(assigneeDo.getActionId()));
         }
 
         BeanUtil.copyProperties(assigneeDo, assignee);

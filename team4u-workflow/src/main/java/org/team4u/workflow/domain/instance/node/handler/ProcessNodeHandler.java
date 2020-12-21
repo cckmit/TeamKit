@@ -9,7 +9,6 @@ import org.team4u.workflow.domain.instance.ProcessInstance;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * 流程节点处理器
@@ -31,7 +30,6 @@ public interface ProcessNodeHandler extends IdObject<String> {
         private final ProcessDefinition definition;
         private final ProcessAction action;
         private final String operatorId;
-        private final Set<String> operatorPermissions;
         private final String remark;
         private final Map<String, Object> ext;
         private ProcessNode node;
@@ -40,13 +38,11 @@ public interface ProcessNodeHandler extends IdObject<String> {
                        ProcessDefinition definition,
                        ProcessAction action,
                        String operatorId,
-                       Set<String> operatorPermissions,
                        String remark, Map<String, Object> ext) {
             this.instance = instance;
             this.definition = definition;
             this.action = action;
             this.operatorId = operatorId;
-            this.operatorPermissions = operatorPermissions;
             this.remark = remark;
             this.ext = ObjectUtil.defaultIfNull(ext, new HashMap<>());
         }
@@ -77,16 +73,17 @@ public interface ProcessNodeHandler extends IdObject<String> {
             return operatorId;
         }
 
-        public Set<String> getOperatorPermissions() {
-            return operatorPermissions;
-        }
-
         public String getRemark() {
             return remark;
         }
 
         public Map<String, Object> getExt() {
             return ext;
+        }
+
+        @SuppressWarnings("unchecked")
+        public <T> T ext(String key) {
+            return (T) getExt().get(key);
         }
 
         public Context putExt(String key, Object value) {

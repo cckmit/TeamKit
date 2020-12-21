@@ -53,7 +53,7 @@ public class MybatisProcessInstanceRepositoryTest extends DbTest {
         );
 
         ProcessAssignee assignee = new ProcessAssignee("pending", TEST1);
-        assignee.handle(definition.actionOf("reject"));
+        assignee.handle(definition.availableActionOf("reject"));
         instance.setAssignees(CollUtil.newHashSet(assignee));
 
         return instance;
