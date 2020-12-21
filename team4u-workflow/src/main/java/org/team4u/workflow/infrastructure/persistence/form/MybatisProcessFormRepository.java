@@ -92,10 +92,10 @@ public abstract class MybatisProcessFormRepository<F extends ProcessForm, D exte
 
         if (processFormDo.getId() == null) {
             processFormDo.setCreateTime(processFormDo.getUpdateTime());
+
             processFormMapper.insert(processFormDo);
 
             processForm.setId(processFormDo.getId());
-
             processForm.setCreateTime(processFormDo.getCreateTime());
         } else {
             processFormMapper.updateById(processFormDo);
