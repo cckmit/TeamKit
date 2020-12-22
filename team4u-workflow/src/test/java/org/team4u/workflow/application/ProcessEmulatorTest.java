@@ -6,13 +6,13 @@ import org.team4u.workflow.infrastructure.persistence.form.TestForm;
 
 import static org.team4u.workflow.TestUtil.TEST;
 
-public class ProcessEmulatorAppServiceTest {
+public class ProcessEmulatorTest {
 
-    private final ProcessEmulatorAppService emulatorAppService = ProcessEmulatorFactory.create();
+    private final ProcessEmulator emulator = ProcessEmulatorFactory.create();
 
     @Test
     public void simulate() {
-        emulatorAppService.simulate(
+        emulator.simulate(
                 "test_simple_completed_script",
                 TestForm.Builder
                         .newBuilder()

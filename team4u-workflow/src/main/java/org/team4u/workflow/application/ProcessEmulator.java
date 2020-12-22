@@ -20,19 +20,19 @@ import java.util.Map;
 
 
 /**
- * 流程模拟器应用服务
+ * 流程模拟器
  *
  * @author jay.wu
  */
-public class ProcessEmulatorAppService {
+public class ProcessEmulator {
 
     private final Log log = Log.get();
 
     private final ProcessFormAppService formAppService;
     private final ProcessEmulatorScriptRepository processEmulatorScriptRepository;
 
-    public ProcessEmulatorAppService(ProcessFormAppService formAppService,
-                                     ProcessEmulatorScriptRepository processEmulatorScriptRepository) {
+    public ProcessEmulator(ProcessFormAppService formAppService,
+                           ProcessEmulatorScriptRepository processEmulatorScriptRepository) {
         this.formAppService = formAppService;
         this.processEmulatorScriptRepository = processEmulatorScriptRepository;
     }
@@ -43,24 +43,26 @@ public class ProcessEmulatorAppService {
     public void simulate(String scriptId, ProcessForm form, Map<String, Object> ext) {
         LogMessage lm = LogMessages.create(this.getClass().getSimpleName(), "simulate")
                 .append("scriptId", scriptId);
-        ProcessEmulatorScript script = processEmulatorScriptRepository.scriptOf(scriptId);
+        log.info(lm.processing().toString());
 
+        ProcessEmulatorScript script = processEmulatorScriptRepository.scriptOf(scriptId);
         if (script == null) {
             throw new ProcessEmulatorScriptNotExistException(scriptId);
         }
-
-        log.info(lm.processing().toString());
 
         String processInstanceId = null;
 
         for (ProcessEmulatorScriptStep step : script.getSteps()) {
             initExt(step, ext);
+
             ProcessInstance instance = doStep(
                     processInstanceId,
                     script.getProcessDefinitionId(),
                     form,
                     step
             );
+
+            checkStepExpected(step, instance);
 
             processInstanceId = instance.getProcessInstanceId();
         }
@@ -103,14 +105,10 @@ public class ProcessEmulatorAppService {
             formAppService.start(command);
         }
 
-        ProcessInstance instance = formAppService.formOf(
+        return formAppService.formOf(
                 processForm.getFormId(),
                 step.getOperatorId()
         ).getInstance();
-
-        checkStepExpected(step, instance);
-
-        return instance;
     }
 
     private void initProcessInstanceCommand(AbstractHandleProcessInstanceCommand command,

@@ -5,7 +5,7 @@ import org.team4u.base.config.LocalJsonConfigService;
 import org.team4u.ddd.event.EventStore;
 import org.team4u.ddd.infrastructure.persistence.memory.InMemoryEventStore;
 import org.team4u.workflow.application.ProcessAppService;
-import org.team4u.workflow.application.ProcessEmulatorAppService;
+import org.team4u.workflow.application.ProcessEmulator;
 import org.team4u.workflow.application.ProcessFormAppService;
 import org.team4u.workflow.domain.form.DefaultProcessFormPermissionService;
 import org.team4u.workflow.domain.instance.ProcessNodeHandlers;
@@ -24,11 +24,11 @@ public class ProcessEmulatorFactory {
     /**
      * 创建模拟器
      */
-    public static ProcessEmulatorAppService create() {
+    public static ProcessEmulator create() {
         EventStore eventStore = new InMemoryEventStore();
         ConfigService configService = new LocalJsonConfigService();
 
-        return new ProcessEmulatorAppService(
+        return new ProcessEmulator(
                 new ProcessFormAppService(
                         eventStore,
                         new ProcessAppService(
