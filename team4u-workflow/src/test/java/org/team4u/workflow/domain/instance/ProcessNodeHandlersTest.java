@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.team4u.workflow.TestUtil;
 import org.team4u.workflow.domain.definition.ProcessDefinition;
 import org.team4u.workflow.domain.instance.node.handler.DynamicChoiceNodeHandler;
+import org.team4u.workflow.domain.instance.node.handler.ProcessNodeHandlerContext;
 
 import static org.team4u.workflow.TestUtil.*;
 
@@ -76,13 +77,14 @@ public class ProcessNodeHandlersTest {
     private void checkIsCompleted(String actionId, String expectedNodeId) {
         ProcessInstance instance = submit();
 
-        handles.handle(contextBuilder()
+        ProcessNodeHandlerContext context = contextBuilder()
                 .withInstance(instance)
                 .withAction(action(actionId))
                 .withDefinition(definition)
-                .build());
+                .build();
+        handles.handle(context);
 
-        Assert.assertEquals(TestUtil.staticNode(expectedNodeId), instance.getCurrentNode());
+        Assert.assertEquals(expectedNodeId, instance.getCurrentNode().getNodeId());
 
         Assert.assertEquals(
                 "nodeId=pending,actionId=" + actionId +
@@ -92,6 +94,7 @@ public class ProcessNodeHandlersTest {
         );
 
         Assert.assertTrue(instance.isCompleted());
+        Assert.assertEquals(TEST, context.ext(TEST));
     }
 
     private ProcessInstance submit() {

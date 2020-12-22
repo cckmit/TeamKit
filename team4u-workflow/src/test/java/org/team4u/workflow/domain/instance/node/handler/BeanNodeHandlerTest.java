@@ -11,9 +11,7 @@ public class BeanNodeHandlerTest {
 
     @Test
     public void handle() {
-        ProcessBeanHandlers handlers = new ProcessBeanHandlers();
-        handlers.saveIdObject(new TestBeanHandler());
-        BeanNodeHandler handler = new BeanNodeHandler(handlers);
+        BeanNodeHandler handler = new TestBeanNodeHandler();
 
         ProcessNodeHandlerContext context = TestUtil.contextBuilder()
                 .withInstance(TestUtil.newInstance())
@@ -25,16 +23,4 @@ public class BeanNodeHandlerTest {
         Assert.assertEquals(TEST, context.ext(TEST));
     }
 
-    public static class TestBeanHandler implements ProcessBeanHandler {
-
-        @Override
-        public String id() {
-            return "test";
-        }
-
-        @Override
-        public void handle(ProcessNodeHandlerContext context) {
-            context.putExt(TEST, TEST);
-        }
-    }
 }
