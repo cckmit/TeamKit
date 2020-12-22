@@ -42,17 +42,20 @@ public class ProcessFormAction extends ProcessAction {
         return requiredPermissions;
     }
 
+    /**
+     * 表单动作权限
+     */
     public enum Permission {
         /**
-         * 创建者
+         * 编辑
          */
         EDIT,
         /**
-         * 审批权限
+         * 审批
          */
         REVIEW,
         /**
-         * 查看权限
+         * 查看
          */
         VIEW
     }

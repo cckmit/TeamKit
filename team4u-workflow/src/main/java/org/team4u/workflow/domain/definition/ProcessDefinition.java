@@ -16,11 +16,14 @@ import java.util.List;
  * @author jay.wu
  */
 public class ProcessDefinition extends AggregateRoot {
-
     /**
      * 流程定义标识
      */
     private final ProcessDefinitionId processDefinitionId;
+    /**
+     * 流程定义名称
+     */
+    private final String processDefinitionName;
     /**
      * 动作集合
      */
@@ -31,9 +34,11 @@ public class ProcessDefinition extends AggregateRoot {
     private List<ProcessNode> nodes;
 
     public ProcessDefinition(ProcessDefinitionId processDefinitionId,
+                             String processDefinitionName,
                              List<ProcessAction> actions,
                              List<ProcessNode> nodes) {
         this.processDefinitionId = processDefinitionId;
+        this.processDefinitionName = processDefinitionName;
         this.actions = ObjectUtil.defaultIfNull(actions, Collections.emptyList());
         this.nodes = ObjectUtil.defaultIfNull(nodes, Collections.emptyList());
     }
@@ -80,6 +85,10 @@ public class ProcessDefinition extends AggregateRoot {
 
     public ProcessDefinitionId getProcessDefinitionId() {
         return processDefinitionId;
+    }
+
+    public String getProcessDefinitionName() {
+        return processDefinitionName;
     }
 
     public List<ProcessAction> getActions() {

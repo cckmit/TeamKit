@@ -78,6 +78,7 @@ public class MybatisProcessDefinitionRepository
         definitionDo.setId(definitionDo.getId());
         definitionDo.setProcessDefinitionId(definition.getProcessDefinitionId().getId());
         definitionDo.setProcessDefinitionVersion(definition.getProcessDefinitionId().getVersion());
+        definitionDo.setProcessDefinitionName(definition.getProcessDefinitionName());
 
         definitionDo.setProcessDefinitionBody(
                 JSON.toJSONString(

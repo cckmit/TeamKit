@@ -38,12 +38,22 @@ public class AssigneeActionChoiceNodeHandler extends ActionChoiceNodeHandler {
         AssigneeActionChoiceNode node = context.getNode();
 
         if (StrUtil.equals(node.getChoiceType(), CHOICE_TYPE_ANY)) {
-            return context.getInstance().getAssignees().stream()
+            return context.getInstance()
+                    .getAssignees()
+                    .stream()
                     .anyMatch(it -> it.getAction() != null);
         }
 
         if (StrUtil.equals(node.getChoiceType(), CHOICE_TYPE_ALL)) {
-            return context.getInstance().getAssignees().stream()
+            // 遇到指定动作则直接跳转
+            if (StrUtil.equals(context.getAction().getActionId(), node.getChoiceActionId())) {
+                return true;
+            }
+
+            // 所有人触发动作后跳转
+            return context.getInstance()
+                    .getAssignees()
+                    .stream()
                     .allMatch(it -> it.getAction() != null);
         }
 

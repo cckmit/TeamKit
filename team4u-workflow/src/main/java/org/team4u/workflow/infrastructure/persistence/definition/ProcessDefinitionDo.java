@@ -24,6 +24,10 @@ public class ProcessDefinitionDo {
      */
     private long processDefinitionVersion;
     /**
+     * 流程定义名称
+     */
+    private String processDefinitionName;
+    /**
      * 流程定义内容
      */
     private String processDefinitionBody;
@@ -66,6 +70,14 @@ public class ProcessDefinitionDo {
 
     public void setProcessDefinitionVersion(long processDefinitionVersion) {
         this.processDefinitionVersion = processDefinitionVersion;
+    }
+
+    public String getProcessDefinitionName() {
+        return processDefinitionName;
+    }
+
+    public void setProcessDefinitionName(String processDefinitionName) {
+        this.processDefinitionName = processDefinitionName;
     }
 
     public String getProcessDefinitionBody() {

@@ -81,14 +81,22 @@ public class TestUtil {
         return processDefinitionRepository.domainOf(id);
     }
 
-    public static AssigneeActionChoiceNode assigneeActionChoiceNode(String type,
-                                                                    ActionChoiceNode.ActionNode... actionNodes) {
+    public static AssigneeActionChoiceNode anyAssigneeActionNode(ActionChoiceNode.ActionNode... actionNodes) {
         return new AssigneeActionChoiceNode(
                 TEST,
                 TEST,
-                type,
-                Arrays.asList(actionNodes.clone())
-        );
+                AssigneeActionChoiceNode.CHOICE_TYPE_ANY,
+                Arrays.asList(actionNodes.clone()));
+    }
+
+    public static AssigneeActionChoiceNode allAssigneeActionNode(String choiceActionId,
+                                                                 ActionChoiceNode.ActionNode... actionNodes) {
+        return new AssigneeActionChoiceNode(
+                TEST,
+                TEST,
+                AssigneeActionChoiceNode.CHOICE_TYPE_ALL,
+                choiceActionId,
+                Arrays.asList(actionNodes.clone()));
     }
 
     public static SelectorAppService selectorAppService() {

@@ -1,4 +1,5 @@
 {
+  "processDefinitionName": "简单流程",
   "actions": [
     {
       "@type": "org.team4u.workflow.domain.form.process.definition.ProcessFormAction",

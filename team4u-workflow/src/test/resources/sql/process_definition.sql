@@ -3,6 +3,7 @@ create table `process_definition`
     `id`                         bigint(20) unsigned not null auto_increment comment '自增长标识',
     `process_definition_id`      varchar(32)         not null default '' comment '流程定义版本',
     `process_definition_version` BIGINT(20) unsigned not null default 0 comment '流程定义版本',
+    `process_definition_name`    varchar(32)         not null default '' comment '流程定义名称',
     `process_definition_body`    varchar(21800)      not null default '' comment '流程定义内容',
     `create_by`                  varchar(32)         not null default '' comment '创建者标识',
     `update_by`                  varchar(32)         not null default '' comment '编辑者标识',

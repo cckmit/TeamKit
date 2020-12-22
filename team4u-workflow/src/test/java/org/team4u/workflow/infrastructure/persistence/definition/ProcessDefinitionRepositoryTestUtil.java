@@ -8,6 +8,11 @@ public class ProcessDefinitionRepositoryTestUtil {
 
     public static void checkDefinition(ProcessDefinition definition) {
         Assert.assertEquals(
+                "简单流程",
+                definition.getProcessDefinitionName()
+        );
+
+        Assert.assertEquals(
                 new ProcessDefinitionId("simple").toString(),
                 definition.getProcessDefinitionId().toString()
         );

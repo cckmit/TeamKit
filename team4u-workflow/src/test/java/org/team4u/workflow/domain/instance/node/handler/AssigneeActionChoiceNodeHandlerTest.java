@@ -2,6 +2,7 @@ package org.team4u.workflow.domain.instance.node.handler;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.team4u.workflow.TestUtil;
 import org.team4u.workflow.domain.definition.exception.ProcessNodeNotExistException;
 import org.team4u.workflow.domain.form.process.definition.node.AssigneeActionChoiceNode;
 import org.team4u.workflow.domain.form.process.node.handler.AssigneeActionChoiceNodeHandler;
@@ -21,10 +22,7 @@ public class AssigneeActionChoiceNodeHandlerTest {
         String nextNodeId = handler.handle(
                 contextBuilder().withInstance(instance)
                         .withAction(action(TEST))
-                        .withNode(assigneeActionChoiceNode(
-                                AssigneeActionChoiceNode.CHOICE_TYPE_ANY,
-                                actionNode(TEST, TEST1)
-                        ))
+                        .withNode(anyAssigneeActionNode(actionNode(TEST, TEST1)))
                         .build()
         );
 
@@ -37,10 +35,7 @@ public class AssigneeActionChoiceNodeHandlerTest {
         AssigneeActionChoiceNodeHandler handler = new AssigneeActionChoiceNodeHandler();
         ProcessInstance instance = newInstance(TEST, TEST1).setCurrentNode(staticNode(TEST));
 
-        AssigneeActionChoiceNode actionChoiceNode = assigneeActionChoiceNode(
-                AssigneeActionChoiceNode.CHOICE_TYPE_ALL,
-                actionNode(TEST, TEST1)
-        );
+        AssigneeActionChoiceNode actionChoiceNode = allAssigneeActionNode(TEST1, actionNode(TEST, TEST1));
 
         String nextNodeId = handler.handle(
                 contextBuilder().withInstance(instance)
@@ -63,6 +58,26 @@ public class AssigneeActionChoiceNodeHandlerTest {
     }
 
     @Test
+    public void allAndReject() {
+        AssigneeActionChoiceNodeHandler handler = new AssigneeActionChoiceNodeHandler();
+        ProcessInstance instance = newInstance(TEST, TEST1).setCurrentNode(staticNode(TEST));
+
+        AssigneeActionChoiceNode actionChoiceNode = TestUtil.allAssigneeActionNode(
+                TEST,
+                actionNode(TEST, TEST1)
+        );
+
+        String nextNodeId = handler.handle(
+                contextBuilder().withInstance(instance)
+                        .withAction(action(TEST))
+                        .withNode(actionChoiceNode)
+                        .build()
+        );
+
+        Assert.assertEquals(TEST1, nextNodeId);
+    }
+
+    @Test
     public void noMatchAssignee() {
         AssigneeActionChoiceNodeHandler handler = new AssigneeActionChoiceNodeHandler();
 
@@ -72,10 +87,7 @@ public class AssigneeActionChoiceNodeHandlerTest {
             handler.handle(
                     contextBuilder().withInstance(instance)
                             .withAction(action(TEST))
-                            .withNode(assigneeActionChoiceNode(
-                                    AssigneeActionChoiceNode.CHOICE_TYPE_ANY,
-                                    actionNode(TEST, TEST1)
-                            ))
+                            .withNode(anyAssigneeActionNode(actionNode(TEST, TEST1)))
                             .build()
             );
 
@@ -93,10 +105,7 @@ public class AssigneeActionChoiceNodeHandlerTest {
             handler.handle(
                     contextBuilder().withInstance(instance)
                             .withAction(action(TEST, TEST))
-                            .withNode(assigneeActionChoiceNode(
-                                    AssigneeActionChoiceNode.CHOICE_TYPE_ANY,
-                                    actionNode(TEST, TEST1)
-                            ))
+                            .withNode(anyAssigneeActionNode(actionNode(TEST, TEST1)))
                             .build()
             );
             Assert.fail();
@@ -118,10 +127,7 @@ public class AssigneeActionChoiceNodeHandlerTest {
             handler.handle(
                     contextBuilder().withInstance(instance)
                             .withAction(action(TEST))
-                            .withNode(assigneeActionChoiceNode(
-                                    AssigneeActionChoiceNode.CHOICE_TYPE_ANY,
-                                    actionNode(TEST1, TEST1)
-                            ))
+                            .withNode(anyAssigneeActionNode(actionNode(TEST1, TEST1)))
                             .build()
             );
 

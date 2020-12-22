@@ -28,6 +28,10 @@ public class ProcessInstanceDo {
      */
     private String processDefinitionId;
     /**
+     * 流程流程定义名称
+     */
+    private String processDefinitionName;
+    /**
      * 流程流程定义版本
      */
     private long processDefinitionVersion;
@@ -35,6 +39,10 @@ public class ProcessInstanceDo {
      * 当前流程节点标识
      */
     private String currentNodeId;
+    /**
+     * 当前流程节点名称
+     */
+    private String currentNodeName;
     /**
      * 创建人
      */
@@ -52,93 +60,100 @@ public class ProcessInstanceDo {
      */
     private Date updateTime;
 
+
     public Long getId() {
         return id;
     }
 
-    public ProcessInstanceDo setId(Long id) {
+    public void setId(Long id) {
         this.id = id;
-        return this;
     }
 
     public String getProcessInstanceId() {
         return processInstanceId;
     }
 
-    public ProcessInstanceDo setProcessInstanceId(String processInstanceId) {
+    public void setProcessInstanceId(String processInstanceId) {
         this.processInstanceId = processInstanceId;
-        return this;
     }
 
     public String getProcessInstanceName() {
         return processInstanceName;
     }
 
-    public ProcessInstanceDo setProcessInstanceName(String processInstanceName) {
+    public void setProcessInstanceName(String processInstanceName) {
         this.processInstanceName = processInstanceName;
-        return this;
     }
 
     public String getProcessDefinitionId() {
         return processDefinitionId;
     }
 
-    public ProcessInstanceDo setProcessDefinitionId(String processDefinitionId) {
+    public void setProcessDefinitionId(String processDefinitionId) {
         this.processDefinitionId = processDefinitionId;
-        return this;
     }
 
     public long getProcessDefinitionVersion() {
         return processDefinitionVersion;
     }
 
-    public ProcessInstanceDo setProcessDefinitionVersion(long processDefinitionVersion) {
+    public void setProcessDefinitionVersion(long processDefinitionVersion) {
         this.processDefinitionVersion = processDefinitionVersion;
-        return this;
+    }
+
+    public String getProcessDefinitionName() {
+        return processDefinitionName;
+    }
+
+    public void setProcessDefinitionName(String processDefinitionName) {
+        this.processDefinitionName = processDefinitionName;
     }
 
     public String getCurrentNodeId() {
         return currentNodeId;
     }
 
-    public ProcessInstanceDo setCurrentNodeId(String currentNodeId) {
+    public void setCurrentNodeId(String currentNodeId) {
         this.currentNodeId = currentNodeId;
-        return this;
+    }
+
+    public String getCurrentNodeName() {
+        return currentNodeName;
+    }
+
+    public void setCurrentNodeName(String currentNodeName) {
+        this.currentNodeName = currentNodeName;
     }
 
     public String getCreateBy() {
         return createBy;
     }
 
-    public ProcessInstanceDo setCreateBy(String createBy) {
+    public void setCreateBy(String createBy) {
         this.createBy = createBy;
-        return this;
     }
 
     public String getUpdateBy() {
         return updateBy;
     }
 
-    public ProcessInstanceDo setUpdateBy(String updateBy) {
+    public void setUpdateBy(String updateBy) {
         this.updateBy = updateBy;
-        return this;
     }
 
     public Date getCreateTime() {
         return createTime;
     }
 
-    public ProcessInstanceDo setCreateTime(Date createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
-        return this;
     }
 
     public Date getUpdateTime() {
         return updateTime;
     }
 
-    public ProcessInstanceDo setUpdateTime(Date updateTime) {
+    public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
-        return this;
     }
 }
