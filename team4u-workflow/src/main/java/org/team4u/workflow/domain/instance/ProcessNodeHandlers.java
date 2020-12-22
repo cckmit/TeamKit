@@ -64,7 +64,7 @@ public class ProcessNodeHandlers extends IdObjectService<String, ProcessNodeHand
             log.info(lm.success().toString());
 
             nextNode = context.getDefinition().processNodeOf(
-                    availableObjectOfId(nextNode.getClass().getSimpleName())
+                    availableObjectOfId(nextNode.getClass().getName())
                             .handle(context.setNode(nextNode))
             );
         }

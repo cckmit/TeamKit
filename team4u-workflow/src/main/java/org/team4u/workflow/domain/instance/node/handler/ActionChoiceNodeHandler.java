@@ -34,6 +34,6 @@ public class ActionChoiceNodeHandler implements ProcessNodeHandler {
 
     @Override
     public String id() {
-        return ActionChoiceNode.class.getSimpleName();
+        return ActionChoiceNode.class.getName();
     }
 }

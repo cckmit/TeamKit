@@ -31,7 +31,7 @@ public class ActionChoiceNode extends ChoiceNode {
         return actionNodes.stream()
                 .filter(it -> it.actionId.equals(action.getActionId()))
                 .findFirst()
-                .map(ActionNode::getNodeId)
+                .map(ActionNode::getNextNodeId)
                 .orElse(null);
     }
 
@@ -45,24 +45,24 @@ public class ActionChoiceNode extends ChoiceNode {
     public static class ActionNode {
 
         private final String actionId;
-        private final String nodeId;
+        private final String nextNodeId;
 
-        public ActionNode(String actionId, String nodeId) {
+        public ActionNode(String actionId, String nextNodeId) {
             this.actionId = actionId;
-            this.nodeId = nodeId;
+            this.nextNodeId = nextNodeId;
         }
 
         public String getActionId() {
             return actionId;
         }
 
-        public String getNodeId() {
-            return nodeId;
+        public String getNextNodeId() {
+            return nextNodeId;
         }
 
         @Override
         public String toString() {
-            return actionId + "->" + nodeId;
+            return actionId + "->" + nextNodeId;
         }
     }
 }

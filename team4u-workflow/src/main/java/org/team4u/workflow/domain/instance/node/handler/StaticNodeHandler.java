@@ -11,7 +11,7 @@ public class StaticNodeHandler extends AbstractStaticProcessNodeHandler {
 
     @Override
     public String id() {
-        return StaticNode.class.getSimpleName();
+        return StaticNode.class.getName();
     }
 
     @Override

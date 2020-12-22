@@ -55,15 +55,15 @@
       "actionNodes": [
         {
           "actionId": "save",
-          "nodeId": "created"
+          "nextNodeId": "created"
         },
         {
           "actionId": "submit",
-          "nodeId": "pending"
+          "nextNodeId": "pending"
         },
         {
           "actionId": "test",
-          "nodeId": "dynamic"
+          "nextNodeId": "dynamic"
         }
       ]
     },
@@ -99,11 +99,11 @@
       "actionNodes": [
         {
           "actionId": "reject",
-          "nodeId": "rejected"
+          "nextNodeId": "rejected"
         },
         {
           "actionId": "approve",
-          "nodeId": "completed"
+          "nextNodeId": "completed"
         }
       ]
     },

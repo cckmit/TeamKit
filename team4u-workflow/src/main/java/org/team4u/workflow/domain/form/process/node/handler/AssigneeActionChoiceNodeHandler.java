@@ -68,6 +68,6 @@ public class AssigneeActionChoiceNodeHandler extends ActionChoiceNodeHandler {
 
     @Override
     public String id() {
-        return AssigneeActionChoiceNode.class.getSimpleName();
+        return AssigneeActionChoiceNode.class.getName();
     }
 }

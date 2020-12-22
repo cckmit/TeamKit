@@ -32,6 +32,6 @@ public class DynamicChoiceNodeHandler implements ProcessNodeHandler {
 
     @Override
     public String id() {
-        return DynamicChoiceNode.class.getSimpleName();
+        return DynamicChoiceNode.class.getName();
     }
 }

@@ -53,6 +53,6 @@ public class AssigneeNodeHandler extends AbstractStaticProcessNodeHandler {
 
     @Override
     public String id() {
-        return AssigneeNode.class.getSimpleName();
+        return AssigneeNode.class.getName();
     }
 }
