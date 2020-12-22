@@ -7,8 +7,6 @@ import org.team4u.workflow.domain.definition.ProcessNode;
 import org.team4u.workflow.domain.definition.exception.ProcessNodeNotExistException;
 import org.team4u.workflow.domain.instance.node.handler.ProcessNodeHandler;
 
-import java.util.List;
-
 /**
  * 流程节点处理器服务
  *
@@ -19,11 +17,7 @@ public class ProcessNodeHandlers extends IdObjectService<String, ProcessNodeHand
     private final Log log = Log.get();
 
     public ProcessNodeHandlers() {
-      super(ProcessNodeHandler.class);
-    }
-
-    public ProcessNodeHandlers(List<ProcessNodeHandler> objects) {
-        super(objects);
+        super(ProcessNodeHandler.class);
     }
 
     public void handle(ProcessNodeHandler.Context context) {
