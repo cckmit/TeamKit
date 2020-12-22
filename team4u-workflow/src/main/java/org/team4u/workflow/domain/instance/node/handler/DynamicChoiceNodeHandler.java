@@ -18,7 +18,7 @@ public class DynamicChoiceNodeHandler implements ProcessNodeHandler {
     }
 
     @Override
-    public String handle(Context context) {
+    public String handle(ProcessNodeHandlerContext context) {
         DynamicChoiceNode node = context.getNode();
 
         SimpleMapBinding binding = new SimpleMapBinding();

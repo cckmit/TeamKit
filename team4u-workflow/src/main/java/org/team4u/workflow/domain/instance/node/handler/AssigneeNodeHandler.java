@@ -20,7 +20,7 @@ public class AssigneeNodeHandler extends AbstractStaticProcessNodeHandler {
     private final Log log = Log.get();
 
     @Override
-    public void internalHandle(Context context) {
+    public void internalHandle(ProcessNodeHandlerContext context) {
         AssigneeNode node = context.getNode();
         List<String> assignees;
 

@@ -1,22 +1,22 @@
 package org.team4u.workflow;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.lang.Dict;
 import org.team4u.base.config.LocalJsonConfigService;
 import org.team4u.selector.application.SelectorAppService;
 import org.team4u.selector.domain.selector.entity.expression.ExpressionSelectorFactory;
 import org.team4u.template.TemplateFunctionService;
 import org.team4u.template.infrastructure.BeetlTemplateEngine;
-import org.team4u.workflow.domain.definition.*;
+import org.team4u.workflow.domain.definition.ProcessDefinition;
+import org.team4u.workflow.domain.definition.ProcessDefinitionId;
+import org.team4u.workflow.domain.definition.ProcessDefinitionRepository;
 import org.team4u.workflow.domain.definition.node.ActionChoiceNode;
 import org.team4u.workflow.domain.definition.node.StaticNode;
-import org.team4u.workflow.domain.form.ProcessFormContextKeys;
 import org.team4u.workflow.domain.form.process.definition.ProcessFormAction;
 import org.team4u.workflow.domain.form.process.definition.node.AssigneeActionChoiceNode;
 import org.team4u.workflow.domain.form.process.definition.node.AssigneeNode;
 import org.team4u.workflow.domain.instance.ProcessAssignee;
 import org.team4u.workflow.domain.instance.ProcessInstance;
-import org.team4u.workflow.domain.instance.node.handler.ProcessNodeHandler;
+import org.team4u.workflow.domain.instance.node.handler.ProcessNodeHandlerContext;
 import org.team4u.workflow.infrastructure.persistence.definition.JsonProcessDefinitionRepository;
 
 import java.util.Arrays;
@@ -49,22 +49,11 @@ public class TestUtil {
         );
     }
 
-    public static ProcessNodeHandler.Context context(ProcessInstance instance,
-                                                     ProcessAction action,
-                                                     ProcessDefinition definition,
-                                                     ProcessNode node,
-                                                     String... permissions) {
-        return new ProcessNodeHandler.Context(
-                instance,
-                definition,
-                action,
-                TEST,
-                TEST,
-                new Dict().set(
-                        ProcessFormContextKeys.OPERATOR_ACTION_PERMISSIONS,
-                        new HashSet<>(CollUtil.toList(permissions))
-                )
-        ).setNode(node);
+    public static ProcessNodeHandlerContext.Builder contextBuilder() {
+        return ProcessNodeHandlerContext.Builder
+                .create()
+                .withOperatorId(TEST)
+                .withRemark(TEST);
     }
 
     public static ActionChoiceNode.ActionNode actionNode(String actionId, String nodeId) {

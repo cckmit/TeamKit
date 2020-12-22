@@ -26,12 +26,9 @@ public class DynamicChoiceNodeHandlerTest {
         );
 
         ProcessInstance instance = newInstance();
-        ProcessNodeHandler.Context c = context(
-                instance,
-                null,
-                null,
-                new DynamicChoiceNode(TEST, TEST, selectorConfig())
-        );
+        ProcessNodeHandlerContext c = contextBuilder().withInstance(instance)
+                .withNode(new DynamicChoiceNode(TEST, TEST, selectorConfig()))
+                .build();
         c.putExt("a", 2);
         Assert.assertEquals("y", handler.handle(c));
 

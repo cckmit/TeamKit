@@ -14,7 +14,7 @@ import org.team4u.workflow.domain.instance.ProcessInstance;
 import org.team4u.workflow.domain.instance.ProcessInstanceNotExistException;
 import org.team4u.workflow.domain.instance.ProcessInstanceRepository;
 import org.team4u.workflow.domain.instance.ProcessNodeHandlers;
-import org.team4u.workflow.domain.instance.node.handler.ProcessNodeHandler;
+import org.team4u.workflow.domain.instance.node.handler.ProcessNodeHandlerContext;
 
 /**
  * 工作流应用服务
@@ -134,14 +134,14 @@ public class ProcessAppService {
                                   ProcessInstance instance) {
         ProcessAction action = definition.availableActionOf(command.getActionId());
 
-        processNodeHandlers.handle(new ProcessNodeHandler.Context(
-                instance,
-                definition,
-                action,
-                command.getOperatorId(),
-                command.getRemark(),
-                command.getExt()
-        ));
+        processNodeHandlers.handle(ProcessNodeHandlerContext.Builder.create()
+                .withInstance(instance)
+                .withDefinition(definition)
+                .withAction(action)
+                .withOperatorId(command.getOperatorId())
+                .withRemark(command.getRemark())
+                .withExt(command.getExt())
+                .build());
 
         processInstanceRepository.save(instance);
         return instance;

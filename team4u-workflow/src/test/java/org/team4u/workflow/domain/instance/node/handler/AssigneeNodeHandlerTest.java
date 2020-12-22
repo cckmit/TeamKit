@@ -13,17 +13,16 @@ public class AssigneeNodeHandlerTest {
     public void handleUserNode() {
         AssigneeNodeHandler handler = new AssigneeNodeHandler();
         ProcessInstance instance = newInstance();
-        handler.handle(context(
-                instance,
-                action(TEST),
-                null,
-                new AssigneeNode(
+        handler.handle(contextBuilder()
+                .withInstance(instance)
+                .withAction(action(TEST))
+                .withNode(new AssigneeNode(
                         TEST,
                         TEST,
                         null,
                         AssigneeNode.RULE_TYPE_USER,
-                        " 1, 2 ")
-        ));
+                        " 1, 2 "))
+                .build());
 
         Assert.assertEquals(
                 "[test,1,null, test,2,null]",

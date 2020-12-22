@@ -6,7 +6,7 @@ import org.team4u.workflow.TestUtil;
 import org.team4u.workflow.domain.definition.ProcessDefinition;
 import org.team4u.workflow.domain.instance.node.handler.DynamicChoiceNodeHandler;
 
-import static org.team4u.workflow.TestUtil.selectorAppService;
+import static org.team4u.workflow.TestUtil.*;
 
 public class ProcessNodeHandlersTest {
 
@@ -16,12 +16,11 @@ public class ProcessNodeHandlersTest {
     @Test
     public void save() {
         ProcessInstance instance = TestUtil.newInstance().setCurrentNode(definition.rootNode());
-        handles.handle(TestUtil.context(
-                instance,
-                TestUtil.action("save"),
-                definition,
-                null
-        ));
+        handles.handle(contextBuilder()
+                .withInstance(instance)
+                .withAction(action("save"))
+                .withDefinition(definition)
+                .build());
 
         Assert.assertEquals(TestUtil.staticNode("created"), instance.getCurrentNode());
         Assert.assertEquals(
@@ -35,12 +34,12 @@ public class ProcessNodeHandlersTest {
         ProcessInstance instance = TestUtil.newInstance().setCurrentNode(definition.rootNode());
         handles.saveIdObject(new DynamicChoiceNodeHandler(selectorAppService()));
 
-        handles.handle(TestUtil.context(
-                instance,
-                TestUtil.action("test"),
-                definition,
-                null
-        ).putExt("a", 1));
+        handles.handle(contextBuilder()
+                .withInstance(instance)
+                .withAction(action("test"))
+                .withDefinition(definition)
+                .build()
+                .putExt("a", 1));
 
         Assert.assertEquals(TestUtil.staticNode("created"), instance.getCurrentNode());
         Assert.assertEquals(
@@ -77,12 +76,11 @@ public class ProcessNodeHandlersTest {
     private void checkIsCompleted(String actionId, String expectedNodeId) {
         ProcessInstance instance = submit();
 
-        handles.handle(TestUtil.context(
-                instance,
-                TestUtil.action(actionId),
-                definition,
-                null
-        ));
+        handles.handle(contextBuilder()
+                .withInstance(instance)
+                .withAction(action(actionId))
+                .withDefinition(definition)
+                .build());
 
         Assert.assertEquals(TestUtil.staticNode(expectedNodeId), instance.getCurrentNode());
 
@@ -98,12 +96,12 @@ public class ProcessNodeHandlersTest {
 
     private ProcessInstance submit() {
         ProcessInstance instance = TestUtil.newInstance().setCurrentNode(definition.rootNode());
-        handles.handle(TestUtil.context(
-                instance,
-                TestUtil.action("submit"),
-                definition,
-                null
-        ));
+
+        handles.handle(contextBuilder()
+                .withInstance(instance)
+                .withAction(action("submit"))
+                .withDefinition(definition)
+                .build());
 
         return instance;
     }

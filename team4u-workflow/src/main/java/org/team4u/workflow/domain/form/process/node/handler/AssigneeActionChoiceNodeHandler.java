@@ -7,6 +7,7 @@ import org.team4u.workflow.domain.form.process.definition.node.AssigneeActionCho
 import org.team4u.workflow.domain.instance.NoPermissionException;
 import org.team4u.workflow.domain.instance.ProcessAssignee;
 import org.team4u.workflow.domain.instance.node.handler.ActionChoiceNodeHandler;
+import org.team4u.workflow.domain.instance.node.handler.ProcessNodeHandlerContext;
 
 import static org.team4u.workflow.domain.form.process.definition.node.AssigneeActionChoiceNode.CHOICE_TYPE_ALL;
 import static org.team4u.workflow.domain.form.process.definition.node.AssigneeActionChoiceNode.CHOICE_TYPE_ANY;
@@ -19,7 +20,7 @@ import static org.team4u.workflow.domain.form.process.definition.node.AssigneeAc
 public class AssigneeActionChoiceNodeHandler extends ActionChoiceNodeHandler {
 
     @Override
-    public String handle(Context context) {
+    public String handle(ProcessNodeHandlerContext context) {
         ProcessAssignee assignee = context.getInstance().currentAssigneeOf(context.getOperatorId());
 
         checkOperatorPermissions(assignee, context);
@@ -33,7 +34,7 @@ public class AssigneeActionChoiceNodeHandler extends ActionChoiceNodeHandler {
         return super.handle(context);
     }
 
-    protected boolean canJumpToNextNode(Context context) {
+    protected boolean canJumpToNextNode(ProcessNodeHandlerContext context) {
         AssigneeActionChoiceNode node = context.getNode();
 
         if (StrUtil.equals(node.getChoiceType(), CHOICE_TYPE_ANY)) {
@@ -49,7 +50,7 @@ public class AssigneeActionChoiceNodeHandler extends ActionChoiceNodeHandler {
         return false;
     }
 
-    private void checkOperatorPermissions(ProcessAssignee assignee, Context context) {
+    private void checkOperatorPermissions(ProcessAssignee assignee, ProcessNodeHandlerContext context) {
         if (assignee == null) {
             throw new NoPermissionException(
                     String.format("processInstanceId=%s|operator=%s",

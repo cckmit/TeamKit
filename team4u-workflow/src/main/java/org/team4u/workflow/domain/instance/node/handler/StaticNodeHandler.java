@@ -15,7 +15,7 @@ public class StaticNodeHandler extends AbstractStaticProcessNodeHandler {
     }
 
     @Override
-    protected void internalHandle(Context context) {
+    protected void internalHandle(ProcessNodeHandlerContext context) {
 
     }
 }

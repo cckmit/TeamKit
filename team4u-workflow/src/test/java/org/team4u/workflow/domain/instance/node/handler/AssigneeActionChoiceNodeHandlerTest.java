@@ -18,15 +18,15 @@ public class AssigneeActionChoiceNodeHandlerTest {
 
         ProcessInstance instance = newInstance(TEST).setCurrentNode(staticNode(TEST));
 
-        String nextNodeId = handler.handle(context(
-                instance,
-                action(TEST),
-                null,
-                assigneeActionChoiceNode(
-                        AssigneeActionChoiceNode.CHOICE_TYPE_ANY,
-                        actionNode(TEST, TEST1)
-                )
-        ));
+        String nextNodeId = handler.handle(
+                contextBuilder().withInstance(instance)
+                        .withAction(action(TEST))
+                        .withNode(assigneeActionChoiceNode(
+                                AssigneeActionChoiceNode.CHOICE_TYPE_ANY,
+                                actionNode(TEST, TEST1)
+                        ))
+                        .build()
+        );
 
         Assert.assertEquals(TEST1, nextNodeId);
         Assert.assertEquals(TEST, instance.currentAssigneeOf(TEST).getAction().getActionId());
@@ -42,24 +42,23 @@ public class AssigneeActionChoiceNodeHandlerTest {
                 actionNode(TEST, TEST1)
         );
 
-        String nextNodeId = handler.handle(context(
-                instance,
-                action(TEST),
-                null,
-                actionChoiceNode
-        ));
+        String nextNodeId = handler.handle(
+                contextBuilder().withInstance(instance)
+                        .withAction(action(TEST))
+                        .withNode(actionChoiceNode)
+                        .build()
+        );
 
         Assert.assertNull(nextNodeId);
         Assert.assertNull(instance.currentAssigneeOf(TEST1).getAction());
 
-        nextNodeId = handler.handle(new ProcessNodeHandler.Context(
-                instance,
-                null,
-                action(TEST),
-                TEST1,
-                TEST,
-                null
-        ).setNode(actionChoiceNode));
+        nextNodeId = handler.handle(
+                contextBuilder().withInstance(instance)
+                        .withOperatorId(TEST1)
+                        .withAction(action(TEST))
+                        .withNode(actionChoiceNode)
+                        .build()
+        );
         Assert.assertEquals(TEST1, nextNodeId);
     }
 
@@ -70,15 +69,15 @@ public class AssigneeActionChoiceNodeHandlerTest {
         ProcessInstance instance = newInstance().setCurrentNode(staticNode(TEST));
 
         try {
-            handler.handle(context(
-                    instance,
-                    action(TEST),
-                    null,
-                    assigneeActionChoiceNode(
-                            AssigneeActionChoiceNode.CHOICE_TYPE_ANY,
-                            actionNode(TEST, TEST1)
-                    )
-            ));
+            handler.handle(
+                    contextBuilder().withInstance(instance)
+                            .withAction(action(TEST))
+                            .withNode(assigneeActionChoiceNode(
+                                    AssigneeActionChoiceNode.CHOICE_TYPE_ANY,
+                                    actionNode(TEST, TEST1)
+                            ))
+                            .build()
+            );
 
             Assert.fail();
         } catch (NoPermissionException e) {
@@ -91,19 +90,19 @@ public class AssigneeActionChoiceNodeHandlerTest {
         AssigneeActionChoiceNodeHandler handler = new AssigneeActionChoiceNodeHandler();
         ProcessInstance instance = newInstance(TEST).setCurrentNode(staticNode(TEST));
         try {
-            handler.handle(context(
-                    instance,
-                    action(TEST, TEST),
-                    null,
-                    assigneeActionChoiceNode(
-                            AssigneeActionChoiceNode.CHOICE_TYPE_ANY,
-                            actionNode(TEST, TEST1)
-                    )
-            ));
+            handler.handle(
+                    contextBuilder().withInstance(instance)
+                            .withAction(action(TEST, TEST))
+                            .withNode(assigneeActionChoiceNode(
+                                    AssigneeActionChoiceNode.CHOICE_TYPE_ANY,
+                                    actionNode(TEST, TEST1)
+                            ))
+                            .build()
+            );
             Assert.fail();
         } catch (NoPermissionException e) {
             Assert.assertEquals(
-                    "processInstanceId=test|operator=test|operatorPermissions=[]",
+                    "processInstanceId=test|operator=test|operatorPermissions=null",
                     e.getMessage()
             );
         }
@@ -116,15 +115,15 @@ public class AssigneeActionChoiceNodeHandlerTest {
         ProcessInstance instance = newInstance(TEST).setCurrentNode(staticNode(TEST));
 
         try {
-            handler.handle(context(
-                    instance,
-                    action(TEST),
-                    null,
-                    assigneeActionChoiceNode(
-                            AssigneeActionChoiceNode.CHOICE_TYPE_ANY,
-                            actionNode(TEST, TEST1)
-                    )
-            ));
+            handler.handle(
+                    contextBuilder().withInstance(instance)
+                            .withAction(action(TEST))
+                            .withNode(assigneeActionChoiceNode(
+                                    AssigneeActionChoiceNode.CHOICE_TYPE_ANY,
+                                    actionNode(TEST1, TEST1)
+                            ))
+                            .build()
+            );
 
             Assert.fail();
         } catch (ProcessNodeNotExistException e) {

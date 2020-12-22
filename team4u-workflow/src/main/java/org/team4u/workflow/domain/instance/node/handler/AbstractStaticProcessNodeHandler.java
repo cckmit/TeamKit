@@ -8,7 +8,7 @@ package org.team4u.workflow.domain.instance.node.handler;
 public abstract class AbstractStaticProcessNodeHandler implements ProcessNodeHandler {
 
     @Override
-    public String handle(Context context) {
+    public String handle(ProcessNodeHandlerContext context) {
         internalHandle(context);
 
         changeCurrentNodeTo(context);
@@ -16,7 +16,7 @@ public abstract class AbstractStaticProcessNodeHandler implements ProcessNodeHan
         return null;
     }
 
-    protected void changeCurrentNodeTo(Context context) {
+    protected void changeCurrentNodeTo(ProcessNodeHandlerContext context) {
         context.getInstance().changeCurrentNodeTo(
                 context.getAction(),
                 context.getNode(),
@@ -30,5 +30,5 @@ public abstract class AbstractStaticProcessNodeHandler implements ProcessNodeHan
      *
      * @param context 上下文
      */
-    protected abstract void internalHandle(Context context);
+    protected abstract void internalHandle(ProcessNodeHandlerContext context);
 }

@@ -6,6 +6,7 @@ import org.team4u.base.log.LogMessage;
 import org.team4u.workflow.domain.definition.ProcessNode;
 import org.team4u.workflow.domain.definition.exception.ProcessNodeNotExistException;
 import org.team4u.workflow.domain.instance.node.handler.ProcessNodeHandler;
+import org.team4u.workflow.domain.instance.node.handler.ProcessNodeHandlerContext;
 
 /**
  * 流程节点处理器服务
@@ -20,7 +21,7 @@ public class ProcessNodeHandlers extends IdObjectService<String, ProcessNodeHand
         super(ProcessNodeHandler.class);
     }
 
-    public void handle(ProcessNodeHandler.Context context) {
+    public void handle(ProcessNodeHandlerContext context) {
         if (context.getInstance() == null) {
             throw new ProcessInstanceNotExistException("context instance is null");
         }

@@ -11,11 +11,11 @@ import org.team4u.workflow.domain.definition.node.ActionChoiceNode;
 public class ActionChoiceNodeHandler implements ProcessNodeHandler {
 
     @Override
-    public String handle(Context context) {
+    public String handle(ProcessNodeHandlerContext context) {
         return findNextNode(context);
     }
 
-    private String findNextNode(Context context) {
+    private String findNextNode(ProcessNodeHandlerContext context) {
         ActionChoiceNode node = context.getNode();
         String nextNodeId = node.nextNodeId(context.getAction());
 
