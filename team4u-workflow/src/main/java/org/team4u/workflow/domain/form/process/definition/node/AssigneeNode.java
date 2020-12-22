@@ -11,11 +11,11 @@ public class AssigneeNode extends StaticNode {
     /**
      * 指定用户角色
      */
-    public static final String RULE_TYPE_ROLE = "role";
+    public static final String RULE_TYPE_ROLE = "ROLE";
     /**
      * 指定用户标识
      */
-    public static final String RULE_TYPE_USER = "user";
+    public static final String RULE_TYPE_USER = "USER";
 
     /**
      * 流程处理人类型
