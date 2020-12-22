@@ -1,9 +1,7 @@
 package org.team4u.selector.domain.selector.service;
 
-import org.team4u.selector.domain.selector.entity.SelectorFactory;
 import org.team4u.base.lang.IdObjectService;
-
-import java.util.ServiceLoader;
+import org.team4u.selector.domain.selector.entity.SelectorFactory;
 
 /**
  * 选择执行器工厂服务
@@ -13,10 +11,6 @@ import java.util.ServiceLoader;
 public class SelectorFactoryService extends IdObjectService<String, SelectorFactory> {
 
     public SelectorFactoryService() {
-        ServiceLoader<SelectorFactory> serviceLoader = ServiceLoader.load(SelectorFactory.class);
-
-        for (SelectorFactory selectorFactory : serviceLoader) {
-            saveIdObject(selectorFactory);
-        }
+        super(SelectorFactory.class);
     }
 }
