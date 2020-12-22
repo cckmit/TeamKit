@@ -6,8 +6,8 @@ import org.team4u.workflow.TestUtil;
 import org.team4u.workflow.domain.definition.exception.ProcessNodeNotExistException;
 import org.team4u.workflow.domain.form.process.definition.node.AssigneeActionChoiceNode;
 import org.team4u.workflow.domain.form.process.node.handler.AssigneeActionChoiceNodeHandler;
-import org.team4u.workflow.domain.instance.NoPermissionException;
 import org.team4u.workflow.domain.instance.ProcessInstance;
+import org.team4u.workflow.domain.instance.exception.NoPermissionException;
 
 import static org.team4u.workflow.TestUtil.*;
 

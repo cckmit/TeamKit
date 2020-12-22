@@ -4,8 +4,8 @@ import cn.hutool.core.util.StrUtil;
 import org.team4u.workflow.domain.form.ProcessFormContextKeys;
 import org.team4u.workflow.domain.form.process.definition.ProcessFormAction;
 import org.team4u.workflow.domain.form.process.definition.node.AssigneeActionChoiceNode;
-import org.team4u.workflow.domain.instance.NoPermissionException;
 import org.team4u.workflow.domain.instance.ProcessAssignee;
+import org.team4u.workflow.domain.instance.exception.NoPermissionException;
 import org.team4u.workflow.domain.instance.node.handler.ActionChoiceNodeHandler;
 import org.team4u.workflow.domain.instance.node.handler.ProcessNodeHandlerContext;
 

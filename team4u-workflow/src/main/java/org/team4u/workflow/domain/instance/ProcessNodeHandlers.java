@@ -5,6 +5,7 @@ import org.team4u.base.lang.IdObjectService;
 import org.team4u.base.log.LogMessage;
 import org.team4u.workflow.domain.definition.ProcessNode;
 import org.team4u.workflow.domain.definition.exception.ProcessNodeNotExistException;
+import org.team4u.workflow.domain.instance.exception.ProcessInstanceNotExistException;
 import org.team4u.workflow.domain.instance.node.handler.ProcessNodeHandler;
 import org.team4u.workflow.domain.instance.node.handler.ProcessNodeHandlerContext;
 
