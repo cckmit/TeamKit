@@ -2,6 +2,7 @@ package org.team4u.workflow.infrastructure.persistence.definition;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 
 import java.util.Date;
 
@@ -10,10 +11,10 @@ import java.util.Date;
  *
  * @author jay.wu
  */
+@TableName("process_definition")
 public class ProcessDefinitionDo {
     @TableId(type = IdType.AUTO)
     private Long id;
-
     /**
      * 流程定义标识
      */

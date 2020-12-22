@@ -14,9 +14,21 @@ import java.util.List;
  */
 public class ProcessFormModel {
 
+    /**
+     * 流程表单
+     */
     private ProcessForm form;
+    /**
+     * 流程实例
+     */
     private ProcessInstance instance;
+    /**
+     * 当前处理人可用动作集合
+     */
     private List<ProcessAction> actions;
+    /**
+     * 流程节点变更事件集合
+     */
     private List<ProcessNodeChangedEvent> events;
 
     @SuppressWarnings("unchecked")
