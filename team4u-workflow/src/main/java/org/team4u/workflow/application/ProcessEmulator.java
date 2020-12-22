@@ -40,7 +40,7 @@ public class ProcessEmulator {
     /**
      * 开始模拟
      */
-    public void simulate(String scriptId, ProcessForm form, Map<String, Object> ext) {
+    public void start(String scriptId, ProcessForm form, Map<String, Object> ext) {
         LogMessage lm = LogMessages.create(this.getClass().getSimpleName(), "simulate")
                 .append("scriptId", scriptId);
         log.info(lm.processing().toString());

@@ -12,7 +12,7 @@ public class ProcessEmulatorTest {
 
     @Test
     public void simulate() {
-        emulator.simulate(
+        emulator.start(
                 "test_simple_completed_script",
                 TestForm.Builder
                         .newBuilder()
