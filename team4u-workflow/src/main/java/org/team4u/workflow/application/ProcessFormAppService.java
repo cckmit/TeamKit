@@ -182,7 +182,12 @@ public class ProcessFormAppService {
                 processDefinitionId
         );
 
-        return (ProcessFormAction) definition.availableActionOf(actionId);
+        ProcessAction action = definition.availableActionOf(actionId);
+        if (action instanceof ProcessFormAction) {
+            return (ProcessFormAction) action;
+        }
+
+        return new ProcessFormAction(actionId, action.getActionName(), Collections.emptySet());
     }
 
     private boolean hasViewPermission(ProcessForm form, ProcessInstance instance, String operatorId) {

@@ -8,16 +8,21 @@ import org.team4u.workflow.domain.definition.node.StaticNode;
  * @author jay.wu
  */
 public class AssigneeNode extends StaticNode {
-
+    /**
+     * 指定用户角色
+     */
     public static final String RULE_TYPE_ROLE = "role";
+    /**
+     * 指定用户标识
+     */
     public static final String RULE_TYPE_USER = "user";
 
     /**
-     * 流程人规则类型
+     * 流程处理人类型
      */
     private final String ruleType;
     /**
-     * 流程人规则表达式
+     * 流程处理人表达式
      */
     private final String ruleExpression;
 
