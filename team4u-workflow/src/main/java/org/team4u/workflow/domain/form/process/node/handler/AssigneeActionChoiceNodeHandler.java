@@ -8,6 +8,7 @@ import org.team4u.workflow.domain.instance.NoPermissionException;
 import org.team4u.workflow.domain.instance.ProcessAssignee;
 import org.team4u.workflow.domain.instance.node.handler.ActionChoiceNodeHandler;
 
+import static org.team4u.workflow.domain.form.process.definition.node.AssigneeActionChoiceNode.CHOICE_TYPE_ALL;
 import static org.team4u.workflow.domain.form.process.definition.node.AssigneeActionChoiceNode.CHOICE_TYPE_ANY;
 
 /**
@@ -38,6 +39,11 @@ public class AssigneeActionChoiceNodeHandler extends ActionChoiceNodeHandler {
         if (StrUtil.equals(node.getChoiceType(), CHOICE_TYPE_ANY)) {
             return context.getInstance().getAssignees().stream()
                     .anyMatch(it -> it.getAction() != null);
+        }
+
+        if (StrUtil.equals(node.getChoiceType(), CHOICE_TYPE_ALL)) {
+            return context.getInstance().getAssignees().stream()
+                    .allMatch(it -> it.getAction() != null);
         }
 
         return false;

@@ -12,6 +12,7 @@ import java.util.List;
 public class AssigneeActionChoiceNode extends ActionChoiceNode {
 
     public static final String CHOICE_TYPE_ANY = "ANY";
+    public static final String CHOICE_TYPE_ALL = "ALL";
 
     /**
      * 选择类型

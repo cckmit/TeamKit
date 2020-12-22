@@ -25,8 +25,6 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.team4u.workflow.domain.form.process.definition.node.AssigneeActionChoiceNode.CHOICE_TYPE_ANY;
-
 public class TestUtil {
 
     public static final String TEST = "test";
@@ -45,7 +43,7 @@ public class TestUtil {
         ).setAssignees(
                 Optional.ofNullable(assignees)
                         .map(it -> Arrays.stream(assignees)
-                                .map(assignee -> new ProcessAssignee(assignee, assignee))
+                                .map(assignee -> new ProcessAssignee(TEST, assignee))
                                 .collect(Collectors.toSet()))
                         .orElse(Collections.emptySet())
         );
@@ -94,11 +92,12 @@ public class TestUtil {
         return processDefinitionRepository.domainOf(id);
     }
 
-    public static AssigneeActionChoiceNode assigneeActionChoiceNode(ActionChoiceNode.ActionNode... actionNodes) {
+    public static AssigneeActionChoiceNode assigneeActionChoiceNode(String type,
+                                                                    ActionChoiceNode.ActionNode... actionNodes) {
         return new AssigneeActionChoiceNode(
                 TEST,
                 TEST,
-                CHOICE_TYPE_ANY,
+                type,
                 Arrays.asList(actionNodes.clone())
         );
     }

@@ -3,6 +3,7 @@ package org.team4u.workflow.domain.instance.node.handler;
 import org.junit.Assert;
 import org.junit.Test;
 import org.team4u.workflow.domain.definition.exception.ProcessNodeNotExistException;
+import org.team4u.workflow.domain.form.process.definition.node.AssigneeActionChoiceNode;
 import org.team4u.workflow.domain.form.process.node.handler.AssigneeActionChoiceNodeHandler;
 import org.team4u.workflow.domain.instance.NoPermissionException;
 import org.team4u.workflow.domain.instance.ProcessInstance;
@@ -21,11 +22,45 @@ public class AssigneeActionChoiceNodeHandlerTest {
                 instance,
                 action(TEST),
                 null,
-                assigneeActionChoiceNode(actionNode(TEST, TEST1))
+                assigneeActionChoiceNode(
+                        AssigneeActionChoiceNode.CHOICE_TYPE_ANY,
+                        actionNode(TEST, TEST1)
+                )
         ));
 
         Assert.assertEquals(TEST1, nextNodeId);
         Assert.assertEquals(TEST, instance.currentAssigneeOf(TEST).getAction().getActionId());
+    }
+
+    @Test
+    public void all() {
+        AssigneeActionChoiceNodeHandler handler = new AssigneeActionChoiceNodeHandler();
+        ProcessInstance instance = newInstance(TEST, TEST1).setCurrentNode(staticNode(TEST));
+
+        AssigneeActionChoiceNode actionChoiceNode = assigneeActionChoiceNode(
+                AssigneeActionChoiceNode.CHOICE_TYPE_ALL,
+                actionNode(TEST, TEST1)
+        );
+
+        String nextNodeId = handler.handle(context(
+                instance,
+                action(TEST),
+                null,
+                actionChoiceNode
+        ));
+
+        Assert.assertNull(nextNodeId);
+        Assert.assertNull(instance.currentAssigneeOf(TEST1).getAction());
+
+        nextNodeId = handler.handle(new ProcessNodeHandler.Context(
+                instance,
+                null,
+                action(TEST),
+                TEST1,
+                TEST,
+                null
+        ).setNode(actionChoiceNode));
+        Assert.assertEquals(TEST1, nextNodeId);
     }
 
     @Test
@@ -39,7 +74,10 @@ public class AssigneeActionChoiceNodeHandlerTest {
                     instance,
                     action(TEST),
                     null,
-                    assigneeActionChoiceNode(actionNode(TEST, TEST1))
+                    assigneeActionChoiceNode(
+                            AssigneeActionChoiceNode.CHOICE_TYPE_ANY,
+                            actionNode(TEST, TEST1)
+                    )
             ));
 
             Assert.fail();
@@ -57,7 +95,10 @@ public class AssigneeActionChoiceNodeHandlerTest {
                     instance,
                     action(TEST, TEST),
                     null,
-                    assigneeActionChoiceNode(actionNode(TEST, TEST1))
+                    assigneeActionChoiceNode(
+                            AssigneeActionChoiceNode.CHOICE_TYPE_ANY,
+                            actionNode(TEST, TEST1)
+                    )
             ));
             Assert.fail();
         } catch (NoPermissionException e) {
@@ -79,7 +120,10 @@ public class AssigneeActionChoiceNodeHandlerTest {
                     instance,
                     action(TEST),
                     null,
-                    assigneeActionChoiceNode(actionNode(TEST1, TEST1))
+                    assigneeActionChoiceNode(
+                            AssigneeActionChoiceNode.CHOICE_TYPE_ANY,
+                            actionNode(TEST, TEST1)
+                    )
             ));
 
             Assert.fail();
