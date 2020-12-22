@@ -1,12 +1,12 @@
 package org.team4u.workflow.infrastructure.persistence.definition;
 
 import cn.hutool.core.io.FileUtil;
-import com.alibaba.fastjson.JSON;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.team4u.ddd.infrastructure.persistence.memory.InMemoryEventStore;
 import org.team4u.workflow.domain.definition.ProcessDefinition;
+import org.team4u.workflow.domain.definition.ProcessDefinitionId;
 import org.team4u.workflow.infrastructure.DbTest;
 
 import javax.annotation.PostConstruct;
@@ -35,12 +35,14 @@ public class MybatisProcessDefinitionRepositoryTest extends DbTest {
     }
 
     public void save() {
-        ProcessDefinition def = JSON.parseObject(
-                FileUtil.readUtf8String("simple.json"),
-                ProcessDefinition.class
+        ProcessDefinition definition = ProcessDefinitionUtil.definitionOfJson(
+                new ProcessDefinitionId("simple"),
+                FileUtil.readUtf8String("simple.json")
         );
-        definitionRepository.save(def);
-        Assert.assertNotNull(def.getId());
+
+        definitionRepository.save(definition);
+
+        Assert.assertNotNull(definition.getId());
     }
 
     @Override

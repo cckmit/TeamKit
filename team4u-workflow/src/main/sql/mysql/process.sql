@@ -13,6 +13,7 @@ create table `process_instance`
     `update_time`                timestamp           not null default current_timestamp on update current_timestamp comment '更新时间',
     primary key (`id`),
     unique index `uniq_process_instance_id` (`process_instance_id`),
+    index `idx_process_instance_name` (`process_instance_name`),
     index `idx_current_node_id` (`current_node_id`),
     index `idx_create_by` (`create_by`),
     index `idx_update_time` (`update_time`)

@@ -1,7 +1,4 @@
 {
-  "processDefinitionId": {
-    "id": "simple"
-  },
   "actions": [
     {
       "@type": "org.team4u.workflow.domain.form.process.definition.ProcessFormAction",

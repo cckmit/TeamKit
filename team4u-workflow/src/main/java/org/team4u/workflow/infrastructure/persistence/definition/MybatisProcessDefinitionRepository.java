@@ -1,8 +1,6 @@
 package org.team4u.workflow.infrastructure.persistence.definition;
 
-import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.parser.Feature;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.team4u.ddd.domain.model.DomainEventAwareRepository;
@@ -10,7 +8,6 @@ import org.team4u.ddd.event.EventStore;
 import org.team4u.workflow.domain.definition.ProcessDefinition;
 import org.team4u.workflow.domain.definition.ProcessDefinitionId;
 import org.team4u.workflow.domain.definition.ProcessDefinitionRepository;
-import org.team4u.workflow.domain.definition.exception.ProcessDefinitionNotExistException;
 
 import java.util.Date;
 
@@ -33,8 +30,9 @@ public class MybatisProcessDefinitionRepository
 
     @Override
     public ProcessDefinition domainOf(String domainId) {
-        ProcessDefinitionDo definitionDo = processDefinitionDoOf(ProcessDefinitionId.of(domainId));
-        return toProcessDefinition(definitionDo);
+        ProcessDefinitionId processDefinitionId = ProcessDefinitionId.of(domainId);
+        ProcessDefinitionDo definitionDo = processDefinitionDoOf(processDefinitionId);
+        return toProcessDefinition(processDefinitionId, definitionDo);
     }
 
     private ProcessDefinitionDo processDefinitionDoOf(ProcessDefinitionId processDefinitionId) {
@@ -56,14 +54,10 @@ public class MybatisProcessDefinitionRepository
         return definitionDo;
     }
 
-    private ProcessDefinition toProcessDefinition(ProcessDefinitionDo definitionDo) {
+    private ProcessDefinition toProcessDefinition(ProcessDefinitionId processDefinitionId,
+                                                  ProcessDefinitionDo definitionDo) {
         String json = definitionDo.getProcessDefinitionBody();
-
-        if (StrUtil.isBlank(json)) {
-            throw new ProcessDefinitionNotExistException(definitionDo.getProcessDefinitionId());
-        }
-
-        return JSON.parseObject(json, ProcessDefinition.class, Feature.SupportAutoType);
+        return ProcessDefinitionUtil.definitionOfJson(processDefinitionId, json);
     }
 
     @Override
