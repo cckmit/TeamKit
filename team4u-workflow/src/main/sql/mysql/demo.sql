@@ -10,7 +10,7 @@ from process_instance pi,
 where pi.process_instance_id = f.process_instance_id
   and pi.process_instance_id = pa.process_instance_id
   and pi.current_node_id = pa.process_node_id
-  and pa.process_action != ''
+  and pa.process_action = ''
   and pa.assignee = '?';
 
 # 历史审批列表
