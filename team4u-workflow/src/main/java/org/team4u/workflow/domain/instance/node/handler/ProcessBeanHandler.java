@@ -9,7 +9,12 @@ import org.team4u.base.lang.IdObject;
  */
 public interface ProcessBeanHandler extends IdObject<String> {
 
-    String NEXT_NODE_ID = "nextNodeId";
+    /**
+     * 扩展属性key：下一个节点标识
+     *
+     * @see BeanChoiceNodeHandler
+     */
+    String EXT_NEXT_NODE_ID = "nextNodeId";
 
     /**
      * 处理流程

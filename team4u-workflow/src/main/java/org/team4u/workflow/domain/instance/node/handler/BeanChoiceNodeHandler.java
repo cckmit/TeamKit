@@ -1,7 +1,6 @@
 package org.team4u.workflow.domain.instance.node.handler;
 
 import org.team4u.workflow.domain.definition.node.BeanChoiceNode;
-import org.team4u.workflow.domain.definition.node.BeanNode;
 
 /**
  * 基于bean选择节点处理器
@@ -18,11 +17,11 @@ public class BeanChoiceNodeHandler implements ProcessNodeHandler {
 
     @Override
     public String handle(ProcessNodeHandlerContext context) {
-        BeanNode node = context.getNode();
+        BeanChoiceNode node = context.getNode();
 
         processBeanHandlers.getBean(node.getBeanName()).handle(context);
 
-        return context.ext(ProcessBeanHandler.NEXT_NODE_ID);
+        return context.ext(ProcessBeanHandler.EXT_NEXT_NODE_ID);
     }
 
     @Override
