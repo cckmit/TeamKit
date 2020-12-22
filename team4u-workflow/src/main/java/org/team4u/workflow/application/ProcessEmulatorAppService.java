@@ -3,6 +3,7 @@ package org.team4u.workflow.application;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.log.Log;
 import org.team4u.base.log.LogMessage;
 import org.team4u.base.log.LogMessages;
 import org.team4u.workflow.application.command.AbstractHandleProcessInstanceCommand;
@@ -25,6 +26,8 @@ import java.util.Map;
  */
 public class ProcessEmulatorAppService {
 
+    private final Log log = Log.get();
+
     private final ProcessFormAppService formAppService;
     private final ProcessEmulatorScriptRepository processEmulatorScriptRepository;
 
@@ -38,11 +41,15 @@ public class ProcessEmulatorAppService {
      * 开始模拟
      */
     public void simulate(String scriptId, ProcessForm form, Map<String, Object> ext) {
+        LogMessage lm = LogMessages.create(this.getClass().getSimpleName(), "simulate")
+                .append("scriptId", scriptId);
         ProcessEmulatorScript script = processEmulatorScriptRepository.scriptOf(scriptId);
 
         if (script == null) {
             throw new ProcessEmulatorScriptNotExistException(scriptId);
         }
+
+        log.info(lm.processing().toString());
 
         String processInstanceId = null;
 
@@ -57,6 +64,8 @@ public class ProcessEmulatorAppService {
 
             processInstanceId = instance.getProcessInstanceId();
         }
+
+        log.info(lm.success().toString());
     }
 
     private void initExt(ProcessEmulatorScriptStep step, Map<String, Object> ext) {
