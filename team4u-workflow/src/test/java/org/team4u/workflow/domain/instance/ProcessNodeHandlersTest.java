@@ -40,7 +40,7 @@ public class ProcessNodeHandlersTest {
                 .withAction(action("test"))
                 .withDefinition(definition)
                 .build()
-                .putExt("a", 1));
+                .ext("a", 1));
 
         Assert.assertEquals(TestUtil.staticNode("created"), instance.getCurrentNode());
         Assert.assertEquals(

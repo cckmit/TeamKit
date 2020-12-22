@@ -11,7 +11,7 @@ public class TestBeanHandler implements ProcessBeanHandler {
 
     @Override
     public void handle(ProcessNodeHandlerContext context) {
-        context.putExt(TEST, TEST);
-        context.putExt(ProcessBeanHandler.NEXT_NODE_ID, TEST);
+        context.ext(TEST, TEST);
+        context.ext(ProcessBeanHandler.NEXT_NODE_ID, TEST);
     }
 }

@@ -19,10 +19,10 @@ public class DynamicChoiceNodeHandlerTest {
         ProcessNodeHandlerContext c = contextBuilder().withInstance(instance)
                 .withNode(new DynamicChoiceNode(TEST, TEST, selectorConfig()))
                 .build();
-        c.putExt("a", 2);
+        c.ext("a", 2);
         Assert.assertEquals("y", handler.handle(c));
 
-        c.putExt("a", 1);
+        c.ext("a", 1);
         Assert.assertEquals("x", handler.handle(c));
     }
 

@@ -89,7 +89,7 @@ public class ProcessNodeHandlerContext {
         return (T) getExt().get(key);
     }
 
-    public ProcessNodeHandlerContext putExt(String key, Object value) {
+    public ProcessNodeHandlerContext ext(String key, Object value) {
         getExt().put(key, value);
         return this;
     }
