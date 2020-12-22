@@ -1,2 +1,3 @@
 org.team4u.workflow.domain.instance.node.handler.TestBeanNodeHandler
+org.team4u.workflow.domain.instance.node.handler.TestBeanChoiceNodeHandler
 org.team4u.workflow.domain.instance.node.handler.TestDynamicChoiceNodeHandler
