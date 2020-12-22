@@ -23,34 +23,20 @@ public class CreateProcessFormCommand extends CreateProcessInstanceCommand {
 
 
     public static final class Builder {
-        private ProcessForm processForm;
-        private String processInstanceName;
-        private String processDefinitionId;
         private String operatorId;
         private String actionId;
         private String remark;
         private Map<String, Object> ext;
+        private ProcessForm processForm;
+        private String processInstanceId;
+        private String processInstanceName;
+        private String processDefinitionId;
 
         private Builder() {
         }
 
-        public static Builder newBuilder() {
+        public static Builder create() {
             return new Builder();
-        }
-
-        public Builder withProcessForm(ProcessForm processForm) {
-            this.processForm = processForm;
-            return this;
-        }
-
-        public Builder withProcessInstanceName(String processInstanceName) {
-            this.processInstanceName = processInstanceName;
-            return this;
-        }
-
-        public Builder withProcessDefinitionId(String processDefinitionId) {
-            this.processDefinitionId = processDefinitionId;
-            return this;
         }
 
         public Builder withOperatorId(String operatorId) {
@@ -73,15 +59,36 @@ public class CreateProcessFormCommand extends CreateProcessInstanceCommand {
             return this;
         }
 
+        public Builder withProcessForm(ProcessForm processForm) {
+            this.processForm = processForm;
+            return this;
+        }
+
+        public Builder withProcessInstanceId(String processInstanceId) {
+            this.processInstanceId = processInstanceId;
+            return this;
+        }
+
+        public Builder withProcessInstanceName(String processInstanceName) {
+            this.processInstanceName = processInstanceName;
+            return this;
+        }
+
+        public Builder withProcessDefinitionId(String processDefinitionId) {
+            this.processDefinitionId = processDefinitionId;
+            return this;
+        }
+
         public CreateProcessFormCommand build() {
             CreateProcessFormCommand createProcessFormCommand = new CreateProcessFormCommand();
-            createProcessFormCommand.setProcessForm(processForm);
-            createProcessFormCommand.setProcessInstanceName(processInstanceName);
-            createProcessFormCommand.setProcessDefinitionId(processDefinitionId);
             createProcessFormCommand.setOperatorId(operatorId);
             createProcessFormCommand.setActionId(actionId);
             createProcessFormCommand.setRemark(remark);
             createProcessFormCommand.setExt(ext);
+            createProcessFormCommand.setProcessForm(processForm);
+            createProcessFormCommand.setProcessInstanceName(processInstanceName);
+            createProcessFormCommand.setProcessDefinitionId(processDefinitionId);
+            createProcessFormCommand.setProcessInstanceId(processInstanceId);
             return createProcessFormCommand;
         }
     }

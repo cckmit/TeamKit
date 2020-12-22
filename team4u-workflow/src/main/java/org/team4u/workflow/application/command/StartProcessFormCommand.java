@@ -33,7 +33,7 @@ public class StartProcessFormCommand extends AbstractHandleProcessInstanceComman
         private Builder() {
         }
 
-        public static Builder newBuilder() {
+        public static Builder create() {
             return new Builder();
         }
 

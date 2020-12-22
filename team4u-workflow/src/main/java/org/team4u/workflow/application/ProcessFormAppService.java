@@ -124,7 +124,7 @@ public class ProcessFormAppService {
         // 开始流程处理
         processAppService.start(
                 StartProcessInstanceCommand.Builder
-                        .newBuilder()
+                        .create()
                         .withActionId(command.getActionId())
                         .withOperatorId(command.getOperatorId())
                         .withProcessInstanceId(oldForm.getProcessInstanceId())

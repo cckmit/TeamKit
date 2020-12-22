@@ -1,6 +1,7 @@
 package org.team4u.workflow.application;
 
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.ObjectUtil;
 import org.team4u.workflow.application.command.AbstractHandleProcessInstanceCommand;
 import org.team4u.workflow.application.command.CreateProcessInstanceCommand;
 import org.team4u.workflow.application.command.StartProcessInstanceCommand;
@@ -96,7 +97,7 @@ public class ProcessAppService {
         ProcessDefinition definition = processDefinitionRepository.domainOf(command.getProcessDefinitionId());
 
         ProcessInstance instance = ProcessInstance.create(
-                IdUtil.fastSimpleUUID(),
+                ObjectUtil.defaultIfBlank(command.getProcessInstanceId(), IdUtil.fastSimpleUUID()),
                 command.getProcessInstanceName(),
                 ProcessDefinitionId.of(command.getProcessDefinitionId()),
                 command.getOperatorId(),

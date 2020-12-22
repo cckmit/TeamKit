@@ -32,7 +32,7 @@ public class StartProcessInstanceCommand extends AbstractHandleProcessInstanceCo
         private Builder() {
         }
 
-        public static Builder newBuilder() {
+        public static Builder create() {
             return new Builder();
         }
 

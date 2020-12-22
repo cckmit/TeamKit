@@ -7,6 +7,8 @@
        default-lazy-init="false">
 
     <context:annotation-config/>
-    <context:component-scan base-package="org.team4u.workflow.infrastructure"/>
+    <context:component-scan base-package="org.team4u.workflow.infrastructure.persistence"/>
+
+    <bean class="org.team4u.workflow.infrastructure.BeanConfig"/>
 
 </beans>

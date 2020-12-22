@@ -68,7 +68,7 @@ public class ProcessFormAppServiceTest extends DbTest {
         String creator = TEST1;
 
         processFormAppService.create(
-                CreateProcessFormCommand.Builder.newBuilder()
+                CreateProcessFormCommand.Builder.create()
                         .withActionId("submit")
                         .withProcessDefinitionId("simple")
                         .withProcessInstanceName(TEST)
@@ -106,7 +106,7 @@ public class ProcessFormAppServiceTest extends DbTest {
 
         processFormAppService.start(
                 StartProcessFormCommand.Builder
-                        .newBuilder()
+                        .create()
                         .withActionId("reject")
                         .withOperatorId(TEST)
                         .withRemark(TEST)

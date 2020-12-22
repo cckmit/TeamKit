@@ -79,7 +79,7 @@ public class ProcessEmulatorAppService {
                                    ProcessEmulatorScriptStep step) {
         if (processInstanceId == null) {
             CreateProcessFormCommand command = CreateProcessFormCommand.Builder
-                    .newBuilder()
+                    .create()
                     .withProcessForm(processForm)
                     .withProcessDefinitionId(processDefinitionId)
                     .build();
@@ -87,7 +87,7 @@ public class ProcessEmulatorAppService {
             formAppService.create(command);
         } else {
             StartProcessFormCommand command = StartProcessFormCommand.Builder
-                    .newBuilder()
+                    .create()
                     .withProcessForm(processForm)
                     .build();
             initProcessInstanceCommand(command, step);
