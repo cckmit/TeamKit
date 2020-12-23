@@ -3,7 +3,6 @@ package org.team4u.workflow.infrastructure.persistence.form;
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.springframework.transaction.annotation.Transactional;
 import org.team4u.workflow.domain.form.ProcessForm;
 import org.team4u.workflow.domain.form.ProcessFormRepository;
 
@@ -28,10 +27,25 @@ public abstract class MybatisProcessFormRepository<F extends ProcessForm, D exte
         return processFormOf(instanceId);
     }
 
-    @Transactional(rollbackFor = Exception.class)
     @Override
     public void save(F form) {
-        saveProcessForm(form);
+        D processFormDo = toProcessFormDo(form);
+
+        BeanUtil.copyProperties(form, processFormDo);
+        processFormDo.setUpdateTime(new Date());
+
+        if (processFormDo.getId() == null) {
+            processFormDo.setCreateTime(processFormDo.getUpdateTime());
+
+            processFormMapper.insert(processFormDo);
+
+            form.setId(processFormDo.getId());
+            form.setCreateTime(processFormDo.getCreateTime());
+        } else {
+            processFormMapper.updateById(processFormDo);
+        }
+
+        form.setUpdateTime(processFormDo.getUpdateTime());
     }
 
     /**
@@ -49,26 +63,6 @@ public abstract class MybatisProcessFormRepository<F extends ProcessForm, D exte
      * @return 数据模型
      */
     protected abstract D toProcessFormDo(F form);
-
-    private void saveProcessForm(F processForm) {
-        D processFormDo = toProcessFormDo(processForm);
-
-        BeanUtil.copyProperties(processForm, processFormDo);
-        processFormDo.setUpdateTime(new Date());
-
-        if (processFormDo.getId() == null) {
-            processFormDo.setCreateTime(processFormDo.getUpdateTime());
-
-            processFormMapper.insert(processFormDo);
-
-            processForm.setId(processFormDo.getId());
-            processForm.setCreateTime(processFormDo.getCreateTime());
-        } else {
-            processFormMapper.updateById(processFormDo);
-        }
-
-        processForm.setUpdateTime(processFormDo.getUpdateTime());
-    }
 
     private F processFormOf(String processInstanceId) {
         D processFormDo = processFormMapper.selectOne(
