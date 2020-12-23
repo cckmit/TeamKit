@@ -1,5 +1,7 @@
 package org.team4u.workflow.application.command;
 
+import org.team4u.workflow.domain.instance.ProcessInstanceDetail;
+
 import java.util.Map;
 
 /**
@@ -28,6 +30,7 @@ public class StartProcessInstanceCommand extends AbstractHandleProcessInstanceCo
         private String remark;
         private Map<String, Object> ext;
         private String processInstanceId;
+        private ProcessInstanceDetail processInstanceDetail;
 
         private Builder() {
         }
@@ -61,6 +64,11 @@ public class StartProcessInstanceCommand extends AbstractHandleProcessInstanceCo
             return this;
         }
 
+        public Builder withProcessInstanceDetail(ProcessInstanceDetail processInstanceDetail) {
+            this.processInstanceDetail = processInstanceDetail;
+            return this;
+        }
+
         public StartProcessInstanceCommand build() {
             StartProcessInstanceCommand startProcessInstanceCommand = new StartProcessInstanceCommand();
             startProcessInstanceCommand.setOperatorId(operatorId);
@@ -68,6 +76,7 @@ public class StartProcessInstanceCommand extends AbstractHandleProcessInstanceCo
             startProcessInstanceCommand.setRemark(remark);
             startProcessInstanceCommand.setExt(ext);
             startProcessInstanceCommand.setProcessInstanceId(processInstanceId);
+            startProcessInstanceCommand.setProcessInstanceDetail(processInstanceDetail);
             return startProcessInstanceCommand;
         }
     }

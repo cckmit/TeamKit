@@ -184,6 +184,10 @@ public class ProcessAppService {
                                    ProcessInstance instance) {
         ProcessAction action = definition.availableActionOf(command.getActionId());
 
+        if (command.getProcessInstanceDetail() != null) {
+            instance.setProcessInstanceDetail(command.getProcessInstanceDetail());
+        }
+
         processNodeHandlers.handle(ProcessNodeHandlerContext.Builder.create()
                 .withInstance(instance)
                 .withDefinition(definition)

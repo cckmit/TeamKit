@@ -90,7 +90,7 @@ public class ProcessFormAppService {
         ProcessInstance instance = processAppService.create(command);
 
         // 保存表单
-        saveForm(instance.getProcessInstanceId(), action, command.getProcessForm());
+        saveForm(instance, action, command.getProcessForm());
         return instance.getProcessInstanceId();
     }
 
@@ -109,20 +109,22 @@ public class ProcessFormAppService {
         newForm.setProcessInstanceId(instance.getProcessInstanceId());
         initCommandExt(command, newForm, instance, action);
 
-        // 开始流程处理
+        // 保存表单
+        boolean isSaveForm = saveForm(instance, action, newForm);
+
+        // 处理流程
         processAppService.start(
                 StartProcessInstanceCommand.Builder
                         .create()
                         .withActionId(command.getActionId())
                         .withOperatorId(command.getOperatorId())
                         .withProcessInstanceId(newForm.getProcessInstanceId())
+                        // 不保存表单，流程实例明细也不做保存
+                        .withProcessInstanceDetail(isSaveForm ? command.getProcessInstanceDetail() : null)
                         .withRemark(command.getRemark())
                         .withExt(command.getExt())
                         .build()
         );
-
-        // 保存表单
-        saveForm(instance.getProcessInstanceId(), action, newForm);
     }
 
     /**
@@ -211,16 +213,19 @@ public class ProcessFormAppService {
         );
     }
 
-    private void saveForm(String processInstanceId, ProcessFormAction action, ProcessForm form) {
-        if (form == null) {
-            return;
-        }
-
+    private boolean saveForm(ProcessInstance instance, ProcessFormAction action, ProcessForm form) {
         if (processFormPermissionService.shouldSaveProcessForm(action)) {
-            form.setProcessInstanceId(processInstanceId);
+            if (form == null) {
+                return true;
+            }
+
+            form.setProcessInstanceId(instance.getProcessInstanceId());
             //noinspection unchecked
             processFormRepository.save(form);
+            return true;
         }
+
+        return false;
     }
 
     private void initCommandExt(AbstractHandleProcessInstanceCommand command,

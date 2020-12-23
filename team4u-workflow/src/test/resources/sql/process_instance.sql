@@ -39,4 +39,4 @@ create table if not exists `process_instance_detail`
     `update_time`         timestamp           not null default current_timestamp on update current_timestamp,
     primary key (`id`),
     unique index `uniq_process_instance_id2` (`process_instance_id`)
-) comment ='流程表单明细';
+) comment ='流程实例明细';

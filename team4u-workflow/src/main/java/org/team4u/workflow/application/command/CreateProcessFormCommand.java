@@ -1,6 +1,7 @@
 package org.team4u.workflow.application.command;
 
 import org.team4u.workflow.domain.form.ProcessForm;
+import org.team4u.workflow.domain.instance.ProcessInstanceDetail;
 
 import java.util.Map;
 
@@ -21,7 +22,6 @@ public class CreateProcessFormCommand extends CreateProcessInstanceCommand {
         this.processForm = processForm;
     }
 
-
     public static final class Builder {
         private String operatorId;
         private String actionId;
@@ -31,6 +31,7 @@ public class CreateProcessFormCommand extends CreateProcessInstanceCommand {
         private String processInstanceId;
         private String processInstanceName;
         private String processDefinitionId;
+        private ProcessInstanceDetail processInstanceDetail;
 
         private Builder() {
         }
@@ -79,6 +80,11 @@ public class CreateProcessFormCommand extends CreateProcessInstanceCommand {
             return this;
         }
 
+        public Builder withProcessInstanceDetail(ProcessInstanceDetail processInstanceDetail) {
+            this.processInstanceDetail = processInstanceDetail;
+            return this;
+        }
+
         public CreateProcessFormCommand build() {
             CreateProcessFormCommand createProcessFormCommand = new CreateProcessFormCommand();
             createProcessFormCommand.setOperatorId(operatorId);
@@ -89,6 +95,7 @@ public class CreateProcessFormCommand extends CreateProcessInstanceCommand {
             createProcessFormCommand.setProcessInstanceName(processInstanceName);
             createProcessFormCommand.setProcessDefinitionId(processDefinitionId);
             createProcessFormCommand.setProcessInstanceId(processInstanceId);
+            createProcessFormCommand.setProcessInstanceDetail(processInstanceDetail);
             return createProcessFormCommand;
         }
     }

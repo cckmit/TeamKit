@@ -1,5 +1,7 @@
 package org.team4u.workflow.application.command;
 
+import org.team4u.workflow.domain.instance.ProcessInstanceDetail;
+
 import java.util.Map;
 
 /**
@@ -24,6 +26,10 @@ public abstract class AbstractHandleProcessInstanceCommand {
      * 附加信息
      */
     private Map<String, Object> ext;
+    /**
+     * 流程实例明细
+     */
+    private ProcessInstanceDetail processInstanceDetail;
 
     public String getOperatorId() {
         return operatorId;
@@ -61,5 +67,11 @@ public abstract class AbstractHandleProcessInstanceCommand {
         return this;
     }
 
+    public ProcessInstanceDetail getProcessInstanceDetail() {
+        return processInstanceDetail;
+    }
 
+    public void setProcessInstanceDetail(ProcessInstanceDetail processInstanceDetail) {
+        this.processInstanceDetail = processInstanceDetail;
+    }
 }
