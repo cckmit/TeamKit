@@ -17,12 +17,12 @@ public class InMemoryProcessFormRepository<F extends ProcessForm>
     private final Map<String, F> forms = new ConcurrentHashMap<>();
 
     @Override
-    public F formOf(String formId) {
-        return forms.get(formId);
+    public F formOf(String instanceId) {
+        return forms.get(instanceId);
     }
 
     @Override
     public void save(F form) {
-        forms.put(form.getFormId(), form);
+        forms.put(form.getProcessInstanceId(), form);
     }
 }

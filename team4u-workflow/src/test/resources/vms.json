@@ -1,0 +1,54 @@
+{
+  "processDefinitionName": "异步流程",
+  "actions": [
+    {
+      "actionId": "test",
+      "actionName": "动作1"
+    },
+    {
+      "actionId": "test1",
+      "actionName": "动作2"
+    }
+  ],
+  "nodes": [
+    {
+      "@type": "org.team4u.workflow.domain.definition.node.StaticNode",
+      "nodeId": "created",
+      "nodeName": "创建",
+      "nextNodeId": "createdChoiceNode"
+    },
+    {
+      "@type": "org.team4u.workflow.domain.definition.node.ActionChoiceNode",
+      "nodeId": "createdChoiceNode",
+      "nodeName": "已创建动作选择器",
+      "actionNodes": [
+        {
+          "actionId": "test",
+          "nextNodeId": "testChoiceNode"
+        },
+        {
+          "actionId": "test1",
+          "nextNodeId": "created"
+        }
+      ]
+    },
+    {
+      "@type": "org.team4u.workflow.domain.definition.node.BeanChoiceNode",
+      "nodeId": "testChoiceNode",
+      "nodeName": "预期到test节点",
+      "beanName": "test",
+      "beanConfig": {
+        "name": "test"
+      }
+    },
+    {
+      "@type": "org.team4u.workflow.domain.definition.node.BeanNode",
+      "nodeId": "test",
+      "nodeName": "完成",
+      "beanName": "test",
+      "beanConfig": {
+        "name": "test1"
+      }
+    }
+  ]
+}

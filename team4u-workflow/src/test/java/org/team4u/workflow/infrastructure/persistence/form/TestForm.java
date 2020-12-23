@@ -24,7 +24,6 @@ public class TestForm extends ProcessForm {
     }
 
     public static final class Builder {
-        private String formId;
         private String processInstanceId;
         private ProcessFormItem formItem;
         private String name;
@@ -34,11 +33,6 @@ public class TestForm extends ProcessForm {
 
         public static Builder newBuilder() {
             return new Builder();
-        }
-
-        public Builder withFormId(String formId) {
-            this.formId = formId;
-            return this;
         }
 
         public Builder withProcessInstanceId(String processInstanceId) {
@@ -58,7 +52,6 @@ public class TestForm extends ProcessForm {
 
         public TestForm build() {
             TestForm testForm = new TestForm();
-            testForm.setFormId(formId);
             testForm.setProcessInstanceId(processInstanceId);
             testForm.setFormItem(formItem);
             testForm.setName(name);

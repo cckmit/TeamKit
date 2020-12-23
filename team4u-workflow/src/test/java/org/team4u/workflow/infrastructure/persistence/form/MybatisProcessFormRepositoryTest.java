@@ -39,7 +39,6 @@ public class MybatisProcessFormRepositoryTest extends DbTest {
     private void save() {
         TestForm form = new TestForm();
         form.setName(TEST);
-        form.setFormId(TEST);
         form.setProcessInstanceId(TEST);
 
         ProcessFormItem item = new ProcessFormItem();

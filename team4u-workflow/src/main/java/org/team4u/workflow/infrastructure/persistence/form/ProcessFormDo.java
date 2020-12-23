@@ -14,10 +14,6 @@ public abstract class ProcessFormDo {
     @TableId(type = IdType.AUTO)
     private Long id;
     /**
-     * 流程表单标识
-     */
-    private String formId;
-    /**
      * 流程实例标识
      */
     private String processInstanceId;
@@ -36,14 +32,6 @@ public abstract class ProcessFormDo {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getFormId() {
-        return formId;
-    }
-
-    public void setFormId(String formId) {
-        this.formId = formId;
     }
 
     public String getProcessInstanceId() {

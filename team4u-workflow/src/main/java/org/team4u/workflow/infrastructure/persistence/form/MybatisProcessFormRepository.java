@@ -29,9 +29,9 @@ public abstract class MybatisProcessFormRepository<F extends ProcessForm, D exte
     }
 
     @Override
-    public F formOf(String formId) {
-        F form = processFormOf(formId);
-        form.setFormItem(processFormItemOf(formId));
+    public F formOf(String instanceId) {
+        F form = processFormOf(instanceId);
+        form.setFormItem(processFormItemOf(instanceId));
         return form;
     }
 
@@ -80,7 +80,7 @@ public abstract class MybatisProcessFormRepository<F extends ProcessForm, D exte
     private ProcessFormItemDo toProcessFormItemDo(F form) {
         ProcessFormItemDo formItemDo = new ProcessFormItemDo();
         BeanUtil.copyProperties(form.getFormItem(), formItemDo);
-        formItemDo.setFormId(form.getFormId());
+        formItemDo.setProcessInstanceId(form.getProcessInstanceId());
         return formItemDo;
     }
 
@@ -105,10 +105,10 @@ public abstract class MybatisProcessFormRepository<F extends ProcessForm, D exte
     }
 
 
-    private ProcessFormItem processFormItemOf(String formId) {
+    private ProcessFormItem processFormItemOf(String processInstanceId) {
         ProcessFormItemDo formItemDo = formItemMapper.selectOne(
                 new LambdaQueryWrapper<ProcessFormItemDo>()
-                        .eq(ProcessFormItemDo::getFormId, formId)
+                        .eq(ProcessFormItemDo::getProcessInstanceId, processInstanceId)
         );
 
         if (formItemDo == null) {
@@ -120,10 +120,10 @@ public abstract class MybatisProcessFormRepository<F extends ProcessForm, D exte
         return formItem;
     }
 
-    private F processFormOf(String formId) {
+    private F processFormOf(String processInstanceId) {
         D processFormDo = processFormMapper.selectOne(
                 new QueryWrapper<D>()
-                        .eq("form_id", formId)
+                        .eq("process_instance_id", processInstanceId)
         );
 
         F processForm = toProcessForm(processFormDo);

@@ -5,6 +5,7 @@ import org.team4u.workflow.domain.definition.ProcessAction;
 import org.team4u.workflow.domain.definition.ProcessDefinition;
 import org.team4u.workflow.domain.definition.ProcessNode;
 import org.team4u.workflow.domain.instance.ProcessInstance;
+import org.team4u.workflow.domain.instance.exception.ProcessInstanceNotExistException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,6 +32,9 @@ public class ProcessNodeHandlerContext {
     }
 
     public void setInstance(ProcessInstance instance) {
+        if (instance == null) {
+            throw new ProcessInstanceNotExistException("context instance is null");
+        }
         this.instance = instance;
     }
 

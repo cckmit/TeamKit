@@ -10,10 +10,10 @@ public interface ProcessFormRepository<F extends ProcessForm> {
     /**
      * 查询流程表单
      *
-     * @param formId 表单标识
+     * @param instanceId 流程实例标识
      * @return 流程表单对象
      */
-    F formOf(String formId);
+    F formOf(String instanceId);
 
     /**
      * 保存流程表单

@@ -17,7 +17,6 @@ import org.team4u.workflow.domain.form.ProcessForm;
 import org.team4u.workflow.domain.form.ProcessFormContextKeys;
 import org.team4u.workflow.domain.form.ProcessFormPermissionService;
 import org.team4u.workflow.domain.form.ProcessFormRepository;
-import org.team4u.workflow.domain.form.exception.ProcessFormNotExistException;
 import org.team4u.workflow.domain.form.process.definition.ProcessFormAction;
 import org.team4u.workflow.domain.instance.ProcessInstance;
 import org.team4u.workflow.domain.instance.event.ProcessNodeChangedEvent;
@@ -53,21 +52,15 @@ public class ProcessFormAppService {
     /**
      * 获取流程表单模型
      *
-     * @param formId     流程表单标识
+     * @param instanceId 流程实例标识
      * @param operatorId 当前处理人
      * @return 流程表单模型
      */
-    public ProcessFormModel formOf(String formId, String operatorId) {
+    public ProcessFormModel formOf(String instanceId, String operatorId) {
         ProcessFormModel formModel = new ProcessFormModel();
 
-        formModel.setForm(processFormRepository.formOf(formId));
-        if (formModel.getForm() == null) {
-            throw new ProcessFormNotExistException(formId);
-        }
-
-        formModel.setInstance(processAppService.availableProcessInstanceOf(
-                formModel.getForm().getProcessInstanceId()
-        ));
+        formModel.setForm(processFormRepository.formOf(instanceId));
+        formModel.setInstance(processAppService.availableProcessInstanceOf(instanceId));
 
         if (!hasViewPermission(formModel.getForm(), formModel.getInstance(), operatorId)) {
             throw new NoPermissionException("您没有权限查看请表单");
@@ -85,9 +78,10 @@ public class ProcessFormAppService {
      * 创建流程表单
      *
      * @param command 流程表单命令
+     * @return 流程实例标识
      */
     @Transactional(rollbackFor = Exception.class)
-    public void create(CreateProcessFormCommand command) {
+    public String create(CreateProcessFormCommand command) {
         // 准备数据
         ProcessFormAction action = actionOf(command.getProcessDefinitionId(), command.getActionId());
         initCommandExt(command, command.getProcessForm(), null, action);
@@ -96,8 +90,8 @@ public class ProcessFormAppService {
         ProcessInstance instance = processAppService.create(command);
 
         // 保存表单
-        command.getProcessForm().setProcessInstanceId(instance.getProcessInstanceId());
-        saveForm(action, command.getProcessForm());
+        saveForm(instance.getProcessInstanceId(), action, command.getProcessForm());
+        return instance.getProcessInstanceId();
     }
 
     /**
@@ -109,13 +103,7 @@ public class ProcessFormAppService {
     public void start(StartProcessFormCommand command) {
         // 准备数据
         ProcessForm newForm = command.getProcessForm();
-        ProcessForm oldForm = processFormRepository.formOf(newForm.getFormId());
-
-        if (oldForm == null) {
-            throw new ProcessFormNotExistException(newForm.getFormId());
-        }
-
-        ProcessInstance instance = processAppService.availableProcessInstanceOf(oldForm.getProcessInstanceId());
+        ProcessInstance instance = processAppService.availableProcessInstanceOf(newForm.getProcessInstanceId());
         ProcessFormAction action = actionOf(instance.getProcessDefinitionId().toString(), command.getActionId());
 
         newForm.setProcessInstanceId(instance.getProcessInstanceId());
@@ -127,14 +115,14 @@ public class ProcessFormAppService {
                         .create()
                         .withActionId(command.getActionId())
                         .withOperatorId(command.getOperatorId())
-                        .withProcessInstanceId(oldForm.getProcessInstanceId())
+                        .withProcessInstanceId(newForm.getProcessInstanceId())
                         .withRemark(command.getRemark())
                         .withExt(command.getExt())
                         .build()
         );
 
         // 保存表单
-        saveForm(action, newForm);
+        saveForm(instance.getProcessInstanceId(), action, newForm);
     }
 
     /**
@@ -156,7 +144,7 @@ public class ProcessFormAppService {
 
         return ((ActionChoiceNode) nextNode).getActionNodes()
                 .stream()
-                .map(it -> (ProcessFormAction) definition.availableActionOf(it.getActionId()))
+                .map(it -> actionOf(definition, it.getActionId()))
                 .filter(it -> it.matchPermissions(permissions))
                 .collect(Collectors.toList());
     }
@@ -176,12 +164,23 @@ public class ProcessFormAppService {
                 .collect(Collectors.toList());
     }
 
-    private ProcessFormAction actionOf(String processDefinitionId,
-                                       String actionId) {
+    /**
+     * 获取工作流应用服务
+     *
+     * @return 工作流应用服务
+     */
+    public ProcessAppService getProcessAppService() {
+        return processAppService;
+    }
+
+    private ProcessFormAction actionOf(String processDefinitionId, String actionId) {
         ProcessDefinition definition = processAppService.availableProcessDefinitionOf(
                 processDefinitionId
         );
+        return actionOf(definition, actionId);
+    }
 
+    private ProcessFormAction actionOf(ProcessDefinition definition, String actionId) {
         ProcessAction action = definition.availableActionOf(actionId);
         if (action instanceof ProcessFormAction) {
             return (ProcessFormAction) action;
@@ -212,8 +211,13 @@ public class ProcessFormAppService {
         );
     }
 
-    private void saveForm(ProcessFormAction action, ProcessForm form) {
+    private void saveForm(String processInstanceId, ProcessFormAction action, ProcessForm form) {
+        if (form == null) {
+            return;
+        }
+
         if (processFormPermissionService.shouldSaveProcessForm(action)) {
+            form.setProcessInstanceId(processInstanceId);
             //noinspection unchecked
             processFormRepository.save(form);
         }

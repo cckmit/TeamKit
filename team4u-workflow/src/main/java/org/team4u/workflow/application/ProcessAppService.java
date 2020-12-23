@@ -51,7 +51,7 @@ public class ProcessAppService {
      * 可用的获取流程定义
      *
      * @param processDefinitionId 流程定义标识
-     * @return 流程定义，无法获取则返回ProcessDefinitionNotExistException
+     * @return 流程定义，无法获取则抛出ProcessDefinitionNotExistException
      */
     public ProcessDefinition availableProcessDefinitionOf(String processDefinitionId) {
         ProcessDefinition definition = processDefinitionOf(processDefinitionId);
@@ -67,7 +67,7 @@ public class ProcessAppService {
      * 获取有效的流程实例
      *
      * @param processInstanceId 流程实例标识
-     * @return 流程实例，无法获取则返回ProcessInstanceNotExistException
+     * @return 流程实例，无法获取则抛出ProcessInstanceNotExistException
      */
     public ProcessInstance availableProcessInstanceOf(String processInstanceId) {
         ProcessInstance instance = processInstanceOf(processInstanceId);
@@ -163,6 +163,13 @@ public class ProcessAppService {
      */
     public void registerBeanHandler(ProcessBeanHandler handler) {
         processNodeHandlers.beanHandlers().saveIdObject(handler);
+    }
+
+    /**
+     * 获取流程节点处理器服务
+     */
+    public ProcessNodeHandlers processNodeHandlers() {
+        return processNodeHandlers;
     }
 
     /**

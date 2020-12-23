@@ -4,8 +4,9 @@ import cn.hutool.log.Log;
 import org.team4u.base.lang.IdObjectService;
 import org.team4u.base.log.LogMessage;
 import org.team4u.workflow.domain.definition.ProcessNode;
+import org.team4u.workflow.domain.definition.exception.NotStaticNodeException;
 import org.team4u.workflow.domain.definition.exception.ProcessNodeNotExistException;
-import org.team4u.workflow.domain.instance.exception.ProcessInstanceNotExistException;
+import org.team4u.workflow.domain.definition.node.StaticNode;
 import org.team4u.workflow.domain.instance.node.handler.*;
 
 /**
@@ -27,10 +28,12 @@ public class ProcessNodeHandlers extends IdObjectService<String, ProcessNodeHand
         initProcessNodeHandler();
     }
 
+    /**
+     * 处理节点
+     */
     public void handle(ProcessNodeHandlerContext context) {
-        if (context.getInstance() == null) {
-            throw new ProcessInstanceNotExistException("context instance is null");
-        }
+        String nextNodeId = context.getInstance().getCurrentNode().getNextNodeId();
+        ProcessNode nextNode = context.getDefinition().processNodeOf(nextNodeId);
 
         LogMessage lm = LogMessage.create(this.getClass().getSimpleName(), "handle")
                 .append("instance", context.getInstance().toString())
@@ -40,27 +43,32 @@ public class ProcessNodeHandlers extends IdObjectService<String, ProcessNodeHand
                 .append("definition", context.getDefinition())
                 .append("ext", context.getExt());
 
-        ProcessNode nextNode = context.getDefinition().processNodeOf(
-                context.getInstance()
-                        .getCurrentNode()
-                        .getNextNodeId()
-        );
-
         if (nextNode == null) {
-            throw new ProcessNodeNotExistException(lm.fail("nextNode is null").toString());
+            throw new ProcessNodeNotExistException(lm.fail(nextNodeId + " not exist").toString());
         }
 
         while (nextNode != null) {
             lm.append("nextNode", nextNode);
             log.info(lm.success().toString());
 
+            ProcessNode preNode = nextNode;
             nextNode = context.getDefinition().processNodeOf(
                     availableObjectOfId(nextNode.getClass().getName())
                             .handle(context.setNode(nextNode))
             );
+
+            // 最后一个节点必须为静态节点
+            if (nextNode == null && !(preNode instanceof StaticNode)) {
+                throw new NotStaticNodeException(
+                        lm.fail(preNode.getNodeId() + "is not staticNode").toString()
+                );
+            }
         }
     }
 
+    /**
+     * 获取流程bean节点处理器服务
+     */
     public ProcessBeanHandlers beanHandlers() {
         return beanHandlers;
     }

@@ -17,9 +17,9 @@ public class ProcessFormItemDo {
     @TableId(type = IdType.AUTO)
     private Long id;
     /**
-     * 流程表单标识
+     * 流程实例标识
      */
-    private String formId;
+    private String processInstanceId;
     /**
      * 表单内容类型
      */
@@ -45,12 +45,12 @@ public class ProcessFormItemDo {
         this.id = id;
     }
 
-    public String getFormId() {
-        return formId;
+    public String getProcessInstanceId() {
+        return processInstanceId;
     }
 
-    public void setFormId(String formId) {
-        this.formId = formId;
+    public void setProcessInstanceId(String processInstanceId) {
+        this.processInstanceId = processInstanceId;
     }
 
     public String getFormBodyType() {

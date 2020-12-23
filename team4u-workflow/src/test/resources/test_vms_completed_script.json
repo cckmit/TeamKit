@@ -1,0 +1,19 @@
+{
+  "processDefinitionId": "vms",
+  "steps": [
+    {
+      "operatorId": "a",
+      "actionId": "test1",
+      "expected": {
+        "nodeId": "created"
+      }
+    },
+    {
+      "operatorId": "a",
+      "actionId": "test",
+      "expected": {
+        "nodeId": "test"
+      }
+    }
+  ]
+}

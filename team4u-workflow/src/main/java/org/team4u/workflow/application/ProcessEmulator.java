@@ -95,20 +95,17 @@ public class ProcessEmulator {
                     .withProcessDefinitionId(processDefinitionId)
                     .build();
             initProcessInstanceCommand(command, step);
-            formAppService.create(command);
+            processInstanceId = formAppService.create(command);
         } else {
             StartProcessFormCommand command = StartProcessFormCommand.Builder
                     .create()
-                    .withProcessForm(processForm)
+                    .withProcessForm(processForm.setProcessInstanceId(processInstanceId))
                     .build();
             initProcessInstanceCommand(command, step);
             formAppService.start(command);
         }
 
-        return formAppService.formOf(
-                processForm.getFormId(),
-                step.getOperatorId()
-        ).getInstance();
+        return formAppService.getProcessAppService().availableProcessInstanceOf(processInstanceId);
     }
 
     private void initProcessInstanceCommand(AbstractHandleProcessInstanceCommand command,

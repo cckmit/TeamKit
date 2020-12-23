@@ -33,7 +33,7 @@ create table `process_assignee`
     `create_time`         timestamp           not null default '1970-01-01 23:59:59' comment '创建时间',
     `update_time`         timestamp           not null default current_timestamp on update current_timestamp comment '更新时间',
     primary key (`id`),
-    unique index `idx_process_instance_id` (`process_instance_id`, node_id),
+    unique index `uniq_process_assignee` (`process_instance_id`, node_id),
     index `idx_assignee` (`assignee`)
 ) comment ='流程处理人';
 
@@ -59,23 +59,22 @@ drop table `test_form`;
 create table if not exists `test_form`
 (
     `id`                  bigint(20) unsigned not null auto_increment comment '自增长标识',
-    `form_id`             varchar(32)         not null default '' comment '表单标识',
     `process_instance_id` varchar(32)         not null default '' comment '流程实例标识',
     `create_time`         timestamp           not null default '1970-01-01 23:59:59' comment '创建时间',
     `update_time`         timestamp           not null default current_timestamp on update current_timestamp,
     primary key (`id`),
-    unique index `uniq_form_id` (`form_id`)
+    unique index `uniq_process_instance_id` (`process_instance_id`)
 ) comment ='测试表单';
 
 drop table `process_form_item`;
 create table if not exists `process_form_item`
 (
-    `id`             bigint(20) unsigned not null auto_increment comment '自增长标识',
-    `form_id`        varchar(32)         not null default '' comment '表单标识',
-    `form_body_type` varchar(100)        not null default '' comment '表单类型',
-    `form_body`      varchar(21800)      not null default '' comment '表单明细',
-    `create_time`    timestamp           not null default '1970-01-01 23:59:59' comment '创建时间',
-    `update_time`    timestamp           not null default current_timestamp on update current_timestamp,
+    `id`                  bigint(20) unsigned not null auto_increment comment '自增长标识',
+    `process_instance_id` varchar(32)         not null default '' comment '流程实例标识',
+    `form_body_type`      varchar(100)        not null default '' comment '表单类型',
+    `form_body`           varchar(21800)      not null default '' comment '表单明细',
+    `create_time`         timestamp           not null default '1970-01-01 23:59:59' comment '创建时间',
+    `update_time`         timestamp           not null default current_timestamp on update current_timestamp,
     primary key (`id`),
-    unique index `idx_form_id` (`form_id`)
+    unique index `uniq_process_instance_id` (`process_instance_id`)
 ) comment ='流程表单明细';

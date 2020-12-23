@@ -9,11 +9,7 @@ import java.util.Date;
  *
  * @author jay.wu
  */
-public abstract class ProcessForm extends AggregateRoot {
-    /**
-     * 流程表单标识
-     */
-    private String formId;
+public class ProcessForm extends AggregateRoot {
     /**
      * 流程实例标识
      */
@@ -31,43 +27,39 @@ public abstract class ProcessForm extends AggregateRoot {
      */
     private Date updateTime;
 
-    public String getFormId() {
-        return formId;
-    }
-
-    public void setFormId(String formId) {
-        this.formId = formId;
-    }
-
     public String getProcessInstanceId() {
         return processInstanceId;
     }
 
-    public void setProcessInstanceId(String processInstanceId) {
+    public ProcessForm setProcessInstanceId(String processInstanceId) {
         this.processInstanceId = processInstanceId;
+        return this;
     }
 
     public ProcessFormItem getFormItem() {
         return formItem;
     }
 
-    public void setFormItem(ProcessFormItem formItem) {
+    public ProcessForm setFormItem(ProcessFormItem formItem) {
         this.formItem = formItem;
+        return this;
     }
 
     public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
+    public ProcessForm setCreateTime(Date createTime) {
         this.createTime = createTime;
+        return this;
     }
 
     public Date getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Date updateTime) {
+    public ProcessForm setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+        return this;
     }
 }

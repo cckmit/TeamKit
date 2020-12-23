@@ -70,12 +70,12 @@ public class ProcessFormAppServiceTest extends DbTest {
                 CreateProcessFormCommand.Builder.create()
                         .withActionId("submit")
                         .withProcessDefinitionId("simple")
+                        .withProcessInstanceId(TEST)
                         .withProcessInstanceName(TEST)
                         .withOperatorId(creator)
                         .withProcessForm(
                                 TestForm.Builder.newBuilder()
                                         .withName(TEST)
-                                        .withFormId(TEST)
                                         .withFormItem(new ProcessFormItem(new Dict().set("x", TEST)))
                                         .build()
                         )
@@ -110,7 +110,7 @@ public class ProcessFormAppServiceTest extends DbTest {
                         .withOperatorId(TEST)
                         .withRemark(TEST)
                         .withProcessForm(TestForm.Builder.newBuilder()
-                                .withFormId(TEST)
+                                .withProcessInstanceId(TEST)
                                 .build())
                         .build()
         );
