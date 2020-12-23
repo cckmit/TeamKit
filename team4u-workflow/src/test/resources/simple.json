@@ -111,14 +111,14 @@
     {
       "@type": "org.team4u.workflow.domain.definition.node.BeanNode",
       "nodeId": "rejected",
-      "beanName": "test",
-      "nodeName": "审批拒绝"
+      "nodeName": "审批拒绝",
+      "beanName": "test"
     },
     {
       "@type": "org.team4u.workflow.domain.definition.node.BeanNode",
       "nodeId": "completed",
-      "beanName": "test",
-      "nodeName": "审批完成"
+      "nodeName": "审批完成",
+      "beanName": "test"
     }
   ]
 }
