@@ -2,6 +2,7 @@ package org.team4u.workflow.application;
 
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.Log;
 import org.team4u.base.log.LogMessage;
@@ -58,7 +59,7 @@ public class ProcessEmulator {
             ProcessInstance instance = doStep(
                     processInstanceId,
                     script.getProcessDefinitionId(),
-                    form,
+                    ObjectUtil.defaultIfNull(form, new ProcessForm()),
                     step
             );
 

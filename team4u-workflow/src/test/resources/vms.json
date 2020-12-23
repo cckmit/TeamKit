@@ -20,7 +20,7 @@
     {
       "@type": "org.team4u.workflow.domain.definition.node.ActionChoiceNode",
       "nodeId": "createdChoiceNode",
-      "nodeName": "已创建动作选择器",
+      "nodeName": "动作选择器",
       "actionNodes": [
         {
           "actionId": "test",
