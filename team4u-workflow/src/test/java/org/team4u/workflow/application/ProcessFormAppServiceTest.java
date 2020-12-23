@@ -18,11 +18,10 @@ import org.team4u.workflow.domain.definition.ProcessAction;
 import org.team4u.workflow.domain.definition.ProcessDefinition;
 import org.team4u.workflow.domain.definition.ProcessDefinitionId;
 import org.team4u.workflow.domain.form.DefaultProcessFormPermissionService;
-import org.team4u.workflow.domain.form.ProcessFormItem;
+import org.team4u.workflow.domain.instance.ProcessInstanceDetail;
 import org.team4u.workflow.domain.instance.node.handler.DynamicChoiceNodeHandler;
 import org.team4u.workflow.infrastructure.DbTest;
 import org.team4u.workflow.infrastructure.persistence.definition.JsonProcessDefinitionRepository;
-import org.team4u.workflow.infrastructure.persistence.form.ProcessFormItemMapper;
 import org.team4u.workflow.infrastructure.persistence.form.TestForm;
 import org.team4u.workflow.infrastructure.persistence.form.TestFormMapper;
 import org.team4u.workflow.infrastructure.persistence.form.TestFormRepository;
@@ -37,8 +36,6 @@ public class ProcessFormAppServiceTest extends DbTest {
 
     @Autowired
     private TestFormMapper testFormMapper;
-    @Autowired
-    private ProcessFormItemMapper formItemMapper;
 
     private ProcessFormAppService processFormAppService;
 
@@ -57,7 +54,7 @@ public class ProcessFormAppServiceTest extends DbTest {
         processFormAppService = new ProcessFormAppService(
                 eventStore,
                 appService,
-                new TestFormRepository(testFormMapper, formItemMapper),
+                new TestFormRepository(testFormMapper),
                 new DefaultProcessFormPermissionService()
         );
     }
@@ -76,7 +73,7 @@ public class ProcessFormAppServiceTest extends DbTest {
                         .withProcessForm(
                                 TestForm.Builder.newBuilder()
                                         .withName(TEST)
-                                        .withFormItem(new ProcessFormItem(new Dict().set("x", TEST)))
+                                        .withFormItem(new ProcessInstanceDetail(new Dict().set("x", TEST)))
                                         .build()
                         )
                         .build()

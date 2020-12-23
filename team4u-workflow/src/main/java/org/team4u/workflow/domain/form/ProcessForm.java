@@ -15,10 +15,6 @@ public class ProcessForm extends AggregateRoot {
      */
     private String processInstanceId;
     /**
-     * 流程表单内容
-     */
-    private ProcessFormItem formItem;
-    /**
      * 创建时间
      */
     private Date createTime;
@@ -33,15 +29,6 @@ public class ProcessForm extends AggregateRoot {
 
     public ProcessForm setProcessInstanceId(String processInstanceId) {
         this.processInstanceId = processInstanceId;
-        return this;
-    }
-
-    public ProcessFormItem getFormItem() {
-        return formItem;
-    }
-
-    public ProcessForm setFormItem(ProcessFormItem formItem) {
-        this.formItem = formItem;
         return this;
     }
 

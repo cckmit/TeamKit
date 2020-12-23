@@ -1,4 +1,4 @@
-package org.team4u.workflow.infrastructure.persistence.form;
+package org.team4u.workflow.infrastructure.persistence.instance;
 
 
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -8,12 +8,12 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.util.Date;
 
 /**
- * 流程表单内容数据
+ * 流程实例明细数据
  *
  * @author jay.wu
  */
-@TableName("process_form_item")
-public class ProcessFormItemDo {
+@TableName("process_instance_detail")
+public class ProcessInstanceDetailDo {
     @TableId(type = IdType.AUTO)
     private Long id;
     /**
@@ -21,13 +21,13 @@ public class ProcessFormItemDo {
      */
     private String processInstanceId;
     /**
-     * 表单内容类型
+     * 流程实例明细类型
      */
-    private String formBodyType;
+    private String type;
     /**
-     * 流程表单内容
+     * 流程实例明细内容
      */
-    private String formBody;
+    private String body;
     /**
      * 创建时间
      */
@@ -41,47 +41,53 @@ public class ProcessFormItemDo {
         return id;
     }
 
-    public void setId(Long id) {
+    public ProcessInstanceDetailDo setId(Long id) {
         this.id = id;
+        return this;
     }
 
     public String getProcessInstanceId() {
         return processInstanceId;
     }
 
-    public void setProcessInstanceId(String processInstanceId) {
+    public ProcessInstanceDetailDo setProcessInstanceId(String processInstanceId) {
         this.processInstanceId = processInstanceId;
+        return this;
     }
 
-    public String getFormBodyType() {
-        return formBodyType;
+    public String getType() {
+        return type;
     }
 
-    public void setFormBodyType(String formBodyType) {
-        this.formBodyType = formBodyType;
+    public ProcessInstanceDetailDo setType(String type) {
+        this.type = type;
+        return this;
     }
 
-    public String getFormBody() {
-        return formBody;
+    public String getBody() {
+        return body;
     }
 
-    public void setFormBody(String formBody) {
-        this.formBody = formBody;
+    public ProcessInstanceDetailDo setBody(String body) {
+        this.body = body;
+        return this;
     }
 
     public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
+    public ProcessInstanceDetailDo setCreateTime(Date createTime) {
         this.createTime = createTime;
+        return this;
     }
 
     public Date getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Date updateTime) {
+    public ProcessInstanceDetailDo setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+        return this;
     }
 }

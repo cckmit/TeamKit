@@ -2,8 +2,8 @@ package org.team4u.workflow.infrastructure.persistence.form;
 
 public class TestFormRepository extends MybatisProcessFormRepository<TestForm, TestFormDo> {
 
-    public TestFormRepository(TestFormMapper testFormMapper, ProcessFormItemMapper formItemMapper) {
-        super(testFormMapper, formItemMapper);
+    public TestFormRepository(TestFormMapper testFormMapper) {
+        super(testFormMapper);
     }
 
     @Override

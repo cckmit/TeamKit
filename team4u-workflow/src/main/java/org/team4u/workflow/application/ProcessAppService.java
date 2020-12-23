@@ -125,7 +125,8 @@ public class ProcessAppService {
                 command.getProcessInstanceName(),
                 ProcessDefinitionId.of(command.getProcessDefinitionId()),
                 command.getOperatorId(),
-                definition.rootNode()
+                definition.rootNode(),
+                null
         );
 
         return handle(command, definition, instance);

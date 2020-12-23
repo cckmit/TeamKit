@@ -39,7 +39,8 @@ public class TestUtil {
                 TEST,
                 ProcessDefinitionId.of(TEST),
                 null,
-                TEST
+                TEST,
+                null
         ).setAssignees(
                 Optional.ofNullable(assignees)
                         .map(it -> Arrays.stream(assignees)

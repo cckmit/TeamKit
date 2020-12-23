@@ -1,7 +1,7 @@
 package org.team4u.workflow.infrastructure.persistence.form;
 
 import org.team4u.workflow.domain.form.ProcessForm;
-import org.team4u.workflow.domain.form.ProcessFormItem;
+import org.team4u.workflow.domain.instance.ProcessInstanceDetail;
 
 public class TestForm extends ProcessForm {
 
@@ -25,7 +25,7 @@ public class TestForm extends ProcessForm {
 
     public static final class Builder {
         private String processInstanceId;
-        private ProcessFormItem formItem;
+        private ProcessInstanceDetail formItem;
         private String name;
 
         private Builder() {
@@ -40,7 +40,7 @@ public class TestForm extends ProcessForm {
             return this;
         }
 
-        public Builder withFormItem(ProcessFormItem formItem) {
+        public Builder withFormItem(ProcessInstanceDetail formItem) {
             this.formItem = formItem;
             return this;
         }
@@ -53,7 +53,6 @@ public class TestForm extends ProcessForm {
         public TestForm build() {
             TestForm testForm = new TestForm();
             testForm.setProcessInstanceId(processInstanceId);
-            testForm.setFormItem(formItem);
             testForm.setName(name);
             return testForm;
         }

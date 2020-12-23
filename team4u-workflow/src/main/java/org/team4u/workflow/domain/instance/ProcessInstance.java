@@ -44,6 +44,10 @@ public class ProcessInstance extends AggregateRoot {
      */
     private Set<ProcessAssignee> assignees;
     /**
+     * 流程实例明细
+     */
+    private ProcessInstanceDetail processInstanceDetail;
+    /**
      * 创建人
      */
     private String createBy;
@@ -64,12 +68,14 @@ public class ProcessInstance extends AggregateRoot {
                            String processInstanceName,
                            ProcessDefinitionId processDefinitionId,
                            StaticNode currentNode,
-                           String createdBy) {
+                           String createdBy,
+                           ProcessInstanceDetail processInstanceDetail) {
         setProcessInstanceId(processInstanceId);
         setProcessInstanceName(processInstanceName);
         setProcessDefinitionId(processDefinitionId);
         setCurrentNode(currentNode);
         setCreateBy(createdBy);
+        setProcessInstanceDetail(processInstanceDetail);
 
         setAssignees(new HashSet<>());
         setCreateTime(new Date());
@@ -89,13 +95,15 @@ public class ProcessInstance extends AggregateRoot {
                                          String processInstanceName,
                                          ProcessDefinitionId processDefinitionId,
                                          String createdBy,
-                                         StaticNode startNode) {
+                                         StaticNode startNode,
+                                         ProcessInstanceDetail processInstanceDetail) {
         ProcessInstance instance = new ProcessInstance(
                 processInstanceId,
                 processInstanceName,
                 processDefinitionId,
                 startNode,
-                createdBy);
+                createdBy,
+                processInstanceDetail);
 
         instance.publishEvent(new ProcessInstanceCreatedEvent(
                 instance.getProcessInstanceId(),
@@ -253,6 +261,15 @@ public class ProcessInstance extends AggregateRoot {
 
     public ProcessInstance setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+        return this;
+    }
+
+    public ProcessInstanceDetail getProcessInstanceDetail() {
+        return processInstanceDetail;
+    }
+
+    public ProcessInstance setProcessInstanceDetail(ProcessInstanceDetail processInstanceDetail) {
+        this.processInstanceDetail = processInstanceDetail;
         return this;
     }
 

@@ -17,6 +17,7 @@ import org.team4u.workflow.domain.instance.ProcessInstanceRepository;
 import org.team4u.workflow.infrastructure.persistence.definition.JsonProcessDefinitionRepository;
 import org.team4u.workflow.infrastructure.persistence.instance.MybatisProcessInstanceRepository;
 import org.team4u.workflow.infrastructure.persistence.instance.ProcessAssigneeMapper;
+import org.team4u.workflow.infrastructure.persistence.instance.ProcessInstanceDetailMapper;
 import org.team4u.workflow.infrastructure.persistence.instance.ProcessInstanceMapper;
 
 import javax.sql.DataSource;
@@ -69,11 +70,13 @@ public class BeanConfig {
     @Bean
     public ProcessInstanceRepository processInstanceRepository(EventStore eventStore,
                                                                ProcessInstanceMapper instanceMapper,
-                                                               ProcessAssigneeMapper assigneeMapper) {
+                                                               ProcessAssigneeMapper assigneeMapper,
+                                                               ProcessInstanceDetailMapper instanceDetailMapper) {
         return new MybatisProcessInstanceRepository(
                 eventStore,
                 instanceMapper,
                 assigneeMapper,
+                instanceDetailMapper,
                 new JsonProcessDefinitionRepository(new LocalJsonConfigService())
         );
     }
