@@ -6,7 +6,7 @@ import org.team4u.workflow.domain.definition.ProcessAction;
 import java.util.Set;
 
 /**
- * 流程表单动作
+ * 表单索引动作
  *
  * @author jay.wu
  */

@@ -1,7 +1,7 @@
 package org.team4u.workflow.domain.form.process.node.handler;
 
 import cn.hutool.core.util.StrUtil;
-import org.team4u.workflow.domain.form.ProcessFormContextKeys;
+import org.team4u.workflow.domain.form.FormContextKeys;
 import org.team4u.workflow.domain.form.process.definition.ProcessFormAction;
 import org.team4u.workflow.domain.form.process.definition.node.AssigneeActionChoiceNode;
 import org.team4u.workflow.domain.instance.ProcessAssignee;
@@ -71,7 +71,7 @@ public class AssigneeActionChoiceNodeHandler extends ActionChoiceNodeHandler {
         }
 
         ProcessFormAction action = (ProcessFormAction) context.getAction();
-        if (action.matchPermissions(context.ext(ProcessFormContextKeys.OPERATOR_ACTION_PERMISSIONS))) {
+        if (action.matchPermissions(context.ext(FormContextKeys.OPERATOR_ACTION_PERMISSIONS))) {
             return;
         }
 
@@ -79,7 +79,7 @@ public class AssigneeActionChoiceNodeHandler extends ActionChoiceNodeHandler {
                 String.format("processInstanceId=%s|operator=%s|operatorPermissions=%s",
                         context.getInstance().getProcessInstanceId(),
                         context.getOperatorId(),
-                        context.ext(ProcessFormContextKeys.OPERATOR_ACTION_PERMISSIONS))
+                        context.ext(FormContextKeys.OPERATOR_ACTION_PERMISSIONS))
         );
     }
 

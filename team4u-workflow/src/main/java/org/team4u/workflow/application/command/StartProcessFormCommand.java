@@ -1,25 +1,25 @@
 package org.team4u.workflow.application.command;
 
-import org.team4u.workflow.domain.form.ProcessForm;
+import org.team4u.workflow.domain.form.FormIndex;
 import org.team4u.workflow.domain.instance.ProcessInstanceDetail;
 
 import java.util.Map;
 
 /**
- * 开始流程表单命令
+ * 开始表单索引命令
  *
  * @author jay.wu
  */
 public class StartProcessFormCommand extends AbstractHandleProcessInstanceCommand {
 
-    private ProcessForm processForm;
+    private FormIndex formIndex;
 
-    public ProcessForm getProcessForm() {
-        return processForm;
+    public FormIndex getProcessForm() {
+        return formIndex;
     }
 
-    public void setProcessForm(ProcessForm processForm) {
-        this.processForm = processForm;
+    public void setProcessForm(FormIndex formIndex) {
+        this.formIndex = formIndex;
     }
 
 
@@ -29,7 +29,7 @@ public class StartProcessFormCommand extends AbstractHandleProcessInstanceComman
         private String remark;
         private Map<String, Object> ext;
         private ProcessInstanceDetail processInstanceDetail;
-        private ProcessForm processForm;
+        private FormIndex formIndex;
 
         private Builder() {
         }
@@ -63,8 +63,8 @@ public class StartProcessFormCommand extends AbstractHandleProcessInstanceComman
             return this;
         }
 
-        public Builder withProcessForm(ProcessForm processForm) {
-            this.processForm = processForm;
+        public Builder withProcessForm(FormIndex formIndex) {
+            this.formIndex = formIndex;
             return this;
         }
 
@@ -75,7 +75,7 @@ public class StartProcessFormCommand extends AbstractHandleProcessInstanceComman
             startProcessFormCommand.setRemark(remark);
             startProcessFormCommand.setExt(ext);
             startProcessFormCommand.setProcessInstanceDetail(processInstanceDetail);
-            startProcessFormCommand.setProcessForm(processForm);
+            startProcessFormCommand.setProcessForm(formIndex);
             return startProcessFormCommand;
         }
     }

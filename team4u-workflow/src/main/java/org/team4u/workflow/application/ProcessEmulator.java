@@ -14,7 +14,7 @@ import org.team4u.workflow.domain.emulator.ProcessEmulatorScript;
 import org.team4u.workflow.domain.emulator.ProcessEmulatorScriptNotExistException;
 import org.team4u.workflow.domain.emulator.ProcessEmulatorScriptRepository;
 import org.team4u.workflow.domain.emulator.ProcessEmulatorScriptStep;
-import org.team4u.workflow.domain.form.ProcessForm;
+import org.team4u.workflow.domain.form.FormIndex;
 import org.team4u.workflow.domain.instance.ProcessInstance;
 
 import java.util.Map;
@@ -41,7 +41,7 @@ public class ProcessEmulator {
     /**
      * 开始模拟
      */
-    public void start(String scriptId, ProcessForm form, Map<String, Object> ext) {
+    public void start(String scriptId, FormIndex form, Map<String, Object> ext) {
         LogMessage lm = LogMessages.create(this.getClass().getSimpleName(), "simulate")
                 .append("scriptId", scriptId);
         log.info(lm.processing().toString());
@@ -59,7 +59,7 @@ public class ProcessEmulator {
             ProcessInstance instance = doStep(
                     processInstanceId,
                     script.getProcessDefinitionId(),
-                    ObjectUtil.defaultIfNull(form, new ProcessForm()),
+                    ObjectUtil.defaultIfNull(form, new FormIndex()),
                     step
             );
 
@@ -87,12 +87,12 @@ public class ProcessEmulator {
 
     private ProcessInstance doStep(String processInstanceId,
                                    String processDefinitionId,
-                                   ProcessForm processForm,
+                                   FormIndex formIndex,
                                    ProcessEmulatorScriptStep step) {
         if (processInstanceId == null) {
             CreateProcessFormCommand command = CreateProcessFormCommand.Builder
                     .create()
-                    .withProcessForm(processForm)
+                    .withProcessForm(formIndex)
                     .withProcessDefinitionId(processDefinitionId)
                     .build();
             initProcessInstanceCommand(command, step);
@@ -100,7 +100,7 @@ public class ProcessEmulator {
         } else {
             StartProcessFormCommand command = StartProcessFormCommand.Builder
                     .create()
-                    .withProcessForm(processForm.setProcessInstanceId(processInstanceId))
+                    .withProcessForm(formIndex.setProcessInstanceId(processInstanceId))
                     .build();
             initProcessInstanceCommand(command, step);
             formAppService.start(command);

@@ -1,23 +1,23 @@
 package org.team4u.workflow.application.model;
 
 import org.team4u.workflow.domain.definition.ProcessAction;
-import org.team4u.workflow.domain.form.ProcessForm;
+import org.team4u.workflow.domain.form.FormIndex;
 import org.team4u.workflow.domain.instance.ProcessInstance;
 import org.team4u.workflow.domain.instance.event.ProcessNodeChangedEvent;
 
 import java.util.List;
 
 /**
- * 流程表单模型
+ * 表单索引模型
  *
  * @author jay.wu
  */
 public class ProcessFormModel {
 
     /**
-     * 流程表单
+     * 表单索引
      */
-    private ProcessForm form;
+    private FormIndex formIndex;
     /**
      * 流程实例
      */
@@ -32,12 +32,12 @@ public class ProcessFormModel {
     private List<ProcessNodeChangedEvent> events;
 
     @SuppressWarnings("unchecked")
-    public <F extends ProcessForm> F getForm() {
-        return (F) form;
+    public <F extends FormIndex> F getFormIndex() {
+        return (F) formIndex;
     }
 
-    public void setForm(ProcessForm form) {
-        this.form = form;
+    public void setFormIndex(FormIndex formIndex) {
+        this.formIndex = formIndex;
     }
 
     public ProcessInstance getInstance() {
@@ -67,7 +67,7 @@ public class ProcessFormModel {
     @Override
     public String toString() {
         return "ProcessFormModel{" +
-                "form=" + form +
+                "index=" + formIndex +
                 ", instance=" + instance +
                 ", actions=" + actions +
                 ", events=" + events +

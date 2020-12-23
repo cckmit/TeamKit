@@ -1,25 +1,25 @@
 package org.team4u.workflow.application.command;
 
-import org.team4u.workflow.domain.form.ProcessForm;
+import org.team4u.workflow.domain.form.FormIndex;
 import org.team4u.workflow.domain.instance.ProcessInstanceDetail;
 
 import java.util.Map;
 
 /**
- * 创建流程表单命令
+ * 创建表单索引命令
  *
  * @author jay.wu
  */
 public class CreateProcessFormCommand extends CreateProcessInstanceCommand {
 
-    private ProcessForm processForm;
+    private FormIndex formIndex;
 
-    public ProcessForm getProcessForm() {
-        return processForm;
+    public FormIndex getProcessForm() {
+        return formIndex;
     }
 
-    public void setProcessForm(ProcessForm processForm) {
-        this.processForm = processForm;
+    public void setProcessForm(FormIndex formIndex) {
+        this.formIndex = formIndex;
     }
 
     public static final class Builder {
@@ -27,7 +27,7 @@ public class CreateProcessFormCommand extends CreateProcessInstanceCommand {
         private String actionId;
         private String remark;
         private Map<String, Object> ext;
-        private ProcessForm processForm;
+        private FormIndex formIndex;
         private String processInstanceId;
         private String processInstanceName;
         private String processDefinitionId;
@@ -60,8 +60,8 @@ public class CreateProcessFormCommand extends CreateProcessInstanceCommand {
             return this;
         }
 
-        public Builder withProcessForm(ProcessForm processForm) {
-            this.processForm = processForm;
+        public Builder withProcessForm(FormIndex formIndex) {
+            this.formIndex = formIndex;
             return this;
         }
 
@@ -91,7 +91,7 @@ public class CreateProcessFormCommand extends CreateProcessInstanceCommand {
             createProcessFormCommand.setActionId(actionId);
             createProcessFormCommand.setRemark(remark);
             createProcessFormCommand.setExt(ext);
-            createProcessFormCommand.setProcessForm(processForm);
+            createProcessFormCommand.setProcessForm(formIndex);
             createProcessFormCommand.setProcessInstanceName(processInstanceName);
             createProcessFormCommand.setProcessDefinitionId(processDefinitionId);
             createProcessFormCommand.setProcessInstanceId(processInstanceId);

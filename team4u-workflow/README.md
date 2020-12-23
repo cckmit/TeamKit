@@ -1,4 +1,4 @@
-20201221-轻量级流程表单设计
+20201221-轻量级表单索引设计
 
 ## 使用说明
 
@@ -209,7 +209,7 @@ public class TestFormRepository extends MybatisProcessFormRepository<TestForm, T
 
 表单流程定义，相当于表单类型，每一种表单需要对应一种流程定义（表单类型）
 
-##### 流程表单动作
+##### 表单索引动作
 
 - 负责定义处理人可用动作，可配置权限要求 ，用于前端页面展示按钮
     - ProcessFormAction
@@ -384,7 +384,7 @@ public class ProcessFormBeanConfig {
 表单明细模型包含以下属性：
 
 - 流程实例，用于获取当前节点（状态）、创建人等
-- 流程表单，用于展示业务属性
+- 表单索引，用于展示业务属性
 - 当前处理人可用动作集合，用于前端按钮展示
 - 流程节点变更事件集合，用于前端审批日志展示
 
@@ -418,14 +418,14 @@ ProcessFormModel
 
 ```java
 /**
- * 流程表单模型
+ * 表单索引模型
  *
  * @author jay.wu
  */
 public class ProcessFormModel {
-    /**
-     * 流程表单
-     */
+  /**
+   * 表单索引
+   */
     private ProcessForm form;
     /**
      * 流程实例
@@ -491,14 +491,14 @@ processFormAppService.start(
 
 ##### 查询表单列表
 
-- 对流程表单进行列表查询是非常常见的需求，查询时需要关联流程表
+- 对表单索引进行列表查询是非常常见的需求，查询时需要关联流程表
 
 - 为了减少开发者对流程模型的学习成本，这里提供了常见的列表查询SQL
 
-    - 将实例中的问号（?）调整为实际审批/申请人，再加上表单自身的查询条件(如f.name)即可完成查询
+  - 将实例中的问号（?）调整为实际审批/申请人，再加上表单自身的查询条件(如f.name)即可完成查询
 
-    - current_node_name可用于状态展示
-    - process_definition_name可用于表单类型展示
+  - current_node_name可用于状态展示
+  - process_definition_name可用于表单类型展示
 
 ```mysql
 # 待审批列表

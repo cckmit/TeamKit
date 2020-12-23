@@ -14,11 +14,11 @@ import org.team4u.base.config.LocalJsonConfigService;
 import org.team4u.ddd.event.EventStore;
 import org.team4u.ddd.infrastructure.persistence.memory.LogOnlyEventStore;
 import org.team4u.workflow.domain.instance.ProcessInstanceRepository;
-import org.team4u.workflow.infrastructure.persistence.definition.JsonProcessDefinitionRepository;
-import org.team4u.workflow.infrastructure.persistence.instance.MybatisProcessInstanceRepository;
-import org.team4u.workflow.infrastructure.persistence.instance.ProcessAssigneeMapper;
-import org.team4u.workflow.infrastructure.persistence.instance.ProcessInstanceDetailMapper;
-import org.team4u.workflow.infrastructure.persistence.instance.ProcessInstanceMapper;
+import org.team4u.workflow.infrastructure.definition.JsonProcessDefinitionRepository;
+import org.team4u.workflow.infrastructure.instance.MybatisProcessInstanceRepository;
+import org.team4u.workflow.infrastructure.instance.ProcessAssigneeMapper;
+import org.team4u.workflow.infrastructure.instance.ProcessInstanceDetailMapper;
+import org.team4u.workflow.infrastructure.instance.ProcessInstanceMapper;
 
 import javax.sql.DataSource;
 

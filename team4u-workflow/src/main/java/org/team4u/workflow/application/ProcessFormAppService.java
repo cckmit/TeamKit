@@ -13,10 +13,10 @@ import org.team4u.workflow.domain.definition.ProcessAction;
 import org.team4u.workflow.domain.definition.ProcessDefinition;
 import org.team4u.workflow.domain.definition.ProcessNode;
 import org.team4u.workflow.domain.definition.node.ActionChoiceNode;
-import org.team4u.workflow.domain.form.ProcessForm;
-import org.team4u.workflow.domain.form.ProcessFormContextKeys;
-import org.team4u.workflow.domain.form.ProcessFormPermissionService;
-import org.team4u.workflow.domain.form.ProcessFormRepository;
+import org.team4u.workflow.domain.form.FormContextKeys;
+import org.team4u.workflow.domain.form.FormIndex;
+import org.team4u.workflow.domain.form.FormIndexRepository;
+import org.team4u.workflow.domain.form.FormPermissionService;
 import org.team4u.workflow.domain.form.process.definition.ProcessFormAction;
 import org.team4u.workflow.domain.instance.ProcessInstance;
 import org.team4u.workflow.domain.instance.event.ProcessNodeChangedEvent;
@@ -26,7 +26,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * 流程表单抽象应用服务
+ * 表单索引抽象应用服务
  *
  * @author jay.wu
  */
@@ -36,37 +36,46 @@ public class ProcessFormAppService {
 
     private final ProcessAppService processAppService;
     @SuppressWarnings("rawtypes")
-    private final ProcessFormRepository processFormRepository;
-    private final ProcessFormPermissionService processFormPermissionService;
+    private final FormIndexRepository formIndexRepository;
+    private final FormPermissionService formPermissionService;
 
     public ProcessFormAppService(EventStore eventStore,
                                  ProcessAppService processAppService,
-                                 ProcessFormRepository<?> processFormRepository,
-                                 ProcessFormPermissionService processFormPermissionService) {
+                                 FormPermissionService formPermissionService) {
+        this(eventStore, processAppService, null, formPermissionService);
+    }
+
+    public ProcessFormAppService(EventStore eventStore,
+                                 ProcessAppService processAppService,
+                                 FormIndexRepository<?> formIndexRepository,
+                                 FormPermissionService formPermissionService) {
         this.eventStore = eventStore;
         this.processAppService = processAppService;
-        this.processFormRepository = processFormRepository;
-        this.processFormPermissionService = processFormPermissionService;
+        this.formIndexRepository = formIndexRepository;
+        this.formPermissionService = formPermissionService;
     }
 
     /**
-     * 获取流程表单模型
+     * 获取表单索引模型
      *
      * @param instanceId 流程实例标识
      * @param operatorId 当前处理人
-     * @return 流程表单模型
+     * @return 表单索引模型
      */
     public ProcessFormModel formOf(String instanceId, String operatorId) {
         ProcessFormModel formModel = new ProcessFormModel();
 
-        formModel.setForm(processFormRepository.formOf(instanceId));
+        if (formIndexRepository != null) {
+            formModel.setFormIndex(formIndexRepository.formOf(instanceId));
+        }
+
         formModel.setInstance(processAppService.availableProcessInstanceOf(instanceId));
 
-        if (!hasViewPermission(formModel.getForm(), formModel.getInstance(), operatorId)) {
+        if (!hasViewPermission(formModel.getFormIndex(), formModel.getInstance(), operatorId)) {
             throw new NoPermissionException("您没有权限查看请表单");
         }
 
-        formModel.setActions(availableActionsOf(formModel.getForm(), formModel.getInstance(), operatorId));
+        formModel.setActions(availableActionsOf(formModel.getFormIndex(), formModel.getInstance(), operatorId));
 
         formModel.setEvents(processNodeChangedEventsOf(
                 formModel.getInstance().getProcessInstanceId()
@@ -75,9 +84,9 @@ public class ProcessFormAppService {
     }
 
     /**
-     * 创建流程表单
+     * 创建表单索引
      *
-     * @param command 流程表单命令
+     * @param command 表单索引命令
      * @return 流程实例标识
      */
     @Transactional(rollbackFor = Exception.class)
@@ -95,14 +104,14 @@ public class ProcessFormAppService {
     }
 
     /**
-     * 处理流程表单
+     * 处理表单索引
      *
-     * @param command 流程表单命令
+     * @param command 表单索引命令
      */
     @Transactional(rollbackFor = Exception.class)
     public void start(StartProcessFormCommand command) {
         // 准备数据
-        ProcessForm newForm = command.getProcessForm();
+        FormIndex newForm = command.getProcessForm();
         ProcessInstance instance = processAppService.availableProcessInstanceOf(newForm.getProcessInstanceId());
         ProcessFormAction action = actionOf(instance.getProcessDefinitionId().toString(), command.getActionId());
 
@@ -130,7 +139,7 @@ public class ProcessFormAppService {
     /**
      * 当前流程实例可用的动作集合
      */
-    public List<ProcessAction> availableActionsOf(ProcessForm form,
+    public List<ProcessAction> availableActionsOf(FormIndex form,
                                                   ProcessInstance instance,
                                                   String operatorId) {
         ProcessDefinition definition = processAppService.availableProcessDefinitionOf(
@@ -191,17 +200,17 @@ public class ProcessFormAppService {
         return new ProcessFormAction(actionId, action.getActionName(), Collections.emptySet());
     }
 
-    private boolean hasViewPermission(ProcessForm form, ProcessInstance instance, String operatorId) {
+    private boolean hasViewPermission(FormIndex form, ProcessInstance instance, String operatorId) {
         Set<String> permissions = operatorPermissionsOf(form, instance, null, operatorId);
         return permissions.contains(ProcessFormAction.Permission.VIEW.name());
     }
 
-    private Set<String> operatorPermissionsOf(ProcessForm form,
+    private Set<String> operatorPermissionsOf(FormIndex form,
                                               ProcessInstance instance,
                                               ProcessAction action,
                                               String operatorId) {
-        return processFormPermissionService.operatorPermissionsOf(
-                new ProcessFormPermissionService.Context(
+        return formPermissionService.operatorPermissionsOf(
+                new FormPermissionService.Context(
                         form,
                         instance,
                         Optional.ofNullable(instance)
@@ -213,15 +222,15 @@ public class ProcessFormAppService {
         );
     }
 
-    private boolean saveForm(ProcessInstance instance, ProcessFormAction action, ProcessForm form) {
-        if (processFormPermissionService.shouldSaveProcessForm(action)) {
-            if (form == null) {
+    private boolean saveForm(ProcessInstance instance, ProcessFormAction action, FormIndex form) {
+        if (formPermissionService.shouldSaveProcessForm(action)) {
+            if (form == null || formIndexRepository == null) {
                 return true;
             }
 
             form.setProcessInstanceId(instance.getProcessInstanceId());
             //noinspection unchecked
-            processFormRepository.save(form);
+            formIndexRepository.save(form);
             return true;
         }
 
@@ -229,16 +238,16 @@ public class ProcessFormAppService {
     }
 
     private void initCommandExt(AbstractHandleProcessInstanceCommand command,
-                                ProcessForm form,
+                                FormIndex form,
                                 ProcessInstance instance,
                                 ProcessFormAction action) {
         if (command.getExt() == null) {
             command.setExt(new HashMap<>(2));
         }
 
-        command.getExt().put(ProcessFormContextKeys.PROCESS_FORM, form);
+        command.getExt().put(FormContextKeys.PROCESS_FORM, form);
 
-        command.getExt().put(ProcessFormContextKeys.OPERATOR_ACTION_PERMISSIONS,
+        command.getExt().put(FormContextKeys.OPERATOR_ACTION_PERMISSIONS,
                 operatorPermissionsOf(
                         form,
                         instance,

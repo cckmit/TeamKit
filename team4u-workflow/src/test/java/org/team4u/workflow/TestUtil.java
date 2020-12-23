@@ -17,7 +17,7 @@ import org.team4u.workflow.domain.form.process.definition.node.AssigneeNode;
 import org.team4u.workflow.domain.instance.ProcessAssignee;
 import org.team4u.workflow.domain.instance.ProcessInstance;
 import org.team4u.workflow.domain.instance.node.handler.ProcessNodeHandlerContext;
-import org.team4u.workflow.infrastructure.persistence.definition.JsonProcessDefinitionRepository;
+import org.team4u.workflow.infrastructure.definition.JsonProcessDefinitionRepository;
 
 import java.util.Arrays;
 import java.util.Collections;
