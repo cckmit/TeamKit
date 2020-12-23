@@ -1,4 +1,4 @@
-create table if not exists `test_form`
+create table if not exists test_form_index
 (
     `id`                  bigint(20) unsigned not null auto_increment comment '自增长标识',
     `process_instance_id` varchar(100)        not null default '' comment '表单名称',
@@ -7,4 +7,4 @@ create table if not exists `test_form`
     `update_time`         timestamp           not null default current_timestamp on update current_timestamp,
     primary key (`id`),
     unique index `uniq_process_instance_id1` (`process_instance_id`)
-) comment ='测试表单';
+) comment ='测试表单索引';

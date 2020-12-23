@@ -155,6 +155,6 @@ public class FormIndexAppServiceTest extends DbTest {
 
     @Override
     protected String[] ddlResourcePaths() {
-        return new String[]{"sql/process_form.sql", "sql/process_instance.sql"};
+        return new String[]{"sql/test_form_index.sql", "sql/process_instance.sql"};
     }
 }

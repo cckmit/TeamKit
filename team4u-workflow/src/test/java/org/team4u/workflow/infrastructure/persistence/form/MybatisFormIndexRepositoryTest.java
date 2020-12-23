@@ -43,6 +43,6 @@ public class MybatisFormIndexRepositoryTest extends DbTest {
 
     @Override
     protected String[] ddlResourcePaths() {
-        return new String[]{"sql/process_form.sql"};
+        return new String[]{"sql/test_form_index.sql"};
     }
 }
