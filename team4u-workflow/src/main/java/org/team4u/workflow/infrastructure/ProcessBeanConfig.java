@@ -6,7 +6,6 @@ import org.team4u.ddd.event.EventStore;
 import org.team4u.workflow.application.ProcessAppService;
 import org.team4u.workflow.domain.definition.ProcessDefinitionRepository;
 import org.team4u.workflow.domain.instance.ProcessInstanceRepository;
-import org.team4u.workflow.domain.instance.ProcessNodeHandlers;
 import org.team4u.workflow.infrastructure.persistence.definition.MybatisProcessDefinitionRepository;
 import org.team4u.workflow.infrastructure.persistence.definition.ProcessDefinitionMapper;
 import org.team4u.workflow.infrastructure.persistence.instance.MybatisProcessInstanceRepository;
@@ -26,7 +25,6 @@ public class ProcessBeanConfig {
             ProcessInstanceRepository processInstanceRepository,
             ProcessDefinitionRepository processDefinitionRepository) {
         return new ProcessAppService(
-                new ProcessNodeHandlers(),
                 processInstanceRepository,
                 processDefinitionRepository
         );

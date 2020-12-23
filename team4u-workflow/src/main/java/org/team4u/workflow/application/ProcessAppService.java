@@ -14,6 +14,8 @@ import org.team4u.workflow.domain.instance.ProcessInstance;
 import org.team4u.workflow.domain.instance.ProcessInstanceRepository;
 import org.team4u.workflow.domain.instance.ProcessNodeHandlers;
 import org.team4u.workflow.domain.instance.exception.ProcessInstanceNotExistException;
+import org.team4u.workflow.domain.instance.node.handler.ProcessBeanHandler;
+import org.team4u.workflow.domain.instance.node.handler.ProcessNodeHandler;
 import org.team4u.workflow.domain.instance.node.handler.ProcessNodeHandlerContext;
 
 /**
@@ -27,12 +29,12 @@ public class ProcessAppService {
     private final ProcessInstanceRepository processInstanceRepository;
     private final ProcessDefinitionRepository processDefinitionRepository;
 
-    public ProcessAppService(ProcessNodeHandlers processNodeHandlers,
-                             ProcessInstanceRepository processInstanceRepository,
+    public ProcessAppService(ProcessInstanceRepository processInstanceRepository,
                              ProcessDefinitionRepository processDefinitionRepository) {
-        this.processNodeHandlers = processNodeHandlers;
         this.processInstanceRepository = processInstanceRepository;
         this.processDefinitionRepository = processDefinitionRepository;
+
+        this.processNodeHandlers = new ProcessNodeHandlers();
     }
 
     /**
@@ -88,6 +90,28 @@ public class ProcessAppService {
     }
 
     /**
+     * 获取指定流程节点处理器
+     *
+     * @param handlerId 流程节点处理器标识
+     * @return 流程节点处理器
+     */
+    @SuppressWarnings("unchecked")
+    public <T extends ProcessNodeHandler> T processNodeHandlerOf(String handlerId) {
+        return (T) processNodeHandlers.objectOfId(handlerId);
+    }
+
+    /**
+     * 获取指定流程bean处理器
+     *
+     * @param handlerId 流程bean处理器标识
+     * @return 流程bean处理器
+     */
+    @SuppressWarnings("unchecked")
+    public <T extends ProcessNodeHandler> T processBeanHandlerOf(String handlerId) {
+        return (T) processNodeHandlers.beanHandlers().objectOfId(handlerId);
+    }
+
+    /**
      * 创建流程实例
      *
      * @param command 开始命令参数
@@ -121,6 +145,24 @@ public class ProcessAppService {
         );
 
         return handle(command, definition, instance);
+    }
+
+    /**
+     * 注册流程节点处理器
+     *
+     * @param handler 流程节点处理器
+     */
+    public void registerNodeHandler(ProcessNodeHandler handler) {
+        processNodeHandlers.saveIdObject(handler);
+    }
+
+    /**
+     * 注册流程bean处理器
+     *
+     * @param handler 流程bean处理器
+     */
+    public void registerBeanHandler(ProcessBeanHandler handler) {
+        processNodeHandlers.beanHandlers().saveIdObject(handler);
     }
 
     /**

@@ -8,7 +8,6 @@ import org.team4u.workflow.application.ProcessAppService;
 import org.team4u.workflow.application.ProcessEmulator;
 import org.team4u.workflow.application.ProcessFormAppService;
 import org.team4u.workflow.domain.form.DefaultProcessFormPermissionService;
-import org.team4u.workflow.domain.instance.ProcessNodeHandlers;
 import org.team4u.workflow.infrastructure.persistence.definition.JsonProcessDefinitionRepository;
 import org.team4u.workflow.infrastructure.persistence.emulator.JsonProcessEmulatorScriptRepository;
 import org.team4u.workflow.infrastructure.persistence.form.InMemoryProcessFormRepository;
@@ -32,7 +31,6 @@ public class ProcessEmulatorFactory {
                 new ProcessFormAppService(
                         eventStore,
                         new ProcessAppService(
-                                new ProcessNodeHandlers(),
                                 new InMemoryProcessInstanceRepository(eventStore),
                                 new JsonProcessDefinitionRepository(configService)),
                         new InMemoryProcessFormRepository<>(),

@@ -6,8 +6,7 @@ import org.team4u.base.log.LogMessage;
 import org.team4u.workflow.domain.definition.ProcessNode;
 import org.team4u.workflow.domain.definition.exception.ProcessNodeNotExistException;
 import org.team4u.workflow.domain.instance.exception.ProcessInstanceNotExistException;
-import org.team4u.workflow.domain.instance.node.handler.ProcessNodeHandler;
-import org.team4u.workflow.domain.instance.node.handler.ProcessNodeHandlerContext;
+import org.team4u.workflow.domain.instance.node.handler.*;
 
 /**
  * 流程节点处理器服务
@@ -18,8 +17,14 @@ public class ProcessNodeHandlers extends IdObjectService<String, ProcessNodeHand
 
     private final Log log = Log.get();
 
+    private final ProcessBeanHandlers beanHandlers;
+
     public ProcessNodeHandlers() {
         super(ProcessNodeHandler.class);
+
+        beanHandlers = new ProcessBeanHandlers();
+
+        initProcessNodeHandler();
     }
 
     public void handle(ProcessNodeHandlerContext context) {
@@ -54,5 +59,14 @@ public class ProcessNodeHandlers extends IdObjectService<String, ProcessNodeHand
                             .handle(context.setNode(nextNode))
             );
         }
+    }
+
+    public ProcessBeanHandlers beanHandlers() {
+        return beanHandlers;
+    }
+
+    private void initProcessNodeHandler() {
+        saveIdObject(new BeanNodeHandler(beanHandlers));
+        saveIdObject(new BeanChoiceNodeHandler(beanHandlers));
     }
 }

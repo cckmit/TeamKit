@@ -1,7 +1,6 @@
 package org.team4u.template;
 
 
-
 import org.team4u.base.lang.IdObjectService;
 
 import java.util.List;
@@ -14,6 +13,7 @@ import java.util.List;
 public class TemplateFunctionService extends IdObjectService<String, TemplateFunction> {
 
     public TemplateFunctionService() {
+        super(TemplateFunction.class);
     }
 
     public TemplateFunctionService(List<TemplateFunction> functions) {

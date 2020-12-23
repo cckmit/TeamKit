@@ -19,7 +19,6 @@ import org.team4u.workflow.domain.definition.ProcessDefinition;
 import org.team4u.workflow.domain.definition.ProcessDefinitionId;
 import org.team4u.workflow.domain.form.DefaultProcessFormPermissionService;
 import org.team4u.workflow.domain.form.ProcessFormItem;
-import org.team4u.workflow.domain.instance.ProcessNodeHandlers;
 import org.team4u.workflow.domain.instance.node.handler.DynamicChoiceNodeHandler;
 import org.team4u.workflow.infrastructure.DbTest;
 import org.team4u.workflow.infrastructure.persistence.definition.JsonProcessDefinitionRepository;
@@ -47,17 +46,17 @@ public class ProcessFormAppServiceTest extends DbTest {
     private void initProcessFormAppService() {
         EventStore eventStore = new InMemoryEventStore();
         ConfigService configService = new LocalJsonConfigService();
-        ProcessNodeHandlers handlers = new ProcessNodeHandlers();
 
-        handlers.saveIdObject(new DynamicChoiceNodeHandler(selectorAppService()));
+        ProcessAppService appService = new ProcessAppService(
+                new InMemoryProcessInstanceRepository(eventStore),
+                new JsonProcessDefinitionRepository(configService)
+        );
+
+        appService.registerNodeHandler(new DynamicChoiceNodeHandler(selectorAppService()));
 
         processFormAppService = new ProcessFormAppService(
                 eventStore,
-                new ProcessAppService(
-                        handlers,
-                        new InMemoryProcessInstanceRepository(eventStore),
-                        new JsonProcessDefinitionRepository(configService)
-                ),
+                appService,
                 new TestFormRepository(testFormMapper, formItemMapper),
                 new DefaultProcessFormPermissionService()
         );
