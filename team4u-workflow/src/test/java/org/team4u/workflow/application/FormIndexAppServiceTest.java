@@ -62,6 +62,7 @@ public class FormIndexAppServiceTest extends DbTest {
     @Test
     public void submit() {
         String creator = TEST1;
+        Dict detail = new Dict().set("x", TEST);
 
         processFormAppService.create(
                 CreateProcessFormCommand.Builder.create()
@@ -70,19 +71,21 @@ public class FormIndexAppServiceTest extends DbTest {
                         .withProcessInstanceId(TEST)
                         .withProcessInstanceName(TEST)
                         .withOperatorId(creator)
+                        .withProcessInstanceDetail(new ProcessInstanceDetail(detail))
                         .withFormIndex(
                                 TestFormIndex.Builder.newBuilder()
                                         .withName(TEST)
-                                        .withFormItem(new ProcessInstanceDetail(new Dict().set("x", TEST)))
                                         .build()
                         )
                         .build()
         );
 
+
         // 审批人查看
         ProcessFormModel model = processFormAppService.formOf(TEST, TEST);
         System.out.println(JSON.toJSONString(model));
 
+        Assert.assertEquals(detail, model.getInstance().getProcessInstanceDetail().toDetailObject());
         Assert.assertEquals("[reject, approve]", model.getActions().toString());
 
         Assert.assertEquals("[nodeId=created,actionId=submit,nextNodeId=pending,remark='null',operator='test1']", model.getEvents().toString());
@@ -106,14 +109,22 @@ public class FormIndexAppServiceTest extends DbTest {
                         .withActionId("reject")
                         .withOperatorId(TEST)
                         .withRemark(TEST)
-                        .withFormIndex(TestFormIndex.Builder.newBuilder()
-                                .withProcessInstanceId(TEST)
-                                .build())
+                        .withProcessInstanceDetail(new ProcessInstanceDetail(new Dict().set("x", TEST1)))
+                        .withFormIndex(
+                                TestFormIndex.Builder.newBuilder()
+                                        .withProcessInstanceId(TEST)
+                                        .build()
+                        )
                         .build()
         );
 
         // 申请人查看
         ProcessFormModel model = processFormAppService.formOf(TEST, TEST1);
+
+        Assert.assertEquals(
+                new Dict().set("x", TEST),
+                model.getInstance().getProcessInstanceDetail().toDetailObject()
+        );
         Assert.assertEquals("rejected", model.getInstance().getCurrentNode().getNodeId());
         Assert.assertEquals(2, model.getEvents().size());
         Assert.assertEquals(TEST, CollUtil.getLast(model.getEvents()).getRemark());

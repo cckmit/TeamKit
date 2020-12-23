@@ -1,7 +1,6 @@
 package org.team4u.workflow.infrastructure.persistence.form;
 
 import org.team4u.workflow.domain.form.FormIndex;
-import org.team4u.workflow.domain.instance.ProcessInstanceDetail;
 
 public class TestFormIndex extends FormIndex {
 
@@ -25,7 +24,6 @@ public class TestFormIndex extends FormIndex {
 
     public static final class Builder {
         private String processInstanceId;
-        private ProcessInstanceDetail formItem;
         private String name;
 
         private Builder() {
@@ -37,11 +35,6 @@ public class TestFormIndex extends FormIndex {
 
         public Builder withProcessInstanceId(String processInstanceId) {
             this.processInstanceId = processInstanceId;
-            return this;
-        }
-
-        public Builder withFormItem(ProcessInstanceDetail formItem) {
-            this.formItem = formItem;
             return this;
         }
 
