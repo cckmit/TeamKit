@@ -21,11 +21,11 @@ import org.team4u.workflow.domain.form.DefaultFormPermissionService;
 import org.team4u.workflow.domain.instance.ProcessInstanceDetail;
 import org.team4u.workflow.domain.instance.node.handler.DynamicChoiceNodeHandler;
 import org.team4u.workflow.infrastructure.DbTest;
-import org.team4u.workflow.infrastructure.definition.JsonProcessDefinitionRepository;
-import org.team4u.workflow.infrastructure.form.TestFormIndeRepository;
-import org.team4u.workflow.infrastructure.form.TestFormIndex;
-import org.team4u.workflow.infrastructure.form.TestFormIndexMapper;
-import org.team4u.workflow.infrastructure.instance.InMemoryProcessInstanceRepository;
+import org.team4u.workflow.infrastructure.persistence.definition.JsonProcessDefinitionRepository;
+import org.team4u.workflow.infrastructure.persistence.form.TestFormIndeRepository;
+import org.team4u.workflow.infrastructure.persistence.form.TestFormIndex;
+import org.team4u.workflow.infrastructure.persistence.form.TestFormIndexMapper;
+import org.team4u.workflow.infrastructure.persistence.instance.InMemoryProcessInstanceRepository;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
@@ -70,7 +70,7 @@ public class FormIndexAppServiceTest extends DbTest {
                         .withProcessInstanceId(TEST)
                         .withProcessInstanceName(TEST)
                         .withOperatorId(creator)
-                        .withProcessForm(
+                        .withFormIndex(
                                 TestFormIndex.Builder.newBuilder()
                                         .withName(TEST)
                                         .withFormItem(new ProcessInstanceDetail(new Dict().set("x", TEST)))
@@ -106,7 +106,7 @@ public class FormIndexAppServiceTest extends DbTest {
                         .withActionId("reject")
                         .withOperatorId(TEST)
                         .withRemark(TEST)
-                        .withProcessForm(TestFormIndex.Builder.newBuilder()
+                        .withFormIndex(TestFormIndex.Builder.newBuilder()
                                 .withProcessInstanceId(TEST)
                                 .build())
                         .build()

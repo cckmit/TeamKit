@@ -1,7 +1,7 @@
 package org.team4u.workflow.application;
 
 import org.junit.Test;
-import org.team4u.workflow.infrastructure.emulator.ProcessEmulatorFactory;
+import org.team4u.workflow.infrastructure.util.ProcessEmulatorFactory;
 
 public class ProcessEmulatorTest {
 

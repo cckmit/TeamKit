@@ -18,7 +18,7 @@ public class CreateProcessFormCommand extends CreateProcessInstanceCommand {
         return formIndex;
     }
 
-    public void setProcessForm(FormIndex formIndex) {
+    public void setFormIndex(FormIndex formIndex) {
         this.formIndex = formIndex;
     }
 
@@ -60,7 +60,7 @@ public class CreateProcessFormCommand extends CreateProcessInstanceCommand {
             return this;
         }
 
-        public Builder withProcessForm(FormIndex formIndex) {
+        public Builder withFormIndex(FormIndex formIndex) {
             this.formIndex = formIndex;
             return this;
         }
@@ -91,7 +91,7 @@ public class CreateProcessFormCommand extends CreateProcessInstanceCommand {
             createProcessFormCommand.setActionId(actionId);
             createProcessFormCommand.setRemark(remark);
             createProcessFormCommand.setExt(ext);
-            createProcessFormCommand.setProcessForm(formIndex);
+            createProcessFormCommand.setFormIndex(formIndex);
             createProcessFormCommand.setProcessInstanceName(processInstanceName);
             createProcessFormCommand.setProcessDefinitionId(processDefinitionId);
             createProcessFormCommand.setProcessInstanceId(processInstanceId);
