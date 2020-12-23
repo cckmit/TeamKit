@@ -74,7 +74,7 @@ public class MybatisProcessInstanceRepository
                 definition.getProcessDefinitionId(),
                 definition.processNodeOf(instanceDo.getCurrentNodeId()),
                 instanceDo.getCreateBy(),
-                toInstanceDetailDo(instanceDetailDo)
+                toInstanceDetail(instanceDetailDo)
         );
 
         BeanUtil.copyProperties(
@@ -85,7 +85,7 @@ public class MybatisProcessInstanceRepository
         return instance;
     }
 
-    private ProcessInstanceDetail toInstanceDetailDo(ProcessInstanceDetailDo instanceDetailDo) {
+    private ProcessInstanceDetail toInstanceDetail(ProcessInstanceDetailDo instanceDetailDo) {
         if (instanceDetailDo == null) {
             return null;
         }
