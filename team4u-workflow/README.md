@@ -1,4 +1,4 @@
-20201221-轻量级表单索引设计
+20201221-轻量级流程表单设计
 
 ## 使用说明
 
@@ -7,11 +7,10 @@
 #### maven
 
 ```xml
-
 <dependency>
-    <groupId>org.team4u</groupId>
-    <artifactId>team4u-workflow</artifactId>
-    <version>2.2.0</version>
+  <groupId>org.team4u</groupId>
+  <artifactId>team4u-workflow</artifactId>
+  <version>2.2.0</version>
 </dependency>
 ```
 
@@ -109,7 +108,6 @@ create table `stored_event`
     comment ='存储的事件'
 ;
 ```
-
 数据模型说明
 
 | 表名                    | 中文         | 备注                                   |
@@ -127,7 +125,7 @@ create table `stored_event`
 数据模型
 
 ```sql
-create table if not exists `test_form`
+create table if not exists `test_form_index`
 (
     `id`                  bigint(20) unsigned not null auto_increment comment '自增长标识',
     `process_instance_id` varchar(100)        not null default '' comment '表单名称',
@@ -135,7 +133,7 @@ create table if not exists `test_form`
     `create_time`         timestamp           not null default '1970-01-01 23:59:59' comment '创建时间',
     `update_time`         timestamp           not null default current_timestamp on update current_timestamp,
     primary key (`id`),
-    unique index `uniq_process_instance_id1` (`process_instance_id`)
+    unique index `uniq_process_instance_id` (`process_instance_id`)
 ) comment ='测试表单';
 ```
 
@@ -149,10 +147,10 @@ create table if not exists `test_form`
 
 ```java
 
-@TableName("test_form")
-public class TestFormDo extends ProcessFormDo {
+@TableName("test_form_index")
+public class TestFormIndexDo extends FormIndexDo {
 
-    private String name;
+  private String name;
 
     ...
 }
@@ -164,9 +162,9 @@ public class TestFormDo extends ProcessFormDo {
 用于业务处理，避免与数据库模型紧耦合，更多细节可以参考DDD相关概念。
 
 ```java
-public class TestForm extends ProcessForm {
+public class TestFormIndex extends FormIndex {
 
-    private String name;
+  private String name;
 
     ...
 }
@@ -178,29 +176,28 @@ public class TestForm extends ProcessForm {
 
 - 用于持久化测试表单，包括表头和明细
 - 负责数据模型与领域模型相互转换
-    - 父类将自动复制数据模型与领域模型相同名称的字段
-    - 转换方法仅需要处理差异字段
+  - 父类将自动复制数据模型与领域模型相同名称的字段
+  - 转换方法仅需要处理差异字段
 
 ```java
-
 @Repository
-public interface TestFormMapper extends BaseMapper<TestFormDo> {
+public interface TestFormIndexMapper extends BaseMapper<TestFormIndexDo> {
 }
 
-public class TestFormRepository extends MybatisProcessFormRepository<TestForm, TestFormDo> {
+public class TestFormIndeRepository extends MybatisFormIndexRepository<TestFormIndex, TestFormIndexDo> {
 
-    public TestFormRepository(TestFormMapper testFormMapper) {
-        super(testFormMapper);
+    public TestFormIndeRepository(TestFormIndexMapper testFormIndexMapper) {
+        super(testFormIndexMapper);
     }
 
     @Override
-    protected TestForm toProcessForm(TestFormDo processFormDo) {
-        return new TestForm();
+    protected TestFormIndex toFormIndex(TestFormIndexDo formIndexDo) {
+        return new TestFormIndex();
     }
 
     @Override
-    protected TestFormDo toProcessFormDo(TestForm form) {
-        return new TestFormDo();
+    protected TestFormIndexDo toFormIndexDo(TestFormIndex formIndex) {
+        return new TestFormIndexDo();
     }
 }
 ```
@@ -209,31 +206,31 @@ public class TestFormRepository extends MybatisProcessFormRepository<TestForm, T
 
 表单流程定义，相当于表单类型，每一种表单需要对应一种流程定义（表单类型）
 
-##### 表单索引动作
+##### 流程表单动作
 
 - 负责定义处理人可用动作，可配置权限要求 ，用于前端页面展示按钮
-    - ProcessFormAction
+  - ProcessFormAction
 - 动作权限
-    - ProcessFormAction.Permission
-        - EDIT，编辑权限，如表单创建者编辑草稿或者提交表单
-        - REVIEW，审批权限，如表单审批人用于审批表单
-        - VIEW，查看权限，如表单创建者和历史/当前审批人可查看表单
-    - 可根据业务需求进行权限扩展
+  - ProcessFormAction.Permission
+    - EDIT，编辑权限，如表单创建者编辑草稿或者提交表单
+    - REVIEW，审批权限，如表单审批人用于审批表单
+    - VIEW，查看权限，如表单创建者和历史/当前审批人可查看表单
+  - 可根据业务需求进行权限扩展
 - 当前处理人权限
-    - ProcessFormPermissionService负责初始化
-    - 可扩展默认实现类以适应业务需求：DefaultProcessFormPermissionService
+  - FormPermissionService负责初始化
+  - 可扩展默认实现类以适应业务需求：DefaultFormPermissionService
 
 ##### 流程节点
 
 流程节点用于描述当前流程的每一个环节，一般分为两种类型：
 
 - 静态节点
-    - 固定路由到下一个节点
-    - 当下一个节点路由（nextNodeId）为空时，表示流程实例已全部完成
-    - 可用于描述表单状态
+  - 固定路由到下一个节点
+  - 当下一个节点路由（nextNodeId）为空时，表示流程实例已全部完成
+  - 可用于描述表单状态
 - 动态节点
-    - 根据条件动态路由到下一个节点
-    - 仅用于临时路由使用
+  - 根据条件动态路由到下一个节点
+  - 仅用于临时路由使用
 
 **静态节点**
 
@@ -362,7 +359,6 @@ AssigneeActionChoiceNode
 #### 构建表单应用服务
 
 ```java
-
 @Import(ProcessBeanConfig.class)
 @Configuration
 public class ProcessFormBeanConfig {
@@ -370,21 +366,20 @@ public class ProcessFormBeanConfig {
     public ProcessFormAppService testFormAppService(EventStore eventStore,
                                                     ProcessAppService processAppService) {
         return new ProcessFormAppService(
-                eventStore,
-                processAppService,
-                new TestFormRepository(testFormMapper),
-                new DefaultProcessFormPermissionService()
+            eventStore,
+            processAppService,
+            new TestFormIndexRepository(testFormIndexMapper),
+            new DefaultFormPermissionService()
         );
     }
 }
 ```
-
 ##### 查看表单明细
 
 表单明细模型包含以下属性：
 
 - 流程实例，用于获取当前节点（状态）、创建人等
-- 表单索引，用于展示业务属性
+- 流程表单，用于展示业务属性
 - 当前处理人可用动作集合，用于前端按钮展示
 - 流程节点变更事件集合，用于前端审批日志展示
 
@@ -413,20 +408,19 @@ ProcessFormModel model=processFormAppService.formOf(formId,operatorId);
 // 当前节点
         Assert.assertEquals("pending",model.getInstance().getCurrentNode().getNodeId());
 ```
-
 ProcessFormModel
 
 ```java
 /**
- * 表单索引模型
+ * 流程表单模型
  *
  * @author jay.wu
  */
 public class ProcessFormModel {
-  /**
-   * 表单索引
-   */
-    private ProcessForm form;
+    /**
+     * 表单索引
+     */
+    private FormIndex formIndex;
     /**
      * 流程实例
      */
@@ -460,7 +454,7 @@ processFormAppService.create(
         .withProcessInstanceName(TEST)
         .withProcessInstanceDetail(new ProcessInstanceDetail(new Dict().set("x",TEST)))
         .withOperatorId(TEST1)
-        .withProcessForm(
+        .withFormIndex(
         TestForm.Builder.newBuilder()
         .withName(TEST)
         .withFormId(TEST)
@@ -473,7 +467,7 @@ processFormAppService.create(
 ##### 处理表单
 
 - 处理表单与新建表单类似，需要收集当前处理人、触发动作、表单标识/内容等
-- 默认的，只有EDIT权限的动作才会保存表单，其他动作仅保存流程实例，更多细节请参考DefaultProcessFormPermissionService.shouldSaveProcessForm
+- 默认的，只有EDIT权限的动作才会保存表单，其他动作仅保存流程实例，更多细节请参考DefaultFormIndexPermissionService.shouldSaveProcessForm
 
 ```java
 processFormAppService.start(
@@ -482,7 +476,7 @@ processFormAppService.start(
         .withActionId("reject")
         .withOperatorId(TEST)
         .withRemark(TEST)
-        .withProcessForm(TestForm.Builder.newBuilder()
+        .withFormIndex(TestForm.Builder.newBuilder()
         .withFormId(TEST)
         .build())
         .build()
@@ -491,7 +485,7 @@ processFormAppService.start(
 
 ##### 查询表单列表
 
-- 对表单索引进行列表查询是非常常见的需求，查询时需要关联流程表
+- 对流程表单进行列表查询是非常常见的需求，查询时需要关联流程表
 
 - 为了减少开发者对流程模型的学习成本，这里提供了常见的列表查询SQL
 
@@ -509,11 +503,11 @@ select pi.current_node_id,
        f.*
 from process_instance pi,
      process_assignee pa,
-     test_form f
+     test_form_index f
 where pi.process_instance_id = f.process_instance_id
   and pi.process_instance_id = pa.process_instance_id
-  and pi.current_node_id = pa.process_node_id
-  and pa.process_action = ''
+  and pi.current_node_id = pa.node_id
+  and pa.action_id = ''
   and pa.assignee = '?';
 
 # 历史审批列表
@@ -524,10 +518,10 @@ select pi.current_node_id,
        f.*
 from process_instance pi,
      process_assignee pa,
-     test_form f
+     test_form_index f
 where pi.process_instance_id = f.process_instance_id
   and pi.process_instance_id = pa.process_instance_id
-  and pa.process_action != ''
+  and pa.action_id != ''
   and pa.assignee = '?';
 
 # 申请列表
@@ -537,7 +531,7 @@ select pi.current_node_id,
        pi.process_definition_name,
        f.*
 from process_instance pi,
-     test_form f
+     test_form_index f
 where pi.process_instance_id = f.process_instance_id
   and pi.create_by = '?';
 ```
@@ -551,6 +545,7 @@ where pi.process_instance_id = f.process_instance_id
 #### 流程模拟器脚本
 
 脚本描述了需要测试的流程定义、执行步骤以及期望结果
+
 
 脚本示例：test_simple_completed_script.json
 
@@ -601,7 +596,7 @@ ProcessEmulator emulator=ProcessEmulatorFactory.create();
 
         emulator.start(
         "test_simple_completed_script",
-        testForm,
+        testFormIndex,
         ext
         );
 ```
