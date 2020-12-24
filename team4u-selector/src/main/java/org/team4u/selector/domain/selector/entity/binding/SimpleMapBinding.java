@@ -8,4 +8,10 @@ import cn.hutool.core.lang.Dict;
  * @author jay.wu
  */
 public class SimpleMapBinding extends Dict implements SelectorBinding {
+
+    @Override
+    public SimpleMapBinding set(String attr, Object value) {
+        super.set(attr, value);
+        return this;
+    }
 }

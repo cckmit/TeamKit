@@ -1,2 +1,3 @@
 org.team4u.selector.domain.selector.entity.weight.WeightSelectorFactory
 org.team4u.selector.domain.selector.entity.probability.ProbabilitySelectorFactory
+org.team4u.selector.domain.selector.entity.whitelist.WhitelistSelectorFactory

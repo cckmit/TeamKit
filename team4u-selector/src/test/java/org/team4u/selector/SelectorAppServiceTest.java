@@ -3,6 +3,8 @@ package org.team4u.selector;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.json.JSONUtil;
+import org.junit.Assert;
+import org.junit.Test;
 import org.team4u.selector.application.SelectorAppService;
 import org.team4u.selector.domain.config.entity.SelectorConfig;
 import org.team4u.selector.domain.config.repository.InMemorySelectorConfigRepository;
@@ -12,8 +14,6 @@ import org.team4u.selector.domain.selector.entity.binding.SimpleMapBinding;
 import org.team4u.selector.domain.selector.entity.binding.SingleValueBinding;
 import org.team4u.selector.domain.selector.entity.expression.ExpressionSelectorFactory;
 import org.team4u.selector.domain.selector.entity.probability.ProbabilitySelector;
-import org.junit.Assert;
-import org.junit.Test;
 import org.team4u.template.TemplateFunctionService;
 import org.team4u.template.infrastructure.BeetlTemplateEngine;
 
@@ -23,6 +23,15 @@ import org.team4u.template.infrastructure.BeetlTemplateEngine;
  * @author jay.wu
  */
 public class SelectorAppServiceTest {
+
+    @Test
+    public void whitelist() {
+        SelectorAppService s = createService("config/whitelistConfig.json");
+        Assert.assertTrue(s.match("test", new SimpleMapBinding().set("a", 1)));
+        Assert.assertFalse(s.match("test", new SimpleMapBinding().set("a", 2)));
+        Assert.assertTrue(s.match("test", new SimpleMapBinding().set("b", 2)));
+        Assert.assertTrue(s.match("test", new SimpleMapBinding().set("c", 3)));
+    }
 
     @Test
     public void weightSelect() {
