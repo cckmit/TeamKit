@@ -29,8 +29,9 @@ public class SelectorAppServiceTest {
         SelectorAppService s = createService("config/whitelistConfig.json");
         Assert.assertTrue(s.match("test", new SimpleMapBinding().set("a", 1)));
         Assert.assertFalse(s.match("test", new SimpleMapBinding().set("a", 2)));
-        Assert.assertTrue(s.match("test", new SimpleMapBinding().set("b", 2)));
-        Assert.assertTrue(s.match("test", new SimpleMapBinding().set("c", 3)));
+        Assert.assertTrue(s.match("test", new SimpleMapBinding().set("b", 3)));
+        Assert.assertTrue(s.match("test", new SimpleMapBinding().set("d", 1)));
+        Assert.assertFalse(s.match("test", new SimpleMapBinding().set("d", 2)));
     }
 
     @Test

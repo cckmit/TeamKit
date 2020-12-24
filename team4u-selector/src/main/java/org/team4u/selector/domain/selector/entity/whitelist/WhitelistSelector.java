@@ -44,7 +44,18 @@ public class WhitelistSelector implements Selector {
     private boolean keyOf(Map.Entry<String, Object> value) {
         return config.stream()
                 .filter(it -> StrUtil.equals(it.getKey(), value.getKey()))
-                .anyMatch(it -> CollUtil.contains(it.getUserIdList(), value.getValue()));
+                .findFirst()
+                .map(it -> matchUserId(it, value.getValue()))
+                // 无法匹配key，则尝试查找*
+                .orElseGet(() -> config.stream()
+                        .filter(it -> StrUtil.equals(it.getKey(), ANY))
+                        .anyMatch(it -> matchUserId(it, value.getValue()))
+                );
+    }
+
+    private boolean matchUserId(NameListItem it, Object userId) {
+        return CollUtil.contains(it.getUserIdList(), userId) ||
+                CollUtil.contains(it.getUserIdList(), ANY);
     }
 
     private Map.Entry<String, Object> value(SelectorBinding binding) {
