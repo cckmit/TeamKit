@@ -197,7 +197,7 @@ public class ProcessFormAppService {
             return (ProcessFormAction) action;
         }
 
-        return new ProcessFormAction(actionId, action.getActionName(), Collections.emptySet());
+        return new ProcessFormAction(actionId, action.getActionName(), Collections.emptyList());
     }
 
     private boolean hasViewPermission(FormIndex form, ProcessInstance instance, String operatorId) {

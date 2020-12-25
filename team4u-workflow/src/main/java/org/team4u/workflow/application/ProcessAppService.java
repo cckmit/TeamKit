@@ -149,6 +149,13 @@ public class ProcessAppService {
     }
 
     /**
+     * 保存流程定义
+     */
+    public void saveDefinition(ProcessDefinition definition) {
+        processDefinitionRepository.save(definition);
+    }
+
+    /**
      * 注册流程节点处理器
      *
      * @param handler 流程节点处理器

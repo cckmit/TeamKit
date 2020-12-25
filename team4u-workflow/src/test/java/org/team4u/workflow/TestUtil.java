@@ -21,7 +21,6 @@ import org.team4u.workflow.infrastructure.persistence.definition.JsonProcessDefi
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -62,7 +61,7 @@ public class TestUtil {
     }
 
     public static ProcessFormAction action(String actionId, String... requiredPermissions) {
-        return new ProcessFormAction(actionId, actionId, new HashSet<>(CollUtil.toList(requiredPermissions)));
+        return new ProcessFormAction(actionId, actionId, CollUtil.toList(requiredPermissions));
     }
 
     public static StaticNode staticNode(String nodeId) {

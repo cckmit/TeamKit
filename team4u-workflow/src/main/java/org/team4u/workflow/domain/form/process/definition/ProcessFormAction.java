@@ -3,6 +3,7 @@ package org.team4u.workflow.domain.form.process.definition;
 import cn.hutool.core.collection.CollUtil;
 import org.team4u.workflow.domain.definition.ProcessAction;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -14,9 +15,9 @@ public class ProcessFormAction extends ProcessAction {
     /**
      * 动作所需权限集合
      */
-    private final Set<String> requiredPermissions;
+    private final List<String> requiredPermissions;
 
-    public ProcessFormAction(String actionId, String actionName, Set<String> requiredPermissions) {
+    public ProcessFormAction(String actionId, String actionName, List<String> requiredPermissions) {
         super(actionId, actionName);
         this.requiredPermissions = requiredPermissions;
     }
@@ -38,7 +39,7 @@ public class ProcessFormAction extends ProcessAction {
         return CollUtil.contains(getRequiredPermissions(), permission);
     }
 
-    public Set<String> getRequiredPermissions() {
+    public List<String> getRequiredPermissions() {
         return requiredPermissions;
     }
 
