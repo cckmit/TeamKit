@@ -1,11 +1,11 @@
 package org.team4u.selector.domain.selector.entity.whitelist;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.StrUtil;
 import org.team4u.selector.domain.selector.entity.Selector;
 import org.team4u.selector.domain.selector.entity.binding.SelectorBinding;
 import org.team4u.selector.domain.selector.entity.binding.SimpleMapBinding;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -19,9 +19,9 @@ public class WhitelistSelector implements Selector {
     public final static String MATCH = "MATCH";
     public final static String ANY = "*";
 
-    private final List<NameListItem> config;
+    private final Config config;
 
-    public WhitelistSelector(List<NameListItem> config) {
+    public WhitelistSelector(Config config) {
         this.config = config;
     }
 
@@ -34,28 +34,44 @@ public class WhitelistSelector implements Selector {
     public String select(SelectorBinding binding) {
         Map.Entry<String, Object> value = value(binding);
 
-        if (keyOf(value)) {
+        if (keyOf(value.getKey(), value.getValue())) {
             return MATCH;
         }
 
         return NONE;
     }
 
-    private boolean keyOf(Map.Entry<String, Object> value) {
-        return config.stream()
-                .filter(it -> StrUtil.equals(it.getKey(), value.getKey()))
+    private boolean keyOf(String key, Object userId) {
+        return config.getRules()
+                .stream()
+                .filter(it -> it.containsKey(key))
+                .map(it -> matchName(key, it.get(key), userId))
                 .findFirst()
-                .map(it -> matchUserId(it, value.getValue()))
                 // 无法匹配key，则尝试查找*
-                .orElseGet(() -> config.stream()
-                        .filter(it -> StrUtil.equals(it.getKey(), ANY))
-                        .anyMatch(it -> matchUserId(it, value.getValue()))
+                .orElseGet(() -> config.getRules()
+                        .stream()
+                        .filter(it -> it.containsKey(ANY))
+                        .findFirst()
+                        .map(it -> matchName(key, it.get(ANY), userId))
+                        .orElse(false)
                 );
     }
 
-    private boolean matchUserId(NameListItem it, Object userId) {
-        return CollUtil.contains(it.getUserIdList(), userId) ||
-                CollUtil.contains(it.getUserIdList(), ANY);
+    private boolean matchName(String key, String nameId, Object userId) {
+        if (key == null) {
+            return false;
+        }
+
+        List<Object> names = namesOf(nameId);
+        return CollUtil.contains(names, userId) || CollUtil.contains(names, ANY);
+    }
+
+    private List<Object> namesOf(String nameId) {
+        if (config.names == null) {
+            return Collections.emptyList();
+        }
+
+        return config.getNames().getOrDefault(nameId, Collections.emptyList());
     }
 
     private Map.Entry<String, Object> value(SelectorBinding binding) {
@@ -66,22 +82,25 @@ public class WhitelistSelector implements Selector {
         return null;
     }
 
-    public static class NameListItem {
-        private final String key;
 
-        private final List<Object> userIdList;
+    public static class Config {
+        private Map<String, List<Object>> names;
+        private List<Map<String, String>> rules;
 
-        public NameListItem(String key, List<Object> userIdList) {
-            this.key = key;
-            this.userIdList = userIdList;
+        public Map<String, List<Object>> getNames() {
+            return names;
         }
 
-        public String getKey() {
-            return key;
+        public void setNames(Map<String, List<Object>> names) {
+            this.names = names;
         }
 
-        public List<Object> getUserIdList() {
-            return userIdList;
+        public List<Map<String, String>> getRules() {
+            return rules;
+        }
+
+        public void setRules(List<Map<String, String>> rules) {
+            this.rules = rules;
         }
     }
 }
