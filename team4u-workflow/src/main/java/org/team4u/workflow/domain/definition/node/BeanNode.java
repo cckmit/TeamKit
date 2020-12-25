@@ -1,7 +1,5 @@
 package org.team4u.workflow.domain.definition.node;
 
-import java.util.Map;
-
 /**
  * bean节点
  *
@@ -15,7 +13,7 @@ public class BeanNode extends StaticNode {
     /**
      * bean配置
      */
-    private final Map<String, Object> beanConfig;
+    private final String beanConfig;
 
     public BeanNode(String nodeId,
                     String nodeName,
@@ -27,7 +25,7 @@ public class BeanNode extends StaticNode {
     public BeanNode(String nodeId,
                     String nodeName,
                     String beanName,
-                    Map<String, Object> beanConfig,
+                    String beanConfig,
                     String nextNodeId) {
         super(nodeId, nodeName, nextNodeId);
         this.beanName = beanName;
@@ -38,7 +36,7 @@ public class BeanNode extends StaticNode {
         return beanName;
     }
 
-    public Map<String, Object> getBeanConfig() {
+    public String getBeanConfig() {
         return beanConfig;
     }
 }

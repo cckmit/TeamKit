@@ -1,7 +1,5 @@
 package org.team4u.workflow.domain.definition.node;
 
-import java.util.Map;
-
 /**
  * 基于bean的选择节点
  *
@@ -16,7 +14,7 @@ public class BeanChoiceNode extends ChoiceNode {
     /**
      * bean配置
      */
-    private final Map<String, Object> beanConfig;
+    private final String beanConfig;
 
     public BeanChoiceNode(String nodeId,
                           String nodeName,
@@ -27,7 +25,7 @@ public class BeanChoiceNode extends ChoiceNode {
     public BeanChoiceNode(String nodeId,
                           String nodeName,
                           String beanName,
-                          Map<String, Object> beanConfig) {
+                          String beanConfig) {
         super(nodeId, nodeName);
         this.beanName = beanName;
         this.beanConfig = beanConfig;
@@ -37,7 +35,7 @@ public class BeanChoiceNode extends ChoiceNode {
         return beanName;
     }
 
-    public Map<String, Object> getBeanConfig() {
+    public String getBeanConfig() {
         return beanConfig;
     }
 }
