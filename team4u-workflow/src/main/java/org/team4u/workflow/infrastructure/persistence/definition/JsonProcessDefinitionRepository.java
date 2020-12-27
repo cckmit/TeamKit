@@ -1,11 +1,9 @@
 package org.team4u.workflow.infrastructure.persistence.definition;
 
-import cn.hutool.core.util.StrUtil;
 import org.team4u.base.config.ConfigService;
 import org.team4u.workflow.domain.definition.ProcessDefinition;
 import org.team4u.workflow.domain.definition.ProcessDefinitionId;
 import org.team4u.workflow.domain.definition.ProcessDefinitionRepository;
-import org.team4u.workflow.domain.definition.exception.ProcessDefinitionNotExistException;
 
 /**
  * 基于Json的流程定义资源库
@@ -29,10 +27,6 @@ public class JsonProcessDefinitionRepository implements ProcessDefinitionReposit
             json = configService.get(domainId);
         } else {
             json = configService.get(processDefinitionId.getId());
-        }
-
-        if (StrUtil.isBlank(json)) {
-            throw new ProcessDefinitionNotExistException(domainId);
         }
 
         return ProcessDefinitionUtil.definitionOfJson(processDefinitionId, json);

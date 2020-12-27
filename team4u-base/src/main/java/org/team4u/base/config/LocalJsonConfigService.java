@@ -3,6 +3,8 @@ package org.team4u.base.config;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.log.Log;
+import org.team4u.base.util.PathUtil;
 
 /**
  * 本地Json文件配置服务
@@ -11,9 +13,16 @@ import cn.hutool.core.util.ObjectUtil;
  */
 public class LocalJsonConfigService implements ConfigService {
 
+    private final Log log = Log.get();
+
     @Override
     public String get(String key) {
-        return FileUtil.readUtf8String(key + ".json");
+        try {
+            return FileUtil.readUtf8String(PathUtil.getPath(key + ".json"));
+        } catch (Exception e) {
+            log.warn(e.getMessage());
+            return null;
+        }
     }
 
     @SuppressWarnings("unchecked")

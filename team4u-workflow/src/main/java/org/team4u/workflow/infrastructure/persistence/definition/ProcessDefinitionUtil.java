@@ -1,6 +1,7 @@
 package org.team4u.workflow.infrastructure.persistence.definition;
 
 import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.parser.Feature;
 import org.team4u.workflow.domain.definition.ProcessDefinition;
@@ -22,6 +23,10 @@ public class ProcessDefinitionUtil {
      */
     public static ProcessDefinition definitionOfJson(ProcessDefinitionId processDefinitionId,
                                                      String json) {
+        if (StrUtil.isBlank(json)) {
+            return null;
+        }
+
         ProcessDefinition definition = JSON.parseObject(
                 json, ProcessDefinition.class, Feature.SupportAutoType
         );
