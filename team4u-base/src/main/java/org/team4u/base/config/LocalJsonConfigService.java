@@ -18,7 +18,7 @@ public class LocalJsonConfigService implements ConfigService {
     @Override
     public String get(String key) {
         try {
-            return FileUtil.readUtf8String(PathUtil.getPath(key + ".json"));
+            return FileUtil.readUtf8String(PathUtil.runningPath(key + ".json"));
         } catch (Exception e) {
             log.warn(e.getMessage());
             return null;
