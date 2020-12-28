@@ -23,10 +23,11 @@ public class PathUtil {
         File file = FileUtil.file(".");
         String result = file.getAbsolutePath();
 
+        // 处理独立jar包
         if (file.getAbsolutePath().contains(JAR_PATH_SUFFIX)) {
             result = file.getParentFile().getParentFile().getParent();
         }
 
-        return result + File.pathSeparatorChar + path;
+        return result + File.separatorChar + path;
     }
 }
