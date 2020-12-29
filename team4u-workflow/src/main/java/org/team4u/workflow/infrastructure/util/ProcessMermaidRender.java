@@ -48,11 +48,11 @@ public class ProcessMermaidRender {
         return flow;
     }
 
-    private MermaidFlow.Node toFlowNode(String nodeId) {
+    protected MermaidFlow.Node toFlowNode(String nodeId) {
         return toFlowNode(definition.processNodeOf(nodeId));
     }
 
-    private MermaidFlow.Node toFlowNode(ProcessNode node) {
+    protected MermaidFlow.Node toFlowNode(ProcessNode node) {
         MermaidFlow.Node flowNode;
 
         if (node instanceof StaticNode) {
@@ -64,23 +64,26 @@ public class ProcessMermaidRender {
         return flowNode;
     }
 
-    private void toElement(MermaidFlow flow, ProcessNode node) {
+    protected void toElement(MermaidFlow flow, ProcessNode node) {
         flow.getElements().add(toFlowNode(node));
     }
 
-    private void toElement(MermaidFlow flow, BeanChoiceNode node) {
+    protected void toElement(MermaidFlow flow, BeanChoiceNode node) {
+        if (node.getNextNodeIds() == null) {
+            return;
+        }
+
         for (String nextNodeId : node.getNextNodeIds()) {
             flow.getElements().add(new MermaidFlow.ArrowLink(
                     new MermaidFlow.Node(node.getNodeId()),
-                    toFlowNode(nextNodeId),
-                    "bean:" + node.getBeanName()
+                    toFlowNode(nextNodeId)
             ));
         }
 
         flow.getElements().add(toFlowNode(node));
     }
 
-    private void toElement(MermaidFlow flow, DynamicChoiceNode node) {
+    protected void toElement(MermaidFlow flow, DynamicChoiceNode node) {
         switch (node.getRule().getType()) {
             case "expression": {
                 Map<String, String> config = ExpressionSelectorFactory.toConfig(node.getRule().getBody());
@@ -99,7 +102,7 @@ public class ProcessMermaidRender {
         }
     }
 
-    private void toElement(MermaidFlow flow, StaticNode node) {
+    protected void toElement(MermaidFlow flow, StaticNode node) {
         if (node.getNextNodeId() == null) {
             return;
         }

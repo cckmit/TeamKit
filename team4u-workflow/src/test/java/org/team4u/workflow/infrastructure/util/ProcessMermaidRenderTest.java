@@ -7,7 +7,7 @@ public class ProcessMermaidRenderTest {
 
     @Test
     public void toFlow() {
-        ProcessMermaidRender render = new ProcessMermaidRender(TestUtil.definitionOf("vms"));
+        ProcessMermaidRender render = new ProcessMermaidRender(TestUtil.definitionOf("simple"));
         System.out.println(render.toFlow().toString());
     }
 }
