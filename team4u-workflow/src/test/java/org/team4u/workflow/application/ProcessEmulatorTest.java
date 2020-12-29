@@ -9,11 +9,11 @@ public class ProcessEmulatorTest {
 
     @Test
     public void simple() {
-        emulator.start("test_simple_completed_script", null, null);
+        emulator.start("test_simple_completed_script");
     }
 
     @Test
     public void vms() {
-        emulator.start("test_vms_completed_script", null, null);
+        emulator.start("test_vms_completed_script");
     }
 }
