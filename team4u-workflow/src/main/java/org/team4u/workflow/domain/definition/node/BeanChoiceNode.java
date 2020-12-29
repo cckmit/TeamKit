@@ -15,20 +15,27 @@ public class BeanChoiceNode extends ChoiceNode {
      * bean配置
      */
     private final String beanConfig;
+    /**
+     * 下一节点候选组
+     */
+    private final String[] nextNodeIds;
 
     public BeanChoiceNode(String nodeId,
                           String nodeName,
-                          String beanName) {
-        this(nodeId, nodeName, beanName, null);
+                          String beanName,
+                          String[] nextNodeIds) {
+        this(nodeId, nodeName, beanName, null, nextNodeIds);
     }
 
     public BeanChoiceNode(String nodeId,
                           String nodeName,
                           String beanName,
-                          String beanConfig) {
+                          String beanConfig,
+                          String[] nextNodeIds) {
         super(nodeId, nodeName);
         this.beanName = beanName;
         this.beanConfig = beanConfig;
+        this.nextNodeIds = nextNodeIds;
     }
 
     public String getBeanName() {
@@ -37,5 +44,9 @@ public class BeanChoiceNode extends ChoiceNode {
 
     public String getBeanConfig() {
         return beanConfig;
+    }
+
+    public String[] getNextNodeIds() {
+        return nextNodeIds;
     }
 }

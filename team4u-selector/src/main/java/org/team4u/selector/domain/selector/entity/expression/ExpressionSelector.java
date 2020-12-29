@@ -16,8 +16,8 @@ import java.util.Map;
  */
 public class ExpressionSelector implements Selector {
 
-    private TemplateEngine templateEngine;
-    private Map<String, String> valueExpressions;
+    private final TemplateEngine templateEngine;
+    private final Map<String, String> valueExpressions;
 
     /**
      * 构建表达式选择器

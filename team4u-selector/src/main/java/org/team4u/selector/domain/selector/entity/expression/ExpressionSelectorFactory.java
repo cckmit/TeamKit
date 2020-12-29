@@ -18,14 +18,13 @@ import java.util.Map;
  */
 public class ExpressionSelectorFactory implements SelectorFactory {
 
-    private TemplateEngine templateEngine;
+    private final TemplateEngine templateEngine;
 
     public ExpressionSelectorFactory(TemplateEngine templateEngine) {
         this.templateEngine = templateEngine;
     }
 
-    @Override
-    public Selector create(String jsonConfig) {
+    public static Map<String, String> toConfig(String jsonConfig) {
         JSONArray config = JSONUtil.parseArray(jsonConfig);
         Map<String, String> valueExpressions = new HashMap<>();
 
@@ -36,7 +35,12 @@ public class ExpressionSelectorFactory implements SelectorFactory {
             }
         }
 
-        return new ExpressionSelector(templateEngine, valueExpressions);
+        return valueExpressions;
+    }
+
+    @Override
+    public Selector create(String jsonConfig) {
+        return new ExpressionSelector(templateEngine, toConfig(jsonConfig));
     }
 
     @Override

@@ -39,7 +39,10 @@
       "beanName": "test",
       "beanConfig": {
         "name": "test"
-      }
+      },
+      "nextNodeIds": [
+        "test"
+      ]
     },
     {
       "@type": "org.team4u.workflow.domain.definition.node.BeanNode",
