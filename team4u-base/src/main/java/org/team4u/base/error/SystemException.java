@@ -1,5 +1,10 @@
 package org.team4u.base.error;
 
+/**
+ * 系统异常
+ *
+ * @author jay.wu
+ */
 public class SystemException extends RuntimeException {
 
     public SystemException() {

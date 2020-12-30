@@ -1,5 +1,10 @@
 package org.team4u.base.error;
 
+/**
+ * 业务异常
+ *
+ * @author jay.wu
+ */
 public class BusinessException extends RuntimeException {
 
     public BusinessException() {
