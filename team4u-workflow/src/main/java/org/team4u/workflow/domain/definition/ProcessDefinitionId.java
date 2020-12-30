@@ -18,7 +18,7 @@ public class ProcessDefinitionId extends ValueObject {
     /**
      * 版本
      */
-    private final long version;
+    private final int version;
 
     public ProcessDefinitionId(String id) {
         String[] idAndVersion = StrUtil.split(id, "|");
@@ -35,12 +35,12 @@ public class ProcessDefinitionId extends ValueObject {
                 break;
             default:
                 this.id = idAndVersion[0];
-                this.version = Convert.toLong(idAndVersion[1]);
+                this.version = Convert.toInt(idAndVersion[1]);
                 break;
         }
     }
 
-    public ProcessDefinitionId(String id, long version) {
+    public ProcessDefinitionId(String id, int version) {
         this.id = id;
         this.version = version;
 
@@ -61,7 +61,7 @@ public class ProcessDefinitionId extends ValueObject {
         return id;
     }
 
-    public long getVersion() {
+    public int getVersion() {
         return version;
     }
 

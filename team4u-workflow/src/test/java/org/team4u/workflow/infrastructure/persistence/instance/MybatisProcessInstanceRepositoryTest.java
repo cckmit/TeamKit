@@ -22,13 +22,14 @@ public class MybatisProcessInstanceRepositoryTest extends DbTest {
 
     @Test
     public void domainOf() {
-        save();
+        insert();
 
         ProcessInstance instance = repository.domainOf(TEST);
         System.out.println(JSON.toJSONString(instance));
 
         Assert.assertFalse(instance.getAssignees().isEmpty());
         Assert.assertNotNull(instance.getCurrentNode());
+        Assert.assertEquals(1, instance.concurrencyVersion());
         Assert.assertEquals(
                 Dict.create().set("x", 1),
                 instance.getProcessInstanceDetail().toDetailObject()
@@ -36,9 +37,23 @@ public class MybatisProcessInstanceRepositoryTest extends DbTest {
     }
 
     @Test
-    public void save() {
-        ProcessInstance instance = newInstance();
+    public void update() {
+        insert();
+        ProcessInstance instance = repository.domainOf(TEST);
+
         repository.save(instance);
+        Assert.assertEquals(1, instance.concurrencyVersion());
+
+        instance = repository.domainOf(TEST);
+        Assert.assertEquals(1, instance.concurrencyVersion());
+    }
+
+    @Test
+    public void insert() {
+        ProcessInstance instance = newInstance();
+
+        repository.save(instance);
+
         Assert.assertNotNull(instance.getId());
     }
 

@@ -8,6 +8,7 @@ create table `process_instance`
     `process_definition_name`    varchar(100)        not null default '' comment '流程流程定义名称',
     `current_node_id`            varchar(32)         not null default '' comment '当前流程节点标识',
     `current_node_name`          varchar(100)        not null default '' comment '当前流程节点名称',
+    `concurrency_version`        int unsigned        not null default 0 comment '乐观锁版本',
     `create_by`                  varchar(32)         not null default '' comment '创建者标识',
     `update_by`                  varchar(32)         not null default '' comment '编辑者标识',
     `create_time`                timestamp           not null default '1970-01-01 23:59:59' comment '创建时间',

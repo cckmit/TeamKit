@@ -90,7 +90,12 @@ public class MybatisProcessInstanceRepository
             return null;
         }
 
-        return new ProcessInstanceDetail(instanceDetailDo.getType(), instanceDetailDo.getBody());
+        ProcessInstanceDetail detail = new ProcessInstanceDetail(
+                instanceDetailDo.getType(),
+                instanceDetailDo.getBody()
+        );
+        BeanUtil.copyProperties(instanceDetailDo, detail);
+        return detail;
     }
 
     private Set<ProcessAssignee> toProcessAssignees(ProcessDefinition definition, String processInstanceId) {
@@ -131,6 +136,7 @@ public class MybatisProcessInstanceRepository
             instance.setId(instanceDo.getId());
         } else {
             instanceMapper.updateById(instanceDo);
+            instance.setConcurrencyVersion(instanceDo.getConcurrencyVersion());
         }
     }
 

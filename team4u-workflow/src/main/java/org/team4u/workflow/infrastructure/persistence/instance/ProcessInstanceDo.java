@@ -3,6 +3,7 @@ package org.team4u.workflow.infrastructure.persistence.instance;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.Version;
 
 import java.util.Date;
 
@@ -34,7 +35,7 @@ public class ProcessInstanceDo {
     /**
      * 流程流程定义版本
      */
-    private long processDefinitionVersion;
+    private int processDefinitionVersion;
     /**
      * 当前流程节点标识
      */
@@ -43,6 +44,11 @@ public class ProcessInstanceDo {
      * 当前流程节点名称
      */
     private String currentNodeName;
+    /**
+     * 乐观锁
+     */
+    @Version
+    private int concurrencyVersion = 0;
     /**
      * 创建人
      */
@@ -93,11 +99,11 @@ public class ProcessInstanceDo {
         this.processDefinitionId = processDefinitionId;
     }
 
-    public long getProcessDefinitionVersion() {
+    public int getProcessDefinitionVersion() {
         return processDefinitionVersion;
     }
 
-    public void setProcessDefinitionVersion(long processDefinitionVersion) {
+    public void setProcessDefinitionVersion(int processDefinitionVersion) {
         this.processDefinitionVersion = processDefinitionVersion;
     }
 
@@ -123,6 +129,14 @@ public class ProcessInstanceDo {
 
     public void setCurrentNodeName(String currentNodeName) {
         this.currentNodeName = currentNodeName;
+    }
+
+    public int getConcurrencyVersion() {
+        return concurrencyVersion;
+    }
+
+    public void setConcurrencyVersion(int concurrencyVersion) {
+        this.concurrencyVersion = concurrencyVersion;
     }
 
     public String getCreateBy() {

@@ -1,9 +1,10 @@
 package org.team4u.workflow.infrastructure;
 
 import cn.hutool.db.ds.simple.SimpleDataSource;
-import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.InnerInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
-import org.apache.ibatis.plugin.Interceptor;
 import org.mybatis.spring.mapper.MapperScannerConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +22,7 @@ import org.team4u.workflow.infrastructure.persistence.instance.ProcessInstanceDe
 import org.team4u.workflow.infrastructure.persistence.instance.ProcessInstanceMapper;
 
 import javax.sql.DataSource;
+import java.util.List;
 
 @Configuration
 public class BeanConfig {
@@ -31,10 +33,13 @@ public class BeanConfig {
     }
 
     @Bean
-    public MybatisSqlSessionFactoryBean sqlSessionFactory(DataSource dataSource, Interceptor[] interceptors) {
+    public MybatisSqlSessionFactoryBean sqlSessionFactory(DataSource dataSource,
+                                                          List<InnerInterceptor> interceptors) {
         MybatisSqlSessionFactoryBean bean = new MybatisSqlSessionFactoryBean();
         bean.setDataSource(dataSource);
-        bean.setPlugins(interceptors);
+        MybatisPlusInterceptor mybatisPlusInterceptor = new MybatisPlusInterceptor();
+        mybatisPlusInterceptor.setInterceptors(interceptors);
+        bean.setPlugins(mybatisPlusInterceptor);
         return bean;
     }
 
@@ -44,8 +49,8 @@ public class BeanConfig {
     }
 
     @Bean
-    public PaginationInterceptor paginationInterceptor() {
-        return new PaginationInterceptor();
+    public OptimisticLockerInnerInterceptor optimisticLockerInnerInterceptor() {
+        return new OptimisticLockerInnerInterceptor();
     }
 
     @Bean

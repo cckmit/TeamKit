@@ -2,7 +2,7 @@ package org.team4u.workflow.domain.instance;
 
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import org.team4u.ddd.domain.model.AggregateRoot;
+import org.team4u.ddd.domain.model.ConcurrencySafeAggregateRoot;
 import org.team4u.workflow.domain.definition.ProcessAction;
 import org.team4u.workflow.domain.definition.ProcessDefinitionId;
 import org.team4u.workflow.domain.definition.ProcessNode;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  *
  * @author jay.wu
  */
-public class ProcessInstance extends AggregateRoot {
+public class ProcessInstance extends ConcurrencySafeAggregateRoot {
 
     /**
      * 流程实例标识
