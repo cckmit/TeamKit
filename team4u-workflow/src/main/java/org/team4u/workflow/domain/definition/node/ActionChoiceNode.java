@@ -1,6 +1,7 @@
 package org.team4u.workflow.domain.definition.node;
 
 import org.team4u.workflow.domain.definition.ProcessAction;
+import org.team4u.workflow.domain.instance.exception.ProcessActionNodeNotExistException;
 
 import java.util.List;
 
@@ -23,16 +24,22 @@ public class ActionChoiceNode extends ChoiceNode {
         this.actionNodes = actionNodes;
     }
 
-    public String nextNodeId(ProcessAction action) {
+    /**
+     * 获取下一个节点
+     *
+     * @param action 当前动作
+     * @return 下一个节点，若不存在则抛出异常
+     */
+    public String nextNodeId(ProcessAction action) throws ProcessActionNodeNotExistException {
         if (actionNodes == null) {
-            return null;
+            throw new ProcessActionNodeNotExistException(action.getActionId());
         }
 
         return actionNodes.stream()
                 .filter(it -> it.actionId.equals(action.getActionId()))
                 .findFirst()
                 .map(ActionNode::getNextNodeId)
-                .orElse(null);
+                .orElseThrow(() -> new ProcessActionNodeNotExistException(action.getActionId()));
     }
 
     public List<ActionNode> getActionNodes() {

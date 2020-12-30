@@ -1,7 +1,7 @@
 package org.team4u.workflow.domain.instance.node.handler;
 
-import org.team4u.workflow.domain.definition.exception.ProcessNodeNotExistException;
 import org.team4u.workflow.domain.definition.node.ActionChoiceNode;
+import org.team4u.workflow.domain.instance.exception.ProcessActionNodeNotExistException;
 
 /**
  * 动作选择器节点处理器
@@ -15,21 +15,9 @@ public class ActionChoiceNodeHandler implements ProcessNodeHandler {
         return findNextNode(context);
     }
 
-    private String findNextNode(ProcessNodeHandlerContext context) {
+    private String findNextNode(ProcessNodeHandlerContext context) throws ProcessActionNodeNotExistException {
         ActionChoiceNode node = context.getNode();
-        String nextNodeId = node.nextNodeId(context.getAction());
-
-        if (nextNodeId == null) {
-            throw new ProcessNodeNotExistException(
-                    String.format("NextNode is null|instanceId=%s|nodeId=%s|action=%s",
-                            context.getInstance().getProcessInstanceId(),
-                            node.getNodeId(),
-                            context.getAction()
-                    )
-            );
-        }
-
-        return nextNodeId;
+        return node.nextNodeId(context.getAction());
     }
 
     @Override
