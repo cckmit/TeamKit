@@ -79,8 +79,6 @@ public class ProcessMermaidRender {
                     toFlowNode(nextNodeId)
             ));
         }
-
-        flow.getElements().add(toFlowNode(node));
     }
 
     protected void toElement(MermaidFlow flow, DynamicChoiceNode node) {
