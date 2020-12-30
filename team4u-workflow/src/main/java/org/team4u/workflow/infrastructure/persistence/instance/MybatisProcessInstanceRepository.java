@@ -3,6 +3,8 @@ package org.team4u.workflow.infrastructure.persistence.instance;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import org.springframework.dao.DuplicateKeyException;
+import org.team4u.base.error.IdempotentException;
 import org.team4u.ddd.domain.model.DomainEventAwareRepository;
 import org.team4u.ddd.event.EventStore;
 import org.team4u.workflow.domain.definition.ProcessDefinition;
@@ -124,9 +126,16 @@ public class MybatisProcessInstanceRepository
 
     @Override
     protected void doSave(ProcessInstance instance) {
-        saveProcessInstance(instance);
-        saveAssignee(instance);
-        saveInstanceDetail(instance);
+        try {
+            saveProcessInstance(instance);
+            saveAssignee(instance);
+            saveInstanceDetail(instance);
+        } catch (DuplicateKeyException e) {
+            throw new IdempotentException(String.format(
+                    "processInstanceId=%s",
+                    instance.getProcessInstanceId()
+            ), e);
+        }
     }
 
     private void saveProcessInstance(ProcessInstance instance) {
@@ -135,7 +144,10 @@ public class MybatisProcessInstanceRepository
             instanceMapper.insert(instanceDo);
             instance.setId(instanceDo.getId());
         } else {
-            instanceMapper.updateById(instanceDo);
+            if (instanceMapper.updateById(instanceDo) == 0) {
+                instance.failWhenConcurrencyViolation();
+            }
+
             instance.setConcurrencyVersion(instanceDo.getConcurrencyVersion());
         }
     }
@@ -219,7 +231,7 @@ public class MybatisProcessInstanceRepository
 
         instanceDo.setProcessDefinitionId(processDefinitionId.getId());
         instanceDo.setProcessDefinitionVersion(processDefinitionId.getVersion());
-
+        instanceDo.setConcurrencyVersion(instance.concurrencyVersion());
         return instanceDo;
     }
 }

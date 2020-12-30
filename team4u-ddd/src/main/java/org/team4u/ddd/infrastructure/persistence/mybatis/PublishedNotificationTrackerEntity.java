@@ -21,7 +21,7 @@ public class PublishedNotificationTrackerEntity {
     private String typeName;
 
     @Version
-    private Long version;
+    private Integer version;
 
     private Date createTime;
 
@@ -63,11 +63,11 @@ public class PublishedNotificationTrackerEntity {
         return this;
     }
 
-    public Long getVersion() {
+    public Integer getVersion() {
         return version;
     }
 
-    public PublishedNotificationTrackerEntity setVersion(Long version) {
+    public PublishedNotificationTrackerEntity setVersion(Integer version) {
         this.version = version;
         return this;
     }

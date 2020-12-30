@@ -63,7 +63,7 @@ public class TimeConstrainedProcessTrackerEntity {
      * 乐观锁版本
      */
     @Version
-    private Long version;
+    private Integer version;
 
     /**
      * 创建时间
@@ -165,11 +165,11 @@ public class TimeConstrainedProcessTrackerEntity {
         return this;
     }
 
-    public Long getVersion() {
+    public Integer getVersion() {
         return version;
     }
 
-    public TimeConstrainedProcessTrackerEntity setVersion(Long version) {
+    public TimeConstrainedProcessTrackerEntity setVersion(Integer version) {
         this.version = version;
         return this;
     }

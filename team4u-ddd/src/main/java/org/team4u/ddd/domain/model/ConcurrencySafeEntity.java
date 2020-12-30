@@ -12,17 +12,17 @@ public class ConcurrencySafeEntity extends Entity {
 
     private static final long serialVersionUID = 1L;
 
-    private long concurrencyVersion = 0;
+    private int concurrencyVersion = 0;
 
     protected ConcurrencySafeEntity() {
         super();
     }
 
-    public long concurrencyVersion() {
+    public int concurrencyVersion() {
         return this.concurrencyVersion;
     }
 
-    public void setConcurrencyVersion(long concurrencyVersion) {
+    public void setConcurrencyVersion(int concurrencyVersion) {
         this.concurrencyVersion = concurrencyVersion;
     }
 
