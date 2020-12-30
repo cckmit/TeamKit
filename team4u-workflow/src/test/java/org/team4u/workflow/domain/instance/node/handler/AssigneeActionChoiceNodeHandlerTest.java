@@ -3,11 +3,11 @@ package org.team4u.workflow.domain.instance.node.handler;
 import org.junit.Assert;
 import org.junit.Test;
 import org.team4u.workflow.TestUtil;
-import org.team4u.workflow.domain.definition.exception.ProcessNodeNotExistException;
 import org.team4u.workflow.domain.form.process.definition.node.AssigneeActionChoiceNode;
 import org.team4u.workflow.domain.form.process.node.handler.AssigneeActionChoiceNodeHandler;
 import org.team4u.workflow.domain.instance.ProcessInstance;
 import org.team4u.workflow.domain.instance.exception.NoPermissionException;
+import org.team4u.workflow.domain.instance.exception.ProcessActionNodeNotExistException;
 
 import static org.team4u.workflow.TestUtil.*;
 
@@ -132,9 +132,9 @@ public class AssigneeActionChoiceNodeHandlerTest {
             );
 
             Assert.fail();
-        } catch (ProcessNodeNotExistException e) {
+        } catch (ProcessActionNodeNotExistException e) {
             Assert.assertEquals(
-                    "NextNode is null|instanceId=test|nodeId=test|action=test",
+                    "test",
                     e.getMessage()
             );
         }

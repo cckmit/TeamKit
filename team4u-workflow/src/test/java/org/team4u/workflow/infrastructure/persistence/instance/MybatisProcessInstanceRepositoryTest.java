@@ -29,7 +29,6 @@ public class MybatisProcessInstanceRepositoryTest extends DbTest {
 
         Assert.assertFalse(instance.getAssignees().isEmpty());
         Assert.assertNotNull(instance.getCurrentNode());
-        Assert.assertEquals(1, instance.concurrencyVersion());
         Assert.assertEquals(
                 Dict.create().set("x", 1),
                 instance.getProcessInstanceDetail().toDetailObject()
