@@ -31,7 +31,8 @@ public class ProcessMermaidRenderTest {
                         "    created[创建]-->createdChoiceNode{动作选择器}\n" +
                         "    createdChoiceNode-->|动作1|testChoiceNode{预期到test节点}\n" +
                         "    createdChoiceNode-->|动作2|created[创建]\n" +
-                        "    testChoiceNode-->test[完成]\n",
+                        "    testChoiceNode-->test(内部处理)\n" +
+                        "    test(内部处理)-->completed[完成]\n",
                 render.render());
     }
 }

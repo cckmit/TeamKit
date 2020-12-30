@@ -45,8 +45,18 @@
       ]
     },
     {
-      "@type": "org.team4u.workflow.domain.definition.node.BeanNode",
+      "@type": "org.team4u.workflow.domain.definition.node.BeanProcessingNode",
       "nodeId": "test",
+      "nodeName": "内部处理",
+      "beanName": "test",
+      "beanConfig": {
+        "name": "test1"
+      },
+      "nextNodeId": "completed"
+    },
+    {
+      "@type": "org.team4u.workflow.domain.definition.node.BeanNode",
+      "nodeId": "completed",
       "nodeName": "完成",
       "beanName": "test",
       "beanConfig": {

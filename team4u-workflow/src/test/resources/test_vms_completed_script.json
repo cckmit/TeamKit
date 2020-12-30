@@ -10,7 +10,7 @@
     {
       "actionId": "test",
       "expected": {
-        "nodeId": "test"
+        "nodeId": "completed"
       }
     }
   ]

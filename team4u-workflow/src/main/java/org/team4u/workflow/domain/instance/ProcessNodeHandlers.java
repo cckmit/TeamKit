@@ -89,5 +89,6 @@ public class ProcessNodeHandlers extends IdObjectService<String, ProcessNodeHand
     private void initProcessNodeHandler() {
         saveIdObject(new BeanNodeHandler(beanHandlers));
         saveIdObject(new BeanChoiceNodeHandler(beanHandlers));
+        saveIdObject(new BeanProcessingNodeHandler(beanHandlers));
     }
 }

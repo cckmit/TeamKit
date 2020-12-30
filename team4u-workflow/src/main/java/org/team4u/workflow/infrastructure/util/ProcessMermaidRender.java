@@ -5,10 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import org.team4u.selector.domain.selector.entity.expression.ExpressionSelectorFactory;
 import org.team4u.workflow.domain.definition.ProcessDefinition;
 import org.team4u.workflow.domain.definition.ProcessNode;
-import org.team4u.workflow.domain.definition.node.ActionChoiceNode;
-import org.team4u.workflow.domain.definition.node.BeanChoiceNode;
-import org.team4u.workflow.domain.definition.node.DynamicChoiceNode;
-import org.team4u.workflow.domain.definition.node.StaticNode;
+import org.team4u.workflow.domain.definition.node.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +37,8 @@ public class ProcessMermaidRender {
                 toElement(flow, (DynamicChoiceNode) node);
             } else if (node instanceof BeanChoiceNode) {
                 toElement(flow, (BeanChoiceNode) node);
+            } else if (node instanceof BeanProcessingNode) {
+                toElement(flow, (BeanProcessingNode) node);
             } else {
                 toElement(flow, node);
             }
@@ -57,6 +56,8 @@ public class ProcessMermaidRender {
 
         if (node instanceof StaticNode) {
             flowNode = new MermaidFlow.Square(node.getNodeId(), node.getNodeName());
+        } else if (node instanceof BeanProcessingNode) {
+            flowNode = new MermaidFlow.RoundEdges(node.getNodeId(), node.getNodeName());
         } else {
             flowNode = new MermaidFlow.Rhombus(node.getNodeId(), node.getNodeName());
         }
@@ -66,6 +67,17 @@ public class ProcessMermaidRender {
 
     protected void toElement(MermaidFlow flow, ProcessNode node) {
         flow.getElements().add(toFlowNode(node));
+    }
+
+    protected void toElement(MermaidFlow flow, BeanProcessingNode node) {
+        if (node.getNextNodeId() == null) {
+            return;
+        }
+
+        flow.getElements().add(new MermaidFlow.ArrowLink(
+                toFlowNode(node),
+                toFlowNode(node.getNextNodeId())
+        ));
     }
 
     protected void toElement(MermaidFlow flow, BeanChoiceNode node) {
