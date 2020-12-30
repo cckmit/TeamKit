@@ -28,7 +28,7 @@ public class ProcessMermaidRender {
         this.definition = definition;
     }
 
-    public MermaidFlow toFlow() {
+    public String render() {
         MermaidFlow flow = new MermaidFlow();
 
         for (ProcessNode node : definition.getNodes()) {
@@ -45,7 +45,7 @@ public class ProcessMermaidRender {
             }
         }
 
-        return flow;
+        return flow.toString();
     }
 
     protected MermaidFlow.Node toFlowNode(String nodeId) {
