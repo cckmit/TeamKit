@@ -1,4 +1,4 @@
-org.team4u.workflow.domain.instance.node.handler.TestBeanNodeHandler
+org.team4u.workflow.domain.instance.node.handler.TestBeanStaticNodeHandler
 org.team4u.workflow.domain.instance.node.handler.TestBeanChoiceNodeHandler
 org.team4u.workflow.domain.instance.node.handler.TestBeanProcessingNodeHandler
 org.team4u.workflow.domain.instance.node.handler.TestBeanActionChoiceNodeHandler

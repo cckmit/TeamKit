@@ -5,7 +5,7 @@ package org.team4u.workflow.domain.definition.node;
  *
  * @author jay.wu
  */
-public class BeanNode extends StaticNode {
+public class BeanStaticNode extends StaticNode {
     /**
      * bean名称
      */
@@ -15,18 +15,18 @@ public class BeanNode extends StaticNode {
      */
     private final String beanConfig;
 
-    public BeanNode(String nodeId,
-                    String nodeName,
-                    String beanName,
-                    String nextNodeId) {
+    public BeanStaticNode(String nodeId,
+                          String nodeName,
+                          String beanName,
+                          String nextNodeId) {
         this(nodeId, nodeName, beanName, null, nextNodeId);
     }
 
-    public BeanNode(String nodeId,
-                    String nodeName,
-                    String beanName,
-                    String beanConfig,
-                    String nextNodeId) {
+    public BeanStaticNode(String nodeId,
+                          String nodeName,
+                          String beanName,
+                          String beanConfig,
+                          String nextNodeId) {
         super(nodeId, nodeName, nextNodeId);
         this.beanName = beanName;
         this.beanConfig = beanConfig;

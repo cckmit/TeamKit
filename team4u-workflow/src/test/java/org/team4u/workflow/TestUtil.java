@@ -13,7 +13,7 @@ import org.team4u.workflow.domain.definition.node.ActionChoiceNode;
 import org.team4u.workflow.domain.definition.node.StaticNode;
 import org.team4u.workflow.domain.form.process.definition.ProcessFormAction;
 import org.team4u.workflow.domain.form.process.definition.node.AssigneeActionChoiceNode;
-import org.team4u.workflow.domain.form.process.definition.node.AssigneeNode;
+import org.team4u.workflow.domain.form.process.definition.node.AssigneeStaticNode;
 import org.team4u.workflow.domain.instance.ProcessAssignee;
 import org.team4u.workflow.domain.instance.ProcessInstance;
 import org.team4u.workflow.domain.instance.node.handler.ProcessNodeHandlerContext;
@@ -69,11 +69,11 @@ public class TestUtil {
     }
 
     public static StaticNode assigneeNode(String nodeId, String nextNodeId, String assignee) {
-        return new AssigneeNode(
+        return new AssigneeStaticNode(
                 nodeId,
                 nodeId,
                 nextNodeId,
-                AssigneeNode.RULE_TYPE_USER,
+                AssigneeStaticNode.RULE_TYPE_USER,
                 assignee);
     }
 

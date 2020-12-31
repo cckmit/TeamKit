@@ -7,7 +7,7 @@ import org.team4u.workflow.domain.definition.node.StaticNode;
  *
  * @author jay.wu
  */
-public class AssigneeNode extends StaticNode {
+public class AssigneeStaticNode extends StaticNode {
     /**
      * 指定用户角色
      */
@@ -26,11 +26,11 @@ public class AssigneeNode extends StaticNode {
      */
     private final String ruleExpression;
 
-    public AssigneeNode(String nodeId,
-                        String nodeName,
-                        String nextNodeId,
-                        String ruleType,
-                        String ruleExpression) {
+    public AssigneeStaticNode(String nodeId,
+                              String nodeName,
+                              String nextNodeId,
+                              String ruleType,
+                              String ruleExpression) {
         super(nodeId, nodeName, nextNodeId);
         this.ruleType = ruleType;
         this.ruleExpression = ruleExpression;

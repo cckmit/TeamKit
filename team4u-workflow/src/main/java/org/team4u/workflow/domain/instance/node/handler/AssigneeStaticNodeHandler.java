@@ -3,7 +3,7 @@ package org.team4u.workflow.domain.instance.node.handler;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.Log;
 import org.team4u.base.log.LogMessage;
-import org.team4u.workflow.domain.form.process.definition.node.AssigneeNode;
+import org.team4u.workflow.domain.form.process.definition.node.AssigneeStaticNode;
 import org.team4u.workflow.domain.instance.ProcessAssignee;
 
 import java.util.Collections;
@@ -15,16 +15,16 @@ import java.util.stream.Collectors;
  *
  * @author jay.wu
  */
-public class AssigneeNodeHandler extends AbstractStaticProcessNodeHandler<AssigneeNode> {
+public class AssigneeStaticNodeHandler extends AbstractStaticProcessNodeHandler<AssigneeStaticNode> {
 
     private final Log log = Log.get();
 
     @Override
     public void internalHandle(ProcessNodeHandlerContext context) {
-        AssigneeNode node = node(context);
+        AssigneeStaticNode node = node(context);
         List<String> assignees;
 
-        if (AssigneeNode.RULE_TYPE_USER.equals(node.getRuleType())) {
+        if (AssigneeStaticNode.RULE_TYPE_USER.equals(node.getRuleType())) {
             assignees = StrUtil.splitTrim(node.getRuleExpression(), ",");
         } else {
             assignees = assigneesOf(node);
@@ -47,7 +47,7 @@ public class AssigneeNodeHandler extends AbstractStaticProcessNodeHandler<Assign
                 .toString());
     }
 
-    protected List<String> assigneesOf(AssigneeNode node) {
+    protected List<String> assigneesOf(AssigneeStaticNode node) {
         return Collections.emptyList();
     }
 }

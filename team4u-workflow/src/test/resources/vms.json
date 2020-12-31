@@ -71,7 +71,7 @@
       ]
     },
     {
-      "@type": "org.team4u.workflow.domain.definition.node.BeanNode",
+      "@type": "org.team4u.workflow.domain.definition.node.BeanStaticNode",
       "nodeId": "completed",
       "nodeName": "完成",
       "beanName": "test",

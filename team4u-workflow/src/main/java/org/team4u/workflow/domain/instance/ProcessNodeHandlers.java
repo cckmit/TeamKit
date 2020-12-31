@@ -87,7 +87,7 @@ public class ProcessNodeHandlers extends IdObjectService<Class<? extends Process
     }
 
     private void initProcessNodeHandler() {
-        saveIdObject(new BeanNodeHandler(beanHandlers));
+        saveIdObject(new BeanStaticNodeHandler(beanHandlers));
         saveIdObject(new BeanChoiceNodeHandler(beanHandlers));
         saveIdObject(new BeanProcessingNodeHandler(beanHandlers));
         saveIdObject(new BeanActionChoiceNodeHandler(beanHandlers));

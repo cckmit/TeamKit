@@ -319,7 +319,7 @@ AssigneeActionChoiceNode
       ]
     },
     {
-      "@type": "org.team4u.workflow.domain.form.process.definition.node.AssigneeNode",
+      "@type": "org.team4u.workflow.domain.form.process.definition.node.AssigneeStaticNode",
       "nodeId": "pending",
       "nodeName": "待审核",
       "ruleType": "USER",
