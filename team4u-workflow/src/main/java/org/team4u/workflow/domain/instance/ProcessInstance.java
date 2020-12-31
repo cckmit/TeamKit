@@ -118,7 +118,7 @@ public class ProcessInstance extends ConcurrencySafeAggregateRoot {
      * 更改当前节点
      */
     public void changeCurrentNodeTo(ProcessAction action,
-                                    StaticNode newNode,
+                                    ProcessNode newNode,
                                     String operator,
                                     String remark) {
         ProcessNode oldNode = ObjectUtil.defaultIfNull(getCurrentNode(), newNode);
