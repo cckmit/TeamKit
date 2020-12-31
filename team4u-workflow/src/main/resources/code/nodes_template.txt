@@ -1,0 +1,13 @@
+public enum ${className} {
+<%
+for(node in nodes) {
+%>
+    /**
+     * ${node.nodeName}
+     */
+    ${node.nodeId},
+<%
+}
+%>
+    ;
+}

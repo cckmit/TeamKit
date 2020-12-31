@@ -49,7 +49,7 @@ public class ProcessNodeHandlers extends IdObjectService<Class<? extends Process
     }
 
     /**
-     * 处理节点
+     * 处理流程
      */
     public void handle(ProcessNodeHandlerContext context) throws
             ProcessInstanceCompletedException,

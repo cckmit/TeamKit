@@ -1,0 +1,13 @@
+public enum ${className} {
+<%
+for(action in actions) {
+%>
+    /**
+     * ${action.actionName}
+     */
+    ${action.actionId},
+<%
+}
+%>
+    ;
+}

@@ -1,0 +1,11 @@
+public enum vmsProcessAction {
+    /**
+     * 动作1
+     */
+    test,
+    /**
+     * 动作2
+     */
+    test1,
+    ;
+}
