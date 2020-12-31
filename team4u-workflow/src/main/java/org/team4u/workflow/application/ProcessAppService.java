@@ -11,9 +11,9 @@ import org.team4u.workflow.domain.instance.ProcessInstance;
 import org.team4u.workflow.domain.instance.ProcessInstanceRepository;
 import org.team4u.workflow.domain.instance.ProcessNodeHandlers;
 import org.team4u.workflow.domain.instance.exception.ProcessInstanceNotExistException;
-import org.team4u.workflow.domain.instance.node.handler.ProcessBeanHandler;
 import org.team4u.workflow.domain.instance.node.handler.ProcessNodeHandler;
 import org.team4u.workflow.domain.instance.node.handler.ProcessNodeHandlerContext;
+import org.team4u.workflow.domain.instance.node.handler.bean.ProcessBeanHandler;
 
 /**
  * 工作流应用服务

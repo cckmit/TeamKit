@@ -13,20 +13,9 @@ public abstract class AbstractStaticProcessNodeHandler<N extends ProcessNode>
     @Override
     public String handle(ProcessNodeHandlerContext context) {
         internalHandle(context);
-
-        changeCurrentNodeTo(context);
-
         return null;
     }
 
-    protected void changeCurrentNodeTo(ProcessNodeHandlerContext context) {
-        context.getInstance().changeCurrentNodeTo(
-                context.getAction(),
-                context.getNode(),
-                context.getOperatorId(),
-                context.getRemark()
-        );
-    }
 
     /**
      * 内部处理流程

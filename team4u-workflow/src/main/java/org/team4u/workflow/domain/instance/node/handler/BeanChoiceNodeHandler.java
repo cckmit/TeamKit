@@ -3,6 +3,8 @@ package org.team4u.workflow.domain.instance.node.handler;
 import cn.hutool.core.util.ArrayUtil;
 import org.team4u.workflow.domain.definition.node.BeanChoiceNode;
 import org.team4u.workflow.domain.instance.exception.ProcessNodeUnexpectedException;
+import org.team4u.workflow.domain.instance.node.handler.bean.ProcessBeanHandler;
+import org.team4u.workflow.domain.instance.node.handler.bean.ProcessBeanHandlers;
 
 /**
  * 基于bean选择节点处理器

@@ -1,4 +1,4 @@
-package org.team4u.workflow.domain.instance.node.handler;
+package org.team4u.workflow.domain.instance.node.handler.bean;
 
 import org.team4u.base.lang.IdObjectService;
 import org.team4u.workflow.domain.instance.exception.ProcessBeanHandlerNotExistException;

@@ -11,6 +11,7 @@ import org.team4u.workflow.domain.definition.node.TransientNode;
 import org.team4u.workflow.domain.instance.exception.ProcessInstanceCompletedException;
 import org.team4u.workflow.domain.instance.exception.ProcessNodeHandlerNotExistException;
 import org.team4u.workflow.domain.instance.node.handler.*;
+import org.team4u.workflow.domain.instance.node.handler.bean.ProcessBeanHandlers;
 
 /**
  * 流程节点处理器服务
@@ -31,6 +32,20 @@ public class ProcessNodeHandlers extends IdObjectService<Class<? extends Process
         initProcessNodeHandler();
     }
 
+    private void initProcessNodeHandler() {
+        saveIdObject(new BeanStaticNodeHandler(beanHandlers));
+        saveIdObject(new BeanChoiceNodeHandler(beanHandlers));
+        saveIdObject(new BeanProcessingNodeHandler(beanHandlers));
+        saveIdObject(new BeanActionChoiceNodeHandler(beanHandlers));
+    }
+
+    /**
+     * 获取流程bean节点处理器服务
+     */
+    public ProcessBeanHandlers beanHandlers() {
+        return beanHandlers;
+    }
+
     /**
      * 处理节点
      */
@@ -38,13 +53,7 @@ public class ProcessNodeHandlers extends IdObjectService<Class<? extends Process
             ProcessInstanceCompletedException,
             ProcessNodeHandlerNotExistException,
             TransientNodeException {
-        LogMessage lm = LogMessage.create(this.getClass().getSimpleName(), "handle")
-                .append("instance", context.getInstance().toString())
-                .append("operatorId", context.getOperatorId())
-                .append("action", context.getAction().toString())
-                .append("startNode", context.getInstance().getCurrentNode().getNodeId())
-                .append("definition", context.getDefinition())
-                .append("ext", context.getExt());
+        LogMessage lm = logMessageOf(context);
 
         if (context.getInstance().isCompleted()) {
             throw new ProcessInstanceCompletedException(lm.fail().toString());
@@ -53,29 +62,49 @@ public class ProcessNodeHandlers extends IdObjectService<Class<? extends Process
         ProcessNode nextNode = processNodeToHandle(context);
 
         while (nextNode != null) {
-            lm.append("nextNode", nextNode);
-            log.info(lm.success().toString());
+            log.info(lm.success().append("nextNode", nextNode).toString());
 
             ProcessNode preNode = nextNode;
 
-            nextNode = context.getDefinition().processNodeOf(
-                    processNodeHandlerOf(nextNode).handle(context.setNode(nextNode))
-            );
+            nextNode = handleNextNode(context, nextNode);
 
-            // 最后一个节点必须为静态节点
-            if (nextNode == null && preNode instanceof TransientNode) {
-                throw new TransientNodeException(
-                        lm.fail(preNode.getNodeId()).toString()
-                );
-            }
+            checkLastNode(lm, preNode, nextNode);
         }
     }
 
-    /**
-     * 获取流程bean节点处理器服务
-     */
-    public ProcessBeanHandlers beanHandlers() {
-        return beanHandlers;
+    private LogMessage logMessageOf(ProcessNodeHandlerContext context) {
+        return LogMessage.create(this.getClass().getSimpleName(), "handle")
+                .append("instance", context.getInstance().toString())
+                .append("operatorId", context.getOperatorId())
+                .append("action", context.getAction().toString())
+                .append("startNode", context.getInstance().getCurrentNode().getNodeId())
+                .append("definition", context.getDefinition())
+                .append("ext", context.getExt());
+    }
+
+    private void checkLastNode(LogMessage lm,
+                               ProcessNode preNode,
+                               ProcessNode nextNode) {
+        if (nextNode != null) {
+            return;
+        }
+
+        // 最后一个节点必须为静态节点
+        if (preNode instanceof TransientNode) {
+            throw new TransientNodeException(
+                    lm.fail(preNode.getNodeId() + " is a TransientNode").toString()
+            );
+        }
+    }
+
+    private ProcessNode handleNextNode(ProcessNodeHandlerContext context, ProcessNode currentNode) {
+        context.setNode(currentNode);
+
+        String nextNodeId = processNodeHandlerOf(currentNode).handle(context);
+
+        changeCurrentNodeTo(context);
+
+        return context.getDefinition().processNodeOf(nextNodeId);
     }
 
     private ProcessNode processNodeToHandle(ProcessNodeHandlerContext context) {
@@ -97,10 +126,16 @@ public class ProcessNodeHandlers extends IdObjectService<Class<? extends Process
         }
     }
 
-    private void initProcessNodeHandler() {
-        saveIdObject(new BeanStaticNodeHandler(beanHandlers));
-        saveIdObject(new BeanChoiceNodeHandler(beanHandlers));
-        saveIdObject(new BeanProcessingNodeHandler(beanHandlers));
-        saveIdObject(new BeanActionChoiceNodeHandler(beanHandlers));
+    protected void changeCurrentNodeTo(ProcessNodeHandlerContext context) {
+        if (context.getNode() instanceof TransientNode) {
+            return;
+        }
+
+        context.getInstance().changeCurrentNodeTo(
+                context.getAction(),
+                context.getNode(),
+                context.getOperatorId(),
+                context.getRemark()
+        );
     }
 }

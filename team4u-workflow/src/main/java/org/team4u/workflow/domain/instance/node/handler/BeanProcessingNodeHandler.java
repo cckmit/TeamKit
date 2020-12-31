@@ -1,6 +1,7 @@
 package org.team4u.workflow.domain.instance.node.handler;
 
 import org.team4u.workflow.domain.definition.node.BeanProcessingNode;
+import org.team4u.workflow.domain.instance.node.handler.bean.ProcessBeanHandlers;
 
 /**
  * bean处理节点处理器

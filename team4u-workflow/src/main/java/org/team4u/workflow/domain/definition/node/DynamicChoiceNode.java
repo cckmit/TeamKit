@@ -7,7 +7,7 @@ import org.team4u.selector.domain.config.entity.SelectorConfig;
  *
  * @author jay.wu
  */
-public class DynamicChoiceNode extends ChoiceNode {
+public class DynamicChoiceNode extends ChoiceNode implements TransientNode {
 
     /**
      * 选择器配置

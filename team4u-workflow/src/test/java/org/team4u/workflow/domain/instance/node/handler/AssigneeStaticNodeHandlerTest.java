@@ -28,10 +28,5 @@ public class AssigneeStaticNodeHandlerTest {
                 "[test,1,null, test,2,null]",
                 instance.getAssignees().toString()
         );
-
-        Assert.assertEquals("[nodeId=test,actionId=test,nextNodeId=test,remark='test',operator='test']",
-                instance.events().toString());
-
-        Assert.assertEquals(1, instance.events().size());
     }
 }

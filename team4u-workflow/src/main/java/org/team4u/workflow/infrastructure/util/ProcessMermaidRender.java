@@ -156,7 +156,7 @@ public class ProcessMermaidRender {
             );
         }
 
-        if (toNode instanceof TransientNode) {
+        if (toNode instanceof SimpleActionChoiceNode) {
             return new MermaidFlow.DottedLink(
                     fromFlowNode,
                     toFlowNode,

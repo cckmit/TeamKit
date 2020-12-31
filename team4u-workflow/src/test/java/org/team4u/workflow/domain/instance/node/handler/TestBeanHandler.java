@@ -1,6 +1,7 @@
 package org.team4u.workflow.domain.instance.node.handler;
 
 import cn.hutool.core.util.ReflectUtil;
+import org.team4u.workflow.domain.instance.node.handler.bean.ProcessBeanHandler;
 
 import static org.team4u.workflow.TestUtil.TEST;
 

@@ -28,15 +28,14 @@ public class ProcessMermaidRenderTest {
         ProcessMermaidRender render = new ProcessMermaidRender(TestUtil.definitionOf("vms"));
 
         Assert.assertEquals("graph TD\n" +
-                        "    created[创建]-.->createdChoiceNode{动作选择器}\n" +
-                        "    createdChoiceNode-->|动作1|testChoiceNode{预期到test节点}\n" +
-                        "    createdChoiceNode-->|动作2|created[创建]\n" +
-                        "    testChoiceNode-->test(内部处理)\n" +
-                        "    test(内部处理)-->beanChoiceNode{bea动作选择器1}\n" +
+                        "    created-->|动作1|beanProcessing(内部处理)\n" +
+                        "    created-->|动作2|completed[完成]\n" +
+                        "    beanProcessing(内部处理)-->beanChoiceNode{bea动作选择器1}\n" +
                         "    beanChoiceNode-->|动作1|beanChoiceNode2{bea动作选择器2}\n" +
                         "    beanChoiceNode-->|动作2|completed[完成]\n" +
-                        "    beanChoiceNode2-->|动作1|completed[完成]\n" +
-                        "    beanChoiceNode2-->|动作2|created[创建]\n",
+                        "    beanChoiceNode2-. 动作1 .->simpleChoice{结束流程}\n" +
+                        "    beanChoiceNode2-->|动作2|created{创建}\n" +
+                        "    simpleChoice-->|动作1|completed[完成]\n",
                 render.render());
     }
 }

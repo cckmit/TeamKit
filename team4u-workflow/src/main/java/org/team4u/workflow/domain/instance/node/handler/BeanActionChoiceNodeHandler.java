@@ -1,6 +1,8 @@
 package org.team4u.workflow.domain.instance.node.handler;
 
 import org.team4u.workflow.domain.definition.node.BeanActionChoiceNode;
+import org.team4u.workflow.domain.instance.node.handler.bean.ProcessBeanHandler;
+import org.team4u.workflow.domain.instance.node.handler.bean.ProcessBeanHandlers;
 
 /**
  * bean动作选择器节点处理器
