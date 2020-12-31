@@ -75,7 +75,7 @@ public class ProcessMermaidRender {
         }
 
         flow.getElements().add(newLink(
-                node.getNodeId(),
+                toFlowNode(node),
                 node.getNextNodeId(),
                 null
         ));
@@ -120,7 +120,7 @@ public class ProcessMermaidRender {
         }
 
         flow.getElements().add(newLink(
-                node.getNodeId(),
+                toFlowNode(node.getNodeId()),
                 node.getNextNodeId(),
                 null
         ));
@@ -138,6 +138,12 @@ public class ProcessMermaidRender {
                                        String toNodeId,
                                        String text) {
         MermaidFlow.Node fromFlowNode = new MermaidFlow.Node(fromNodeId);
+        return newLink(fromFlowNode, toNodeId, text);
+    }
+
+    protected MermaidFlow.Link newLink(MermaidFlow.Node fromFlowNode,
+                                       String toNodeId,
+                                       String text) {
 
         ProcessNode toNode = definition.processNodeOf(toNodeId);
         MermaidFlow.Node toFlowNode = toFlowNode(toNode);
