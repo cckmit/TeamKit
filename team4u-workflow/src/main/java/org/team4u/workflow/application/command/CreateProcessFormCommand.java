@@ -24,7 +24,6 @@ public class CreateProcessFormCommand extends CreateProcessInstanceCommand {
 
     public static final class Builder {
         private String operatorId;
-        private String actionId;
         private String remark;
         private Map<String, Object> ext;
         private FormIndex formIndex;
@@ -42,11 +41,6 @@ public class CreateProcessFormCommand extends CreateProcessInstanceCommand {
 
         public Builder withOperatorId(String operatorId) {
             this.operatorId = operatorId;
-            return this;
-        }
-
-        public Builder withActionId(String actionId) {
-            this.actionId = actionId;
             return this;
         }
 
@@ -88,7 +82,6 @@ public class CreateProcessFormCommand extends CreateProcessInstanceCommand {
         public CreateProcessFormCommand build() {
             CreateProcessFormCommand createProcessFormCommand = new CreateProcessFormCommand();
             createProcessFormCommand.setOperatorId(operatorId);
-            createProcessFormCommand.setActionId(actionId);
             createProcessFormCommand.setRemark(remark);
             createProcessFormCommand.setExt(ext);
             createProcessFormCommand.setFormIndex(formIndex);

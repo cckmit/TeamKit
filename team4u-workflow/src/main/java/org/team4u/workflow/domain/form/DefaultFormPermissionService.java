@@ -39,6 +39,10 @@ public class DefaultFormPermissionService implements FormPermissionService {
 
     @Override
     public boolean shouldSaveProcessForm(ProcessFormAction action) {
+        if (action == null) {
+            return true;
+        }
+
         return action.hasPermission(ProcessFormAction.Permission.EDIT.name());
     }
 

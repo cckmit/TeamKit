@@ -2,7 +2,6 @@ package org.team4u.workflow.application;
 
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
-import org.team4u.workflow.application.command.AbstractHandleProcessInstanceCommand;
 import org.team4u.workflow.application.command.CreateProcessInstanceCommand;
 import org.team4u.workflow.application.command.StartProcessInstanceCommand;
 import org.team4u.workflow.domain.definition.*;
@@ -31,7 +30,7 @@ public class ProcessAppService {
         this.processInstanceRepository = processInstanceRepository;
         this.processDefinitionRepository = processDefinitionRepository;
 
-        this.processNodeHandlers = new ProcessNodeHandlers();
+        this.processNodeHandlers = new ProcessNodeHandlers(processInstanceRepository);
     }
 
     /**
@@ -126,7 +125,8 @@ public class ProcessAppService {
                 null
         );
 
-        return handle(command, definition, instance);
+        processInstanceRepository.save(instance);
+        return instance;
     }
 
     /**
@@ -183,7 +183,7 @@ public class ProcessAppService {
      * @param command 开始命令参数
      * @return 流程实例
      */
-    private ProcessInstance handle(AbstractHandleProcessInstanceCommand command,
+    private ProcessInstance handle(StartProcessInstanceCommand command,
                                    ProcessDefinition definition,
                                    ProcessInstance instance) {
         ProcessAction action = definition.availableActionOf(command.getActionId());
@@ -201,7 +201,6 @@ public class ProcessAppService {
                 .withExt(command.getExt())
                 .build());
 
-        processInstanceRepository.save(instance);
         return instance;
     }
 }

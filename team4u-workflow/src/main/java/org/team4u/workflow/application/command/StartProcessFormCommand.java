@@ -12,7 +12,21 @@ import java.util.Map;
  */
 public class StartProcessFormCommand extends AbstractHandleProcessInstanceCommand {
 
+    private String actionId;
+
     private FormIndex formIndex;
+
+    public String getActionId() {
+        return actionId;
+    }
+
+    public void setActionId(String actionId) {
+        this.actionId = actionId;
+    }
+
+    public FormIndex getFormIndex() {
+        return formIndex;
+    }
 
     public FormIndex getProcessForm() {
         return formIndex;

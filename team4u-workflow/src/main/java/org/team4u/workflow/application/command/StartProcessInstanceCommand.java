@@ -10,10 +10,19 @@ import java.util.Map;
  * @author jay.wu
  */
 public class StartProcessInstanceCommand extends AbstractHandleProcessInstanceCommand {
+    private String actionId;
     /**
      * 流程实例标识
      */
     private String processInstanceId;
+
+    public String getActionId() {
+        return actionId;
+    }
+
+    public void setActionId(String actionId) {
+        this.actionId = actionId;
+    }
 
     public String getProcessInstanceId() {
         return processInstanceId;

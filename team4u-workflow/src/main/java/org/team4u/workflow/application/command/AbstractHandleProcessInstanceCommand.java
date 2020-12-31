@@ -15,10 +15,6 @@ public abstract class AbstractHandleProcessInstanceCommand {
      */
     private String operatorId;
     /**
-     * 触发动作标识
-     */
-    private String actionId;
-    /**
      * 备注
      */
     private String remark;
@@ -37,15 +33,6 @@ public abstract class AbstractHandleProcessInstanceCommand {
 
     public AbstractHandleProcessInstanceCommand setOperatorId(String operatorId) {
         this.operatorId = operatorId;
-        return this;
-    }
-
-    public String getActionId() {
-        return actionId;
-    }
-
-    public AbstractHandleProcessInstanceCommand setActionId(String actionId) {
-        this.actionId = actionId;
         return this;
     }
 

@@ -49,7 +49,6 @@ public class CreateProcessInstanceCommand extends AbstractHandleProcessInstanceC
 
     public static final class Builder {
         private String operatorId;
-        private String actionId;
         private String remark;
         private Map<String, Object> ext;
         private String processInstanceId;
@@ -66,11 +65,6 @@ public class CreateProcessInstanceCommand extends AbstractHandleProcessInstanceC
 
         public Builder withOperatorId(String operatorId) {
             this.operatorId = operatorId;
-            return this;
-        }
-
-        public Builder withActionId(String actionId) {
-            this.actionId = actionId;
             return this;
         }
 
@@ -107,7 +101,6 @@ public class CreateProcessInstanceCommand extends AbstractHandleProcessInstanceC
         public CreateProcessInstanceCommand build() {
             CreateProcessInstanceCommand createProcessInstanceCommand = new CreateProcessInstanceCommand();
             createProcessInstanceCommand.setOperatorId(operatorId);
-            createProcessInstanceCommand.setActionId(actionId);
             createProcessInstanceCommand.setRemark(remark);
             createProcessInstanceCommand.setExt(ext);
             createProcessInstanceCommand.setProcessInstanceId(processInstanceId);

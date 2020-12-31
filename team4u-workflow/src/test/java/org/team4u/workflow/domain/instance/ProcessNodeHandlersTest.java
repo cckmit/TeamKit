@@ -12,7 +12,7 @@ import static org.team4u.workflow.TestUtil.*;
 public class ProcessNodeHandlersTest {
 
     private final ProcessDefinition definition = TestUtil.definitionOf("simple");
-    private final ProcessNodeHandlers handles = new ProcessNodeHandlers();
+    private final ProcessNodeHandlers handles = new ProcessNodeHandlers(new MockProcessInstanceRepository());
 
     @Test
     public void save() {

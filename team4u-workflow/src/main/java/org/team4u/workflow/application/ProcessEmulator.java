@@ -111,22 +111,22 @@ public class ProcessEmulator {
                     .build();
             initProcessInstanceCommand(command, step);
             processInstanceId = formAppService.create(command);
-        } else {
-            StartProcessFormCommand command = StartProcessFormCommand.Builder
-                    .create()
-                    .withFormIndex(formIndex.setProcessInstanceId(processInstanceId))
-                    .build();
-            initProcessInstanceCommand(command, step);
-            formAppService.start(command);
         }
+
+        StartProcessFormCommand command = StartProcessFormCommand.Builder
+                .create()
+                .withActionId(step.getActionId())
+                .withFormIndex(formIndex.setProcessInstanceId(processInstanceId))
+                .build();
+        initProcessInstanceCommand(command, step);
+        formAppService.start(command);
 
         return formAppService.getProcessAppService().availableProcessInstanceOf(processInstanceId);
     }
 
     private void initProcessInstanceCommand(AbstractHandleProcessInstanceCommand command,
                                             ProcessEmulatorScriptStep step) {
-        command.setActionId(step.getActionId())
-                .setExt(step.getExt())
+        command.setExt(step.getExt())
                 .setOperatorId(step.getOperatorId());
     }
 
@@ -138,12 +138,15 @@ public class ProcessEmulator {
         LogMessage lm = LogMessages.createWithMasker(getClass().getSimpleName(), "checkStepExpected")
                 .append("step", step)
                 .append("instance", instance);
+        log.info(lm.processing().toString());
 
         Assert.isTrue(
                 StrUtil.equals(
                         step.getExpected().getNodeId(),
                         instance.getCurrentNode().getNodeId()),
-                lm.fail("NodeId is not expected").toString()
+                String.format("expected:%s,but:%s",
+                        step.getExpected().getNodeId(),
+                        instance.getCurrentNode().getNodeId())
         );
     }
 

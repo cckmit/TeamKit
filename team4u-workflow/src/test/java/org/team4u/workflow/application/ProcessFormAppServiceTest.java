@@ -32,7 +32,7 @@ import java.util.List;
 
 import static org.team4u.workflow.TestUtil.*;
 
-public class FormIndexAppServiceTest extends DbTest {
+public class ProcessFormAppServiceTest extends DbTest {
 
     @Autowired
     private TestFormIndexMapper testFormIndexMapper;
@@ -66,7 +66,6 @@ public class FormIndexAppServiceTest extends DbTest {
 
         processFormAppService.create(
                 CreateProcessFormCommand.Builder.create()
-                        .withActionId("submit")
                         .withProcessDefinitionId("simple")
                         .withProcessInstanceId(TEST)
                         .withProcessInstanceName(TEST)
@@ -80,6 +79,18 @@ public class FormIndexAppServiceTest extends DbTest {
                         .build()
         );
 
+        processFormAppService.start(StartProcessFormCommand.Builder.create()
+                .withActionId("submit")
+                .withOperatorId(creator)
+                .withProcessInstanceDetail(new ProcessInstanceDetail(detail))
+                .withFormIndex(
+                        TestFormIndex.Builder.newBuilder()
+                                .withProcessInstanceId(TEST)
+                                .withName(TEST)
+                                .build()
+                )
+                .build()
+        );
 
         // 审批人查看
         ProcessFormModel model = processFormAppService.formOf(TEST, TEST);

@@ -4,7 +4,6 @@ import cn.hutool.core.util.StrUtil;
 import org.springframework.transaction.annotation.Transactional;
 import org.team4u.ddd.event.EventStore;
 import org.team4u.ddd.event.StoredEvent;
-import org.team4u.workflow.application.command.AbstractHandleProcessInstanceCommand;
 import org.team4u.workflow.application.command.CreateProcessFormCommand;
 import org.team4u.workflow.application.command.StartProcessFormCommand;
 import org.team4u.workflow.application.command.StartProcessInstanceCommand;
@@ -92,15 +91,11 @@ public class ProcessFormAppService {
      */
     @Transactional(rollbackFor = Exception.class)
     public String create(CreateProcessFormCommand command) {
-        // 准备数据
-        ProcessFormAction action = actionOf(command.getProcessDefinitionId(), command.getActionId());
-        initCommandExt(command, command.getProcessForm(), null, action);
-
         // 开始流程处理
         ProcessInstance instance = processAppService.create(command);
 
         // 保存表单
-        saveForm(instance, action, command.getProcessForm());
+        saveForm(instance, null, command.getProcessForm());
         return instance.getProcessInstanceId();
     }
 
@@ -114,9 +109,13 @@ public class ProcessFormAppService {
         // 准备数据
         FormIndex newForm = command.getProcessForm();
         ProcessInstance instance = processAppService.availableProcessInstanceOf(newForm.getProcessInstanceId());
+        newForm.setProcessInstanceId(instance.getProcessInstanceId());
+
         ProcessFormAction action = actionOf(instance.getProcessDefinitionId().toString(), command.getActionId());
 
-        newForm.setProcessInstanceId(instance.getProcessInstanceId());
+        FormIndex oldForm = formIndexRepository.formOf(instance.getProcessInstanceId());
+        newForm.setId(oldForm.getId());
+
         initCommandExt(command, newForm, instance, action);
 
         // 保存表单
@@ -245,7 +244,7 @@ public class ProcessFormAppService {
         return false;
     }
 
-    private void initCommandExt(AbstractHandleProcessInstanceCommand command,
+    private void initCommandExt(StartProcessFormCommand command,
                                 FormIndex form,
                                 ProcessInstance instance,
                                 ProcessFormAction action) {

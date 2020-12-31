@@ -23,9 +23,11 @@ public class ProcessNodeHandlers extends IdObjectService<Class<? extends Process
     private final Log log = Log.get();
 
     private final ProcessBeanHandlers beanHandlers;
+    private final ProcessInstanceRepository processInstanceRepository;
 
-    public ProcessNodeHandlers() {
+    public ProcessNodeHandlers(ProcessInstanceRepository processInstanceRepository) {
         super(ProcessNodeHandler.class);
+        this.processInstanceRepository = processInstanceRepository;
 
         beanHandlers = new ProcessBeanHandlers();
 
@@ -101,8 +103,8 @@ public class ProcessNodeHandlers extends IdObjectService<Class<? extends Process
         context.setNode(currentNode);
 
         String nextNodeId = processNodeHandlerOf(currentNode).handle(context);
-
         changeCurrentNodeTo(context);
+        processInstanceRepository.save(context.getInstance());
 
         return context.getDefinition().processNodeOf(nextNodeId);
     }
