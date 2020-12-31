@@ -52,7 +52,23 @@
       "beanConfig": {
         "name": "test1"
       },
-      "nextNodeId": "completed"
+      "nextNodeId": "beanChoiceNode"
+    },
+    {
+      "@type": "org.team4u.workflow.domain.definition.node.BeanActionChoiceNode",
+      "nodeId": "beanChoiceNode",
+      "nodeName": "动作选择器",
+      "beanName": "test",
+      "actionNodes": [
+        {
+          "actionId": "test",
+          "nextNodeId": "completed"
+        },
+        {
+          "actionId": "test1",
+          "nextNodeId": "created"
+        }
+      ]
     },
     {
       "@type": "org.team4u.workflow.domain.definition.node.BeanNode",

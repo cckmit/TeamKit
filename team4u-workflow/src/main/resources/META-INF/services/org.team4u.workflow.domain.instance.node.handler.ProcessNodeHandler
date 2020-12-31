@@ -1,4 +1,4 @@
 org.team4u.workflow.domain.instance.node.handler.StaticNodeHandler
 org.team4u.workflow.domain.instance.node.handler.AssigneeNodeHandler
-org.team4u.workflow.domain.instance.node.handler.ActionChoiceNodeHandler
+org.team4u.workflow.domain.instance.node.handler.SimpleActionChoiceNodeHandler
 org.team4u.workflow.domain.form.process.node.handler.AssigneeActionChoiceNodeHandler

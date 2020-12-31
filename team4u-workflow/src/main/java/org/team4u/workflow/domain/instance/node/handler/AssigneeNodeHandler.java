@@ -15,13 +15,13 @@ import java.util.stream.Collectors;
  *
  * @author jay.wu
  */
-public class AssigneeNodeHandler extends AbstractStaticProcessNodeHandler {
+public class AssigneeNodeHandler extends AbstractStaticProcessNodeHandler<AssigneeNode> {
 
     private final Log log = Log.get();
 
     @Override
     public void internalHandle(ProcessNodeHandlerContext context) {
-        AssigneeNode node = context.getNode();
+        AssigneeNode node = node(context);
         List<String> assignees;
 
         if (AssigneeNode.RULE_TYPE_USER.equals(node.getRuleType())) {
@@ -49,10 +49,5 @@ public class AssigneeNodeHandler extends AbstractStaticProcessNodeHandler {
 
     protected List<String> assigneesOf(AssigneeNode node) {
         return Collections.emptyList();
-    }
-
-    @Override
-    public String id() {
-        return AssigneeNode.class.getName();
     }
 }

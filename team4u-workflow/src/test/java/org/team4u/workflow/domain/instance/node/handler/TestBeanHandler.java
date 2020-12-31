@@ -15,6 +15,7 @@ public class TestBeanHandler implements ProcessBeanHandler {
     public void handle(ProcessNodeHandlerContext context) {
         context.ext(TEST, TEST);
         context.ext(ProcessBeanHandler.EXT_NEXT_NODE_ID, TEST);
+        context.ext(ProcessBeanHandler.EXT_CHOICE_ACTION_ID, TEST);
 
         Object config = ReflectUtil.getFieldValue(context.getNode(), "beanConfig");
         System.out.println(config);

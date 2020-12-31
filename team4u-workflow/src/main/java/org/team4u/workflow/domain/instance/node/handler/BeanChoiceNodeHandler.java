@@ -9,7 +9,7 @@ import org.team4u.workflow.domain.instance.exception.ProcessNodeUnexpectedExcept
  *
  * @author jay.wu
  */
-public class BeanChoiceNodeHandler implements ProcessNodeHandler {
+public class BeanChoiceNodeHandler extends AbstractProcessNodeHandler<BeanChoiceNode> {
 
     private final ProcessBeanHandlers processBeanHandlers;
 
@@ -19,7 +19,7 @@ public class BeanChoiceNodeHandler implements ProcessNodeHandler {
 
     @Override
     public String handle(ProcessNodeHandlerContext context) {
-        BeanChoiceNode node = context.getNode();
+        BeanChoiceNode node = node(context);
 
         processBeanHandlers.getBean(node.getBeanName()).handle(context);
 
@@ -30,10 +30,5 @@ public class BeanChoiceNodeHandler implements ProcessNodeHandler {
         }
 
         return nextNodeId;
-    }
-
-    @Override
-    public String id() {
-        return BeanChoiceNode.class.getName();
     }
 }

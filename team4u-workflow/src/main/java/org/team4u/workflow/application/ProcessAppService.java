@@ -5,10 +5,7 @@ import cn.hutool.core.util.ObjectUtil;
 import org.team4u.workflow.application.command.AbstractHandleProcessInstanceCommand;
 import org.team4u.workflow.application.command.CreateProcessInstanceCommand;
 import org.team4u.workflow.application.command.StartProcessInstanceCommand;
-import org.team4u.workflow.domain.definition.ProcessAction;
-import org.team4u.workflow.domain.definition.ProcessDefinition;
-import org.team4u.workflow.domain.definition.ProcessDefinitionId;
-import org.team4u.workflow.domain.definition.ProcessDefinitionRepository;
+import org.team4u.workflow.domain.definition.*;
 import org.team4u.workflow.domain.definition.exception.ProcessDefinitionNotExistException;
 import org.team4u.workflow.domain.instance.ProcessInstance;
 import org.team4u.workflow.domain.instance.ProcessInstanceRepository;
@@ -92,12 +89,12 @@ public class ProcessAppService {
     /**
      * 获取指定流程节点处理器
      *
-     * @param handlerId 流程节点处理器标识
+     * @param nodeClass 流程节点处理器类型
      * @return 流程节点处理器
      */
     @SuppressWarnings("unchecked")
-    public <T extends ProcessNodeHandler> T processNodeHandlerOf(String handlerId) {
-        return (T) processNodeHandlers.objectOfId(handlerId);
+    public <T extends ProcessNodeHandler> T processNodeHandlerOf(Class<? extends ProcessNode> nodeClass) {
+        return (T) processNodeHandlers.objectOfId(nodeClass);
     }
 
     /**
@@ -107,7 +104,7 @@ public class ProcessAppService {
      * @return 流程bean处理器
      */
     @SuppressWarnings("unchecked")
-    public <T extends ProcessNodeHandler> T processBeanHandlerOf(String handlerId) {
+    public <T extends ProcessBeanHandler> T processBeanHandlerOf(String handlerId) {
         return (T) processNodeHandlers.beanHandlers().objectOfId(handlerId);
     }
 

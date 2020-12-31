@@ -6,7 +6,7 @@ import org.team4u.workflow.domain.form.process.definition.ProcessFormAction;
 import org.team4u.workflow.domain.form.process.definition.node.AssigneeActionChoiceNode;
 import org.team4u.workflow.domain.instance.ProcessAssignee;
 import org.team4u.workflow.domain.instance.exception.NoPermissionException;
-import org.team4u.workflow.domain.instance.node.handler.ActionChoiceNodeHandler;
+import org.team4u.workflow.domain.instance.node.handler.AbstractActionChoiceNodeHandler;
 import org.team4u.workflow.domain.instance.node.handler.ProcessNodeHandlerContext;
 
 import static org.team4u.workflow.domain.form.process.definition.node.AssigneeActionChoiceNode.CHOICE_TYPE_ALL;
@@ -17,7 +17,7 @@ import static org.team4u.workflow.domain.form.process.definition.node.AssigneeAc
  *
  * @author jay.wu
  */
-public class AssigneeActionChoiceNodeHandler extends ActionChoiceNodeHandler {
+public class AssigneeActionChoiceNodeHandler extends AbstractActionChoiceNodeHandler<AssigneeActionChoiceNode> {
 
     @Override
     public String handle(ProcessNodeHandlerContext context) {
@@ -81,10 +81,5 @@ public class AssigneeActionChoiceNodeHandler extends ActionChoiceNodeHandler {
                         context.getOperatorId(),
                         context.ext(FormContextKeys.OPERATOR_ACTION_PERMISSIONS))
         );
-    }
-
-    @Override
-    public String id() {
-        return AssigneeActionChoiceNode.class.getName();
     }
 }

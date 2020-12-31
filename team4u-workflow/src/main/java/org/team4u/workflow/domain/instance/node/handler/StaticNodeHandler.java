@@ -7,12 +7,7 @@ import org.team4u.workflow.domain.definition.node.StaticNode;
  *
  * @author jay.wu
  */
-public class StaticNodeHandler extends AbstractStaticProcessNodeHandler {
-
-    @Override
-    public String id() {
-        return StaticNode.class.getName();
-    }
+public class StaticNodeHandler extends AbstractStaticProcessNodeHandler<StaticNode> {
 
     @Override
     protected void internalHandle(ProcessNodeHandlerContext context) {

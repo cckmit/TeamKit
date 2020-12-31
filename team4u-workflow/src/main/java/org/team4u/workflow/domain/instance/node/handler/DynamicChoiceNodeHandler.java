@@ -10,7 +10,7 @@ import org.team4u.workflow.domain.definition.node.DynamicChoiceNode;
  *
  * @author jay.wu
  */
-public class DynamicChoiceNodeHandler implements ProcessNodeHandler {
+public class DynamicChoiceNodeHandler extends AbstractProcessNodeHandler<DynamicChoiceNode> {
     private final SelectorAppService selectorAppService;
 
     public DynamicChoiceNodeHandler(SelectorAppService selectorAppService) {
@@ -19,7 +19,7 @@ public class DynamicChoiceNodeHandler implements ProcessNodeHandler {
 
     @Override
     public String handle(ProcessNodeHandlerContext context) {
-        DynamicChoiceNode node = context.getNode();
+        DynamicChoiceNode node = node(context);
 
         SimpleMapBinding binding = new SimpleMapBinding();
         binding.putAll(BeanUtil.beanToMap(context));
@@ -28,10 +28,5 @@ public class DynamicChoiceNodeHandler implements ProcessNodeHandler {
                 node.getRule(),
                 binding
         );
-    }
-
-    @Override
-    public String id() {
-        return DynamicChoiceNode.class.getName();
     }
 }

@@ -7,7 +7,7 @@ import org.team4u.workflow.domain.definition.node.BeanNode;
  *
  * @author jay.wu
  */
-public class BeanNodeHandler extends AbstractStaticProcessNodeHandler {
+public class BeanNodeHandler extends AbstractStaticProcessNodeHandler<BeanNode> {
 
     private final ProcessBeanHandlers processBeanHandlers;
 
@@ -17,12 +17,7 @@ public class BeanNodeHandler extends AbstractStaticProcessNodeHandler {
 
     @Override
     protected void internalHandle(ProcessNodeHandlerContext context) {
-        BeanNode node = context.getNode();
+        BeanNode node = node(context);
         processBeanHandlers.getBean(node.getBeanName()).handle(context);
-    }
-
-    @Override
-    public String id() {
-        return BeanNode.class.getName();
     }
 }

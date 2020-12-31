@@ -16,7 +16,7 @@ import org.team4u.workflow.domain.instance.node.handler.*;
  *
  * @author jay.wu
  */
-public class ProcessNodeHandlers extends IdObjectService<String, ProcessNodeHandler> {
+public class ProcessNodeHandlers extends IdObjectService<Class<? extends ProcessNode>, ProcessNodeHandler> {
 
     private final Log log = Log.get();
 
@@ -80,7 +80,7 @@ public class ProcessNodeHandlers extends IdObjectService<String, ProcessNodeHand
 
     private ProcessNodeHandler processNodeHandlerOf(ProcessNode node) {
         try {
-            return availableObjectOfId(node.getClass().getName());
+            return availableObjectOfId(node.getClass());
         } catch (SystemDataNotExistException e) {
             throw new ProcessNodeHandlerNotExistException(node.getClass().getName());
         }
@@ -90,5 +90,6 @@ public class ProcessNodeHandlers extends IdObjectService<String, ProcessNodeHand
         saveIdObject(new BeanNodeHandler(beanHandlers));
         saveIdObject(new BeanChoiceNodeHandler(beanHandlers));
         saveIdObject(new BeanProcessingNodeHandler(beanHandlers));
+        saveIdObject(new BeanActionChoiceNodeHandler(beanHandlers));
     }
 }
