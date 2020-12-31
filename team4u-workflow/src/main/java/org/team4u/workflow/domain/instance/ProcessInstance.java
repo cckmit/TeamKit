@@ -107,8 +107,11 @@ public class ProcessInstance extends ConcurrencySafeAggregateRoot {
 
         instance.publishEvent(new ProcessInstanceCreatedEvent(
                 instance.getProcessInstanceId(),
+                instance.getProcessInstanceName(),
                 instance.getCreateTime(),
-                instance
+                instance.getCreateBy(),
+                instance.getCurrentNode().getNodeId(),
+                instance.getProcessDefinitionId()
         ));
 
         return instance;
