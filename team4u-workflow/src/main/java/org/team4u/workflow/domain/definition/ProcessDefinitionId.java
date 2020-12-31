@@ -67,6 +67,10 @@ public class ProcessDefinitionId extends ValueObject {
 
     @Override
     public String toString() {
-        return id + "|" + version;
+        if (hasVersion()) {
+            return id + "|" + version;
+        }
+
+        return id;
     }
 }

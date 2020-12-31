@@ -275,6 +275,10 @@ public class ProcessInstance extends ConcurrencySafeAggregateRoot {
 
     @Override
     public String toString() {
+        if (StrUtil.isBlank(processInstanceName)) {
+            return processInstanceId;
+        }
+        
         return processInstanceId + '/' + processInstanceName;
     }
 }

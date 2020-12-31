@@ -57,7 +57,23 @@
     {
       "@type": "org.team4u.workflow.domain.definition.node.BeanActionChoiceNode",
       "nodeId": "beanChoiceNode",
-      "nodeName": "动作选择器",
+      "nodeName": "bea动作选择器1",
+      "beanName": "test",
+      "actionNodes": [
+        {
+          "actionId": "test",
+          "nextNodeId": "beanChoiceNode2"
+        },
+        {
+          "actionId": "test1",
+          "nextNodeId": "completed"
+        }
+      ]
+    },
+    {
+      "@type": "org.team4u.workflow.domain.definition.node.BeanActionChoiceNode",
+      "nodeId": "beanChoiceNode2",
+      "nodeName": "bea动作选择器2",
       "beanName": "test",
       "actionNodes": [
         {
