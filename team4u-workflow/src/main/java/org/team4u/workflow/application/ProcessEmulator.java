@@ -60,13 +60,9 @@ public class ProcessEmulator {
                 .append("scriptId", scriptId);
         log.info(lm.processing().toString());
 
-        ProcessEmulatorScript script = processEmulatorScriptRepository.scriptOf(scriptId);
-        if (script == null) {
-            throw new ProcessEmulatorScriptNotExistException(scriptId);
-        }
+        ProcessEmulatorScript script = scriptOf(scriptId);
 
         String processInstanceId = null;
-
         for (ProcessEmulatorScriptStep step : script.getSteps()) {
             initExt(step, ext);
 
@@ -83,6 +79,16 @@ public class ProcessEmulator {
         }
 
         log.info(lm.success().toString());
+    }
+
+    private ProcessEmulatorScript scriptOf(String scriptId) {
+        ProcessEmulatorScript script = processEmulatorScriptRepository.scriptOf(scriptId);
+
+        if (script == null) {
+            throw new ProcessEmulatorScriptNotExistException(scriptId);
+        }
+
+        return script;
     }
 
     private void initExt(ProcessEmulatorScriptStep step, Map<String, Object> ext) {
@@ -138,7 +144,7 @@ public class ProcessEmulator {
         LogMessage lm = LogMessages.createWithMasker(getClass().getSimpleName(), "checkStepExpected")
                 .append("step", step)
                 .append("instance", instance);
-        log.info(lm.processing().toString());
+        log.info(lm.success().toString());
 
         Assert.isTrue(
                 StrUtil.equals(

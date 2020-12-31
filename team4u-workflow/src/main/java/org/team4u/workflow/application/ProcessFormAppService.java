@@ -91,11 +91,11 @@ public class ProcessFormAppService {
      */
     @Transactional(rollbackFor = Exception.class)
     public String create(CreateProcessFormCommand command) {
-        // 开始流程处理
+        // 创建流程
         ProcessInstance instance = processAppService.create(command);
-
-        // 保存表单
+        // 创建表单
         saveForm(instance, null, command.getProcessForm());
+
         return instance.getProcessInstanceId();
     }
 
@@ -111,11 +111,10 @@ public class ProcessFormAppService {
         ProcessInstance instance = processAppService.availableProcessInstanceOf(newForm.getProcessInstanceId());
         newForm.setProcessInstanceId(instance.getProcessInstanceId());
 
-        ProcessFormAction action = actionOf(instance.getProcessDefinitionId().toString(), command.getActionId());
-
         FormIndex oldForm = formIndexRepository.formOf(instance.getProcessInstanceId());
         newForm.setId(oldForm.getId());
 
+        ProcessFormAction action = actionOf(instance.getProcessDefinitionId().toString(), command.getActionId());
         initCommandExt(command, newForm, instance, action);
 
         // 保存表单

@@ -61,16 +61,16 @@ public class ProcessNodeHandlers extends IdObjectService<Class<? extends Process
             throw new ProcessInstanceCompletedException(lm.fail().toString());
         }
 
-        ProcessNode nextNode = processNodeToHandle(context);
+        ProcessNode nodeToHandle = firstNodeToHandle(context);
 
-        while (nextNode != null) {
-            log.info(lm.success().append("nextNode", nextNode).toString());
+        while (nodeToHandle != null) {
+            log.info(lm.success().append("nodeToHandle", nodeToHandle).toString());
 
-            ProcessNode preNode = nextNode;
+            ProcessNode preNode = nodeToHandle;
 
-            nextNode = handleNextNode(context, nextNode);
+            nodeToHandle = handleNode(context, nodeToHandle);
 
-            checkLastNode(lm, preNode, nextNode);
+            checkLastNode(lm, preNode, nodeToHandle);
         }
     }
 
@@ -99,7 +99,7 @@ public class ProcessNodeHandlers extends IdObjectService<Class<? extends Process
         }
     }
 
-    private ProcessNode handleNextNode(ProcessNodeHandlerContext context, ProcessNode currentNode) {
+    private ProcessNode handleNode(ProcessNodeHandlerContext context, ProcessNode currentNode) {
         context.setNode(currentNode);
 
         String nextNodeId = processNodeHandlerOf(currentNode).handle(context);
@@ -109,7 +109,7 @@ public class ProcessNodeHandlers extends IdObjectService<Class<? extends Process
         return context.getDefinition().processNodeOf(nextNodeId);
     }
 
-    private ProcessNode processNodeToHandle(ProcessNodeHandlerContext context) {
+    private ProcessNode firstNodeToHandle(ProcessNodeHandlerContext context) {
         ProcessNode nextNode = context.getInstance().getCurrentNode();
 
         if (context.getInstance().getCurrentNode() instanceof StaticNode) {
