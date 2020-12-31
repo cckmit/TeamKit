@@ -5,8 +5,9 @@ import org.team4u.base.error.SystemDataNotExistException;
 import org.team4u.base.lang.IdObjectService;
 import org.team4u.base.log.LogMessage;
 import org.team4u.workflow.domain.definition.ProcessNode;
-import org.team4u.workflow.domain.definition.exception.NotStaticNodeException;
+import org.team4u.workflow.domain.definition.exception.TransientNodeException;
 import org.team4u.workflow.domain.definition.node.StaticNode;
+import org.team4u.workflow.domain.definition.node.TransientNode;
 import org.team4u.workflow.domain.instance.exception.ProcessInstanceCompletedException;
 import org.team4u.workflow.domain.instance.exception.ProcessNodeHandlerNotExistException;
 import org.team4u.workflow.domain.instance.node.handler.*;
@@ -36,7 +37,7 @@ public class ProcessNodeHandlers extends IdObjectService<Class<? extends Process
     public void handle(ProcessNodeHandlerContext context) throws
             ProcessInstanceCompletedException,
             ProcessNodeHandlerNotExistException,
-            NotStaticNodeException {
+            TransientNodeException {
         LogMessage lm = LogMessage.create(this.getClass().getSimpleName(), "handle")
                 .append("instance", context.getInstance().toString())
                 .append("operatorId", context.getOperatorId())
@@ -49,8 +50,7 @@ public class ProcessNodeHandlers extends IdObjectService<Class<? extends Process
             throw new ProcessInstanceCompletedException(lm.fail().toString());
         }
 
-        String nextNodeId = context.getInstance().getCurrentNode().getNextNodeId();
-        ProcessNode nextNode = context.getDefinition().processNodeOf(nextNodeId);
+        ProcessNode nextNode = processNodeToHandle(context);
 
         while (nextNode != null) {
             lm.append("nextNode", nextNode);
@@ -63,9 +63,9 @@ public class ProcessNodeHandlers extends IdObjectService<Class<? extends Process
             );
 
             // 最后一个节点必须为静态节点
-            if (nextNode == null && !(preNode instanceof StaticNode)) {
-                throw new NotStaticNodeException(
-                        lm.fail(preNode.getNodeId() + "is not staticNode").toString()
+            if (nextNode == null && preNode instanceof TransientNode) {
+                throw new TransientNodeException(
+                        lm.fail(preNode.getNodeId()).toString()
                 );
             }
         }
@@ -76,6 +76,17 @@ public class ProcessNodeHandlers extends IdObjectService<Class<? extends Process
      */
     public ProcessBeanHandlers beanHandlers() {
         return beanHandlers;
+    }
+
+    private ProcessNode processNodeToHandle(ProcessNodeHandlerContext context) {
+        ProcessNode nextNode = context.getInstance().getCurrentNode();
+
+        if (context.getInstance().getCurrentNode() instanceof StaticNode) {
+            StaticNode currentNode = context.getInstance().getCurrentNode();
+            nextNode = context.getDefinition().processNodeOf(currentNode.getNextNodeId());
+        }
+
+        return nextNode;
     }
 
     private ProcessNodeHandler processNodeHandlerOf(ProcessNode node) {

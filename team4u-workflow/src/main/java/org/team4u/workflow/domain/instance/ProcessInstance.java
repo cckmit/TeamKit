@@ -38,7 +38,7 @@ public class ProcessInstance extends ConcurrencySafeAggregateRoot {
     /**
      * 当前流程节点
      */
-    private StaticNode currentNode;
+    private ProcessNode currentNode;
     /**
      * 当前流程人集合
      */
@@ -148,7 +148,11 @@ public class ProcessInstance extends ConcurrencySafeAggregateRoot {
             return false;
         }
 
-        return getCurrentNode().getNextNodeId() == null;
+        if (getCurrentNode() instanceof StaticNode) {
+            return ((StaticNode) getCurrentNode()).getNextNodeId() == null;
+        }
+
+        return false;
     }
 
     /**
@@ -210,8 +214,9 @@ public class ProcessInstance extends ConcurrencySafeAggregateRoot {
         return this;
     }
 
-    public StaticNode getCurrentNode() {
-        return currentNode;
+    @SuppressWarnings("unchecked")
+    public <N extends ProcessNode> N getCurrentNode() {
+        return (N) currentNode;
     }
 
     public ProcessInstance setCurrentNode(StaticNode currentNode) {
@@ -278,7 +283,7 @@ public class ProcessInstance extends ConcurrencySafeAggregateRoot {
         if (StrUtil.isBlank(processInstanceName)) {
             return processInstanceId;
         }
-        
+
         return processInstanceId + '/' + processInstanceName;
     }
 }

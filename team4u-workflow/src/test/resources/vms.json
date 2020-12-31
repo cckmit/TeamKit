@@ -18,7 +18,7 @@
       "nextNodeId": "createdChoiceNode"
     },
     {
-      "@type": "org.team4u.workflow.domain.definition.node.ActionChoiceNode",
+      "@type": "org.team4u.workflow.domain.definition.node.SimpleActionChoiceNode",
       "nodeId": "createdChoiceNode",
       "nodeName": "动作选择器",
       "actionNodes": [

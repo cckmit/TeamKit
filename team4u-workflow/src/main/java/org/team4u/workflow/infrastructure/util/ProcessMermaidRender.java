@@ -156,19 +156,20 @@ public class ProcessMermaidRender {
             );
         }
 
-        if (toNode.getClass().equals(BeanActionChoiceNode.class)) {
-            return new MermaidFlow.ArrowLink(
-                    fromFlowNode,
-                    toFlowNode,
-                    text
-            );
-        } else {
+        if (toNode instanceof TransientNode) {
             return new MermaidFlow.DottedLink(
                     fromFlowNode,
                     toFlowNode,
                     text
             );
+
         }
+
+        return new MermaidFlow.ArrowLink(
+                fromFlowNode,
+                toFlowNode,
+                text
+        );
     }
 
     public static class MermaidFlow {

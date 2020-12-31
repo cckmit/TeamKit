@@ -1,11 +1,13 @@
 package org.team4u.workflow.domain.definition.node;
 
+import org.team4u.workflow.domain.definition.ProcessNode;
+
 /**
  * 内部处理节点
  *
  * @author jay.wu
  */
-public class InternalProcessingNode extends TransientNode {
+public class InternalProcessingNode extends ProcessNode implements TransientNode {
     /**
      * 下一个流转节点
      */

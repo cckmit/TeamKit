@@ -3,13 +3,13 @@ package org.team4u.workflow.domain.definition.exception;
 import org.team4u.workflow.domain.ProcessSystemException;
 
 /**
- * 非静态流程节点异常
+ * 瞬时节点无法保存异常
  *
  * @author jay.wu
  */
-public class NotStaticNodeException extends ProcessSystemException {
+public class TransientNodeException extends ProcessSystemException {
 
-    public NotStaticNodeException(String message) {
+    public TransientNodeException(String message) {
         super(message);
     }
 }

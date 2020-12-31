@@ -6,11 +6,11 @@ import org.team4u.workflow.domain.instance.exception.ProcessActionNodeNotExistEx
 import java.util.List;
 
 /**
- * 动作选择器节点
+ * 抽象动作选择器节点
  *
  * @author jay.wu
  */
-public class ActionChoiceNode extends ChoiceNode {
+public abstract class ActionChoiceNode extends ChoiceNode {
 
     /**
      * 动作节点映射集合

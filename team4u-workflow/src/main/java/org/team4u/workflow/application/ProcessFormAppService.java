@@ -13,6 +13,7 @@ import org.team4u.workflow.domain.definition.ProcessAction;
 import org.team4u.workflow.domain.definition.ProcessDefinition;
 import org.team4u.workflow.domain.definition.ProcessNode;
 import org.team4u.workflow.domain.definition.node.ActionChoiceNode;
+import org.team4u.workflow.domain.definition.node.StaticNode;
 import org.team4u.workflow.domain.form.FormContextKeys;
 import org.team4u.workflow.domain.form.FormIndex;
 import org.team4u.workflow.domain.form.FormIndexRepository;
@@ -145,7 +146,14 @@ public class ProcessFormAppService {
         ProcessDefinition definition = processAppService.availableProcessDefinitionOf(
                 instance.getProcessDefinitionId().toString()
         );
-        ProcessNode nextNode = definition.processNodeOf(instance.getCurrentNode().getNextNodeId());
+
+        if (!(instance.getCurrentNode() instanceof StaticNode)) {
+            return Collections.emptyList();
+        }
+
+        StaticNode currentNode = instance.getCurrentNode();
+        ProcessNode nextNode = definition.processNodeOf(currentNode.getNextNodeId());
+
         // 仅处理ActionChoiceNode
         if (!(nextNode instanceof ActionChoiceNode)) {
             return Collections.emptyList();

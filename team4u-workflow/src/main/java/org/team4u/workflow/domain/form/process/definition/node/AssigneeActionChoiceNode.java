@@ -1,6 +1,7 @@
 package org.team4u.workflow.domain.form.process.definition.node;
 
 import org.team4u.workflow.domain.definition.node.ActionChoiceNode;
+import org.team4u.workflow.domain.definition.node.TransientNode;
 
 import java.util.List;
 
@@ -9,7 +10,7 @@ import java.util.List;
  *
  * @author jay.wu
  */
-public class AssigneeActionChoiceNode extends ActionChoiceNode {
+public class AssigneeActionChoiceNode extends ActionChoiceNode implements TransientNode {
 
     public static final String CHOICE_TYPE_ANY = "ANY";
     public static final String CHOICE_TYPE_ALL = "ALL";

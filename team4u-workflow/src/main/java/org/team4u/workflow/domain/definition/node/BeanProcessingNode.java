@@ -5,7 +5,7 @@ package org.team4u.workflow.domain.definition.node;
  *
  * @author jay.wu
  */
-public class BeanProcessingNode extends InternalProcessingNode {
+public class BeanProcessingNode extends InternalProcessingNode implements TransientNode {
     /**
      * bean名称
      */
