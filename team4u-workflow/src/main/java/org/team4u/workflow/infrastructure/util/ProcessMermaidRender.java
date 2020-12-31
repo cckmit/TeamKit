@@ -162,7 +162,6 @@ public class ProcessMermaidRender {
                     toFlowNode,
                     text
             );
-
         }
 
         return new MermaidFlow.ArrowLink(

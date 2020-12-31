@@ -1,7 +1,7 @@
 package org.team4u.workflow.domain.instance.event;
 
 import org.team4u.ddd.domain.model.AbstractDomainEvent;
-import org.team4u.workflow.domain.instance.ProcessInstance;
+import org.team4u.workflow.domain.definition.ProcessDefinitionId;
 
 import java.util.Date;
 
@@ -12,16 +12,37 @@ import java.util.Date;
  */
 public class ProcessInstanceCreatedEvent extends AbstractDomainEvent {
 
-    private final ProcessInstance processInstance;
+    private final String createdBy;
+    private final String currentNodeId;
+    private final String processInstanceName;
+    private final ProcessDefinitionId processDefinitionId;
 
     public ProcessInstanceCreatedEvent(String domainId,
+                                       String processInstanceName,
                                        Date occurredOn,
-                                       ProcessInstance processInstance) {
+                                       String createdBy,
+                                       String currentNodeId,
+                                       ProcessDefinitionId processDefinitionId) {
         super(domainId, occurredOn);
-        this.processInstance = processInstance;
+        this.createdBy = createdBy;
+        this.currentNodeId = currentNodeId;
+        this.processInstanceName = processInstanceName;
+        this.processDefinitionId = processDefinitionId;
     }
 
-    public ProcessInstance getProcessInstance() {
-        return processInstance;
+    public String getCurrentNodeId() {
+        return currentNodeId;
+    }
+
+    public ProcessDefinitionId getProcessDefinitionId() {
+        return processDefinitionId;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public String getProcessInstanceName() {
+        return processInstanceName;
     }
 }
