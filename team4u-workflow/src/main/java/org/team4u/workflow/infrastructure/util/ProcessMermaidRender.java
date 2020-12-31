@@ -74,9 +74,10 @@ public class ProcessMermaidRender {
             return;
         }
 
-        flow.getElements().add(new MermaidFlow.ArrowLink(
-                toFlowNode(node),
-                toFlowNode(node.getNextNodeId())
+        flow.getElements().add(newLink(
+                node.getNodeId(),
+                node.getNextNodeId(),
+                null
         ));
     }
 
@@ -86,9 +87,10 @@ public class ProcessMermaidRender {
         }
 
         for (String nextNodeId : node.getNextNodeIds()) {
-            flow.getElements().add(new MermaidFlow.ArrowLink(
-                    new MermaidFlow.Node(node.getNodeId()),
-                    toFlowNode(nextNodeId)
+            flow.getElements().add(newLink(
+                    node.getNodeId(),
+                    nextNodeId,
+                    null
             ));
         }
     }
@@ -98,9 +100,9 @@ public class ProcessMermaidRender {
             case "expression": {
                 Map<String, String> config = ExpressionSelectorFactory.toConfig(node.getRule().getBody());
                 for (Map.Entry<String, String> entry : config.entrySet()) {
-                    flow.getElements().add(new MermaidFlow.ArrowLink(
-                            new MermaidFlow.Node(node.getNodeId()),
-                            toFlowNode(entry.getKey()),
+                    flow.getElements().add(newLink(
+                            node.getNodeId(),
+                            entry.getKey(),
                             "\"" + entry.getValue() + "\""
                     ));
                 }
@@ -117,19 +119,49 @@ public class ProcessMermaidRender {
             return;
         }
 
-        flow.getElements().add(new MermaidFlow.ArrowLink(
-                toFlowNode(node),
-                toFlowNode(node.getNextNodeId())
+        flow.getElements().add(newLink(
+                node.getNodeId(),
+                node.getNextNodeId(),
+                null
         ));
     }
 
     protected void toElement(MermaidFlow flow, ActionChoiceNode node) {
         for (ActionChoiceNode.ActionNode actionNode : node.getActionNodes()) {
-            flow.getElements().add(new MermaidFlow.ArrowLink(
-                    new MermaidFlow.Node(node.getNodeId()),
-                    toFlowNode(actionNode.getNextNodeId()),
-                    definition.availableActionOf(actionNode.getActionId()).getActionName()
-            ));
+            String actionName = definition.availableActionOf(actionNode.getActionId()).getActionName();
+
+            flow.getElements().add(newLink(node.getNodeId(), actionNode.getNextNodeId(), actionName));
+        }
+    }
+
+    protected MermaidFlow.Link newLink(String fromNodeId,
+                                       String toNodeId,
+                                       String text) {
+        MermaidFlow.Node fromFlowNode = new MermaidFlow.Node(fromNodeId);
+
+        ProcessNode toNode = definition.processNodeOf(toNodeId);
+        MermaidFlow.Node toFlowNode = toFlowNode(toNode);
+
+        if (!(toNode instanceof ActionChoiceNode)) {
+            return new MermaidFlow.ArrowLink(
+                    fromFlowNode,
+                    toFlowNode,
+                    text
+            );
+        }
+
+        if (toNode.getClass().equals(BeanActionChoiceNode.class)) {
+            return new MermaidFlow.ArrowLink(
+                    fromFlowNode,
+                    toFlowNode,
+                    text
+            );
+        } else {
+            return new MermaidFlow.DottedLink(
+                    fromFlowNode,
+                    toFlowNode,
+                    text
+            );
         }
     }
 
@@ -315,5 +347,24 @@ public class ProcessMermaidRender {
             }
         }
 
+        public static class DottedLink extends Link {
+
+            public DottedLink(Node fromNode, Node toNode) {
+                this(fromNode, toNode, null);
+            }
+
+            public DottedLink(Node fromNode, Node toNode, String text) {
+                super(fromNode, toNode, text);
+            }
+
+            @Override
+            protected String toRelated() {
+                if (StrUtil.isNotBlank(getText())) {
+                    return String.format("-. %s .->", getText());
+                }
+
+                return "-.->";
+            }
+        }
     }
 }

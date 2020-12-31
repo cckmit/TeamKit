@@ -146,4 +146,8 @@ public class ProcessEmulator {
                 lm.fail("NodeId is not expected").toString()
         );
     }
+
+    public ProcessFormAppService getFormAppService() {
+        return formAppService;
+    }
 }
