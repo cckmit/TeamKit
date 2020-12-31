@@ -12,41 +12,24 @@
   ],
   "nodes": [
     {
-      "@type": "org.team4u.workflow.domain.definition.node.StaticNode",
+      "@type": "org.team4u.workflow.domain.definition.node.BeanActionChoiceNode",
       "nodeId": "created",
       "nodeName": "创建",
-      "nextNodeId": "createdChoiceNode"
-    },
-    {
-      "@type": "org.team4u.workflow.domain.definition.node.SimpleActionChoiceNode",
-      "nodeId": "createdChoiceNode",
-      "nodeName": "动作选择器",
+      "beanName": "test",
       "actionNodes": [
         {
           "actionId": "test",
-          "nextNodeId": "testChoiceNode"
+          "nextNodeId": "beanProcessing"
         },
         {
           "actionId": "test1",
-          "nextNodeId": "created"
+          "nextNodeId": "completed"
         }
       ]
     },
     {
-      "@type": "org.team4u.workflow.domain.definition.node.BeanChoiceNode",
-      "nodeId": "testChoiceNode",
-      "nodeName": "预期到test节点",
-      "beanName": "test",
-      "beanConfig": {
-        "name": "test"
-      },
-      "nextNodeIds": [
-        "test"
-      ]
-    },
-    {
       "@type": "org.team4u.workflow.domain.definition.node.BeanProcessingNode",
-      "nodeId": "test",
+      "nodeId": "beanProcessing",
       "nodeName": "内部处理",
       "beanName": "test",
       "beanConfig": {
@@ -78,11 +61,22 @@
       "actionNodes": [
         {
           "actionId": "test",
-          "nextNodeId": "completed"
+          "nextNodeId": "simpleChoice"
         },
         {
           "actionId": "test1",
           "nextNodeId": "created"
+        }
+      ]
+    },
+    {
+      "@type": "org.team4u.workflow.domain.definition.node.SimpleActionChoiceNode",
+      "nodeId": "simpleChoice",
+      "nodeName": "结束流程",
+      "actionNodes": [
+        {
+          "actionId": "test",
+          "nextNodeId": "completed"
         }
       ]
     },

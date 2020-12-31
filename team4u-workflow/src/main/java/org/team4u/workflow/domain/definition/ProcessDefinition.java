@@ -5,7 +5,6 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import org.team4u.ddd.domain.model.AggregateRoot;
 import org.team4u.workflow.domain.definition.exception.ProcessActionNotExistException;
-import org.team4u.workflow.domain.definition.node.StaticNode;
 
 import java.util.Collections;
 import java.util.List;
@@ -48,8 +47,8 @@ public class ProcessDefinition extends AggregateRoot {
      *
      * @return 理财节点
      */
-    public StaticNode rootNode() {
-        return (StaticNode) CollUtil.getFirst(nodes);
+    public ProcessNode rootNode() {
+        return CollUtil.getFirst(nodes);
     }
 
     /**

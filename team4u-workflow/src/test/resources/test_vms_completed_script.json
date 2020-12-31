@@ -2,12 +2,6 @@
   "processDefinitionId": "vms",
   "steps": [
     {
-      "actionId": "test1",
-      "expected": {
-        "nodeId": "created"
-      }
-    },
-    {
       "actionId": "test",
       "expected": {
         "nodeId": "completed"

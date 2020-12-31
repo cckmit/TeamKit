@@ -67,7 +67,7 @@ public class ProcessInstance extends ConcurrencySafeAggregateRoot {
     public ProcessInstance(String processInstanceId,
                            String processInstanceName,
                            ProcessDefinitionId processDefinitionId,
-                           StaticNode currentNode,
+                           ProcessNode currentNode,
                            String createdBy,
                            ProcessInstanceDetail processInstanceDetail) {
         setProcessInstanceId(processInstanceId);
@@ -95,7 +95,7 @@ public class ProcessInstance extends ConcurrencySafeAggregateRoot {
                                          String processInstanceName,
                                          ProcessDefinitionId processDefinitionId,
                                          String createdBy,
-                                         StaticNode startNode,
+                                         ProcessNode startNode,
                                          ProcessInstanceDetail processInstanceDetail) {
         ProcessInstance instance = new ProcessInstance(
                 processInstanceId,
@@ -219,7 +219,7 @@ public class ProcessInstance extends ConcurrencySafeAggregateRoot {
         return (N) currentNode;
     }
 
-    public ProcessInstance setCurrentNode(StaticNode currentNode) {
+    public ProcessInstance setCurrentNode(ProcessNode currentNode) {
         this.currentNode = currentNode;
         return this;
     }
