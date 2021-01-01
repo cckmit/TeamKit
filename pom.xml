@@ -83,14 +83,6 @@
             <id>aliyun</id>
             <url>http://maven.aliyun.com/nexus/content/groups/public</url>
         </repository>
-        <repository>
-            <id>rdc-releases</id>
-            <url>https://packages.aliyun.com/maven/repository/2016366-release-X1rEnZ/</url>
-        </repository>
-        <repository>
-            <id>rdc-snapshots</id>
-            <url>https://packages.aliyun.com/maven/repository/2016366-snapshot-lj2H3H/</url>
-        </repository>
     </repositories>
 
     <distributionManagement>
