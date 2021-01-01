@@ -2,8 +2,6 @@ package org.team4u.workflow.application.command;
 
 import org.team4u.workflow.domain.instance.ProcessInstanceDetail;
 
-import java.util.Map;
-
 /**
  * 创建新流程实例命令
  *
@@ -50,7 +48,6 @@ public class CreateProcessInstanceCommand extends AbstractHandleProcessInstanceC
     public static final class Builder {
         private String operatorId;
         private String remark;
-        private Map<String, Object> ext;
         private String processInstanceId;
         private String processInstanceName;
         private String processDefinitionId;
@@ -70,11 +67,6 @@ public class CreateProcessInstanceCommand extends AbstractHandleProcessInstanceC
 
         public Builder withRemark(String remark) {
             this.remark = remark;
-            return this;
-        }
-
-        public Builder withExt(Map<String, Object> ext) {
-            this.ext = ext;
             return this;
         }
 
@@ -102,7 +94,6 @@ public class CreateProcessInstanceCommand extends AbstractHandleProcessInstanceC
             CreateProcessInstanceCommand createProcessInstanceCommand = new CreateProcessInstanceCommand();
             createProcessInstanceCommand.setOperatorId(operatorId);
             createProcessInstanceCommand.setRemark(remark);
-            createProcessInstanceCommand.setExt(ext);
             createProcessInstanceCommand.setProcessInstanceId(processInstanceId);
             createProcessInstanceCommand.setProcessInstanceName(processInstanceName);
             createProcessInstanceCommand.setProcessDefinitionId(processDefinitionId);

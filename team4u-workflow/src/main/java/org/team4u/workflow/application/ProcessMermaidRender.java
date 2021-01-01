@@ -1,4 +1,4 @@
-package org.team4u.workflow.infrastructure.util;
+package org.team4u.workflow.application;
 
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;

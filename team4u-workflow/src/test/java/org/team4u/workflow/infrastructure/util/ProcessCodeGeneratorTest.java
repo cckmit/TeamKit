@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.team4u.template.TemplateFunctionService;
 import org.team4u.template.infrastructure.BeetlTemplateEngine;
 import org.team4u.workflow.TestUtil;
+import org.team4u.workflow.application.ProcessCodeGenerator;
 
 public class ProcessCodeGeneratorTest {
 

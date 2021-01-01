@@ -1,4 +1,4 @@
-package org.team4u.workflow.infrastructure.util;
+package org.team4u.workflow.application;
 
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Dict;

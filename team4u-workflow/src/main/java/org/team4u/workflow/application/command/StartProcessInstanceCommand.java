@@ -10,11 +10,18 @@ import java.util.Map;
  * @author jay.wu
  */
 public class StartProcessInstanceCommand extends AbstractHandleProcessInstanceCommand {
+    /**
+     * 流程动作标识
+     */
     private String actionId;
     /**
      * 流程实例标识
      */
     private String processInstanceId;
+    /**
+     * 附加信息
+     */
+    private Map<String, Object> ext;
 
     public String getActionId() {
         return actionId;
@@ -28,9 +35,16 @@ public class StartProcessInstanceCommand extends AbstractHandleProcessInstanceCo
         return processInstanceId;
     }
 
-    public StartProcessInstanceCommand setProcessInstanceId(String processInstanceId) {
+    public void setProcessInstanceId(String processInstanceId) {
         this.processInstanceId = processInstanceId;
-        return this;
+    }
+
+    public Map<String, Object> getExt() {
+        return ext;
+    }
+
+    public void setExt(Map<String, Object> ext) {
+        this.ext = ext;
     }
 
     public static final class Builder {

@@ -3,6 +3,7 @@ package org.team4u.workflow.infrastructure.util;
 import org.junit.Assert;
 import org.junit.Test;
 import org.team4u.workflow.TestUtil;
+import org.team4u.workflow.application.ProcessMermaidRender;
 
 public class ProcessMermaidRenderTest {
 

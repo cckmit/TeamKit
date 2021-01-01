@@ -2,8 +2,6 @@ package org.team4u.workflow.application.command;
 
 import org.team4u.workflow.domain.instance.ProcessInstanceDetail;
 
-import java.util.Map;
-
 /**
  * 处理流程实例命令
  *
@@ -18,10 +16,6 @@ public abstract class AbstractHandleProcessInstanceCommand {
      * 备注
      */
     private String remark;
-    /**
-     * 附加信息
-     */
-    private Map<String, Object> ext;
     /**
      * 流程实例明细
      */
@@ -42,15 +36,6 @@ public abstract class AbstractHandleProcessInstanceCommand {
 
     public AbstractHandleProcessInstanceCommand setRemark(String remark) {
         this.remark = remark;
-        return this;
-    }
-
-    public Map<String, Object> getExt() {
-        return ext;
-    }
-
-    public AbstractHandleProcessInstanceCommand setExt(Map<String, Object> ext) {
-        this.ext = ext;
         return this;
     }
 

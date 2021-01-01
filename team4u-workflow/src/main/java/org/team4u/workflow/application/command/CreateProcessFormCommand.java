@@ -3,8 +3,6 @@ package org.team4u.workflow.application.command;
 import org.team4u.workflow.domain.form.FormIndex;
 import org.team4u.workflow.domain.instance.ProcessInstanceDetail;
 
-import java.util.Map;
-
 /**
  * 创建表单索引命令
  *
@@ -25,7 +23,6 @@ public class CreateProcessFormCommand extends CreateProcessInstanceCommand {
     public static final class Builder {
         private String operatorId;
         private String remark;
-        private Map<String, Object> ext;
         private FormIndex formIndex;
         private String processInstanceId;
         private String processInstanceName;
@@ -46,11 +43,6 @@ public class CreateProcessFormCommand extends CreateProcessInstanceCommand {
 
         public Builder withRemark(String remark) {
             this.remark = remark;
-            return this;
-        }
-
-        public Builder withExt(Map<String, Object> ext) {
-            this.ext = ext;
             return this;
         }
 
@@ -83,7 +75,6 @@ public class CreateProcessFormCommand extends CreateProcessInstanceCommand {
             CreateProcessFormCommand createProcessFormCommand = new CreateProcessFormCommand();
             createProcessFormCommand.setOperatorId(operatorId);
             createProcessFormCommand.setRemark(remark);
-            createProcessFormCommand.setExt(ext);
             createProcessFormCommand.setFormIndex(formIndex);
             createProcessFormCommand.setProcessInstanceName(processInstanceName);
             createProcessFormCommand.setProcessDefinitionId(processDefinitionId);

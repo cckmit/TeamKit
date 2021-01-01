@@ -11,10 +11,18 @@ import java.util.Map;
  * @author jay.wu
  */
 public class StartProcessFormCommand extends AbstractHandleProcessInstanceCommand {
-
+    /**
+     * 流程动作标识
+     */
     private String actionId;
-
+    /**
+     * 表单索引
+     */
     private FormIndex formIndex;
+    /**
+     * 附加信息
+     */
+    private Map<String, Object> ext;
 
     public String getActionId() {
         return actionId;
@@ -36,6 +44,13 @@ public class StartProcessFormCommand extends AbstractHandleProcessInstanceComman
         this.formIndex = formIndex;
     }
 
+    public Map<String, Object> getExt() {
+        return ext;
+    }
+
+    public void setExt(Map<String, Object> ext) {
+        this.ext = ext;
+    }
 
     public static final class Builder {
         private String operatorId;

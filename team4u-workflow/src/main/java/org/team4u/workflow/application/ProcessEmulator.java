@@ -5,17 +5,25 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.Log;
+import org.team4u.base.config.ConfigService;
+import org.team4u.base.config.LocalJsonConfigService;
 import org.team4u.base.log.LogMessage;
 import org.team4u.base.log.LogMessages;
-import org.team4u.workflow.application.command.AbstractHandleProcessInstanceCommand;
+import org.team4u.ddd.event.EventStore;
+import org.team4u.ddd.infrastructure.persistence.memory.InMemoryEventStore;
 import org.team4u.workflow.application.command.CreateProcessFormCommand;
 import org.team4u.workflow.application.command.StartProcessFormCommand;
 import org.team4u.workflow.domain.emulator.ProcessEmulatorScript;
 import org.team4u.workflow.domain.emulator.ProcessEmulatorScriptNotExistException;
 import org.team4u.workflow.domain.emulator.ProcessEmulatorScriptRepository;
 import org.team4u.workflow.domain.emulator.ProcessEmulatorScriptStep;
+import org.team4u.workflow.domain.form.DefaultFormPermissionService;
 import org.team4u.workflow.domain.form.FormIndex;
 import org.team4u.workflow.domain.instance.ProcessInstance;
+import org.team4u.workflow.infrastructure.persistence.definition.JsonProcessDefinitionRepository;
+import org.team4u.workflow.infrastructure.persistence.emulator.JsonProcessEmulatorScriptRepository;
+import org.team4u.workflow.infrastructure.persistence.form.InMemoryFormIndexRepository;
+import org.team4u.workflow.infrastructure.persistence.instance.InMemoryProcessInstanceRepository;
 
 import java.util.Map;
 
@@ -36,6 +44,26 @@ public class ProcessEmulator {
                            ProcessEmulatorScriptRepository processEmulatorScriptRepository) {
         this.formAppService = formAppService;
         this.processEmulatorScriptRepository = processEmulatorScriptRepository;
+    }
+
+    /**
+     * 创建模拟器
+     */
+    public static ProcessEmulator create() {
+        EventStore eventStore = new InMemoryEventStore();
+        ConfigService configService = new LocalJsonConfigService();
+
+        return new ProcessEmulator(
+                new ProcessFormAppService(
+                        eventStore,
+                        new ProcessAppService(
+                                new InMemoryProcessInstanceRepository(eventStore),
+                                new JsonProcessDefinitionRepository(configService)),
+                        new InMemoryFormIndexRepository<>(),
+                        new DefaultFormPermissionService()
+                ),
+                new JsonProcessEmulatorScriptRepository(configService)
+        );
     }
 
     /**
@@ -112,28 +140,23 @@ public class ProcessEmulator {
         if (processInstanceId == null) {
             CreateProcessFormCommand command = CreateProcessFormCommand.Builder
                     .create()
+                    .withOperatorId(step.getOperatorId())
                     .withFormIndex(formIndex)
                     .withProcessDefinitionId(processDefinitionId)
                     .build();
-            initProcessInstanceCommand(command, step);
             processInstanceId = formAppService.create(command);
         }
 
         StartProcessFormCommand command = StartProcessFormCommand.Builder
                 .create()
+                .withExt(step.getExt())
+                .withOperatorId(step.getOperatorId())
                 .withActionId(step.getActionId())
                 .withFormIndex(formIndex.setProcessInstanceId(processInstanceId))
                 .build();
-        initProcessInstanceCommand(command, step);
         formAppService.start(command);
 
         return formAppService.getProcessAppService().availableProcessInstanceOf(processInstanceId);
-    }
-
-    private void initProcessInstanceCommand(AbstractHandleProcessInstanceCommand command,
-                                            ProcessEmulatorScriptStep step) {
-        command.setExt(step.getExt())
-                .setOperatorId(step.getOperatorId());
     }
 
     private void checkStepExpected(ProcessEmulatorScriptStep step, ProcessInstance instance) {
