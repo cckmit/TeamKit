@@ -1,6 +1,6 @@
 package org.team4u.workflow.infrastructure.util;
 
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Dict;
 import org.team4u.template.TemplateEngine;
 import org.team4u.workflow.domain.definition.ProcessDefinition;
@@ -26,7 +26,7 @@ public class ProcessCodeGenerator {
      */
     public String enumCodeForNodes(ProcessDefinition definition) {
         return templateEngine.render(
-                FileUtil.readUtf8String(config.getNodesTemplatePath()),
+                ResourceUtil.readUtf8Str(config.getNodesTemplatePath()),
                 Dict.create().set("nodes", definition.getNodes())
                         .set("className", definition.getProcessDefinitionId().getId() + "ProcessNode")
         );
@@ -37,7 +37,7 @@ public class ProcessCodeGenerator {
      */
     public String enumCodeForActions(ProcessDefinition definition) {
         return templateEngine.render(
-                FileUtil.readUtf8String(config.getActionsTemplatePath()),
+                ResourceUtil.readUtf8Str(config.getActionsTemplatePath()),
                 Dict.create().set("actions", definition.getActions())
                         .set("className", definition.getProcessDefinitionId().getId() + "ProcessAction")
         );
