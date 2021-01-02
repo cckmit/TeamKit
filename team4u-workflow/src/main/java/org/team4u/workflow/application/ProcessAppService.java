@@ -4,7 +4,10 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
 import org.team4u.workflow.application.command.CreateProcessInstanceCommand;
 import org.team4u.workflow.application.command.StartProcessInstanceCommand;
-import org.team4u.workflow.domain.definition.*;
+import org.team4u.workflow.domain.definition.ProcessDefinition;
+import org.team4u.workflow.domain.definition.ProcessDefinitionId;
+import org.team4u.workflow.domain.definition.ProcessDefinitionRepository;
+import org.team4u.workflow.domain.definition.ProcessNode;
 import org.team4u.workflow.domain.definition.exception.ProcessDefinitionNotExistException;
 import org.team4u.workflow.domain.instance.ProcessInstance;
 import org.team4u.workflow.domain.instance.ProcessInstanceRepository;
@@ -138,11 +141,23 @@ public class ProcessAppService {
     public ProcessInstance start(StartProcessInstanceCommand command) {
         ProcessInstance instance = availableProcessInstanceOf(command.getProcessInstanceId());
 
+        if (command.getProcessInstanceDetail() != null) {
+            instance.setProcessInstanceDetail(command.getProcessInstanceDetail());
+        }
+
         ProcessDefinition definition = processDefinitionRepository.domainOf(
                 instance.getProcessDefinitionId().toString()
         );
+        processNodeHandlers.handle(ProcessNodeHandlerContext.Builder.create()
+                .withInstance(instance)
+                .withDefinition(definition)
+                .withAction(definition.availableActionOf(command.getActionId()))
+                .withOperatorId(command.getOperatorId())
+                .withRemark(command.getRemark())
+                .withExt(command.getExt())
+                .build());
 
-        return handle(command, definition, instance);
+        return instance;
     }
 
     /**
@@ -175,32 +190,5 @@ public class ProcessAppService {
      */
     public ProcessNodeHandlers processNodeHandlers() {
         return processNodeHandlers;
-    }
-
-    /**
-     * 处理流程实例
-     *
-     * @param command 开始命令参数
-     * @return 流程实例
-     */
-    private ProcessInstance handle(StartProcessInstanceCommand command,
-                                   ProcessDefinition definition,
-                                   ProcessInstance instance) {
-        ProcessAction action = definition.availableActionOf(command.getActionId());
-
-        if (command.getProcessInstanceDetail() != null) {
-            instance.setProcessInstanceDetail(command.getProcessInstanceDetail());
-        }
-
-        processNodeHandlers.handle(ProcessNodeHandlerContext.Builder.create()
-                .withInstance(instance)
-                .withDefinition(definition)
-                .withAction(action)
-                .withOperatorId(command.getOperatorId())
-                .withRemark(command.getRemark())
-                .withExt(command.getExt())
-                .build());
-
-        return instance;
     }
 }
