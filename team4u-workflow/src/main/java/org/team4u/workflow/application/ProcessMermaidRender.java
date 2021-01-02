@@ -74,8 +74,8 @@ public class ProcessMermaidRender {
             return;
         }
 
-        flow.getElements().add(newLink(
-                toFlowNode(node),
+        flow.getElements().add(newNormalLink(
+                node.getNodeId(),
                 node.getNextNodeId(),
                 null
         ));
@@ -87,7 +87,7 @@ public class ProcessMermaidRender {
         }
 
         for (String nextNodeId : node.getNextNodeIds()) {
-            flow.getElements().add(newLink(
+            flow.getElements().add(newSimpleLink(
                     node.getNodeId(),
                     nextNodeId,
                     null
@@ -100,7 +100,7 @@ public class ProcessMermaidRender {
             case "expression": {
                 Map<String, String> config = ExpressionSelectorFactory.toConfig(node.getRule().getBody());
                 for (Map.Entry<String, String> entry : config.entrySet()) {
-                    flow.getElements().add(newLink(
+                    flow.getElements().add(newSimpleLink(
                             node.getNodeId(),
                             entry.getKey(),
                             "\"" + entry.getValue() + "\""
@@ -119,8 +119,8 @@ public class ProcessMermaidRender {
             return;
         }
 
-        flow.getElements().add(newLink(
-                toFlowNode(node.getNodeId()),
+        flow.getElements().add(newNormalLink(
+                node.getNodeId(),
                 node.getNextNodeId(),
                 null
         ));
@@ -130,33 +130,35 @@ public class ProcessMermaidRender {
         for (ActionChoiceNode.ActionNode actionNode : node.getActionNodes()) {
             String actionName = definition.availableActionOf(actionNode.getActionId()).getActionName();
 
-            flow.getElements().add(newLink(node.getNodeId(), actionNode.getNextNodeId(), actionName));
+            flow.getElements().add(newSimpleLink(node.getNodeId(), actionNode.getNextNodeId(), actionName));
         }
     }
 
-    protected MermaidFlow.Link newLink(String fromNodeId,
-                                       String toNodeId,
-                                       String text) {
-        MermaidFlow.Node fromFlowNode = new MermaidFlow.Node(fromNodeId);
-        return newLink(fromFlowNode, toNodeId, text);
+    protected MermaidFlow.Link newSimpleLink(String fromNodeId,
+                                             String toNodeId,
+                                             String text) {
+        return newLink(true, fromNodeId, toNodeId, text);
     }
 
-    protected MermaidFlow.Link newLink(MermaidFlow.Node fromFlowNode,
+    protected MermaidFlow.Link newNormalLink(String fromNodeId,
+                                             String toNodeId,
+                                             String text) {
+        return newLink(false, fromNodeId, toNodeId, text);
+    }
+
+    protected MermaidFlow.Link newLink(boolean simpleFromNode,
+                                       String fromNodeId,
                                        String toNodeId,
                                        String text) {
-
+        ProcessNode fromNode = definition.processNodeOf(fromNodeId);
         ProcessNode toNode = definition.processNodeOf(toNodeId);
+
+        MermaidFlow.Node fromFlowNode = simpleFromNode ?
+                new MermaidFlow.Node(fromNodeId) : toFlowNode(fromNodeId);
+
         MermaidFlow.Node toFlowNode = toFlowNode(toNode);
 
-        if (!(toNode instanceof ActionChoiceNode)) {
-            return new MermaidFlow.ArrowLink(
-                    fromFlowNode,
-                    toFlowNode,
-                    text
-            );
-        }
-
-        if (toNode instanceof SimpleActionChoiceNode) {
+        if (fromNode instanceof StaticNode || toNode instanceof SimpleActionChoiceNode) {
             return new MermaidFlow.DottedLink(
                     fromFlowNode,
                     toFlowNode,

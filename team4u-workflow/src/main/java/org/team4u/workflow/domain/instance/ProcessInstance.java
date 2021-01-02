@@ -40,7 +40,7 @@ public class ProcessInstance extends ConcurrencySafeAggregateRoot {
      */
     private ProcessNode currentNode;
     /**
-     * 当前流程人集合
+     * 当前流程处理人集合
      */
     private Set<ProcessAssignee> assignees;
     /**
