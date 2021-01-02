@@ -125,7 +125,7 @@ public class ProcessAppService {
                 ProcessDefinitionId.of(command.getProcessDefinitionId()),
                 command.getOperatorId(),
                 definition.rootNode(),
-                null
+                command.getProcessInstanceDetail()
         );
 
         processInstanceRepository.save(instance);
@@ -136,9 +136,8 @@ public class ProcessAppService {
      * 开始流程实例
      *
      * @param command 开始命令参数
-     * @return 流程实例
      */
-    public ProcessInstance start(StartProcessInstanceCommand command) {
+    public void start(StartProcessInstanceCommand command) {
         ProcessInstance instance = availableProcessInstanceOf(command.getProcessInstanceId());
 
         if (command.getProcessInstanceDetail() != null) {
@@ -156,8 +155,6 @@ public class ProcessAppService {
                 .withRemark(command.getRemark())
                 .withExt(command.getExt())
                 .build());
-
-        return instance;
     }
 
     /**
