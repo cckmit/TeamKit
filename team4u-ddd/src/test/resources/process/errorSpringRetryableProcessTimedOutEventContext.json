@@ -1,5 +1,5 @@
 {
-  "invokerId": "springRetryableMethodInterceptorTest.TestRetry",
+  "invokerId": "testRetry",
   "methodName": "error",
   "parameterTypes": [],
   "parameterValues": [],

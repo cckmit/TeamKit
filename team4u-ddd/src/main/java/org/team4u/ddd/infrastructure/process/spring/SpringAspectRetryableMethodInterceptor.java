@@ -4,37 +4,45 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
-import org.team4u.ddd.process.retry.method.interceptor.RetryInterceptor;
-import org.team4u.ddd.process.retry.method.interceptor.RetryInterceptorContext;
-import org.aopalliance.intercept.MethodInterceptor;
-import org.aopalliance.intercept.MethodInvocation;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.team4u.base.log.LogMessages;
+import org.team4u.ddd.process.retry.method.interceptor.RetryInterceptor;
+import org.team4u.ddd.process.retry.method.interceptor.RetryInterceptorContext;
+
+import java.lang.reflect.Method;
 
 /**
  * 基于spring的可重试方法拦截器
  *
  * @author jay.wu
  */
-public class SpringRetryableMethodInterceptor implements MethodInterceptor, ApplicationContextAware {
+@Aspect
+public class SpringAspectRetryableMethodInterceptor implements ApplicationContextAware {
 
     private final Log log = LogFactory.get();
     private final RetryInterceptor retryInterceptor;
     private ApplicationContext applicationContext;
 
-    public SpringRetryableMethodInterceptor(RetryInterceptor retryInterceptor) {
+    public SpringAspectRetryableMethodInterceptor(RetryInterceptor retryInterceptor) {
         this.retryInterceptor = retryInterceptor;
     }
 
-    @Override
-    public Object invoke(MethodInvocation methodInvocation) throws Throwable {
+    @Around("@annotation(org.team4u.ddd.process.retry.method.annotation.Retryable)")
+    public Object invoke(ProceedingJoinPoint joinPoint) throws Throwable {
+        MethodSignature ms = (MethodSignature) joinPoint.getSignature();
+        Method method = ms.getMethod();
+
         return retryInterceptor.invoke(
                 new RetryInterceptorContext(
-                        new SpringAopInvoker(methodInvocation),
-                        methodInvocation.getMethod(),
-                        methodInvocation.getArguments()
+                        new SpringAopInvoker(joinPoint),
+                        method,
+                        joinPoint.getArgs()
                 )
         );
     }
@@ -46,23 +54,23 @@ public class SpringRetryableMethodInterceptor implements MethodInterceptor, Appl
 
     private class SpringAopInvoker implements RetryInterceptorContext.Invoker {
 
-        private final MethodInvocation methodInvocation;
+        private final ProceedingJoinPoint joinPoint;
 
-        private SpringAopInvoker(MethodInvocation methodInvocation) {
-            this.methodInvocation = methodInvocation;
+        private SpringAopInvoker(ProceedingJoinPoint joinPoint) {
+            this.joinPoint = joinPoint;
         }
 
         @Override
         public String id() {
             String beanName = ArrayUtil.firstNonNull(applicationContext.getBeanNamesForType(
-                    methodInvocation.getThis().getClass()
+                    joinPoint.getSignature().getDeclaringType()
             ));
 
             if (StrUtil.isEmpty(beanName)) {
                 log.warn(LogMessages.create(this.getClass().getSimpleName(), "beanNameOf")
                         .fail("beanName is null")
-                        .append("beanClass", methodInvocation.getThis().getClass().getName())
-                        .append("methodName", methodInvocation.getMethod().getName())
+                        .append("beanClass", joinPoint.getSignature().getDeclaringType().getName())
+                        .append("methodName", joinPoint.getSignature().getName())
                         .toString());
 
                 return null;
@@ -73,7 +81,7 @@ public class SpringRetryableMethodInterceptor implements MethodInterceptor, Appl
 
         @Override
         public Object invoke() throws Throwable {
-            return methodInvocation.proceed();
+            return joinPoint.proceed();
         }
     }
 }

@@ -8,26 +8,21 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.team4u.base.error.BusinessException;
 import org.team4u.ddd.TestUtil;
 import org.team4u.ddd.process.FakeTimeConstrainedProcessTrackerRepository;
 import org.team4u.ddd.process.MockRetryStrategy;
 import org.team4u.ddd.process.TimeConstrainedProcessTracker;
-import org.team4u.ddd.process.retry.method.annotation.EnableRetry;
-import org.team4u.ddd.process.retry.method.annotation.Retryable;
 import org.team4u.ddd.process.retry.method.interceptor.AbstractRetryableMethodTimedOutEventSubscriber;
 import org.team4u.ddd.process.retry.method.interceptor.RetryableMethodTimedOutEvent;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:applicationContext-simple-test.xml"})
-public class SpringRetryableMethodInterceptorTest {
+@ContextConfiguration(classes = TestRetryBeanConfig.class)
+public class SpringAspectRetryableMethodInterceptorTest {
 
     private final Dict TEST_DICT = Dict.create().set(TestUtil.TEST_ID, TestUtil.TEST_ID);
     private final List<Integer> TEST_LIST = CollUtil.newArrayList(1, 2);
@@ -110,51 +105,4 @@ public class SpringRetryableMethodInterceptorTest {
         Assert.assertEquals(TestUtil.TEST_ID, tracker.processId());
     }
 
-    @Service
-    @EnableRetry
-    public static class TestRetry {
-
-        private String name;
-        private Map<String, Object> dict;
-        private List<Integer> ages;
-        private RetryableMethodTimedOutEvent event;
-
-        @Retryable(
-                retryStrategyId = "1",
-                shouldRemoveTrackerAfterCompleted = true
-        )
-        public void handle(String name, Map<String, Object> dict, List<Integer> ages) {
-            this.name = name;
-            this.dict = dict;
-            this.ages = ages;
-            this.event = RetryableMethodTimedOutEvent.currentEvent();
-        }
-
-        private void error() {
-            throw new BusinessException();
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public Map<String, Object> getDict() {
-            return dict;
-        }
-
-        public List<Integer> getAges() {
-            return ages;
-        }
-
-        public RetryableMethodTimedOutEvent getEvent() {
-            return event;
-        }
-
-        public void reset() {
-            name = null;
-            dict = null;
-            ages = null;
-            event = null;
-        }
-    }
 }

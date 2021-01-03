@@ -1,1 +1,22 @@
-{"invokerId":"springRetryableMethodInterceptorTest.TestRetry","methodName":"handle","noRetryForClass":[],"parameterTypes":["java.lang.String","java.util.Map","java.util.List"],"parameterValues":["TEST",{"TEST":"TEST"},[1,2]],"retryForClass":[],"shouldRemoveTrackerAfterCompleted":true}
+{
+  "invokerId": "testRetry",
+  "methodName": "handle",
+  "noRetryForClass": [],
+  "parameterTypes": [
+    "java.lang.String",
+    "java.util.Map",
+    "java.util.List"
+  ],
+  "parameterValues": [
+    "TEST",
+    {
+      "TEST": "TEST"
+    },
+    [
+      1,
+      2
+    ]
+  ],
+  "retryForClass": [],
+  "shouldRemoveTrackerAfterCompleted": true
+}
