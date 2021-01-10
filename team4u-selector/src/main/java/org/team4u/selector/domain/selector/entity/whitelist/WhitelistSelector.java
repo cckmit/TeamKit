@@ -28,33 +28,35 @@ public class WhitelistSelector implements Selector {
     /**
      * 选择
      *
-     * @return 若命中则返回常量MATCH，负责为常量NONE
+     * @return 若命中则返回常量MATCH，否则为常量NONE
      */
     @Override
     public String select(SelectorBinding binding) {
         Map.Entry<String, Object> value = value(binding);
 
-        if (keyOf(value.getKey(), value.getValue())) {
+        if (matchKeyOrAny(value.getKey(), value.getValue())) {
             return MATCH;
         }
 
         return NONE;
     }
 
-    private boolean keyOf(String key, Object userId) {
+    private boolean matchKeyOrAny(String key, Object userId) {
+        if (match(key, userId)) {
+            return true;
+        }
+
+        // 无法匹配key，则尝试查找*
+        return match(ANY, userId);
+    }
+
+    private boolean match(String key, Object userId) {
         return config.getRules()
                 .stream()
                 .filter(it -> it.containsKey(key))
                 .map(it -> matchName(key, it.get(key), userId))
                 .findFirst()
-                // 无法匹配key，则尝试查找*
-                .orElseGet(() -> config.getRules()
-                        .stream()
-                        .filter(it -> it.containsKey(ANY))
-                        .findFirst()
-                        .map(it -> matchName(key, it.get(ANY), userId))
-                        .orElse(false)
-                );
+                .orElse(false);
     }
 
     private boolean matchName(String key, String nameId, Object userId) {
