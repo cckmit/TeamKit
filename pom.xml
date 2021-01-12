@@ -18,6 +18,7 @@
         <module>team4u-notification</module>
         <module>team4u-workflow</module>
         <module>team4u-config</module>
+        <module>team4u-counter</module>
     </modules>
 
     <properties>

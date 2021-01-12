@@ -2,7 +2,7 @@ package org.team4u.config.infrastructure.persistence;
 
 import java.util.Date;
 
-public class SystemConfig {
+public class SystemConfigDo {
 
     private Long id;
 

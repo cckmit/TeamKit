@@ -1,8 +1,8 @@
 package org.team4u.config.infrastructure.persistence;
 
 import org.team4u.config.domain.SimpleConfig;
-import org.team4u.config.domain.SimpleConfigRepository;
 import org.team4u.config.domain.SimpleConfigComparator;
+import org.team4u.config.domain.SimpleConfigRepository;
 
 import java.util.List;
 
@@ -44,7 +44,7 @@ public class CacheableSimpleConfigRepository implements SimpleConfigRepository {
     }
 
     private boolean isExpired() {
-        return System.currentTimeMillis() - lastUpdateTimeMillis > config.getMaxEffectiveSec() * 1000;
+        return System.currentTimeMillis() - lastUpdateTimeMillis > config.getMaxEffectiveSec() * 1000L;
     }
 
     public static class Config {

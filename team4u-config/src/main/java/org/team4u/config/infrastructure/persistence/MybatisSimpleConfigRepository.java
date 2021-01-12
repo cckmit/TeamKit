@@ -23,28 +23,28 @@ public class MybatisSimpleConfigRepository implements SimpleConfigRepository {
 
     @Override
     public List<SimpleConfig> allConfigs() {
-        List<SystemConfig> systemConfigs = mapper.selectList(new QueryWrapper<>());
-        return toSimpleConfigs(systemConfigs);
+        List<SystemConfigDo> systemConfigDos = mapper.selectList(new QueryWrapper<>());
+        return toSimpleConfigs(systemConfigDos);
     }
 
-    private List<SimpleConfig> toSimpleConfigs(List<SystemConfig> systemConfigs) {
-        return systemConfigs.stream()
+    private List<SimpleConfig> toSimpleConfigs(List<SystemConfigDo> systemConfigDos) {
+        return systemConfigDos.stream()
                 .map(this::toSimpleConfig)
                 .collect(Collectors.toList());
     }
 
-    private SimpleConfig toSimpleConfig(SystemConfig systemConfig) {
+    private SimpleConfig toSimpleConfig(SystemConfigDo systemConfigDo) {
         SimpleConfig simpleConfig = new SimpleConfig(
-                new SimpleConfigId(systemConfig.getConfigType(), systemConfig.getConfigKey()),
-                systemConfig.getConfigValue(),
-                systemConfig.getDescription(),
-                systemConfig.getSequenceNo(),
-                systemConfig.getEnabled(),
-                systemConfig.getCreatedBy(),
-                systemConfig.getCreateTime()
+                new SimpleConfigId(systemConfigDo.getConfigType(), systemConfigDo.getConfigKey()),
+                systemConfigDo.getConfigValue(),
+                systemConfigDo.getDescription(),
+                systemConfigDo.getSequenceNo(),
+                systemConfigDo.getEnabled(),
+                systemConfigDo.getCreatedBy(),
+                systemConfigDo.getCreateTime()
         );
 
-        BeanUtil.copyProperties(systemConfig, simpleConfig);
+        BeanUtil.copyProperties(systemConfigDo, simpleConfig);
 
         return simpleConfig;
     }
