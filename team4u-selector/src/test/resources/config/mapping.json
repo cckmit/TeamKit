@@ -1,0 +1,8 @@
+{
+  "id": "test",
+  "type": "mapping",
+  "body": {
+    "x": "1",
+    "y": "2"
+  }
+}

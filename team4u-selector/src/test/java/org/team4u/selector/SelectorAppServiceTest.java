@@ -25,6 +25,14 @@ import org.team4u.template.infrastructure.BeetlTemplateEngine;
 public class SelectorAppServiceTest {
 
     @Test
+    public void mapping() {
+        SelectorAppService s = createService("config/mapping.json");
+        Assert.assertEquals("1", s.select("test", new SingleValueBinding("x")));
+        Assert.assertEquals("2", s.select("test", new SingleValueBinding("y")));
+        Assert.assertEquals(Selector.NONE, s.select("test", new SingleValueBinding("z")));
+    }
+
+    @Test
     public void whitelist() {
         SelectorAppService s = createService("config/whitelistConfig.json");
         Assert.assertTrue(s.match("test", new SimpleMapBinding().set("a", 1)));
