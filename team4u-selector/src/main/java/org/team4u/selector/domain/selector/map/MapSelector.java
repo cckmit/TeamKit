@@ -1,4 +1,4 @@
-package org.team4u.selector.domain.selector.mapping;
+package org.team4u.selector.domain.selector.map;
 
 import org.team4u.selector.domain.selector.Selector;
 import org.team4u.selector.domain.selector.binding.SelectorBinding;

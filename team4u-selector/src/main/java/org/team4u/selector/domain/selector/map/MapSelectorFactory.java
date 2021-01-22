@@ -1,4 +1,4 @@
-package org.team4u.selector.domain.selector.mapping;
+package org.team4u.selector.domain.selector.map;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.json.JSONObject;
