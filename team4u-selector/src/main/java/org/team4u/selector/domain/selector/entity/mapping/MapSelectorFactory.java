@@ -10,11 +10,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 表达式选择器构建工厂
+ * 映射选择器构建工厂
  *
  * @author jay.wu
  */
-public class MappingSelectorFactory implements SelectorFactory {
+public class MapSelectorFactory implements SelectorFactory {
 
     public static Map<String, String> toConfig(String jsonConfig) {
         JSONObject config = JSONUtil.parseObj(jsonConfig);
@@ -29,11 +29,11 @@ public class MappingSelectorFactory implements SelectorFactory {
 
     @Override
     public Selector create(String jsonConfig) {
-        return new MappingSelector(toConfig(jsonConfig));
+        return new MapSelector(toConfig(jsonConfig));
     }
 
     @Override
     public String id() {
-        return "mapping";
+        return "map";
     }
 }

@@ -1,6 +1,6 @@
 {
   "id": "test",
-  "type": "mapping",
+  "type": "map",
   "body": {
     "x": "1",
     "y": "2"

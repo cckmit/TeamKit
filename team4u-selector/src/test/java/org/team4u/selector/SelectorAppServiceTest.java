@@ -25,8 +25,8 @@ import org.team4u.template.infrastructure.BeetlTemplateEngine;
 public class SelectorAppServiceTest {
 
     @Test
-    public void mapping() {
-        SelectorAppService s = createService("config/mapping.json");
+    public void map() {
+        SelectorAppService s = createService("config/map.json");
         Assert.assertEquals("1", s.select("test", new SingleValueBinding("x")));
         Assert.assertEquals("2", s.select("test", new SingleValueBinding("y")));
         Assert.assertEquals(Selector.NONE, s.select("test", new SingleValueBinding("z")));

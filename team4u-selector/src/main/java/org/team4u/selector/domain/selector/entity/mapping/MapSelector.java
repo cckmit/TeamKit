@@ -7,15 +7,15 @@ import org.team4u.selector.domain.selector.entity.binding.SingleValueBinding;
 import java.util.Map;
 
 /**
- * 简单映射选择器
+ * 映射选择器
  *
  * @author jay.wu
  */
-public class MappingSelector implements Selector {
+public class MapSelector implements Selector {
 
     private final Map<String, String> rules;
 
-    public MappingSelector(Map<String, String> rules) {
+    public MapSelector(Map<String, String> rules) {
         this.rules = rules;
     }
 
