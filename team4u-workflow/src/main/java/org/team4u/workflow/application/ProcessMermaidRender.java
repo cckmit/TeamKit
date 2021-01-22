@@ -2,7 +2,7 @@ package org.team4u.workflow.application;
 
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import org.team4u.selector.domain.selector.entity.expression.ExpressionSelectorFactory;
+import org.team4u.selector.domain.selector.expression.ExpressionSelectorFactory;
 import org.team4u.workflow.domain.definition.ProcessDefinition;
 import org.team4u.workflow.domain.definition.ProcessNode;
 import org.team4u.workflow.domain.definition.node.*;

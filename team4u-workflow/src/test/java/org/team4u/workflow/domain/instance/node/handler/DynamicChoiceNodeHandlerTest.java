@@ -3,7 +3,7 @@ package org.team4u.workflow.domain.instance.node.handler;
 import com.alibaba.fastjson.JSON;
 import org.junit.Assert;
 import org.junit.Test;
-import org.team4u.selector.domain.config.entity.SelectorConfig;
+import org.team4u.selector.domain.selector.SelectorConfig;
 import org.team4u.workflow.domain.definition.node.DynamicChoiceNode;
 import org.team4u.workflow.domain.instance.ProcessInstance;
 

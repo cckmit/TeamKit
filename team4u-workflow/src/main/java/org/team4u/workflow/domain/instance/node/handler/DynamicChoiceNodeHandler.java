@@ -2,7 +2,7 @@ package org.team4u.workflow.domain.instance.node.handler;
 
 import cn.hutool.core.bean.BeanUtil;
 import org.team4u.selector.application.SelectorAppService;
-import org.team4u.selector.domain.selector.entity.binding.SimpleMapBinding;
+import org.team4u.selector.domain.selector.binding.SimpleMapBinding;
 import org.team4u.workflow.domain.definition.node.DynamicChoiceNode;
 
 /**

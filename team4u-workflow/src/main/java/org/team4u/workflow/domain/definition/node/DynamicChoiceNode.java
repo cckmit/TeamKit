@@ -1,6 +1,6 @@
 package org.team4u.workflow.domain.definition.node;
 
-import org.team4u.selector.domain.config.entity.SelectorConfig;
+import org.team4u.selector.domain.selector.SelectorConfig;
 
 /**
  * 动态选择器节点
