@@ -10,7 +10,7 @@
 <dependency>
   <groupId>org.team4u</groupId>
   <artifactId>team4u-workflow</artifactId>
-  <version>2.2.4-SNAPSHOT</version>
+  <version>2.3.0-SNAPSHOT</version>
 </dependency>
 ```
 

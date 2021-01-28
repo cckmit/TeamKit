@@ -21,6 +21,12 @@ public class SimpleCommandExecutor extends IdObjectService<String, CommandRoutes
 
     private final Map<String, FilterChain<CommandHandler.Context>> filterChainMap = new HashMap<>();
 
+    public SimpleCommandExecutor() {
+        super(CommandRoutesBuilder.class);
+
+        initFilterChains();
+    }
+
     public SimpleCommandExecutor(List<CommandRoutesBuilder> objects) {
         super(objects);
 
@@ -29,9 +35,18 @@ public class SimpleCommandExecutor extends IdObjectService<String, CommandRoutes
 
     private void initFilterChains() {
         for (CommandRoutesBuilder builder : idObjects()) {
-            FilterChain<CommandHandler.Context> filterChain = FilterChainFactory.buildFilterChain(builder.configure());
-            filterChainMap.put(builder.id(), filterChain);
+            initFilterChain(builder);
         }
+    }
+
+    public void saveAndInitFilterChain(CommandRoutesBuilder builder) {
+        saveIdObject(builder);
+        initFilterChain(builder);
+    }
+
+    private void initFilterChain(CommandRoutesBuilder builder) {
+        FilterChain<CommandHandler.Context> filterChain = FilterChainFactory.buildFilterChain(builder.configure());
+        filterChainMap.put(builder.id(), filterChain);
     }
 
     @Override

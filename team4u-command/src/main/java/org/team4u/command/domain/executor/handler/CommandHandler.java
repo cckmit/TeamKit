@@ -16,30 +16,27 @@ public interface CommandHandler extends Filter<CommandHandler.Context> {
 
     @Override
     default void doFilter(Context context, FilterInvoker<Context> nextFilterInvoker) {
-        handle(context);
-        nextFilterInvoker.invoke(context);
+        if (handle(context)) {
+            nextFilterInvoker.invoke(context);
+        }
     }
 
     /**
      * 处理命令
      *
      * @param context 处理器上下文
+     * @return true则继续处理，false则停止后续处理
      */
-    void handle(Context context);
+    boolean handle(Context context);
 
     class Context {
 
-        private String commandLogId;
-
         private final String commandId;
-
         private final CommandConfig config;
-
         private final Object request;
-
-        private Object response;
-
         private final Dict extraAttributes = new Dict();
+        private String commandLogId;
+        private Object response;
 
         public Context(String commandId, CommandConfig config, Object request) {
             this.commandId = commandId;

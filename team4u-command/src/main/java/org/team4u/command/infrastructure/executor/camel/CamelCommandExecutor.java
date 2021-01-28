@@ -24,28 +24,41 @@ public class CamelCommandExecutor extends IdObjectService<String, CommandRoutesB
 
     private final Map<String, CamelContext> contexts = new HashMap<>();
 
+    public CamelCommandExecutor() {
+        super(CommandRoutesBuilder.class);
+        start();
+    }
+
     public CamelCommandExecutor(List<CommandRoutesBuilder> builders) {
         super(builders);
-
         start();
     }
 
     private void start() {
-        try {
-            for (CommandRoutesBuilder builder : idObjects()) {
-                CamelContext context = new DefaultCamelContext();
-                builder.addRoutesToCamelContext(context);
-                context.start();
+        for (CommandRoutesBuilder builder : idObjects()) {
+            start(builder);
+        }
+    }
 
-                contexts.put(builder.id(), context);
-            }
+    public void saveAndStart(CommandRoutesBuilder builder) {
+        saveIdObject(builder);
+        start(builder);
+    }
+
+    private void start(CommandRoutesBuilder builder) {
+        try {
+            CamelContext context = new DefaultCamelContext();
+            builder.addRoutesToCamelContext(context);
+            context.start();
+
+            contexts.put(builder.id(), context);
         } catch (Exception e) {
             throw new SystemException(e);
         }
     }
 
     @Override
-    public Object execute(String commandId, CommandConfig config, Object  request) {
+    public Object execute(String commandId, CommandConfig config, Object request) {
         CamelContext camelContext = contexts.get(commandId);
         if (camelContext == null) {
             throw new SystemDataNotExistException("commandId=" + commandId);
