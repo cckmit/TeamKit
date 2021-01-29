@@ -59,7 +59,7 @@ public class GlobalDynamicMasker implements Masker {
                 return value;
             }
 
-            return masker.mask(value.toString());
+            return masker.mask(value);
         }
     }
 }

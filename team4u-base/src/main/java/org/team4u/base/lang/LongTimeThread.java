@@ -52,13 +52,13 @@ public abstract class LongTimeThread extends Thread implements Closeable {
     @Override
     public void run() {
         while (!closed) {
-            ThreadUtil.safeSleep(runIntervalMillis());
-
             try {
                 onRun();
             } catch (Exception e) {
                 log.error(e, e.getMessage());
             }
+
+            ThreadUtil.safeSleep(runIntervalMillis());
         }
     }
 
