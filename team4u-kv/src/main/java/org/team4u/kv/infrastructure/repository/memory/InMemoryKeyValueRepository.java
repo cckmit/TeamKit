@@ -1,4 +1,4 @@
-package org.team4u.kv.infrastruture.repository.memory;
+package org.team4u.kv.infrastructure.repository.memory;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.Log;

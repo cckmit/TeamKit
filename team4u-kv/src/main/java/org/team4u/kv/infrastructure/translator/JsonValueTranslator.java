@@ -1,4 +1,4 @@
-package org.team4u.kv.infrastruture.translator;
+package org.team4u.kv.infrastructure.translator;
 
 import org.team4u.base.util.ConvertUtil;
 import org.team4u.kv.ValueTranslator;

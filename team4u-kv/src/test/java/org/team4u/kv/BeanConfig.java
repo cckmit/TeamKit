@@ -1,25 +1,33 @@
 package org.team4u.kv;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.db.ds.simple.SimpleDataSource;
-import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.handler.TableNameHandler;
+import com.baomidou.mybatisplus.extension.plugins.inner.DynamicTableNameInnerInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.InnerInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
-import org.team4u.kv.infrastruture.repository.db.DbKeyValueMapper;
-import org.team4u.kv.infrastruture.repository.db.DbKeyValueRepository;
-import org.team4u.kv.infrastruture.repository.db.DynamicTableNameParser;
-import org.team4u.kv.infrastruture.resource.SimpleStoreResourceService;
-import org.team4u.kv.resource.StoreResourceService;
 import org.apache.ibatis.plugin.Interceptor;
 import org.mybatis.spring.mapper.MapperScannerConfigurer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Repository;
+import org.team4u.kv.infrastructure.repository.db.DbKeyValueMapper;
+import org.team4u.kv.infrastructure.repository.db.DbKeyValueRepository;
+import org.team4u.kv.infrastructure.repository.db.TableIdHandler;
+import org.team4u.kv.infrastructure.resource.SimpleStoreResourceService;
+import org.team4u.kv.resource.StoreResourceService;
 
 import javax.sql.DataSource;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Configuration
+@ComponentScan("org.team4u.kv.infrastructure.repository.db")
 public class BeanConfig {
 
     @Bean
@@ -41,10 +49,28 @@ public class BeanConfig {
     }
 
     @Bean
-    public PaginationInterceptor paginationInterceptor() {
-        PaginationInterceptor paginationInterceptor = new PaginationInterceptor();
-        paginationInterceptor.setSqlParserList(CollUtil.newArrayList(new DynamicTableNameParser()));
-        return paginationInterceptor;
+    public MybatisPlusInterceptor mybatisPlusInterceptor(List<InnerInterceptor> innerInterceptorList) {
+        MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
+        for (InnerInterceptor innerInterceptor : innerInterceptorList) {
+            interceptor.addInnerInterceptor(innerInterceptor);
+        }
+        return interceptor;
+    }
+
+    @Bean
+    public DynamicTableNameInnerInterceptor dynamicTableNameInnerInterceptor(List<TableIdHandler> tableIdHandlers) {
+        DynamicTableNameInnerInterceptor dynamicTableNameInnerInterceptor = new DynamicTableNameInnerInterceptor();
+        Map<String, TableNameHandler> map = new HashMap<>();
+        for (TableIdHandler tableIdHandler : tableIdHandlers) {
+            map.put(tableIdHandler.tableName(), tableIdHandler);
+        }
+        dynamicTableNameInnerInterceptor.setTableNameHandlerMap(map);
+        return dynamicTableNameInnerInterceptor;
+    }
+
+    @Bean
+    public PaginationInnerInterceptor paginationInterceptor() {
+        return new PaginationInnerInterceptor();
     }
 
     @Bean

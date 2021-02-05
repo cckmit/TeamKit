@@ -1,7 +1,7 @@
 package org.team4u.kv;
 
 import cn.hutool.core.io.FileUtil;
-import org.team4u.kv.infrastruture.repository.file.SimpleFileKeyValueRepository;
+import org.team4u.kv.infrastructure.repository.file.SimpleFileKeyValueRepository;
 
 public class SimpleFileKeyValueRepositoryTest extends KeyValueServiceTest {
 

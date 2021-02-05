@@ -1,4 +1,4 @@
-package org.team4u.kv.infrastruture.repository.db;
+package org.team4u.kv.infrastructure.repository.db;
 
 import cn.hutool.core.util.StrUtil;
 
@@ -28,5 +28,9 @@ public class TableNameContext {
         }
 
         return tableName.split(":")[0];
+    }
+
+    public static void clear() {
+        TABLE_NAME_THREAD_LOCAL.remove();
     }
 }

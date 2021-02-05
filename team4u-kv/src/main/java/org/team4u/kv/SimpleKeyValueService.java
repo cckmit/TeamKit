@@ -1,6 +1,6 @@
 package org.team4u.kv;
 
-import org.team4u.kv.infrastruture.translator.JsonValueTranslator;
+import org.team4u.kv.infrastructure.translator.JsonValueTranslator;
 
 import java.util.Collection;
 import java.util.Map;

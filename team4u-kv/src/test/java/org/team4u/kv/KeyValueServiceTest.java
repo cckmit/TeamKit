@@ -71,13 +71,13 @@ public abstract class KeyValueServiceTest {
     @Test
     @Transactional(value = "txManager")
     public void expirationWithClean() {
-        testForExpirationKv(200, true);
+        testForExpirationKv(500, true);
     }
 
     @Test
     @Transactional(value = "txManager")
     public void expirationWithoutClean() {
-        testForExpirationKv(200, false);
+        testForExpirationKv(500, false);
     }
 
     private void testForExpirationKv(int ttlMillis, boolean shouldClean) {
@@ -85,13 +85,13 @@ public abstract class KeyValueServiceTest {
         s.put("x", "1");
         s.put("y", "2");
 
-        Assert.assertTrue(s.expirationTimestamp("x") - System.currentTimeMillis() > ttlMillis - 40);
-        Assert.assertTrue(s.expirationTimestamp("y") - System.currentTimeMillis() > ttlMillis - 40);
+        Assert.assertTrue(s.expirationTimestamp("x") - System.currentTimeMillis() > 0);
+        Assert.assertTrue(s.expirationTimestamp("y") - System.currentTimeMillis() > 0);
 
         Assert.assertEquals("1", s.get("x"));
         Assert.assertEquals("2", s.get("y"));
 
-        ThreadUtil.sleep(ttlMillis + 50);
+        ThreadUtil.sleep(ttlMillis);
 
         if (shouldClean) {
             keyValueRepository().removeExpirationValues(100);

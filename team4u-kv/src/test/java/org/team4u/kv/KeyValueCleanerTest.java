@@ -1,10 +1,10 @@
 package org.team4u.kv;
 
 import cn.hutool.core.thread.ThreadUtil;
-import org.team4u.kv.infrastruture.repository.memory.InMemoryKeyValueRepository;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.transaction.annotation.Transactional;
+import org.team4u.kv.infrastructure.repository.memory.InMemoryKeyValueRepository;
 
 public abstract class KeyValueCleanerTest {
 

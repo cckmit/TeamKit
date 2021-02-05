@@ -1,8 +1,7 @@
-package org.team4u.kv.infrastruture.repository.db;
+package org.team4u.kv.infrastructure.repository.db;
 
 import cn.hutool.core.util.StrUtil;
-import com.baomidou.mybatisplus.extension.parsers.ITableNameHandler;
-import org.apache.ibatis.reflection.MetaObject;
+import org.springframework.stereotype.Component;
 
 /**
  * 键值表名处理器
@@ -11,10 +10,17 @@ import org.apache.ibatis.reflection.MetaObject;
  *
  * @author jay.wu
  */
-public class KeyValueTableNameHandler implements ITableNameHandler {
+@Component
+public class KeyValueTableNameHandler implements TableIdHandler {
+
 
     @Override
-    public String dynamicTableName(MetaObject metaObject, String sql, String tableName) {
+    public String tableName() {
+        return "key_value";
+    }
+
+    @Override
+    public String dynamicTableName(String sql, String tableName) {
         if (!StrUtil.equals(TableNameContext.getOriginalTableName(), tableName)) {
             return tableName;
         }

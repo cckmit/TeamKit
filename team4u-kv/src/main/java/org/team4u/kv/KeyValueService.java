@@ -4,7 +4,7 @@ import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 import org.team4u.base.log.LogMessage;
-import org.team4u.kv.infrastruture.translator.JsonValueTranslator;
+import org.team4u.kv.infrastructure.translator.JsonValueTranslator;
 import org.team4u.kv.model.KeyValue;
 import org.team4u.kv.model.KeyValueFactory;
 import org.team4u.kv.model.KeyValueId;

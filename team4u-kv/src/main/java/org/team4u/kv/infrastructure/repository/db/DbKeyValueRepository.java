@@ -1,10 +1,11 @@
-package org.team4u.kv.infrastruture.repository.db;
+package org.team4u.kv.infrastructure.repository.db;
 
 import cn.hutool.core.lang.func.Func0;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.springframework.dao.DuplicateKeyException;
 import org.team4u.base.log.LogMessage;
 import org.team4u.base.log.LogMessageContext;
 import org.team4u.kv.KeyValueRepository;
@@ -13,7 +14,6 @@ import org.team4u.kv.model.KeyValueFactory;
 import org.team4u.kv.model.KeyValueId;
 import org.team4u.kv.resource.StoreResource;
 import org.team4u.kv.resource.StoreResourceService;
-import org.springframework.dao.DuplicateKeyException;
 
 import java.util.Collection;
 import java.util.Date;

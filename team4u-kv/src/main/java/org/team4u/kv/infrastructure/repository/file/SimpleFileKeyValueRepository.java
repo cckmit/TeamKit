@@ -1,9 +1,9 @@
-package org.team4u.kv.infrastruture.repository.file;
+package org.team4u.kv.infrastructure.repository.file;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
-import org.team4u.kv.infrastruture.repository.memory.InMemoryKeyValueRepository;
+import org.team4u.kv.infrastructure.repository.memory.InMemoryKeyValueRepository;
 import org.team4u.kv.model.KeyValue;
 import org.team4u.kv.model.KeyValueId;
 

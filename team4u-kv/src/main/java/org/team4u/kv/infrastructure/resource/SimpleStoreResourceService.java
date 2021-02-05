@@ -1,4 +1,4 @@
-package org.team4u.kv.infrastruture.resource;
+package org.team4u.kv.infrastructure.resource;
 
 import cn.hutool.core.lang.ConsistentHash;
 import org.team4u.kv.resource.StoreResource;

@@ -1,9 +1,9 @@
 package org.team4u.kv;
 
-import org.team4u.kv.infrastruture.resource.SimpleStoreResourceService;
-import org.team4u.kv.resource.StoreResource;
 import org.junit.Assert;
 import org.junit.Test;
+import org.team4u.kv.infrastructure.resource.SimpleStoreResourceService;
+import org.team4u.kv.resource.StoreResource;
 
 import java.util.List;
 

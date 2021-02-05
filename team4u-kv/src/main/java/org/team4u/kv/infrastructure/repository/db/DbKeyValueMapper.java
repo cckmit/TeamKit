@@ -1,4 +1,4 @@
-package org.team4u.kv.infrastruture.repository.db;
+package org.team4u.kv.infrastructure.repository.db;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.springframework.stereotype.Repository;

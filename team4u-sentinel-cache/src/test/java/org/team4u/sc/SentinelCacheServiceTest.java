@@ -5,7 +5,7 @@ import cn.hutool.core.util.ObjectUtil;
 import org.junit.Assert;
 import org.junit.Test;
 import org.team4u.kv.KeyValueCleaner;
-import org.team4u.kv.infrastruture.repository.memory.InMemoryKeyValueRepository;
+import org.team4u.kv.infrastructure.repository.memory.InMemoryKeyValueRepository;
 
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicReference;
