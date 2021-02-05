@@ -1,11 +1,16 @@
 package org.team4u.ddd.infrastructure.persistence.mybatis;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 import java.util.Date;
 
 @TableName("stored_event")
 public class StoredEventEntity {
+
+    @TableId(type = IdType.AUTO)
+    private Long id;
 
     private long eventId;
 
@@ -20,6 +25,15 @@ public class StoredEventEntity {
     private Date createTime;
 
     private Date updateTime;
+
+    public Long getId() {
+        return id;
+    }
+
+    public StoredEventEntity setId(Long id) {
+        this.id = id;
+        return this;
+    }
 
     public String getDomainId() {
         return domainId;

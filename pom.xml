@@ -18,6 +18,7 @@
         <module>team4u-notification</module>
         <module>team4u-workflow</module>
         <module>team4u-config</module>
+        <module>team4u-counter</module>
     </modules>
 
     <properties>
@@ -36,7 +37,6 @@
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
             <version>${hutool.version}</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>log4j</groupId>
