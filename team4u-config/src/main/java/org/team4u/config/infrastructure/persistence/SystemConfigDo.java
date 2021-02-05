@@ -1,7 +1,10 @@
 package org.team4u.config.infrastructure.persistence;
 
+import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.util.Date;
 
+@TableName("system_config")
 public class SystemConfigDo {
 
     private Long id;

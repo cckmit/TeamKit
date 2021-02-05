@@ -18,17 +18,23 @@
         <module>team4u-notification</module>
         <module>team4u-workflow</module>
         <module>team4u-config</module>
-        <module>team4u-counter</module>
     </modules>
 
     <properties>
+        <mybatis-plus.version>3.4.2</mybatis-plus.version>
+        <hutool.version>5.5.8</hutool.version>
+        <spring-data-jpa.version>2.3.1.RELEASE</spring-data-jpa.version>
+        <spring.version>5.2.7.RELEASE</spring.version>
+        <beetl.version>3.3.2.RELEASE</beetl.version>
+        <fastjson.version>1.2.75</fastjson.version>
+        <byte-buddy.version>1.10.20</byte-buddy.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
-            <version>5.3.8</version>
+            <version>${hutool.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -47,6 +53,18 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
             <version>1.9.5</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.199</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
