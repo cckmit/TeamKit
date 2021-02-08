@@ -3,7 +3,6 @@ package org.team4u.base.lang;
 import cn.hutool.core.thread.ThreadUtil;
 import org.junit.Assert;
 import org.junit.Test;
-import org.team4u.base.lang.LongTimeThread;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -29,7 +28,7 @@ public class LongTimeThreadTest {
         };
 
         t.start();
-        ThreadUtil.safeSleep(10);
+        ThreadUtil.safeSleep(15);
         t.close();
         t.awaitTermination();
         Assert.assertEquals(2, counter.get());

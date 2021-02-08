@@ -9,7 +9,8 @@ public class ManuallyLongTimeThreadTest {
     @Test
     public void notEnabled() {
         TestThread t = new TestThread(false, 1);
-        t.run();
+        t.start();
+        ThreadUtil.sleep(100);
         Assert.assertEquals(0, t.getRunCount());
     }
 
