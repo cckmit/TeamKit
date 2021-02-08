@@ -1,14 +1,19 @@
 package org.team4u.ddd.notification;
 
 import cn.hutool.core.collection.CollUtil;
-import org.team4u.ddd.DbTest;
-import org.team4u.ddd.infrastructure.persistence.mybatis.MybatisPublishedNotificationTrackerRepository;
-import org.team4u.ddd.infrastructure.persistence.mybatis.PublishedNotificationTrackerMapper;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.test.context.ContextConfiguration;
 import org.team4u.ddd.TestUtil;
+import org.team4u.ddd.infrastructure.persistence.mybatis.MybatisPublishedNotificationTrackerRepository;
+import org.team4u.ddd.infrastructure.persistence.mybatis.PublishedNotificationTrackerMapper;
+import org.team4u.test.DbTest;
+import org.team4u.test.TestBeanConfig;
 
+@ComponentScan("org.team4u.ddd.infrastructure.persistence.mybatis")
+@ContextConfiguration(classes = TestBeanConfig.class)
 public class PublishedNotificationTrackerRepositoryTest extends DbTest {
     @Autowired
     private PublishedNotificationTrackerMapper mapper;

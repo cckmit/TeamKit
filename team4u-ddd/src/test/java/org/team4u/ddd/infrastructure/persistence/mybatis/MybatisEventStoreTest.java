@@ -4,22 +4,33 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.team4u.ddd.DbTest;
+import org.springframework.test.context.ContextConfiguration;
 import org.team4u.ddd.FakeLongIdentityFactory;
 import org.team4u.ddd.TestUtil;
 import org.team4u.ddd.domain.model.AbstractDomainEvent;
 import org.team4u.ddd.event.EventStore;
 import org.team4u.ddd.event.StoredEvent;
+import org.team4u.test.DbTest;
+import org.team4u.test.TestBeanConfig;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 
+@ContextConfiguration(classes = TestBeanConfig.class)
 public class MybatisEventStoreTest extends DbTest {
 
     @Autowired
+    private EventStoreMapper mapper;
+
     private EventStore eventStore;
 
+    @PostConstruct
+    public void beforeClass() {
+        eventStore = new MybatisEventStore(mapper, FakeLongIdentityFactory.getInstance());
+    }
+
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         eventStore.removeStoredEventsBefore(Long.MAX_VALUE);
     }
 

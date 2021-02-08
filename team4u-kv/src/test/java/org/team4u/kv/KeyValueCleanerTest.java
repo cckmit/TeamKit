@@ -9,7 +9,7 @@ import org.team4u.kv.infrastructure.repository.memory.InMemoryKeyValueRepository
 public abstract class KeyValueCleanerTest {
 
     @Test
-    @Transactional(value = "txManager")
+    @Transactional
     public void testExpirationKv() {
         KeyValueService keyValueService = newKeyValueService();
         keyValueService.put("T", "x", "1", 500);

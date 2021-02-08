@@ -6,10 +6,12 @@ import com.alibaba.fastjson.JSON;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
 import org.team4u.base.config.ConfigService;
 import org.team4u.base.config.LocalJsonConfigService;
 import org.team4u.ddd.event.EventStore;
 import org.team4u.ddd.infrastructure.persistence.memory.InMemoryEventStore;
+import org.team4u.test.DbTest;
 import org.team4u.workflow.TestUtil;
 import org.team4u.workflow.application.command.CreateProcessFormCommand;
 import org.team4u.workflow.application.command.StartProcessFormCommand;
@@ -20,7 +22,7 @@ import org.team4u.workflow.domain.definition.ProcessDefinitionId;
 import org.team4u.workflow.domain.form.DefaultFormPermissionService;
 import org.team4u.workflow.domain.instance.ProcessInstanceDetail;
 import org.team4u.workflow.domain.instance.node.handler.DynamicChoiceNodeHandler;
-import org.team4u.workflow.infrastructure.DbTest;
+import org.team4u.workflow.infrastructure.BeanConfig;
 import org.team4u.workflow.infrastructure.persistence.definition.JsonProcessDefinitionRepository;
 import org.team4u.workflow.infrastructure.persistence.form.TestFormIndeRepository;
 import org.team4u.workflow.infrastructure.persistence.form.TestFormIndex;
@@ -32,6 +34,7 @@ import java.util.List;
 
 import static org.team4u.workflow.TestUtil.*;
 
+@ContextConfiguration(classes = BeanConfig.class)
 public class ProcessFormAppServiceTest extends DbTest {
 
     @Autowired

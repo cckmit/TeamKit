@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public abstract class KeyValueServiceTest {
 
     @Test
-    @Transactional(value = "txManager")
+    @Transactional
     public void putAndGet() {
         SimpleKeyValueService<String> s = newKeyValueService();
         s.put("x", "1");
@@ -28,7 +28,7 @@ public abstract class KeyValueServiceTest {
     }
 
     @Test
-    @Transactional(value = "txManager")
+    @Transactional
     public void size() {
         SimpleKeyValueService<String> s = newKeyValueService();
         s.put("x", "1");
@@ -37,7 +37,7 @@ public abstract class KeyValueServiceTest {
     }
 
     @Test
-    @Transactional(value = "txManager")
+    @Transactional
     public void clear() {
         SimpleKeyValueService<String> s = newKeyValueService();
         s.put("x", "1");
@@ -49,7 +49,7 @@ public abstract class KeyValueServiceTest {
     }
 
     @Test
-    @Transactional(value = "txManager")
+    @Transactional
     public void containsKey() {
         SimpleKeyValueService<String> s = newKeyValueService();
         s.put("x", "1");
@@ -59,7 +59,7 @@ public abstract class KeyValueServiceTest {
     }
 
     @Test
-    @Transactional(value = "txManager")
+    @Transactional
     public void putIfAbsent() {
         SimpleKeyValueService<String> s = newKeyValueService();
         s.put("x", "1");
@@ -69,13 +69,13 @@ public abstract class KeyValueServiceTest {
     }
 
     @Test
-    @Transactional(value = "txManager")
+    @Transactional
     public void expirationWithClean() {
         testForExpirationKv(500, true);
     }
 
     @Test
-    @Transactional(value = "txManager")
+    @Transactional
     public void expirationWithoutClean() {
         testForExpirationKv(500, false);
     }
@@ -109,7 +109,7 @@ public abstract class KeyValueServiceTest {
     }
 
     @Test
-    @Transactional(value = "txManager")
+    @Transactional
     public void putAll() {
         Map<String, String> data = new HashMap<>();
         data.put("x", "1");
@@ -121,7 +121,7 @@ public abstract class KeyValueServiceTest {
     }
 
     @Test
-    @Transactional(value = "txManager")
+    @Transactional
     public void values() {
         SimpleKeyValueService<String> s = newKeyValueService();
         s.put("x", "1");
@@ -131,7 +131,7 @@ public abstract class KeyValueServiceTest {
     }
 
     @Test
-    @Transactional(value = "txManager")
+    @Transactional
     public void entrySet() {
         SimpleKeyValueService<String> s = newKeyValueService();
         s.put("x", "1");
@@ -143,7 +143,7 @@ public abstract class KeyValueServiceTest {
     }
 
     @Test
-    @Transactional(value = "txManager")
+    @Transactional
     public void keySet() {
         SimpleKeyValueService<String> s = newKeyValueService();
         s.put("x", "1");
@@ -154,14 +154,14 @@ public abstract class KeyValueServiceTest {
     }
 
     @Test
-    @Transactional(value = "txManager")
+    @Transactional
     public void waitingForGet() throws TimeoutException {
         KeyValueService s = mockKeyValueServiceForWaitingGet(3);
         Assert.assertEquals("1", s.get("", "", String.class, 10, 20));
     }
 
     @Test
-    @Transactional(value = "txManager")
+    @Transactional
     public void waitingTimeoutForGet() {
         KeyValueService s = mockKeyValueServiceForWaitingGet(4);
 

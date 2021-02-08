@@ -6,16 +6,19 @@ import com.alibaba.fastjson.JSON;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
 import org.team4u.base.error.OptimisticLockingFailureException;
 import org.team4u.workflow.domain.definition.ProcessDefinition;
 import org.team4u.workflow.domain.instance.ProcessAssignee;
 import org.team4u.workflow.domain.instance.ProcessInstance;
 import org.team4u.workflow.domain.instance.ProcessInstanceDetail;
 import org.team4u.workflow.domain.instance.ProcessInstanceRepository;
-import org.team4u.workflow.infrastructure.DbTest;
+import org.team4u.test.DbTest;
+import org.team4u.workflow.infrastructure.BeanConfig;
 
 import static org.team4u.workflow.TestUtil.*;
 
+@ContextConfiguration(classes = BeanConfig.class)
 public class MybatisProcessInstanceRepositoryTest extends DbTest {
 
     @Autowired

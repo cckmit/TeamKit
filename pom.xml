@@ -18,7 +18,7 @@
         <module>team4u-notification</module>
         <module>team4u-workflow</module>
         <module>team4u-config</module>
-        <module>team4u-counter</module>
+        <module>team4u-test</module>
     </modules>
 
     <properties>
@@ -30,6 +30,8 @@
         <fastjson.version>1.2.75</fastjson.version>
         <byte-buddy.version>1.10.20</byte-buddy.version>
         <camel.version>3.7.1</camel.version>
+        <testable.version>0.4.8</testable.version>
+        <smart-http-server.version>1.0.22</smart-http-server.version>
     </properties>
 
     <dependencies>
@@ -39,33 +41,9 @@
             <version>${hutool.version}</version>
         </dependency>
         <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.17</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>1.9.5</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>1.4.199</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-            <version>${spring.version}</version>
+            <groupId>org.team4u</groupId>
+            <artifactId>team4u-test</artifactId>
+            <version>${version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -94,6 +72,15 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <argLine>
+                        -javaagent:${settings.localRepository}/com/alibaba/testable/testable-agent/${testable.version}/testable-agent-${testable.version}.jar
+                    </argLine>
+                </configuration>
             </plugin>
         </plugins>
     </build>

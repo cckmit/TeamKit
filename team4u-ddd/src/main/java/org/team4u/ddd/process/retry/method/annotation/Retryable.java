@@ -5,7 +5,7 @@ import java.lang.annotation.*;
 /**
  * 重试策略注解
  * <p>
- * 在需要重试的方法上使用，需要配合 @EnableRetry 使用
+ * 在需要重试的方法上使用
  *
  * @author jay.wu
  */

@@ -5,19 +5,33 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
-import org.team4u.ddd.DbTest;
 import org.team4u.ddd.TestUtil;
-import org.team4u.ddd.infrastructure.spring.TrackerBeanConfig;
+import org.team4u.ddd.infrastructure.persistence.memory.LogOnlyEventStore;
 import org.team4u.ddd.process.ProcessTimedOutEvent;
 import org.team4u.ddd.process.TimeConstrainedProcessTracker;
 import org.team4u.ddd.process.TimeConstrainedProcessTrackerRepository;
+import org.team4u.ddd.process.strategy.FakeRetryStrategyRepository;
 import org.team4u.ddd.process.strategy.FixedRetryStrategy;
+import org.team4u.test.DbTest;
+import org.team4u.test.TestBeanConfig;
 
-@ContextConfiguration(classes = TrackerBeanConfig.class)
+import javax.annotation.PostConstruct;
+
+@ContextConfiguration(classes = TestBeanConfig.class)
 public class MybatisTimeConstrainedProcessTrackerRepositoryTest extends DbTest {
 
     @Autowired
+    private TimeConstrainedProcessTrackerMapper mapper;
+
     private TimeConstrainedProcessTrackerRepository repository;
+
+    @PostConstruct
+    public void beforeClass() {
+        repository = new MybatisTimeConstrainedProcessTrackerRepository(
+                new LogOnlyEventStore(),
+                mapper,
+                new FakeRetryStrategyRepository());
+    }
 
     @Test
     public void allTimedOut() {

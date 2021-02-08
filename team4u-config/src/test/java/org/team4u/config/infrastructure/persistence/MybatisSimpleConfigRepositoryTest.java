@@ -4,11 +4,15 @@ import cn.hutool.core.date.DateUtil;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
 import org.team4u.config.TestUtil;
 import org.team4u.config.domain.SimpleConfig;
+import org.team4u.config.infrastructure.BeanConfig;
+import org.team4u.test.DbTest;
 
 import java.util.List;
 
+@ContextConfiguration(classes = BeanConfig.class)
 public class MybatisSimpleConfigRepositoryTest extends DbTest {
 
     @Autowired
