@@ -29,5 +29,17 @@
             <version>${camel.version}</version>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>org.team4u</groupId>
+            <artifactId>team4u-test</artifactId>
+            <version>${parent.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.team4u</groupId>
+            <artifactId>team4u-test</artifactId>
+            <version>${parent.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>

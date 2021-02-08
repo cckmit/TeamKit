@@ -17,5 +17,11 @@
             <artifactId>team4u-kv</artifactId>
             <version>${parent.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.team4u</groupId>
+            <artifactId>team4u-test</artifactId>
+            <version>${parent.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>
