@@ -5,7 +5,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
-import org.team4u.test.DbTest;
+import org.team4u.test.spring.SpringDbTest;
 import org.team4u.workflow.infrastructure.BeanConfig;
 
 import javax.annotation.PostConstruct;
@@ -13,7 +13,7 @@ import javax.annotation.PostConstruct;
 import static org.team4u.workflow.TestUtil.TEST;
 
 @ContextConfiguration(classes = BeanConfig.class)
-public class MybatisFormIndexRepositoryTest extends DbTest {
+public class MybatisFormIndexRepositoryTest extends SpringDbTest {
     @Autowired
     private TestFormIndexMapper testFormIndexMapper;
 

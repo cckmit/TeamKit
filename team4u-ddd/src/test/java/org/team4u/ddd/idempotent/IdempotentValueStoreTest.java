@@ -2,7 +2,7 @@ package org.team4u.ddd.idempotent;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.ContextConfiguration;
-import org.team4u.test.DbTest;
+import org.team4u.test.spring.SpringDbTest;
 import org.team4u.ddd.infrastructure.persistence.mybatis.IdempotentValueMapper;
 import org.team4u.ddd.infrastructure.persistence.mybatis.MybatisIdempotentValueStore;
 import org.junit.Assert;
@@ -10,11 +10,11 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.team4u.base.error.IdempotentException;
 import org.team4u.ddd.TestUtil;
-import org.team4u.test.TestBeanConfig;
+import org.team4u.test.spring.DbTestBeanConfig;
 
 @ComponentScan("org.team4u.ddd.infrastructure.persistence.mybatis")
-@ContextConfiguration(classes = TestBeanConfig.class)
-public class IdempotentValueStoreTest extends DbTest {
+@ContextConfiguration(classes = DbTestBeanConfig.class)
+public class IdempotentValueStoreTest extends SpringDbTest {
 
     @Autowired
     private IdempotentValueMapper mapper;

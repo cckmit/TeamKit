@@ -9,12 +9,12 @@ import org.springframework.test.context.ContextConfiguration;
 import org.team4u.ddd.TestUtil;
 import org.team4u.ddd.infrastructure.persistence.mybatis.MybatisPublishedNotificationTrackerRepository;
 import org.team4u.ddd.infrastructure.persistence.mybatis.PublishedNotificationTrackerMapper;
-import org.team4u.test.DbTest;
-import org.team4u.test.TestBeanConfig;
+import org.team4u.test.spring.SpringDbTest;
+import org.team4u.test.spring.DbTestBeanConfig;
 
 @ComponentScan("org.team4u.ddd.infrastructure.persistence.mybatis")
-@ContextConfiguration(classes = TestBeanConfig.class)
-public class PublishedNotificationTrackerRepositoryTest extends DbTest {
+@ContextConfiguration(classes = DbTestBeanConfig.class)
+public class PublishedNotificationTrackerRepositoryTest extends SpringDbTest {
     @Autowired
     private PublishedNotificationTrackerMapper mapper;
 

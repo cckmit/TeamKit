@@ -11,7 +11,7 @@ import org.team4u.base.config.ConfigService;
 import org.team4u.base.config.LocalJsonConfigService;
 import org.team4u.ddd.event.EventStore;
 import org.team4u.ddd.infrastructure.persistence.memory.InMemoryEventStore;
-import org.team4u.test.DbTest;
+import org.team4u.test.spring.SpringDbTest;
 import org.team4u.workflow.TestUtil;
 import org.team4u.workflow.application.command.CreateProcessFormCommand;
 import org.team4u.workflow.application.command.StartProcessFormCommand;
@@ -35,7 +35,7 @@ import java.util.List;
 import static org.team4u.workflow.TestUtil.*;
 
 @ContextConfiguration(classes = BeanConfig.class)
-public class ProcessFormAppServiceTest extends DbTest {
+public class ProcessFormAppServiceTest extends SpringDbTest {
 
     @Autowired
     private TestFormIndexMapper testFormIndexMapper;

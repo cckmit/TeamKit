@@ -10,14 +10,14 @@ import org.team4u.ddd.TestUtil;
 import org.team4u.ddd.domain.model.AbstractDomainEvent;
 import org.team4u.ddd.event.EventStore;
 import org.team4u.ddd.event.StoredEvent;
-import org.team4u.test.DbTest;
-import org.team4u.test.TestBeanConfig;
+import org.team4u.test.spring.SpringDbTest;
+import org.team4u.test.spring.DbTestBeanConfig;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
 
-@ContextConfiguration(classes = TestBeanConfig.class)
-public class MybatisEventStoreTest extends DbTest {
+@ContextConfiguration(classes = DbTestBeanConfig.class)
+public class MybatisEventStoreTest extends SpringDbTest {
 
     @Autowired
     private EventStoreMapper mapper;

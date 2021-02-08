@@ -13,13 +13,13 @@ import org.team4u.workflow.domain.instance.ProcessAssignee;
 import org.team4u.workflow.domain.instance.ProcessInstance;
 import org.team4u.workflow.domain.instance.ProcessInstanceDetail;
 import org.team4u.workflow.domain.instance.ProcessInstanceRepository;
-import org.team4u.test.DbTest;
+import org.team4u.test.spring.SpringDbTest;
 import org.team4u.workflow.infrastructure.BeanConfig;
 
 import static org.team4u.workflow.TestUtil.*;
 
 @ContextConfiguration(classes = BeanConfig.class)
-public class MybatisProcessInstanceRepositoryTest extends DbTest {
+public class MybatisProcessInstanceRepositoryTest extends SpringDbTest {
 
     @Autowired
     private ProcessInstanceRepository repository;

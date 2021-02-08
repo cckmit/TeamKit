@@ -8,12 +8,12 @@ import org.springframework.test.context.ContextConfiguration;
 import org.team4u.config.TestUtil;
 import org.team4u.config.domain.SimpleConfig;
 import org.team4u.config.infrastructure.BeanConfig;
-import org.team4u.test.DbTest;
+import org.team4u.test.spring.SpringDbTest;
 
 import java.util.List;
 
 @ContextConfiguration(classes = BeanConfig.class)
-public class MybatisSimpleConfigRepositoryTest extends DbTest {
+public class MybatisSimpleConfigRepositoryTest extends SpringDbTest {
 
     @Autowired
     private MybatisSimpleConfigRepository repository;

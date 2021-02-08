@@ -11,14 +11,14 @@ import org.team4u.kv.infrastructure.repository.db.DbKeyValueRepository;
 import org.team4u.kv.infrastructure.repository.db.TableIdHandler;
 import org.team4u.kv.infrastructure.resource.SimpleStoreResourceService;
 import org.team4u.kv.resource.StoreResourceService;
-import org.team4u.test.TestBeanConfig;
+import org.team4u.test.spring.DbTestBeanConfig;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Configuration
-@Import(TestBeanConfig.class)
+@Import(DbTestBeanConfig.class)
 @ComponentScan("org.team4u.kv.infrastructure.repository.db")
 public class BeanConfig {
 

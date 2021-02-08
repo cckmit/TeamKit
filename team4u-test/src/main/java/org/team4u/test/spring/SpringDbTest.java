@@ -1,4 +1,4 @@
-package org.team4u.test;
+package org.team4u.test.spring;
 
 import cn.hutool.core.io.FileUtil;
 import org.junit.Before;
@@ -13,6 +13,11 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * 基于db的单元测试
+ *
+ * @author jay.wu
+ */
 @RunWith(SpringJUnit4ClassRunner.class)
 @TestExecutionListeners({
         DependencyInjectionTestExecutionListener.class,
@@ -21,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 })
 @Transactional
 @ActiveProfiles(value = "test")
-public abstract class DbTest {
+public abstract class SpringDbTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -30,7 +35,7 @@ public abstract class DbTest {
     public void initDdl() {
         for (String ddlPath : ddlResourcePaths()) {
             String ddl = FileUtil.readUtf8String(ddlPath);
-            jdbcTemplate.execute(ddl);
+            jdbcTemplate().execute(ddl);
         }
     }
 

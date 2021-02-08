@@ -12,13 +12,13 @@ import org.team4u.ddd.process.TimeConstrainedProcessTracker;
 import org.team4u.ddd.process.TimeConstrainedProcessTrackerRepository;
 import org.team4u.ddd.process.strategy.FakeRetryStrategyRepository;
 import org.team4u.ddd.process.strategy.FixedRetryStrategy;
-import org.team4u.test.DbTest;
-import org.team4u.test.TestBeanConfig;
+import org.team4u.test.spring.SpringDbTest;
+import org.team4u.test.spring.DbTestBeanConfig;
 
 import javax.annotation.PostConstruct;
 
-@ContextConfiguration(classes = TestBeanConfig.class)
-public class MybatisTimeConstrainedProcessTrackerRepositoryTest extends DbTest {
+@ContextConfiguration(classes = DbTestBeanConfig.class)
+public class MybatisTimeConstrainedProcessTrackerRepositoryTest extends SpringDbTest {
 
     @Autowired
     private TimeConstrainedProcessTrackerMapper mapper;

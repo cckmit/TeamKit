@@ -1,4 +1,4 @@
-package org.team4u.test;
+package org.team4u.test.spring;
 
 import cn.hutool.db.ds.simple.SimpleDataSource;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
@@ -16,8 +16,13 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.util.List;
 
+/**
+ * 基于db的测试bean配置
+ *
+ * @author jay.wu
+ */
 @Configuration
-public class TestBeanConfig {
+public class DbTestBeanConfig {
 
     @Bean
     public DataSource dataSource() {
@@ -48,7 +53,7 @@ public class TestBeanConfig {
     @Bean
     public MapperScannerConfigurer mapperScannerConfigurer() {
         MapperScannerConfigurer configurer = new MapperScannerConfigurer();
-        configurer.setBasePackage("org.team4u");
+        configurer.setBasePackage(mapperScannerBasePackage());
         configurer.setSqlSessionFactoryBeanName("sqlSessionFactory");
         configurer.setAnnotationClass(Repository.class);
         return configurer;
@@ -71,5 +76,9 @@ public class TestBeanConfig {
     @Bean
     public JdbcTemplate jdbcTemplate(DataSource dataSource) {
         return new JdbcTemplate(dataSource);
+    }
+
+    protected String mapperScannerBasePackage() {
+        return "org.team4u";
     }
 }

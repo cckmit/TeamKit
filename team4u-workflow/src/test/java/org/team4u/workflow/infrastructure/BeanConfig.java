@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Import;
 import org.team4u.base.config.LocalJsonConfigService;
 import org.team4u.ddd.event.EventStore;
 import org.team4u.ddd.infrastructure.persistence.memory.LogOnlyEventStore;
-import org.team4u.test.TestBeanConfig;
+import org.team4u.test.spring.DbTestBeanConfig;
 import org.team4u.workflow.domain.instance.ProcessInstanceRepository;
 import org.team4u.workflow.infrastructure.persistence.definition.JsonProcessDefinitionRepository;
 import org.team4u.workflow.infrastructure.persistence.instance.MybatisProcessInstanceRepository;
@@ -16,7 +16,7 @@ import org.team4u.workflow.infrastructure.persistence.instance.ProcessInstanceDe
 import org.team4u.workflow.infrastructure.persistence.instance.ProcessInstanceMapper;
 
 @Configuration
-@Import(TestBeanConfig.class)
+@Import(DbTestBeanConfig.class)
 @ComponentScan("org.team4u.workflow.infrastructure.persistence")
 public class BeanConfig {
 

@@ -8,13 +8,13 @@ import org.springframework.test.context.ContextConfiguration;
 import org.team4u.ddd.infrastructure.persistence.memory.InMemoryEventStore;
 import org.team4u.workflow.domain.definition.ProcessDefinition;
 import org.team4u.workflow.domain.definition.ProcessDefinitionId;
-import org.team4u.test.DbTest;
+import org.team4u.test.spring.SpringDbTest;
 import org.team4u.workflow.infrastructure.BeanConfig;
 
 import javax.annotation.PostConstruct;
 
 @ContextConfiguration(classes = BeanConfig.class)
-public class MybatisProcessDefinitionRepositoryTest extends DbTest {
+public class MybatisProcessDefinitionRepositoryTest extends SpringDbTest {
 
     @Autowired
     private ProcessDefinitionMapper definitionMapper;
