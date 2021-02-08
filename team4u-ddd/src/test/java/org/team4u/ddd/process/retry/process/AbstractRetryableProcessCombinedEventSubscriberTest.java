@@ -65,7 +65,11 @@ public class AbstractRetryableProcessCombinedEventSubscriberTest {
         );
 
         FakeEvent1 e = new FakeEvent1(TestUtil.TEST_ID);
-        subscriber.processMessage(e);
+        try {
+            subscriber.processMessage(e);
+        } catch (SystemException ex) {
+            // ignore error
+        }
 
         Assert.assertNotNull(trackerAppService.repository().trackerOfProcessId(
                 TestUtil.TEST_ID,
@@ -82,7 +86,11 @@ public class AbstractRetryableProcessCombinedEventSubscriberTest {
         );
 
         FakeEvent1 e = new FakeEvent1(TestUtil.TEST_ID);
-        subscriber.processMessage(e);
+        try {
+            subscriber.processMessage(e);
+        } catch (BusinessException ex) {
+            // ignore error
+        }
 
         Assert.assertNull(trackerAppService.repository().trackerOfProcessId(
                 TestUtil.TEST_ID,

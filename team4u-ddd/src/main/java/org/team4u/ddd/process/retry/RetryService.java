@@ -80,6 +80,10 @@ public class RetryService {
                 trackerAppService.closeTracker(tracker, shouldRemoveTrackerAfterCompleted);
             }
 
+            if (e instanceof NeedRetryException) {
+                return null;
+            }
+
             throw e;
         }
     }
