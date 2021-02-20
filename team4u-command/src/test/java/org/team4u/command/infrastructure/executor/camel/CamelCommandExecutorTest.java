@@ -1,6 +1,7 @@
 package org.team4u.command.infrastructure.executor.camel;
 
 import cn.hutool.core.collection.CollUtil;
+import org.apache.camel.builder.RouteBuilder;
 import org.team4u.command.domain.executor.CommandExecutor;
 import org.team4u.command.domain.executor.handler.log.CommandLogHandler;
 import org.team4u.command.infrastructure.executor.AbstractCommandExecutorTest;
@@ -16,13 +17,33 @@ public class CamelCommandExecutorTest extends AbstractCommandExecutorTest {
         return new CamelCommandExecutor(CollUtil.newArrayList(mockRoutersBuilder));
     }
 
-    public static class MockRoutersBuilder extends AbstractTraceableCommandRoutesBuilder {
+    public static class MockRoutersBuilder extends RouteBuilder implements CommandRoutesBuilder {
+
+        private final CommandLogHandler commandLogHandler;
+        private final MockHttpCommandRequester commandRequester;
 
         public MockRoutersBuilder() {
-            super(
-                    new MockHttpCommandRequester(new MockHttpRequester()),
-                    new CommandLogHandler(new MockCommandLogRepository())
-            );
+            commandRequester = new MockHttpCommandRequester(new MockHttpRequester());
+            commandLogHandler = new CommandLogHandler(new MockCommandLogRepository());
+        }
+
+        @Override
+        public void configure() {
+            bindToRegistry();
+
+            from(startUri())
+                    .to("bean:commandLogHandler?method=handle")
+                    .to("bean:commandRequester?method=handle")
+                    .to("bean:commandLogHandler?method=handle");
+        }
+
+        private void bindToRegistry() {
+            bindToRegistry("commandRequester", commandRequester);
+            bindToRegistry("commandLogHandler", commandLogHandler);
+        }
+
+        protected String startUri() {
+            return "direct:" + id();
         }
 
         @Override
