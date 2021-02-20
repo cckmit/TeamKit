@@ -1,7 +1,7 @@
 package org.team4u.command.domain.executor.handler.log;
 
 
-import org.team4u.command.domain.executor.handler.SimpleCommandHandler;
+import org.team4u.command.domain.executor.handler.CommandHandler;
 
 import java.util.Date;
 
@@ -10,7 +10,7 @@ import java.util.Date;
  *
  * @author jay.wu
  */
-public class CommandLogHandler implements SimpleCommandHandler {
+public class CommandLogHandler implements CommandHandler {
 
     private final CommandLogRepository commandLogRepository;
 
@@ -19,7 +19,7 @@ public class CommandLogHandler implements SimpleCommandHandler {
     }
 
     @Override
-    public void internalHandle(Context context) {
+    public void handle(Context context) {
         CommandLog commandLog = commandLogRepository.logOf(context.getCommandLogId());
 
         if (commandLog == null) {

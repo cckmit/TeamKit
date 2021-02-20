@@ -1,6 +1,8 @@
 package org.team4u.command.infrastructure.executor.simple;
 
 import cn.hutool.core.collection.CollUtil;
+import org.team4u.base.filter.Filter;
+import org.team4u.base.filter.FilterBuilder;
 import org.team4u.command.domain.executor.handler.CommandHandler;
 import org.team4u.command.domain.executor.handler.log.CommandLogHandler;
 import org.team4u.command.domain.executor.handler.requester.CommandRequester;
@@ -14,25 +16,26 @@ import java.util.List;
  */
 public abstract class AbstractTraceableCommandRoutesBuilder extends AbstractCommandRoutesBuilder {
 
-    private final CommandLogHandler commandLogHandler;
+    private final Filter<CommandHandler.Context> commandLogHandler;
 
     public AbstractTraceableCommandRoutesBuilder(CommandRequester<?, ?> commandRequester,
                                                  CommandLogHandler commandLogHandler) {
         super(commandRequester);
 
-        this.commandLogHandler = commandLogHandler;
+        this.commandLogHandler = new FilterBuilder<CommandHandler.Context>().setWorker(commandLogHandler::handle).build();
+
     }
 
     @Override
-    public List<CommandHandler> configure() {
+    public List<Filter<CommandHandler.Context>> configure() {
         return CollUtil.newArrayList(
-                commandLogHandler,
+                getCommandLogHandler(),
                 getCommandRequester(),
-                commandLogHandler
+                getCommandLogHandler()
         );
     }
 
-    public CommandLogHandler getCommandLogHandler() {
+    public Filter<CommandHandler.Context> getCommandLogHandler() {
         return commandLogHandler;
     }
 }

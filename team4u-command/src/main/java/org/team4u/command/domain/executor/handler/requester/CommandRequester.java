@@ -1,17 +1,17 @@
 package org.team4u.command.domain.executor.handler.requester;
 
 
-import org.team4u.command.domain.executor.handler.SimpleCommandHandler;
+import org.team4u.command.domain.executor.handler.CommandHandler;
 
 /**
  * 命令请求者
  *
  * @author jay.wu
  */
-public abstract class CommandRequester<Request, Response> implements SimpleCommandHandler {
+public abstract class CommandRequester<Request, Response> implements CommandHandler {
 
     @Override
-    public void internalHandle(Context context) {
+    public void handle(CommandHandler.Context context) {
         Response response = execute(toRequest(context));
         context.setResponse(toCommandResponse(context, response));
     }

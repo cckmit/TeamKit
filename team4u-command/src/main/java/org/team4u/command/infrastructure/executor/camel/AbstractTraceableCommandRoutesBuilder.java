@@ -24,9 +24,9 @@ public abstract class AbstractTraceableCommandRoutesBuilder extends AbstractComm
         bindToRegistry();
 
         from(startUri())
-                .to("bean:commandLogHandler?method=internalHandle")
-                .to("bean:commandRequester?method=internalHandle")
-                .to("bean:commandLogHandler?method=internalHandle");
+                .to("bean:commandLogHandler?method=handle")
+                .to("bean:commandRequester?method=handle")
+                .to("bean:commandLogHandler?method=handle");
     }
 
     @Override

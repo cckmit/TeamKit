@@ -1,6 +1,7 @@
 package org.team4u.command.infrastructure.executor.simple;
 
 
+import org.team4u.base.filter.Filter;
 import org.team4u.base.lang.IdObject;
 import org.team4u.command.domain.executor.handler.CommandHandler;
 
@@ -18,5 +19,5 @@ public interface CommandRoutesBuilder extends IdObject<String> {
      *
      * @return 命令处理器集合
      */
-    List<CommandHandler> configure();
+    List<Filter<CommandHandler.Context>> configure();
 }

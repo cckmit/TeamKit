@@ -3,8 +3,6 @@ package org.team4u.command.domain.executor.handler;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
-import org.team4u.base.filter.Filter;
-import org.team4u.base.filter.FilterInvoker;
 import org.team4u.command.domain.config.CommandConfig;
 
 /**
@@ -12,22 +10,14 @@ import org.team4u.command.domain.config.CommandConfig;
  *
  * @author jay.wu
  */
-public interface CommandHandler extends Filter<CommandHandler.Context> {
-
-    @Override
-    default void doFilter(Context context, FilterInvoker<Context> nextFilterInvoker) {
-        if (handle(context)) {
-            nextFilterInvoker.invoke(context);
-        }
-    }
+public interface CommandHandler {
 
     /**
      * 处理命令
      *
      * @param context 处理器上下文
-     * @return true则继续处理，false则停止后续处理
      */
-    boolean handle(Context context);
+    void handle(Context context);
 
     class Context {
 
