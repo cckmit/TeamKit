@@ -33,6 +33,16 @@ public class CommandConfig {
      * @return 配置对象
      */
     public <T> T itemOf(String itemId, Class<T> configType) {
-        return BeanUtil.toBean(items.get(itemId), configType);
+        return BeanUtil.toBean(itemOf(itemId), configType);
+    }
+
+    /**
+     * 获取某个类型的配置
+     *
+     * @param itemId 配置标识
+     * @return 配置对象
+     */
+    public Dict itemOf(String itemId) {
+        return items.get(itemId);
     }
 }

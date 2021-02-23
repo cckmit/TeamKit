@@ -72,5 +72,10 @@ public interface CommandHandler {
         public <V> V extraAttribute(String key, Class<V> valueType) {
             return Convert.convert(valueType, extraAttributes.get(key));
         }
+
+        @SuppressWarnings("unchecked")
+        public <V> V extraAttribute(String key) {
+            return (V) extraAttributes.get(key);
+        }
     }
 }
