@@ -1,10 +1,14 @@
 package org.team4u.base.masker;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Dict;
+import com.alibaba.fastjson.JSON;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.team4u.base.masker.dynamic.*;
+
+import java.util.Map;
 
 public class DynamicMaskerTest {
     private DynamicMasker masker;
@@ -19,8 +23,8 @@ public class DynamicMaskerTest {
 
     @Test
     public void maskWithGlobal() {
-        String value = masker.mask(new B("fjayblue"));
-        Assert.assertEquals("{\"name\":\"*\",\"name2\":\"fjayblue\"}", value);
+        String value = masker.mask(new B("fjayblue").setMap(JSON.parseObject(FileUtil.readUtf8String("complex.json"))));
+        Assert.assertEquals("{\"map\":{\"a\":[{\"b\":[{\"c\":{\"name\":\"*\"}}]}],\"b\":{\"c\":{\"d\":{\"name\":\"*\"}}}},\"name\":\"*\",\"name2\":\"fjayblue\"}", value);
     }
 
     @Test
@@ -49,8 +53,10 @@ public class DynamicMaskerTest {
 
     public static class A {
 
-        private String name;
-        private String name2;
+        private final String name;
+        private final String name2;
+
+        private Map<String, Object> map;
 
         public A(String name) {
             this.name = name;
@@ -63,6 +69,15 @@ public class DynamicMaskerTest {
 
         public String getName2() {
             return name2;
+        }
+
+        public Map<String, Object> getMap() {
+            return map;
+        }
+
+        public A setMap(Map<String, Object> map) {
+            this.map = map;
+            return this;
         }
     }
 
