@@ -4,6 +4,7 @@ import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 import org.team4u.base.error.ControlException;
 import org.team4u.base.log.LogMessage;
+import org.team4u.base.log.LogMessages;
 import org.team4u.base.log.LogService;
 import org.team4u.command.domain.config.CommandConfig;
 import org.team4u.command.domain.config.CommandConfigRepository;
@@ -46,8 +47,7 @@ public class CommandAppService {
      */
     @SuppressWarnings("unchecked")
     public <Response> Response execute(String commandId, String configId, Object request) {
-        LogMessage lm = LogMessage.create(this.getClass().getSimpleName(), "execute")
-                .append("commandId", commandId)
+        LogMessage lm = LogMessages.createWithMasker(this.getClass().getSimpleName(), "execute|" + commandId)
                 .append("request", request);
         Response response = null;
         try {
