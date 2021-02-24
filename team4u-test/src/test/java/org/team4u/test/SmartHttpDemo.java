@@ -1,7 +1,6 @@
 package org.team4u.test;
 
-import org.smartboot.http.*;
-import org.smartboot.http.server.handle.HttpHandle;
+import org.smartboot.http.server.*;
 import org.smartboot.http.server.handle.HttpRouteHandle;
 import org.smartboot.http.server.handle.WebSocketDefaultHandle;
 import org.smartboot.http.server.handle.WebSocketRouteHandle;
@@ -16,7 +15,7 @@ public class SmartHttpDemo {
         System.setProperty("smartHttp.server.alias", "SANDAO base on ");
 
         HttpRouteHandle routeHandle = new HttpRouteHandle();
-        routeHandle.route("/", new HttpHandle() {
+        routeHandle.route("/", new HttpServerHandle() {
             final byte[] body = ("<html>" +
                     "<head><title>smart-http demo</title></head>" +
                     "<body>" +
@@ -31,18 +30,17 @@ public class SmartHttpDemo {
                 response.setContentLength(body.length);
                 response.getOutputStream().write(body);
             }
-        })
-                .route("/get", new HttpHandle() {
-                    @Override
-                    public void doHandle(HttpRequest request, HttpResponse response) throws IOException {
-                        response.write(("收到Get参数text=" + request.getParameter("text")).getBytes());
-                    }
-                }).route("/post", new HttpHandle() {
+        }).route("/get", new HttpServerHandle() {
+            @Override
+            public void doHandle(HttpRequest request, HttpResponse response) throws IOException {
+                response.write(("收到Get参数text=" + request.getParameter("text")).getBytes());
+            }
+        }).route("/post", new HttpServerHandle() {
             @Override
             public void doHandle(HttpRequest request, HttpResponse response) throws IOException {
                 response.write(("收到Post参数text=" + request.getParameter("text")).getBytes());
             }
-        }).route("/upload", new HttpHandle() {
+        }).route("/upload", new HttpServerHandle() {
             @Override
             public void doHandle(HttpRequest request, HttpResponse response) throws IOException {
                 InputStream in = request.getInputStream();
@@ -53,7 +51,7 @@ public class SmartHttpDemo {
                 }
                 in.close();
             }
-        }).route("/post_json", new HttpHandle() {
+        }).route("/post_json", new HttpServerHandle() {
             @Override
             public void doHandle(HttpRequest request, HttpResponse response) throws IOException {
                 InputStream in = request.getInputStream();
@@ -65,7 +63,7 @@ public class SmartHttpDemo {
                 }
                 in.close();
             }
-        }).route("/plaintext", new HttpHandle() {
+        }).route("/plaintext", new HttpServerHandle() {
             final byte[] body = "Hello World!".getBytes();
 
             @Override
@@ -74,7 +72,7 @@ public class SmartHttpDemo {
                 response.setContentType("text/plain; charset=UTF-8");
                 response.write(body);
             }
-        }).route("/head", new HttpHandle() {
+        }).route("/head", new HttpServerHandle() {
             @Override
             public void doHandle(HttpRequest request, HttpResponse response) throws IOException {
                 response.addHeader("a", "b");
