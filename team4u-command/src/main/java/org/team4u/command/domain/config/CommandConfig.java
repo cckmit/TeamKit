@@ -19,9 +19,22 @@ public class CommandConfig {
      * value = 配置集合
      */
     private final Map<String, Dict> items;
+    /**
+     * 配置标识
+     */
+    private String configId;
 
     public CommandConfig(Map<String, Dict> items) {
         this.items = items;
+    }
+
+    public String getConfigId() {
+        return configId;
+    }
+
+    public CommandConfig setConfigId(String configId) {
+        this.configId = configId;
+        return this;
     }
 
     /**

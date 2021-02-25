@@ -21,7 +21,7 @@ public class JsonCommandConfigRepository implements CommandConfigRepository {
     @Override
     public CommandConfig configOf(String id) {
         String configStr = configService.get(id);
-        return JSON.parseObject(configStr, CommandConfig.class);
+        return JSON.parseObject(configStr, CommandConfig.class).setConfigId(id);
     }
 
     @Override
