@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
 import org.mybatis.spring.mapper.MapperScannerConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Repository;
@@ -21,6 +22,7 @@ import java.util.List;
  *
  * @author jay.wu
  */
+@Import(BaseTestBeanConfig.class)
 @Configuration
 public class DbTestBeanConfig {
 
