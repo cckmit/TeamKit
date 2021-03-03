@@ -5,23 +5,16 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Dict;
 import com.alibaba.fastjson.JSON;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
-import org.team4u.base.masker.dynamic.*;
+import org.team4u.base.masker.dynamic.DynamicMaskerUtil;
+import org.team4u.base.masker.dynamic.DynamicMasker;
 
 import java.util.List;
 import java.util.Map;
 
 public class DynamicMaskerTest {
-    private DynamicMasker masker;
 
-    @Before
-    public void setUp() {
-        DynamicMaskerConfigRepository repository = new LocalDynamicMaskerConfigRepository();
-        DynamicMaskerValueSerializer serializer = new FastJsonDynamicMaskerValueSerializer();
-
-        masker = new DynamicMasker(serializer, repository);
-    }
+    private final DynamicMasker masker = DynamicMaskerUtil.masker();
 
     @Test
     public void maskWithGlobal() {
