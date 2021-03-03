@@ -12,8 +12,8 @@ public class SimpleConfigServiceTest {
 
     @Test
     public void get() {
-        SimpleConfigService simpleConfigService = new SimpleConfigService("test2", simpleConfigAppService);
-        Assert.assertEquals("2", simpleConfigService.get("b"));
-        Assert.assertEquals(2, (long) simpleConfigService.get("b", 2L));
+        SimpleConfigService simpleConfigService = new SimpleConfigService(simpleConfigAppService);
+        Assert.assertEquals("2", simpleConfigService.get("test2.b"));
+        Assert.assertEquals(2, (long) simpleConfigService.get("test2.b", 2L));
     }
 }
