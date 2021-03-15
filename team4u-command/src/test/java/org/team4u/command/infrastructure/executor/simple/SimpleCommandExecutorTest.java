@@ -4,11 +4,9 @@ import cn.hutool.core.collection.CollUtil;
 import org.team4u.base.filter.Filter;
 import org.team4u.command.domain.executor.CommandExecutor;
 import org.team4u.command.domain.executor.handler.CommandHandler;
-import org.team4u.command.domain.executor.handler.log.CommandLogHandler;
 import org.team4u.command.infrastructure.executor.AbstractCommandExecutorTest;
-import org.team4u.command.infrastructure.executor.MockCommandLogRepository;
+import org.team4u.command.infrastructure.executor.MockCommandLogHandler;
 import org.team4u.command.infrastructure.executor.MockHttpCommandRequester;
-import org.team4u.command.infrastructure.executor.MockHttpRequester;
 
 import java.util.List;
 
@@ -26,9 +24,9 @@ public class SimpleCommandExecutorTest extends AbstractCommandExecutorTest {
 
         public MockRoutersBuilder() {
             this.commandRequester = CommandFilterBuilder.sequentialFilterOf(
-                    new MockHttpCommandRequester(new MockHttpRequester()));
+                    new MockHttpCommandRequester());
             this.commandLogHandler = CommandFilterBuilder.sequentialFilterOf(
-                    new CommandLogHandler(new MockCommandLogRepository())
+                    new MockCommandLogHandler()
             );
         }
 

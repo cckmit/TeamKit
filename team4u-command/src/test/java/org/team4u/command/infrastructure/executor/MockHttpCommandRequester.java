@@ -10,6 +10,10 @@ public class MockHttpCommandRequester extends HttpCommandRequester {
     private CommandConfig config;
     private MockCommandRequest request;
 
+    public MockHttpCommandRequester() {
+        super(new MockHttpRequester());
+    }
+
     public MockHttpCommandRequester(HttpRequester httpRequester) {
         super(httpRequester);
     }

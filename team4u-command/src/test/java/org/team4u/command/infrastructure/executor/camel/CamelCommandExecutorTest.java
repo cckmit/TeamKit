@@ -5,9 +5,8 @@ import org.apache.camel.builder.RouteBuilder;
 import org.team4u.command.domain.executor.CommandExecutor;
 import org.team4u.command.domain.executor.handler.log.CommandLogHandler;
 import org.team4u.command.infrastructure.executor.AbstractCommandExecutorTest;
-import org.team4u.command.infrastructure.executor.MockCommandLogRepository;
+import org.team4u.command.infrastructure.executor.MockCommandLogHandler;
 import org.team4u.command.infrastructure.executor.MockHttpCommandRequester;
-import org.team4u.command.infrastructure.executor.MockHttpRequester;
 
 public class CamelCommandExecutorTest extends AbstractCommandExecutorTest {
 
@@ -23,8 +22,8 @@ public class CamelCommandExecutorTest extends AbstractCommandExecutorTest {
         private final MockHttpCommandRequester commandRequester;
 
         public MockRoutersBuilder() {
-            commandRequester = new MockHttpCommandRequester(new MockHttpRequester());
-            commandLogHandler = new CommandLogHandler(new MockCommandLogRepository());
+            commandRequester = new MockHttpCommandRequester();
+            commandLogHandler = new MockCommandLogHandler();
         }
 
         @Override
