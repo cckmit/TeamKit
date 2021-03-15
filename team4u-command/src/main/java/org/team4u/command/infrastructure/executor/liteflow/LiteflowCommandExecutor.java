@@ -47,6 +47,8 @@ public class LiteflowCommandExecutor extends IdObjectService<String, CommandRout
     }
 
     private void initFlowExecutor(CommandRoutesBuilder builder) {
+        builder.registerNodes();
+
         FlowExecutor executor = new FlowExecutor();
         executor.setRulePath(builder.configure());
         executor.init();

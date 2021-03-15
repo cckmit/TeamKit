@@ -15,7 +15,7 @@ import org.team4u.command.domain.executor.handler.CommandHandler;
  */
 public class NodeComponentBuilder {
 
-    public static NodeComponent nodeOf(String name, CommandHandler handler) {
+    public static NodeComponent registerNode(String name, CommandHandler handler) {
         NodeComponent c = new NodeComponent() {
 
             @Override
@@ -28,7 +28,7 @@ public class NodeComponentBuilder {
         return c;
     }
 
-    public static NodeCondComponent condOf(String name, CommandHandler handler) {
+    public static NodeCondComponent registerCond(String name, CommandHandler handler) {
         NodeCondComponent c = new NodeCondComponent() {
             @Override
             public String processCond() {

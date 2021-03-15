@@ -13,6 +13,11 @@ import java.util.List;
 public interface CommandRoutesBuilder extends IdObject<String> {
 
     /**
+     * 注册节点组件
+     */
+    void registerNodes();
+
+    /**
      * 配置处理器路由
      *
      * @return 命令处理器集合
