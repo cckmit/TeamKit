@@ -1,7 +1,7 @@
 package org.team4u.base.masker.dynamic;
 
 /**
- * 动态掩码器
+ * 动态掩码器服务
  *
  * @author jay.wu
  */
