@@ -10,9 +10,9 @@ import cn.hutool.log.LogFactory;
  */
 public abstract class AbstractMasker implements Masker {
 
-    private Log log = LogFactory.get();
+    private final Log log = LogFactory.get();
 
-    private MaskerValueSerializer serializer;
+    private final MaskerValueSerializer serializer;
 
     protected AbstractMasker() {
         this(new SimpleMaskerValueSerializer());
@@ -41,6 +41,12 @@ public abstract class AbstractMasker implements Masker {
         }
     }
 
+    /**
+     * 内部掩码
+     *
+     * @param value 原始值
+     * @return 掩码后的字符串
+     */
     protected abstract String internalMask(Object value);
 
     public MaskerValueSerializer serializer() {
