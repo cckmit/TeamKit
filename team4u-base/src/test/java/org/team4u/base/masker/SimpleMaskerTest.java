@@ -2,8 +2,6 @@ package org.team4u.base.masker;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.team4u.base.masker.Maskers;
-import org.team4u.base.masker.SimpleMasker;
 
 public class SimpleMaskerTest {
 

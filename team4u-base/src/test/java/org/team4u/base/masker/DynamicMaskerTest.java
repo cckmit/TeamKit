@@ -6,15 +6,15 @@ import cn.hutool.core.lang.Dict;
 import com.alibaba.fastjson.JSON;
 import org.junit.Assert;
 import org.junit.Test;
-import org.team4u.base.masker.dynamic.DynamicMaskerUtil;
 import org.team4u.base.masker.dynamic.DynamicMasker;
+import org.team4u.base.masker.dynamic.DynamicMaskerService;
 
 import java.util.List;
 import java.util.Map;
 
 public class DynamicMaskerTest {
 
-    private final DynamicMasker masker = DynamicMaskerUtil.masker();
+    private final DynamicMasker masker = DynamicMaskerService.instance().getDefaultMasker();
 
     @Test
     public void maskWithGlobal() {
@@ -48,6 +48,19 @@ public class DynamicMaskerTest {
         masker.context().setValuePath("z");
         String value = masker.mask(Dict.create());
         Assert.assertEquals("*", value);
+    }
+
+    @Test
+    public void maskBeanSelf() {
+        Maskers.instance().register("TEST", new HideMasker());
+
+        DynamicMasker masker =  DynamicMaskerService.instance().getBeanMasker();
+
+        A a = new A("fjayblue");
+        String value = masker.mask(a);
+
+        Assert.assertEquals(a.toString(), value);
+        Assert.assertEquals("*", a.getName2());
     }
 
     public static class A {
