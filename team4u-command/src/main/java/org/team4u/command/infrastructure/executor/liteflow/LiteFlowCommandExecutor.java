@@ -1,6 +1,8 @@
 package org.team4u.command.infrastructure.executor.liteflow;
 
+import cn.hutool.core.util.StrUtil;
 import com.yomahub.liteflow.core.FlowExecutor;
+import com.yomahub.liteflow.property.LiteflowConfig;
 import org.team4u.base.error.NestedException;
 import org.team4u.base.error.SystemDataNotExistException;
 import org.team4u.base.lang.IdObjectService;
@@ -19,17 +21,17 @@ import java.util.Map;
  *
  * @author jay.wu
  */
-public class LiteflowCommandExecutor extends IdObjectService<String, CommandRoutesBuilder> implements CommandExecutor {
+public class LiteFlowCommandExecutor extends IdObjectService<String, CommandRoutesBuilder> implements CommandExecutor {
 
     private final Map<String, FlowExecutor> flowMap = new HashMap<>();
 
-    public LiteflowCommandExecutor() {
+    public LiteFlowCommandExecutor() {
         super(CommandRoutesBuilder.class);
 
         initFlow();
     }
 
-    public LiteflowCommandExecutor(List<CommandRoutesBuilder> objects) {
+    public LiteFlowCommandExecutor(List<CommandRoutesBuilder> objects) {
         super(objects);
 
         initFlow();
@@ -50,7 +52,9 @@ public class LiteflowCommandExecutor extends IdObjectService<String, CommandRout
         builder.registerNodes();
 
         FlowExecutor executor = new FlowExecutor();
-        executor.setRulePath(builder.configure());
+        LiteflowConfig liteflowConfig = new LiteflowConfig();
+        liteflowConfig.setRuleSource(StrUtil.join(",", builder.configure()));
+        executor.setLiteflowConfig(liteflowConfig);
         executor.init();
 
         flowMap.put(builder.id(), executor);

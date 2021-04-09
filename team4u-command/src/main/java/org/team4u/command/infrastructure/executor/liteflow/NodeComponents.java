@@ -1,19 +1,17 @@
 package org.team4u.command.infrastructure.executor.liteflow;
 
-import cn.hutool.core.util.ReflectUtil;
 import com.yomahub.liteflow.core.NodeComponent;
 import com.yomahub.liteflow.core.NodeCondComponent;
-import com.yomahub.liteflow.monitor.MonitorBus;
-import com.yomahub.liteflow.spring.ComponentScaner;
+import com.yomahub.liteflow.spring.ComponentScanner;
 import com.yomahub.liteflow.util.SpringAware;
 import org.team4u.command.domain.executor.handler.CommandHandler;
 
 /**
- * 节点构建器
+ * 节点组件服务
  *
  * @author jay.wu
  */
-public class NodeComponentBuilder {
+public class NodeComponents {
 
     public static NodeComponent registerNode(String name, CommandHandler handler) {
         NodeComponent c = new NodeComponent() {
@@ -42,8 +40,7 @@ public class NodeComponentBuilder {
         return c;
     }
 
-    private static void registerComponent(String name, NodeComponent component) {
-        ReflectUtil.setFieldValue(component, "monitorBus", SpringAware.getBean(MonitorBus.class));
-        SpringAware.getBean(ComponentScaner.class).postProcessBeforeInitialization(component, name);
+    public static void registerComponent(String name, NodeComponent component) {
+        SpringAware.getBean(ComponentScanner.class).postProcessAfterInitialization(component, name);
     }
 }
