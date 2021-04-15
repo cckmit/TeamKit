@@ -23,7 +23,7 @@
 
     <properties>
         <mybatis-plus.version>3.4.2</mybatis-plus.version>
-        <hutool.version>5.5.8</hutool.version>
+        <hutool.version>5.6.3</hutool.version>
         <spring-data-jpa.version>2.3.1.RELEASE</spring-data-jpa.version>
         <spring.version>5.2.7.RELEASE</spring.version>
         <beetl.version>3.3.2.RELEASE</beetl.version>
