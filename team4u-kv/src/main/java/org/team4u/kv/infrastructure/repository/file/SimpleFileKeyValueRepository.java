@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
  */
 public class SimpleFileKeyValueRepository extends InMemoryKeyValueRepository {
 
-    private File db;
+    private final File db;
 
     public SimpleFileKeyValueRepository(File db) {
         this.db = db;

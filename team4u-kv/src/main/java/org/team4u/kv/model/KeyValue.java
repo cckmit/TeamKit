@@ -30,6 +30,15 @@ public class KeyValue {
         return this;
     }
 
+    public KeyValueId getKeyValueId() {
+        return keyValueId;
+    }
+
+    public KeyValue setKeyValueId(KeyValueId keyValueId) {
+        this.keyValueId = keyValueId;
+        return this;
+    }
+
     public String getValue() {
         return value;
     }

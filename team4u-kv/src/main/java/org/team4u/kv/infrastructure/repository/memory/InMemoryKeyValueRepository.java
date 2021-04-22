@@ -20,9 +20,9 @@ import java.util.stream.Collectors;
  */
 public class InMemoryKeyValueRepository implements KeyValueRepository {
 
-    private Log log = LogFactory.get();
+    private final Log log = LogFactory.get();
 
-    private Map<String, KeyValue> cache;
+    private final Map<String, KeyValue> cache;
 
     public InMemoryKeyValueRepository() {
         this(new ConcurrentHashMap<>());
