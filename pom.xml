@@ -23,16 +23,16 @@
 
     <properties>
         <mybatis-plus.version>3.4.2</mybatis-plus.version>
-        <hutool.version>5.6.3</hutool.version>
+        <hutool.version>5.6.4</hutool.version>
         <spring-data-jpa.version>2.3.1.RELEASE</spring-data-jpa.version>
         <spring.version>5.2.7.RELEASE</spring.version>
         <beetl.version>3.3.2.RELEASE</beetl.version>
-        <fastjson.version>1.2.75</fastjson.version>
-        <byte-buddy.version>1.10.20</byte-buddy.version>
-        <camel.version>3.7.1</camel.version>
-        <testable.version>0.4.8</testable.version>
+        <fastjson.version>1.2.76</fastjson.version>
+        <byte-buddy.version>1.11.0</byte-buddy.version>
+        <camel.version>3.9.0</camel.version>
+        <testable.version>0.6.4</testable.version>
         <smart-http-server.version>1.1.0</smart-http-server.version>
-        <liteflow.version>2.5.0</liteflow.version>
+        <liteflow.version>2.5.4</liteflow.version>
     </properties>
 
     <dependencies>
