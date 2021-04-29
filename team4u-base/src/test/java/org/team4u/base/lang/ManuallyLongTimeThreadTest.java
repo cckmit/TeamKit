@@ -22,6 +22,14 @@ public class ManuallyLongTimeThreadTest {
         Assert.assertEquals(2, t.getRunCount());
     }
 
+    @Test
+    public void runUnlimited() {
+        TestThread t = new TestThread(true, -1);
+        t.start();
+        ThreadUtil.sleep(10);
+        Assert.assertTrue(t.getRunCount() > 2);
+    }
+
     private static class TestThread extends ManuallyLongTimeThread {
 
         private final boolean isEnabled;

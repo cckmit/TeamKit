@@ -49,7 +49,7 @@ public abstract class ManuallyLongTimeThread extends LongTimeThread {
     @Override
     public void run() {
         while (!isClosed()) {
-            if (!isEnabled() || runCount >= maxRunCount()) {
+            if (!canRun()) {
                 ThreadUtil.safeSleep(runIntervalMillis());
                 continue;
             }
@@ -64,6 +64,18 @@ public abstract class ManuallyLongTimeThread extends LongTimeThread {
 
             ThreadUtil.safeSleep(runIntervalMillis());
         }
+    }
+
+    private boolean canRun() {
+        if (!isEnabled()) {
+            return false;
+        }
+
+        if (maxRunCount() < 0) {
+            return true;
+        }
+
+        return runCount < maxRunCount();
     }
 
     public int getRunCount() {
