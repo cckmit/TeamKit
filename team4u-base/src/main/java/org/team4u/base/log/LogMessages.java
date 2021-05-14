@@ -11,21 +11,17 @@ import org.team4u.base.masker.dynamic.LocalDynamicMaskerConfigRepository;
  */
 public class LogMessages {
 
+    private static DynamicMasker dynamicMasker = new DynamicMasker(
+            new FastJsonDynamicMaskerValueSerializer(),
+            new LocalDynamicMaskerConfigRepository()
+    );
+
     /**
      * 创建包含掩码服务的日志消息
      */
     public static LogMessage createWithMasker(String module, String eventName) {
         LogMessage lm = LogMessage.create(module, eventName);
-
-        lm.config().setLogMessageRender(
-                new MaskLogMessageRender(
-                        new DynamicMasker(
-                                new FastJsonDynamicMaskerValueSerializer(),
-                                new LocalDynamicMaskerConfigRepository()
-                        )
-                )
-        );
-
+        lm.config().setLogMessageRender(new MaskLogMessageRender(dynamicMasker));
         return lm;
     }
 
@@ -34,5 +30,9 @@ public class LogMessages {
      */
     public static LogMessage create(String module, String eventName) {
         return LogMessage.create(module, eventName);
+    }
+
+    public static void setDynamicMasker(DynamicMasker dynamicMasker) {
+        LogMessages.dynamicMasker = dynamicMasker;
     }
 }
