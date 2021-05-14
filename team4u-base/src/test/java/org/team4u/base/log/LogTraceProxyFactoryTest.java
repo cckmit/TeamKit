@@ -3,7 +3,6 @@ package org.team4u.base.log;
 import cn.hutool.core.lang.Dict;
 import org.junit.Assert;
 import org.junit.Test;
-import org.team4u.base.log.LogTraceProxyFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,9 +64,9 @@ public class LogTraceProxyFactoryTest {
     public void mask() {
         A a = LogTraceProxyFactory.proxy(new A(), newConfig());
 
-        a.mask("123456");
+        a.mask("123456", "123456");
 
-        Assert.assertEquals("[A|mask|processing|input=123456, A|mask|succeeded|output={\"name\":\"*\"}]",
+        Assert.assertEquals("[A|mask|processing|input=[\"123456\",\"*\"], A|mask|succeeded|output={\"name\":\"*\"}]",
                 logX.getMessages().toString());
     }
 
@@ -96,7 +95,7 @@ public class LogTraceProxyFactoryTest {
 
     public static class A {
 
-        public Dict mask(String name) {
+        public Dict mask(String name, String name2) {
             return Dict.create().set("name", "fjayblue");
         }
 

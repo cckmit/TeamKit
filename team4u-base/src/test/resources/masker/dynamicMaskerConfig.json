@@ -26,5 +26,14 @@
         "a.name"
       ]
     }
+  },
+  {
+    "configId": "A.mask",
+    "maskerExpressions": {
+      "HIDE": [
+        "input[1]",
+        "output.name"
+      ]
+    }
   }
 ]
