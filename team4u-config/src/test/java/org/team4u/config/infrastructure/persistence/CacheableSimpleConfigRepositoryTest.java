@@ -47,10 +47,9 @@ public class CacheableSimpleConfigRepositoryTest {
         );
 
         Assert.assertEquals(1, repository.allConfigs().size());
-        SimpleConfig oldConfig = repository.allConfigs().get(0);
 
         mockSimpleConfigRepository.setConfigs(CollUtil.newArrayList());
-        ThreadUtil.sleep(1000);
+        ThreadUtil.sleep(1500);
 
         Assert.assertEquals(0, repository.allConfigs().size());
         Assert.assertEquals(ConfigDeletedEvent.class, configEventConsumer.getEvent().getClass());
@@ -67,7 +66,7 @@ public class CacheableSimpleConfigRepositoryTest {
 
         Assert.assertEquals(1, repository.allConfigs().size());
         mockSimpleConfigRepository.setConfigs(CollUtil.newArrayList(c("a", "2")));
-        ThreadUtil.sleep(1000);
+        ThreadUtil.sleep(1500);
 
         Assert.assertEquals(1, repository.allConfigs().size());
         ConfigValueChangedEvent event = (ConfigValueChangedEvent) configEventConsumer.getEvent();
