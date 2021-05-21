@@ -34,6 +34,7 @@
         <testable.version>0.6.4</testable.version>
         <smart-http-server.version>1.1.0</smart-http-server.version>
         <liteflow.version>2.5.4</liteflow.version>
+        <org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
     </properties>
 
     <dependencies>
@@ -49,7 +50,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.0</version>
+                <version>3.5.1</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
