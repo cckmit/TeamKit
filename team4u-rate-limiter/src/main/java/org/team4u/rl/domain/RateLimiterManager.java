@@ -1,7 +1,7 @@
 package org.team4u.rl.domain;
 
 /**
- * @author Jay Wu
+ * @author jay.wu
  */
 public interface RateLimiterManager {
 

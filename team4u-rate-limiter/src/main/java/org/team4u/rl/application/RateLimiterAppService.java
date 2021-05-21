@@ -5,7 +5,7 @@ import org.team4u.rl.domain.RateLimiterService;
 /**
  * 限流应用服务
  *
- * @author Jay Wu
+ * @author jay.wu
  */
 public class RateLimiterAppService {
 

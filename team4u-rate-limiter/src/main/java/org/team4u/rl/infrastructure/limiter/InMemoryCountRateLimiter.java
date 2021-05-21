@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * 基于本地内存的简单计数限流器
  *
- * @author Jay Wu
+ * @author jay.wu
  */
 public class InMemoryCountRateLimiter implements RateLimiter {
 

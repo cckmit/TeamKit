@@ -10,13 +10,14 @@ import org.team4u.rl.domain.RateLimiter;
 import org.team4u.rl.domain.RateLimiterConfig;
 import org.team4u.rl.domain.RateLimiterService;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
  * 计数限流器管理者
  *
- * @author Jay Wu
+ * @author jay.wu
  */
 public abstract class AbstractRateLimiterService extends LongTimeThread implements RateLimiterService {
 
@@ -24,12 +25,11 @@ public abstract class AbstractRateLimiterService extends LongTimeThread implemen
     private final RateLimitConfigRepository rateLimitConfigRepository;
     protected Config config;
     protected RateLimiterConfig rateLimiterConfig;
-    private Map<String, RateLimiter> rateLimiters;
+    private Map<String, RateLimiter> rateLimiters = Collections.emptyMap();
 
     public AbstractRateLimiterService(Config config, RateLimitConfigRepository configRepository) {
         this.config = config;
         this.rateLimitConfigRepository = configRepository;
-        this.rateLimiterConfig = rateLimitConfigRepository.configOf(config.getConfigId());
     }
 
     @Override

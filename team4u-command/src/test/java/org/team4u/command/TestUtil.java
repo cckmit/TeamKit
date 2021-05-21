@@ -5,7 +5,7 @@ import org.team4u.command.infrastructure.config.CommandConfigService;
 import org.team4u.command.infrastructure.config.JsonCommandConfigRepository;
 
 /**
- * @author Jay Wu
+ * @author jay.wu
  */
 public class TestUtil {
 

@@ -2,10 +2,9 @@ package org.team4u.base.log;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.team4u.base.log.LogMessage;
 
 /**
- * @author Jay Wu
+ * @author jay.wu
  */
 public class LogMessageTest {
 

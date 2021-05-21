@@ -14,7 +14,6 @@ public abstract class AbstractRateLimiterServiceTest {
     @Test
     public void tryAcquire() {
         RateLimiterService service = newRateLimiterService();
-
         ThreadUtil.safeSleep(500);
 
         Assert.assertTrue(service.tryAcquire("test", "1"));

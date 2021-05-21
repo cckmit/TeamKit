@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Jay Wu
+ * @author jay.wu
  */
 public class SpringMessageQueueMapper implements ApplicationContextAware, Closeable {
 

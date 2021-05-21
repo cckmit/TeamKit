@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * 基于Redis的计数限流器
  *
- * @author Jay Wu
+ * @author jay.wu
  */
 public class RedisCountRateLimiter implements RateLimiter {
 

@@ -10,7 +10,7 @@ import java.io.Closeable;
 /**
  * 长时间运行的线程
  *
- * @author Jay Wu
+ * @author jay.wu
  */
 public abstract class LongTimeThread extends Thread implements Closeable {
 

@@ -1,7 +1,7 @@
 package org.team4u.ddd.infrastructure.spring;
 
 /**
- * @author Jay Wu
+ * @author jay.wu
  */
 
 import org.springframework.context.annotation.Bean;

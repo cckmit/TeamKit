@@ -9,7 +9,7 @@ import com.alibaba.fastjson.TypeReference;
 /**
  * 转换工具类
  *
- * @author Jay Wu
+ * @author jay.wu
  */
 public class ConvertUtil {
 

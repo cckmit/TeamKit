@@ -4,7 +4,7 @@ import cn.hutool.core.io.resource.ResourceUtil;
 import org.team4u.base.config.ConfigService;
 
 /**
- * @author Jay Wu
+ * @author jay.wu
  */
 public class CommandConfigService implements ConfigService {
     @Override

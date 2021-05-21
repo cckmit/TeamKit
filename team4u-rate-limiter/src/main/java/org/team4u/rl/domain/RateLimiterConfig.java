@@ -1,6 +1,7 @@
 package org.team4u.rl.domain;
 
 import java.util.List;
+import java.util.Objects;
 
 public class RateLimiterConfig {
 
@@ -13,6 +14,19 @@ public class RateLimiterConfig {
     public RateLimiterConfig setRules(List<Rule> rules) {
         this.rules = rules;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RateLimiterConfig that = (RateLimiterConfig) o;
+        return Objects.equals(rules, that.rules);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(rules);
     }
 
     public static class Rule {
@@ -48,6 +62,21 @@ public class RateLimiterConfig {
         public Rule setThreshold(long threshold) {
             this.threshold = threshold;
             return this;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Rule rule = (Rule) o;
+            return expirationMillis == rule.expirationMillis &&
+                    threshold == rule.threshold &&
+                    type.equals(rule.type);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(type, expirationMillis, threshold);
         }
     }
 }

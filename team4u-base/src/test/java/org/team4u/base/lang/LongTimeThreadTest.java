@@ -7,7 +7,7 @@ import org.junit.Test;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * @author Jay Wu
+ * @author jay.wu
  */
 public class LongTimeThreadTest {
 

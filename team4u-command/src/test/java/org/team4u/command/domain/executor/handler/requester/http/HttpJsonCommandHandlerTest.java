@@ -13,7 +13,7 @@ import org.team4u.command.infrastructure.executor.MockCommandRequest;
 import org.team4u.command.infrastructure.executor.MockCommandResponse;
 
 /**
- * @author Jay Wu
+ * @author jay.wu
  */
 @RunWith(MockitoJUnitRunner.class)
 public class HttpJsonCommandHandlerTest {
@@ -46,7 +46,7 @@ public class HttpJsonCommandHandlerTest {
 
         handler.handle(context);
 
-        MockCommandResponse mr = (MockCommandResponse) context.getResponse();
+        MockCommandResponse mr = context.getResponse();
         Assert.assertEquals("0", mr.getChannelCode());
     }
 }
