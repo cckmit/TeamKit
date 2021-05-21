@@ -3,6 +3,7 @@ package org.team4u.workflow.domain.instance.node.handler;
 import org.junit.Assert;
 import org.junit.Test;
 import org.team4u.workflow.domain.form.process.definition.node.AssigneeStaticNode;
+import org.team4u.workflow.domain.form.process.node.handler.AssigneeStaticNodeHandler;
 import org.team4u.workflow.domain.instance.ProcessInstance;
 
 import static org.team4u.workflow.TestUtil.*;

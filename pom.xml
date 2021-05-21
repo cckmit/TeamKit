@@ -19,6 +19,7 @@
         <module>team4u-workflow</module>
         <module>team4u-config</module>
         <module>team4u-test</module>
+        <module>team4u-rate-limiter</module>
     </modules>
 
     <properties>

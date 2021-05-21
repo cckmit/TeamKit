@@ -1,0 +1,9 @@
+{
+  "rules": [
+    {
+      "type": "test",
+      "expirationMillis": 500,
+      "threshold": 1
+    }
+  ]
+}

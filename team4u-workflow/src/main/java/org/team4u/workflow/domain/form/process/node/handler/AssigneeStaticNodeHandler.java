@@ -1,10 +1,12 @@
-package org.team4u.workflow.domain.instance.node.handler;
+package org.team4u.workflow.domain.form.process.node.handler;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.Log;
 import org.team4u.base.log.LogMessage;
 import org.team4u.workflow.domain.form.process.definition.node.AssigneeStaticNode;
 import org.team4u.workflow.domain.instance.ProcessAssignee;
+import org.team4u.workflow.domain.instance.node.handler.AbstractStaticProcessNodeHandler;
+import org.team4u.workflow.domain.instance.node.handler.ProcessNodeHandlerContext;
 
 import java.util.Collections;
 import java.util.List;
