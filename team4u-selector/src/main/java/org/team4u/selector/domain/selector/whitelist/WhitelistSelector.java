@@ -34,29 +34,34 @@ public class WhitelistSelector implements Selector {
     public String select(SelectorBinding binding) {
         Map.Entry<String, Object> value = value(binding);
 
-        if (matchKeyOrAny(value.getKey(), value.getValue())) {
-            return MATCH;
+        Boolean isMatch = matchKeyOrAny(value.getKey(), value.getValue());
+        if (isMatch == null || !isMatch) {
+            return NONE;
         }
 
-        return NONE;
+        return MATCH;
     }
 
-    private boolean matchKeyOrAny(String key, Object userId) {
-        if (match(key, userId)) {
-            return true;
+    private Boolean matchKeyOrAny(String key, Object userId) {
+        Boolean isMatch = match(key, userId);
+        // 找到规则，返回命中结果
+        if (isMatch != null) {
+            return isMatch;
         }
 
         // 无法匹配key，则尝试查找*
         return match(ANY, userId);
     }
 
-    private boolean match(String key, Object userId) {
-        return config.getRules()
-                .stream()
-                .filter(it -> it.containsKey(key))
-                .map(it -> matchName(key, it.get(key), userId))
-                .findFirst()
-                .orElse(false);
+    private Boolean match(String key, Object userId) {
+        for (Map<String, String> rule : config.getRules()) {
+            if (rule.containsKey(key)) {
+                return matchName(key, rule.get(key), userId);
+            }
+        }
+
+        // 无法找到规则
+        return null;
     }
 
     private boolean matchName(String key, String nameId, Object userId) {
