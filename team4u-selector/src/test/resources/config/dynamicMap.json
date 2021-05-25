@@ -1,0 +1,25 @@
+{
+  "id": "test",
+  "type": "dynamicMap",
+  "body": {
+    "handlers": {
+      "testA": {
+        "id": "test",
+        "name": "a"
+      },
+      "testB": {
+        "id": "test",
+        "name": "b"
+      },
+      "any": {
+        "id": "test",
+        "name": "c"
+      }
+    },
+    "rules": {
+      "x": "testA",
+      "y": "testB",
+      "*": "any"
+    }
+  }
+}

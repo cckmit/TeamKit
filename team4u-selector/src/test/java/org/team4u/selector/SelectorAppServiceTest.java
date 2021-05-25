@@ -8,10 +8,13 @@ import org.junit.Test;
 import org.team4u.selector.application.SelectorAppService;
 import org.team4u.selector.domain.selector.Selector;
 import org.team4u.selector.domain.selector.SelectorConfig;
+import org.team4u.selector.domain.selector.SelectorValueHandler;
+import org.team4u.selector.domain.selector.SelectorValueService;
 import org.team4u.selector.domain.selector.binding.ListBinding;
 import org.team4u.selector.domain.selector.binding.SimpleMapBinding;
 import org.team4u.selector.domain.selector.binding.SingleValueBinding;
 import org.team4u.selector.domain.selector.expression.ExpressionSelectorFactory;
+import org.team4u.selector.domain.selector.map.DynamicMapSelector;
 import org.team4u.selector.domain.selector.probability.ProbabilitySelector;
 import org.team4u.selector.infrastructure.persistence.InMemorySelectorConfigRepository;
 import org.team4u.template.TemplateFunctionService;
@@ -23,6 +26,35 @@ import org.team4u.template.infrastructure.BeetlTemplateEngine;
  * @author jay.wu
  */
 public class SelectorAppServiceTest {
+
+    @Test
+    public void dynamicMap() {
+        SelectorValueService valueService = new SelectorValueService();
+        valueService.saveIdObject(new SelectorValueHandler() {
+            @Override
+            public String handle(Context context) {
+                return context.getParams().getStr("name");
+            }
+
+            @Override
+            public String id() {
+                return "test";
+            }
+        });
+
+        SelectorAppService s = createService("config/dynamicMap.json");
+        checkDynamicMap(s, valueService, "a", "x");
+        checkDynamicMap(s, valueService, "b", "y");
+        checkDynamicMap(s, valueService, "c", "z");
+    }
+
+    private void checkDynamicMap(SelectorAppService s, SelectorValueService valueService,
+                                 String expected, String key) {
+        Assert.assertEquals(
+                expected,
+                s.select("test", new DynamicMapSelector.Binding(key, valueService))
+        );
+    }
 
     @Test
     public void map() {

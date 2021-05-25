@@ -16,9 +16,6 @@ import java.util.Map;
  */
 public class WhitelistSelector implements Selector {
 
-    public final static String MATCH = "MATCH";
-    public final static String ANY = "*";
-
     private final Config config;
 
     public WhitelistSelector(Config config) {

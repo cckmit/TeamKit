@@ -19,9 +19,6 @@ import java.util.Map;
  */
 public class ProbabilitySelector implements Selector {
 
-    public final static String MATCH = "MATCH";
-    public final static String ANY = "*";
-
     private final Map<String, Double> valueProbabilities;
 
     /**

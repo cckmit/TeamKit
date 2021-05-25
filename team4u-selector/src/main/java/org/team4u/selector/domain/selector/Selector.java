@@ -9,7 +9,20 @@ import org.team4u.selector.domain.selector.binding.SelectorBinding;
  */
 public interface Selector {
 
+    /**
+     * 任意值
+     */
+    String ANY = "*";
+
+    /**
+     * 未命中规则常量值
+     */
     String NONE = "NONE";
+
+    /**
+     * 命中规则常量值
+     */
+    String MATCH = "MATCH";
 
     /**
      * 根据绑定值选择最终结果
