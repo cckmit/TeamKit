@@ -19,16 +19,16 @@ public abstract class IdObjectService<K, V extends IdObject<K>> {
 
     private final Map<K, V> idObjectMap = new ConcurrentHashMap<>();
 
+    public IdObjectService() {
+        this(Collections.emptyList());
+    }
+
     public IdObjectService(Class<V> valueClass) {
         ServiceLoader<V> serviceLoader = ServiceLoader.load(valueClass);
 
         for (V handler : serviceLoader) {
             saveIdObject(handler);
         }
-    }
-
-    public IdObjectService() {
-        this(Collections.emptyList());
     }
 
     public IdObjectService(List<V> objects) {

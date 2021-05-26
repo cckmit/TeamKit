@@ -11,11 +11,12 @@ import java.util.List;
  */
 public class SelectorValueService extends IdObjectService<String, SelectorValueHandler> {
 
-    public SelectorValueService(Class<SelectorValueHandler> valueClass) {
-        super(valueClass);
+    public SelectorValueService() {
+        super();
     }
 
-    public SelectorValueService() {
+    public SelectorValueService(Class<SelectorValueHandler> valueClass) {
+        super(valueClass);
     }
 
     public SelectorValueService(List<SelectorValueHandler> objects) {
