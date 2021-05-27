@@ -56,6 +56,18 @@ public abstract class AbstractRateLimiterService extends LongTimeThread implemen
         return rateLimiter.tryAcquiredCount(key);
     }
 
+    @Override
+    public boolean canAcquire(String type, String key) {
+        RateLimiter rateLimiter = rateLimiters.get(type);
+
+        // 不存在限流统计器不做拦截
+        if (rateLimiter == null) {
+            return true;
+        }
+
+        return rateLimiter.canAcquire(key);
+    }
+
     /**
      * 创建限流器
      */

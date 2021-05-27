@@ -43,4 +43,9 @@ public class InMemoryCountRateLimiter implements RateLimiter {
         }
         return counter.get();
     }
+
+    @Override
+    public boolean canAcquire(String key) {
+        return tryAcquiredCount(key) < config.getThreshold();
+    }
 }

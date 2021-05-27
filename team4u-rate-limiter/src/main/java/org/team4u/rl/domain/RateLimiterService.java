@@ -20,4 +20,13 @@ public interface RateLimiterService {
      * @return 成功访问次数
      */
     long tryAcquiredCount(String type, String key);
+
+    /**
+     * 是否可以访问
+     *
+     * @param type 类型
+     * @param key  键值
+     * @return 是否可以访问
+     */
+    boolean canAcquire(String type, String key);
 }

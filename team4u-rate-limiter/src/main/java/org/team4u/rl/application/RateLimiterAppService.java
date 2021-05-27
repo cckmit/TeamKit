@@ -2,6 +2,8 @@ package org.team4u.rl.application;
 
 import org.team4u.rl.domain.RateLimiterService;
 
+import java.util.Arrays;
+
 /**
  * 限流应用服务
  *
@@ -16,13 +18,19 @@ public class RateLimiterAppService {
     }
 
     public boolean tryAcquire(String type, String key) {
-        // 任意一个限流管理器不允许访问，则返回false
-        for (RateLimiterService rateLimiter : limiterServices) {
-            if (!rateLimiter.tryAcquire(type, key)) {
-                return false;
-            }
-        }
+        return Arrays.stream(limiterServices)
+                .allMatch(it -> it.tryAcquire(type, key));
+    }
 
-        return true;
+    public long tryAcquiredCount(String type, String key) {
+        return Arrays.stream(limiterServices)
+                .map(it -> it.tryAcquiredCount(type, key))
+                .max(Long::compareTo)
+                .orElse(0L);
+    }
+
+    public boolean canAcquire(String type, String key) {
+        return Arrays.stream(limiterServices)
+                .allMatch(it -> it.canAcquire(type, key));
     }
 }

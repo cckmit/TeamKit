@@ -40,6 +40,23 @@ public abstract class AbstractRateLimiterServiceTest {
         Assert.assertEquals(0, service.tryAcquiredCount("test", "1"));
     }
 
+    @Test
+    public void canAcquire() {
+        RateLimiterService service = newRateLimiterService();
+        ThreadUtil.safeSleep(500);
+
+        // 无请求
+        Assert.assertTrue(service.canAcquire("test", "1"));
+
+        // 请求1次
+        service.tryAcquire("test", "1");
+        Assert.assertFalse(service.canAcquire("test", "1"));
+
+        // 超时后重置
+        ThreadUtil.safeSleep(500);
+        Assert.assertTrue(service.canAcquire("test", "1"));
+    }
+
     protected abstract RateLimiterService newRateLimiterService();
 
     protected RateLimitConfigRepository rateLimitConfigRepository() {
