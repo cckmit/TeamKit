@@ -1,5 +1,6 @@
 package org.team4u.rl.infrastructure.limiter;
 
+import cn.hutool.core.convert.Convert;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -53,5 +54,10 @@ public class RedisCountRateLimiter implements RateLimiter {
         }
 
         return true;
+    }
+
+    @Override
+    public long tryAcquiredCount(String key) {
+        return Convert.toLong(redisTemplate.opsForValue().get(key), 0L);
     }
 }

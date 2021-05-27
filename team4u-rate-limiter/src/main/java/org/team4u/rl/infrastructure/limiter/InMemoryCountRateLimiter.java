@@ -5,7 +5,7 @@ import cn.hutool.cache.impl.TimedCache;
 import org.team4u.rl.domain.RateLimiter;
 import org.team4u.rl.domain.RateLimiterConfig;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * 基于本地内存的简单计数限流器
@@ -15,7 +15,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class InMemoryCountRateLimiter implements RateLimiter {
 
     private final RateLimiterConfig.Rule config;
-    private final Cache<String, AtomicInteger> counters;
+    private final Cache<String, AtomicLong> counters;
 
     public InMemoryCountRateLimiter(RateLimiterConfig.Rule config) {
         this.config = config;
@@ -24,18 +24,23 @@ public class InMemoryCountRateLimiter implements RateLimiter {
 
     @Override
     public synchronized boolean tryAcquire(String key) {
-        AtomicInteger counter = counters.get(key);
+        AtomicLong counter = counters.get(key);
 
         if (counter == null) {
-            counter = new AtomicInteger();
+            counter = new AtomicLong();
             counters.put(key, counter);
         }
 
-        // 超出阀值不在累加统计
-        if (counter.get() > config.getThreshold()) {
-            return false;
-        }
-
         return counter.incrementAndGet() <= config.getThreshold();
+    }
+
+    @Override
+    public long tryAcquiredCount(String key) {
+        AtomicLong counter = counters.get(key);
+
+        if (counter == null) {
+            return 0;
+        }
+        return counter.get();
     }
 }
