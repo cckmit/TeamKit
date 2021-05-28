@@ -7,12 +7,11 @@ import org.junit.Test;
 import org.team4u.base.config.LocalJsonConfigService;
 import org.team4u.rl.domain.RateLimitConfigRepository;
 import org.team4u.rl.domain.RateLimiterFactory;
-import org.team4u.rl.domain.RateLimiterService;
 import org.team4u.rl.infrastructure.persistence.JsonRateLimitConfigRepository;
 
 public abstract class AbstractRateLimiterAppServiceTest {
 
-    private final RateLimiterService service = rateLimiterAppService();
+    private final RateLimiterAppService service = rateLimiterAppService();
 
     @Test
     public void tryAcquire() {

@@ -5,7 +5,10 @@ import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 import org.team4u.base.lang.LongTimeThread;
 import org.team4u.base.log.LogMessage;
-import org.team4u.rl.domain.*;
+import org.team4u.rl.domain.RateLimitConfigRepository;
+import org.team4u.rl.domain.RateLimiter;
+import org.team4u.rl.domain.RateLimiterConfig;
+import org.team4u.rl.domain.RateLimiterFactory;
 
 import java.util.Collections;
 import java.util.Map;
@@ -16,7 +19,7 @@ import java.util.stream.Collectors;
  *
  * @author jay.wu
  */
-public class RateLimiterAppService extends LongTimeThread implements RateLimiterService {
+public class RateLimiterAppService extends LongTimeThread {
 
     protected final Log log = LogFactory.get();
 
@@ -37,7 +40,13 @@ public class RateLimiterAppService extends LongTimeThread implements RateLimiter
         start();
     }
 
-    @Override
+    /**
+     * 根据类型尝试是否允许访问
+     *
+     * @param type 类型
+     * @param key  键值
+     * @return true为可以访问，false为拒绝访问
+     */
     public boolean tryAcquire(String type, String key) {
         RateLimiter rateLimiter = rateLimiters.get(type);
 
@@ -49,7 +58,13 @@ public class RateLimiterAppService extends LongTimeThread implements RateLimiter
         return rateLimiter.tryAcquire(key);
     }
 
-    @Override
+    /**
+     * 统计尝试访问次数
+     *
+     * @param type 类型
+     * @param key  键值
+     * @return 成功访问次数
+     */
     public long countAcquired(String type, String key) {
         RateLimiter rateLimiter = rateLimiters.get(type);
 
@@ -61,7 +76,13 @@ public class RateLimiterAppService extends LongTimeThread implements RateLimiter
         return rateLimiter.countAcquired(key);
     }
 
-    @Override
+    /**
+     * 是否可以访问
+     *
+     * @param type 类型
+     * @param key  键值
+     * @return 是否可以访问
+     */
     public boolean canAcquire(String type, String key) {
         RateLimiter rateLimiter = rateLimiters.get(type);
 
