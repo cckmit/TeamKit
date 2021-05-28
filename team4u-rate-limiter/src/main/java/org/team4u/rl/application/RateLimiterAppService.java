@@ -88,8 +88,10 @@ public class RateLimiterAppService {
         private final Log log = LogFactory.get();
 
         private final Config config;
+
         private final RateLimiterFactory rateLimiterFactory;
         private final RateLimitConfigRepository rateLimitConfigRepository;
+
         private RateLimiterConfig rateLimiterConfig;
         private Map<String, RateLimiter> rateLimiters = Collections.emptyMap();
 
