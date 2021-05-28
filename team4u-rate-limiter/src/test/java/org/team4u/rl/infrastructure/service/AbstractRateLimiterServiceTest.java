@@ -24,20 +24,20 @@ public abstract class AbstractRateLimiterServiceTest {
     }
 
     @Test
-    public void tryAcquiredCount() {
+    public void countAcquired() {
         RateLimiterService service = newRateLimiterService();
         ThreadUtil.safeSleep(500);
 
         // 无请求，次数=0
-        Assert.assertEquals(0, service.tryAcquiredCount("test", "1"));
+        Assert.assertEquals(0, service.countAcquired("test", "1"));
 
         // 请求1次
         service.tryAcquire("test", "1");
-        Assert.assertEquals(1, service.tryAcquiredCount("test", "1"));
+        Assert.assertEquals(1, service.countAcquired("test", "1"));
 
         // 超时后重置，次数=0
         ThreadUtil.safeSleep(500);
-        Assert.assertEquals(0, service.tryAcquiredCount("test", "1"));
+        Assert.assertEquals(0, service.countAcquired("test", "1"));
     }
 
     @Test

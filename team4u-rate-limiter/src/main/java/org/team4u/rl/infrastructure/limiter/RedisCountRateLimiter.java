@@ -57,12 +57,12 @@ public class RedisCountRateLimiter implements RateLimiter {
     }
 
     @Override
-    public long tryAcquiredCount(String key) {
+    public long countAcquired(String key) {
         return Convert.toLong(redisTemplate.opsForValue().get(key), 0L);
     }
 
     @Override
     public boolean canAcquire(String key) {
-        return tryAcquiredCount(key) < config.getThreshold();
+        return countAcquired(key) < config.getThreshold();
     }
 }

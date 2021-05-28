@@ -13,13 +13,13 @@ public interface RateLimiterService {
 
 
     /**
-     * 获取尝试访问次数
+     * 统计尝试访问次数
      *
      * @param type 类型
      * @param key  键值
      * @return 成功访问次数
      */
-    long tryAcquiredCount(String type, String key);
+    long countAcquired(String type, String key);
 
     /**
      * 是否可以访问

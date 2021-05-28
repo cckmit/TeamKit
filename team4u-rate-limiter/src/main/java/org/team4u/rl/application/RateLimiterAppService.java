@@ -30,15 +30,15 @@ public class RateLimiterAppService {
     }
 
     /**
-     * 获取尝试访问次数
+     * 统计尝试访问次数
      *
      * @param type 类型
      * @param key  键值
      * @return 成功访问次数
      */
-    public long tryAcquiredCount(String type, String key) {
+    public long countAcquired(String type, String key) {
         return Arrays.stream(limiterServices)
-                .map(it -> it.tryAcquiredCount(type, key))
+                .map(it -> it.countAcquired(type, key))
                 .max(Long::compareTo)
                 .orElse(0L);
     }

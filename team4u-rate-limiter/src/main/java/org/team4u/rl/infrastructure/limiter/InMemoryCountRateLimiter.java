@@ -35,7 +35,7 @@ public class InMemoryCountRateLimiter implements RateLimiter {
     }
 
     @Override
-    public long tryAcquiredCount(String key) {
+    public long countAcquired(String key) {
         AtomicLong counter = counters.get(key);
 
         if (counter == null) {
@@ -46,6 +46,6 @@ public class InMemoryCountRateLimiter implements RateLimiter {
 
     @Override
     public boolean canAcquire(String key) {
-        return tryAcquiredCount(key) < config.getThreshold();
+        return countAcquired(key) < config.getThreshold();
     }
 }

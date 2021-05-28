@@ -14,12 +14,12 @@ public interface RateLimiter {
     boolean tryAcquire(String key);
 
     /**
-     * 获取尝试访问次数
+     * 统计尝试访问次数
      *
      * @param key 关键key
      * @return 成功访问次数
      */
-    long tryAcquiredCount(String key);
+    long countAcquired(String key);
 
     /**
      * 是否可以访问
