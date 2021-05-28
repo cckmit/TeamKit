@@ -61,13 +61,15 @@ public class FilterService<C> {
      * 开始处理
      *
      * @param context 上下文
+     * @return context 上下文
      */
-    public void doFilter(C context) {
+    public C doFilter(C context) {
         LogMessage lm = LogMessages.create(this.getClass().getSimpleName(), "doFilter")
                 .append("context", context);
         try {
             contextFilterChain.doFilter(context);
             log.info(lm.success().toString());
+            return context;
         } catch (Exception e) {
             LogService.logForError(log, lm, e);
             throw e;
