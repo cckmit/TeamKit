@@ -2,7 +2,7 @@
   "rules": [
     {
       "type": "test",
-      "expirationMillis": 100,
+      "expirationMillis": 200,
       "threshold": 1
     }
   ]

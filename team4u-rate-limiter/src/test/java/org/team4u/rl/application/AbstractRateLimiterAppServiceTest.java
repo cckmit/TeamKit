@@ -18,7 +18,7 @@ public abstract class AbstractRateLimiterAppServiceTest {
         Assert.assertTrue(service.tryAcquire("test", "1"));
         Assert.assertFalse(service.tryAcquire("test", "1"));
 
-        ThreadUtil.safeSleep(101);
+        ThreadUtil.safeSleep(201);
         Assert.assertTrue(service.tryAcquire("test", "1"));
     }
 
@@ -32,7 +32,7 @@ public abstract class AbstractRateLimiterAppServiceTest {
         Assert.assertEquals(1, service.countAcquired("test", "1"));
 
         // 超时后重置，次数=0
-        ThreadUtil.safeSleep(101);
+        ThreadUtil.safeSleep(201);
         Assert.assertEquals(0, service.countAcquired("test", "1"));
     }
 
@@ -46,7 +46,7 @@ public abstract class AbstractRateLimiterAppServiceTest {
         Assert.assertFalse(service.canAcquire("test", "1"));
 
         // 超时后重置
-        ThreadUtil.safeSleep(101);
+        ThreadUtil.safeSleep(201);
         Assert.assertTrue(service.canAcquire("test", "1"));
     }
 
@@ -54,7 +54,9 @@ public abstract class AbstractRateLimiterAppServiceTest {
 
     private RateLimiterAppService rateLimiterAppService() {
         return new RateLimiterAppService(
-                new RateLimiterAppService.Config().setConfigId("config/test").setRefreshConfigIntervalMillis(50),
+                new RateLimiterAppService.LimitersRefresher.Config()
+                        .setConfigId("config/test")
+                        .setRefreshConfigIntervalMillis(50),
                 newRateLimiterFactory(),
                 rateLimitConfigRepository()
         );

@@ -19,25 +19,15 @@ import java.util.stream.Collectors;
  *
  * @author jay.wu
  */
-public class RateLimiterAppService extends LongTimeThread {
+public class RateLimiterAppService {
 
-    protected final Log log = LogFactory.get();
+    private final LimitersRefresher limiterRefresher;
 
-    protected final Config config;
-    private final RateLimiterFactory rateLimiterFactory;
-    protected RateLimiterConfig rateLimiterConfig;
-    private final RateLimitConfigRepository rateLimitConfigRepository;
-    private Map<String, RateLimiter> rateLimiters = Collections.emptyMap();
-
-    public RateLimiterAppService(Config config,
+    public RateLimiterAppService(LimitersRefresher.Config config,
                                  RateLimiterFactory rateLimiterFactory,
                                  RateLimitConfigRepository configRepository) {
-        this.config = config;
-        this.rateLimiterFactory = rateLimiterFactory;
-        this.rateLimitConfigRepository = configRepository;
-
-        onRun();
-        start();
+        limiterRefresher = new LimitersRefresher(config, rateLimiterFactory, configRepository);
+        limiterRefresher.start();
     }
 
     /**
@@ -48,7 +38,7 @@ public class RateLimiterAppService extends LongTimeThread {
      * @return true为可以访问，false为拒绝访问
      */
     public boolean tryAcquire(String type, String key) {
-        RateLimiter rateLimiter = rateLimiters.get(type);
+        RateLimiter rateLimiter = limiterRefresher.limiterOf(type);
 
         // 不存在限流统计器不做拦截
         if (rateLimiter == null) {
@@ -66,7 +56,7 @@ public class RateLimiterAppService extends LongTimeThread {
      * @return 成功访问次数
      */
     public long countAcquired(String type, String key) {
-        RateLimiter rateLimiter = rateLimiters.get(type);
+        RateLimiter rateLimiter = limiterRefresher.limiterOf(type);
 
         // 不存在限流统计器不做拦截
         if (rateLimiter == null) {
@@ -84,7 +74,7 @@ public class RateLimiterAppService extends LongTimeThread {
      * @return 是否可以访问
      */
     public boolean canAcquire(String type, String key) {
-        RateLimiter rateLimiter = rateLimiters.get(type);
+        RateLimiter rateLimiter = limiterRefresher.limiterOf(type);
 
         // 不存在限流统计器不做拦截
         if (rateLimiter == null) {
@@ -94,63 +84,96 @@ public class RateLimiterAppService extends LongTimeThread {
         return rateLimiter.canAcquire(key);
     }
 
-    @Override
-    protected void onRun() {
-        RateLimiterConfig rateLimiterConfig = rateLimitConfigRepository.configOf(config.getConfigId());
-        // 判断规则集合是否有变动，若有则重新构建
-        if (ObjectUtil.equals(this.rateLimiterConfig, rateLimiterConfig)) {
-            return;
+    public static class LimitersRefresher extends LongTimeThread {
+        private final Log log = LogFactory.get();
+
+        private final Config config;
+        private final RateLimiterFactory rateLimiterFactory;
+        private final RateLimitConfigRepository rateLimitConfigRepository;
+        private RateLimiterConfig rateLimiterConfig;
+        private Map<String, RateLimiter> rateLimiters = Collections.emptyMap();
+
+        public LimitersRefresher(Config config,
+                                 RateLimiterFactory rateLimiterFactory,
+                                 RateLimitConfigRepository rateLimitConfigRepository) {
+            this.config = config;
+            this.rateLimiterFactory = rateLimiterFactory;
+            this.rateLimitConfigRepository = rateLimitConfigRepository;
         }
 
-        this.rateLimiterConfig = rateLimiterConfig;
-        initRateLimitersWithRules();
-    }
+        @Override
+        public synchronized void start() {
+            onRun();
+            super.start();
+        }
 
-    private void initRateLimitersWithRules() {
-        rateLimiters = rateLimiterConfig.getRules()
-                .stream()
-                .collect(Collectors.toMap(
-                        RateLimiterConfig.Rule::getType,
-                        rateLimiterFactory::create
-                ));
+        public RateLimiter limiterOf(String key) {
+            return rateLimiters.get(key);
+        }
 
-        log.info(LogMessage.create(this.getClass().getSimpleName(), "initRateLimitersWithRules")
-                .success()
-                .append("rateLimiters", rateLimiters.size())
-                .toString());
-    }
+        @Override
+        protected void onRun() {
+            RateLimiterConfig rateLimiterConfig = rateLimitConfigRepository.configOf(config.getConfigId());
 
-    @Override
-    protected Number runIntervalMillis() {
-        return config.getRefreshConfigIntervalMillis();
-    }
+            // 判断规则集合是否有变动，若有则重新构建
+            if (ObjectUtil.equals(this.rateLimiterConfig, rateLimiterConfig)) {
+                return;
+            }
 
-    /**
-     * 配置类
-     */
-    public static class Config {
-        private int refreshConfigIntervalMillis = 5000;
+            this.rateLimiterConfig = rateLimiterConfig;
+            initRateLimitersWithRules();
+        }
+
+        private boolean hasChanged() {
+            return ObjectUtil.equals(this.rateLimiterConfig, rateLimiterConfig);
+        }
+
+        private void initRateLimitersWithRules() {
+            rateLimiters = rateLimiterConfig.getRules()
+                    .stream()
+                    .collect(Collectors.toMap(
+                            RateLimiterConfig.Rule::getType,
+                            rateLimiterFactory::create
+                    ));
+
+            log.info(LogMessage.create(this.getClass().getSimpleName(), "initRateLimitersWithRules")
+                    .success()
+                    .append("rateLimiters", rateLimiters.size())
+                    .toString());
+        }
+
+        @Override
+        protected Number runIntervalMillis() {
+            return config.getRefreshConfigIntervalMillis();
+        }
+
         /**
-         * 配置标识
+         * 配置类
          */
-        private String configId;
+        public static class Config {
+            private int refreshConfigIntervalMillis = 5000;
+            /**
+             * 配置标识
+             */
+            private String configId;
 
-        public int getRefreshConfigIntervalMillis() {
-            return refreshConfigIntervalMillis;
-        }
+            public int getRefreshConfigIntervalMillis() {
+                return refreshConfigIntervalMillis;
+            }
 
-        public Config setRefreshConfigIntervalMillis(int refreshConfigIntervalMillis) {
-            this.refreshConfigIntervalMillis = refreshConfigIntervalMillis;
-            return this;
-        }
+            public Config setRefreshConfigIntervalMillis(int refreshConfigIntervalMillis) {
+                this.refreshConfigIntervalMillis = refreshConfigIntervalMillis;
+                return this;
+            }
 
-        public String getConfigId() {
-            return configId;
-        }
+            public String getConfigId() {
+                return configId;
+            }
 
-        public Config setConfigId(String configId) {
-            this.configId = configId;
-            return this;
+            public Config setConfigId(String configId) {
+                this.configId = configId;
+                return this;
+            }
         }
     }
 }
