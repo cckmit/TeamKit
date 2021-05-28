@@ -1,25 +1,13 @@
-package org.team4u.rl.infrastructure.service;
+package org.team4u.rl.application;
 
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-import org.team4u.rl.domain.RateLimiterService;
 import redis.clients.jedis.JedisPoolConfig;
 
-public class RedisRateLimiterServiceTest extends AbstractRateLimiterServiceTest {
+public class TestUtil {
 
-    private final RedisRateLimiterService service = new RedisRateLimiterService(
-            new AbstractRateLimiterService.Config().setConfigId("config/test"),
-            rateLimitConfigRepository(),
-            createRedisTemplate()
-    );
-
-    @Override
-    protected RateLimiterService newRateLimiterService() {
-        return service;
-    }
-
-    private StringRedisTemplate createRedisTemplate() {
+    public static StringRedisTemplate createRedisTemplate() {
         StringRedisTemplate template = new StringRedisTemplate();
 
         JedisConnectionFactory factory = new JedisConnectionFactory();
@@ -35,4 +23,5 @@ public class RedisRateLimiterServiceTest extends AbstractRateLimiterServiceTest 
         template.afterPropertiesSet();
         return template;
     }
+
 }

@@ -7,6 +7,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.team4u.base.log.LogMessage;
 import org.team4u.rl.domain.RateLimiter;
 import org.team4u.rl.domain.RateLimiterConfig;
+import org.team4u.rl.domain.RateLimiterFactory;
 
 import java.util.concurrent.TimeUnit;
 
@@ -64,5 +65,19 @@ public class RedisCountRateLimiter implements RateLimiter {
     @Override
     public boolean canAcquire(String key) {
         return countAcquired(key) < config.getThreshold();
+    }
+
+    public static class Factory implements RateLimiterFactory {
+
+        private final RedisTemplate<String, String> redisTemplate;
+
+        public Factory(RedisTemplate<String, String> redisTemplate) {
+            this.redisTemplate = redisTemplate;
+        }
+
+        @Override
+        public RateLimiter create(RateLimiterConfig.Rule rule) {
+            return new RedisCountRateLimiter(rule, redisTemplate);
+        }
     }
 }

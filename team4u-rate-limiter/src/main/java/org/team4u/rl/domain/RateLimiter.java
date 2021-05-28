@@ -1,6 +1,8 @@
 package org.team4u.rl.domain;
 
 /**
+ * 限流器
+ *
  * @author jay.wu
  */
 public interface RateLimiter {

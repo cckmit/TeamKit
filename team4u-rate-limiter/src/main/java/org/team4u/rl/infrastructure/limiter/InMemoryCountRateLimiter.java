@@ -4,6 +4,7 @@ import cn.hutool.cache.Cache;
 import cn.hutool.cache.impl.TimedCache;
 import org.team4u.rl.domain.RateLimiter;
 import org.team4u.rl.domain.RateLimiterConfig;
+import org.team4u.rl.domain.RateLimiterFactory;
 
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -47,5 +48,13 @@ public class InMemoryCountRateLimiter implements RateLimiter {
     @Override
     public boolean canAcquire(String key) {
         return countAcquired(key) < config.getThreshold();
+    }
+
+    public static class Factory implements RateLimiterFactory {
+
+        @Override
+        public RateLimiter create(RateLimiterConfig.Rule rule) {
+            return new InMemoryCountRateLimiter(rule);
+        }
     }
 }
