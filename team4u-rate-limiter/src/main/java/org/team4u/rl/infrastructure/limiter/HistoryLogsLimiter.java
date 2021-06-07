@@ -31,6 +31,20 @@ public class HistoryLogsLimiter implements RateLimiter {
         HistoryLogsLimiter.datasource.set(datasource);
     }
 
+    /**
+     * 获取上下文数据源
+     */
+    public static List<Long> getDatasource() {
+        return HistoryLogsLimiter.datasource.get();
+    }
+
+    /**
+     * 移除上下文数据源
+     */
+    public static void removeDatasource() {
+        HistoryLogsLimiter.datasource.remove();
+    }
+
     @Override
     public synchronized boolean tryAcquire(String key) {
         List<Long> logs = datasource.get();
