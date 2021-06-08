@@ -21,6 +21,8 @@ import java.util.stream.Collectors;
  */
 public class RateLimiterAppService {
 
+    private final Log log = Log.get();
+
     private final LimitersRefresher limiterRefresher;
 
     public RateLimiterAppService(LimitersRefresher.Config config,
@@ -40,12 +42,23 @@ public class RateLimiterAppService {
     public boolean tryAcquire(String type, String key) {
         RateLimiter rateLimiter = limiterRefresher.limiterOf(type);
 
+        LogMessage lm = logMessageOf(rateLimiter, "tryAcquire", type, key);
+
         // 不存在限流统计器不做拦截
         if (rateLimiter == null) {
+            if (log.isDebugEnabled()) {
+                log.debug(lm.fail("rateLimiter not exist").append("result", true).toString());
+            }
             return true;
         }
 
-        return rateLimiter.tryAcquire(key);
+        boolean result = rateLimiter.tryAcquire(key);
+
+        if (log.isDebugEnabled()) {
+            log.debug(lm.success().append("result", result).toString());
+        }
+
+        return result;
     }
 
     /**
@@ -58,12 +71,23 @@ public class RateLimiterAppService {
     public long countAcquired(String type, String key) {
         RateLimiter rateLimiter = limiterRefresher.limiterOf(type);
 
+        LogMessage lm = logMessageOf(rateLimiter, "countAcquired", type, key);
+
         // 不存在限流统计器不做拦截
         if (rateLimiter == null) {
+            if (log.isDebugEnabled()) {
+                log.debug(lm.fail("rateLimiter not exist").append("result", 0).toString());
+            }
             return 0;
         }
 
-        return rateLimiter.countAcquired(key);
+        long result = rateLimiter.countAcquired(key);
+
+        if (log.isDebugEnabled()) {
+            log.debug(lm.success().append("result", result).toString());
+        }
+
+        return result;
     }
 
     /**
@@ -75,13 +99,36 @@ public class RateLimiterAppService {
      */
     public boolean canAcquire(String type, String key) {
         RateLimiter rateLimiter = limiterRefresher.limiterOf(type);
+        LogMessage lm = logMessageOf(rateLimiter, "canAcquire", type, key);
 
         // 不存在限流统计器不做拦截
         if (rateLimiter == null) {
+            if (log.isDebugEnabled()) {
+                log.debug(lm.fail("rateLimiter not exist").append("result", true).toString());
+            }
             return true;
         }
 
-        return rateLimiter.canAcquire(key);
+        boolean result = rateLimiter.canAcquire(key);
+
+        if (log.isDebugEnabled()) {
+            log.debug(lm.success().append("result", result).toString());
+        }
+
+        return result;
+    }
+
+    private LogMessage logMessageOf(RateLimiter rateLimiter,
+                                    String eventName,
+                                    String type,
+                                    String key) {
+        LogMessage lm = LogMessage.create(this.getClass().getSimpleName(), eventName);
+
+        if (rateLimiter != null) {
+            lm.append("limiter", rateLimiter.getClass().getSimpleName());
+        }
+
+        return lm.append("type", type).append("key", key);
     }
 
     public static class LimitersRefresher extends LongTimeThread {
