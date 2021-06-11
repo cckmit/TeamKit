@@ -2,7 +2,7 @@ drop table `process_instance`;
 create table `process_instance`
 (
     `id`                         bigint(20) unsigned not null auto_increment comment '自增长标识',
-    `process_instance_id`        varchar(32)         not null default '' comment '流程实例标识',
+    `process_instance_id`        varchar(50)         not null default '' comment '流程实例标识',
     `process_instance_name`      varchar(100)        not null default '' comment '流程实例名称',
     `process_definition_id`      varchar(32)         not null default '' comment '流程流程定义标识',
     `process_definition_version` int unsigned        not null default 0 comment '流程定义版本',
@@ -27,7 +27,7 @@ drop table `process_assignee`;
 create table `process_assignee`
 (
     `id`                  bigint(20) unsigned not null auto_increment comment '自增长标识',
-    `process_instance_id` varchar(32)         not null default '' comment '流程实例标识',
+    `process_instance_id` varchar(50)         not null default '' comment '流程实例标识',
     `node_id`             varchar(100)        not null default '' comment '流程节点标识',
     `action_id`           varchar(32)         not null default '' comment '动作',
     `assignee`            varchar(32)         not null default '' comment '审批人',
@@ -60,7 +60,7 @@ drop table `process_instance_detail`;
 create table if not exists `process_instance_detail`
 (
     `id`                  bigint(20) unsigned not null auto_increment comment '自增长标识',
-    `process_instance_id` varchar(32)         not null default '' comment '流程实例标识',
+    `process_instance_id` varchar(50)         not null default '' comment '流程实例标识',
     `type`                varchar(100)        not null default '' comment '明细类型',
     `body`                varchar(21000)      not null default '' comment '明细内容',
     `create_time`         timestamp           not null default '1970-01-01 23:59:59' comment '创建时间',
