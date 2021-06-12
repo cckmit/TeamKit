@@ -17,6 +17,8 @@ import org.team4u.workflow.domain.instance.node.handler.ProcessNodeHandler;
 import org.team4u.workflow.domain.instance.node.handler.ProcessNodeHandlerContext;
 import org.team4u.workflow.domain.instance.node.handler.bean.ProcessBeanHandler;
 
+import java.util.List;
+
 /**
  * 工作流应用服务
  *
@@ -180,6 +182,17 @@ public class ProcessAppService {
      */
     public void registerBeanHandler(ProcessBeanHandler handler) {
         processNodeHandlers.beanHandlers().saveIdObject(handler);
+    }
+
+    /**
+     * 注册流程bean处理器集合
+     *
+     * @param handlers 流程bean处理器集合
+     */
+    public void registerBeanHandlers(List<ProcessBeanHandler> handlers) {
+        for (ProcessBeanHandler handler : handlers) {
+            registerBeanHandler(handler);
+        }
     }
 
     /**

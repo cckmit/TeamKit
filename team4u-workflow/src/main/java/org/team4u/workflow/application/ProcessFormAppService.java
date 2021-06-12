@@ -18,6 +18,10 @@ import org.team4u.workflow.domain.form.FormIndex;
 import org.team4u.workflow.domain.form.FormIndexRepository;
 import org.team4u.workflow.domain.form.FormPermissionService;
 import org.team4u.workflow.domain.form.process.definition.ProcessFormAction;
+import org.team4u.workflow.domain.form.process.definition.node.AssigneeActionChoiceNode;
+import org.team4u.workflow.domain.form.process.definition.node.AssigneeStaticNode;
+import org.team4u.workflow.domain.form.process.node.handler.AssigneeActionChoiceNodeHandler;
+import org.team4u.workflow.domain.form.process.node.handler.AssigneeStaticNodeHandler;
 import org.team4u.workflow.domain.instance.ProcessInstance;
 import org.team4u.workflow.domain.instance.event.ProcessNodeChangedEvent;
 import org.team4u.workflow.domain.instance.exception.NoPermissionException;
@@ -188,6 +192,26 @@ public class ProcessFormAppService {
      */
     public ProcessAppService getProcessAppService() {
         return processAppService;
+    }
+
+    /**
+     * 注册处理人策略
+     *
+     * @param policy 策略
+     */
+    public void registerAssigneePolicy(AssigneeStaticNodeHandler.Policy policy) {
+        AssigneeStaticNodeHandler handler = processAppService.processNodeHandlerOf(AssigneeStaticNode.class);
+        handler.registerPolicy(policy);
+    }
+
+    /**
+     * 注册处理人动作策略
+     *
+     * @param policy 策略
+     */
+    public void registerAssigneeActionPolicy(AssigneeActionChoiceNodeHandler.Policy policy) {
+        AssigneeActionChoiceNodeHandler handler = processAppService.processNodeHandlerOf(AssigneeActionChoiceNode.class);
+        handler.registerPolicy(policy);
     }
 
     private ProcessFormAction actionOf(String processDefinitionId, String actionId) {
