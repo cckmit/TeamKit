@@ -17,7 +17,7 @@ public class ProcessCodeGeneratorTest {
 
     @Test
     public void enumCodeForNodes() {
-        String code = codeGenerator.enumCodeForNodes(TestUtil.definitionOf("vms"));
+        String code = codeGenerator.enumCodeForStaticNodes(TestUtil.definitionOf("vms"));
         Assert.assertEquals(FileUtil.readUtf8String("code/vmsProcessNode.txt"), code);
 
     }

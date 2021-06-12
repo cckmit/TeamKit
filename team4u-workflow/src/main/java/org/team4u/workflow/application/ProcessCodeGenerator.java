@@ -4,6 +4,9 @@ import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.lang.Dict;
 import org.team4u.template.TemplateEngine;
 import org.team4u.workflow.domain.definition.ProcessDefinition;
+import org.team4u.workflow.domain.definition.node.StaticNode;
+
+import java.util.stream.Collectors;
 
 /**
  * 流程代码生成器
@@ -22,12 +25,15 @@ public class ProcessCodeGenerator {
     }
 
     /**
-     * 生成节点枚举类
+     * 生成静态节点枚举类
      */
-    public String enumCodeForNodes(ProcessDefinition definition) {
+    public String enumCodeForStaticNodes(ProcessDefinition definition) {
         return templateEngine.render(
                 ResourceUtil.readUtf8Str(config.getNodesTemplatePath()),
-                Dict.create().set("nodes", definition.getNodes())
+                Dict.create().set("nodes", definition.getNodes()
+                        .stream()
+                        .filter(it -> it instanceof StaticNode)
+                        .collect(Collectors.toList()))
                         .set("className", definition.getProcessDefinitionId().getId() + "ProcessNode")
         );
     }
