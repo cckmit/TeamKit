@@ -9,9 +9,9 @@ import org.team4u.workflow.domain.definition.node.StaticNode;
  */
 public class AssigneeStaticNode extends StaticNode {
     /**
-     * 指定用户角色
+     * 自定义处理人标识
      */
-    public static final String RULE_TYPE_ROLE = "ROLE";
+    public static final String RULE_TYPE_CUSTOM = "CUSTOM";
     /**
      * 指定用户标识
      */
