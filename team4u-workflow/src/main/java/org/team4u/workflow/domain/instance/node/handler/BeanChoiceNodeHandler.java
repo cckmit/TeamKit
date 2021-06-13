@@ -8,6 +8,11 @@ import org.team4u.workflow.domain.instance.node.handler.bean.ProcessBeanHandlers
 
 /**
  * 基于bean选择节点处理器
+ * <p>
+ * ProcessBeanHandler需要设置Context的ext以指定下一个节点
+ * <p>
+ * key=ProcessBeanHandler.EXT_NEXT_NODE_ID
+ * value=下一个节点标识
  *
  * @author jay.wu
  */

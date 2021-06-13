@@ -6,6 +6,11 @@ import org.team4u.workflow.domain.instance.node.handler.bean.ProcessBeanHandlers
 
 /**
  * bean动作选择器节点处理器
+ * <p>
+ * ProcessBeanHandler需要设置Context的ext以指定执行动作标识
+ * <p>
+ * key=ProcessBeanHandler.EXT_CHOICE_ACTION_ID
+ * value=执行动作标识
  *
  * @author jay.wu
  */
