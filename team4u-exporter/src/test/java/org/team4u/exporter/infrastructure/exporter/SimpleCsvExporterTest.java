@@ -40,5 +40,4 @@ public class SimpleCsvExporterTest {
         ByteArrayOutputStream o = new ByteArrayOutputStream();
         exporter.export(c);
     }
-
 }
