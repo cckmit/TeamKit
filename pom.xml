@@ -20,6 +20,7 @@
         <module>team4u-config</module>
         <module>team4u-test</module>
         <module>team4u-rate-limiter</module>
+        <module>team4u-exporter</module>
     </modules>
 
     <properties>
