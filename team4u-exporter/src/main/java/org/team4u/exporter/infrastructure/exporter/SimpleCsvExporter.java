@@ -22,6 +22,12 @@ import java.util.stream.Collectors;
  */
 public class SimpleCsvExporter implements Exporter<SimpleCsvExporter.Context> {
 
+    private static final SimpleCsvExporter INSTANCE = new SimpleCsvExporter();
+
+    public static SimpleCsvExporter getInstance() {
+        return INSTANCE;
+    }
+
     @Override
     public void export(Context context) {
         CsvWriter writer = CsvUtil.getWriter(

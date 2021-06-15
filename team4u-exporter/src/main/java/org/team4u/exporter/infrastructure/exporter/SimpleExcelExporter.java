@@ -13,6 +13,12 @@ import org.team4u.exporter.domain.Title;
  */
 public class SimpleExcelExporter implements Exporter<RowContext> {
 
+    private static final SimpleExcelExporter INSTANCE = new SimpleExcelExporter();
+
+    public static SimpleExcelExporter getInstance() {
+        return INSTANCE;
+    }
+
     @Override
     public void export(RowContext context) {
         ExcelWriter writer = createExcelWriter(context);
