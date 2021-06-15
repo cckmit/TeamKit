@@ -30,10 +30,6 @@ public class SimpleCsvExporterTest {
     public void exportBean() {
         SimpleCsvExporter.Context c = new SimpleCsvExporter.Context();
         c.setOutputStream(System.out)
-                .setTitles(CollUtil.newArrayList(
-                        new Title("a", "1"),
-                        new Title("b", "2")
-                ))
                 .setRows(CollUtil.newArrayList(new TestBean("11", "22"))
                 );
 

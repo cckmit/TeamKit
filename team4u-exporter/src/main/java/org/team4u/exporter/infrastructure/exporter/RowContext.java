@@ -1,16 +1,37 @@
 package org.team4u.exporter.infrastructure.exporter;
 
+import cn.hutool.core.util.StrUtil;
 import org.team4u.exporter.domain.Title;
 
 import java.io.OutputStream;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * 基于行数据的上下文
+ *
+ * @author jay.wu
+ */
 public class RowContext {
+    /**
+     * 第一行是否输出标题
+     */
     private boolean writeTitle = true;
+    /**
+     * 标题定义集合
+     */
     private List<Title> titles;
+    /**
+     * 行数据集合
+     */
     private Collection<?> rows;
+    /**
+     * 导出完成后是否关闭输出流
+     */
     private boolean isCloseOut = true;
+    /**
+     * 输出流
+     */
     private OutputStream outputStream;
 
     public boolean isWriteTitle() {
@@ -20,6 +41,10 @@ public class RowContext {
     public RowContext setWriteTitle(boolean writeTitle) {
         this.writeTitle = writeTitle;
         return this;
+    }
+
+    public boolean anyMatchTitleKey(String key) {
+        return titles.stream().anyMatch(it -> StrUtil.contains(key, it.getKey()));
     }
 
     public List<Title> getTitles() {

@@ -1,5 +1,6 @@
 package org.team4u.exporter.infrastructure.exporter;
 
+import cn.hutool.core.annotation.Alias;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.text.csv.CsvUtil;
@@ -10,6 +11,7 @@ import org.team4u.exporter.domain.Exporter;
 import org.team4u.exporter.domain.Title;
 
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -39,7 +41,14 @@ public class SimpleCsvExporter implements Exporter<SimpleCsvExporter.Context> {
         }
 
         if (CollUtil.isEmpty(context.getTitles())) {
-            return;
+            Object row = CollUtil.getFirst(context.getRows());
+            if (row != null && BeanUtil.isBean(row.getClass())) {
+                context.setTitles(titlesOfBean(row));
+
+                if (CollUtil.isEmpty(context.getTitles())) {
+                    return;
+                }
+            }
         }
 
         writer.write(
@@ -50,12 +59,28 @@ public class SimpleCsvExporter implements Exporter<SimpleCsvExporter.Context> {
         );
     }
 
-    @SuppressWarnings("rawtypes")
+    private List<Title> titlesOfBean(Object bean) {
+        return Arrays.stream(ReflectUtil.getFields(bean.getClass()))
+                .map(it -> new Title(it.getName(), alias(it)))
+                .collect(Collectors.toList());
+    }
+
+    private String alias(Field field) {
+        Alias alias = field.getAnnotation(Alias.class);
+
+        if (alias == null) {
+            return field.getName();
+        }
+
+        return alias.value();
+    }
+
     private void writeBody(CsvWriter writer, RowContext context) {
         List<?> rows = context.getRows()
                 .stream()
+                .filter(Objects::nonNull)
                 .map(it -> {
-                    if (it instanceof Map) {
+                    if (it instanceof Map<?, ?>) {
                         return writeMap(context, (Map<?, ?>) it);
                     }
 
@@ -71,14 +96,9 @@ public class SimpleCsvExporter implements Exporter<SimpleCsvExporter.Context> {
     }
 
     private Collection<?> writeBean(RowContext context, Object bean) {
-        if (CollUtil.isEmpty(context.getTitles())) {
-            return Arrays.stream(ReflectUtil.getFields(bean.getClass()))
-                    .map(field -> ReflectUtil.getFieldValue(bean, field))
-                    .collect(Collectors.toList());
-        }
-
-        return context.getTitles().stream()
-                .map(title -> BeanUtil.getProperty(bean, title.getKey()))
+        return Arrays.stream(ReflectUtil.getFields(bean.getClass()))
+                .filter(it -> context.anyMatchTitleKey(it.getName()))
+                .map(it -> ReflectUtil.getFieldValue(bean, it))
                 .collect(Collectors.toList());
     }
 

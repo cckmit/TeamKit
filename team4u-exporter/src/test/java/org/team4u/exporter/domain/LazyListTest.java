@@ -11,14 +11,14 @@ public class LazyListTest {
 
     @Test
     public void hasNext() {
-        List<Integer> list = new LazyList<>(new LazyList.PageLoader<Integer>() {
+        List<Integer> list = new LazyList<>(new LazyList.OffsetLoader<Integer>() {
             @Override
-            protected List<Integer> load(long pageNumber) {
-                if (pageNumber > 2) {
+            protected List<Integer> load(long offset) {
+                if (offset > 1) {
                     return null;
                 }
 
-                return CollUtil.newArrayList((int) pageNumber);
+                return CollUtil.newArrayList((int) offset);
             }
         });
 
@@ -27,8 +27,8 @@ public class LazyListTest {
             list2.add(integer);
         }
 
-        Assert.assertEquals(1, list2.get(0).intValue());
-        Assert.assertEquals(2, list2.get(1).intValue());
-        Assert.assertNull(CollUtil.get(list2, 2));
+        Assert.assertEquals(0, list2.get(0).intValue());
+        Assert.assertEquals(1, list2.get(1).intValue());
+        Assert.assertEquals(2, list2.size());
     }
 }

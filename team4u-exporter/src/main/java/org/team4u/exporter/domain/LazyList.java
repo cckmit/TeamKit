@@ -159,20 +159,44 @@ public class LazyList<E> implements Iterator<E>, List<E> {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * 数据加载器
+     *
+     * @param <E> 数据类型
+     */
     public interface Loader<E> {
 
+        /**
+         * 加载
+         *
+         * @return 数据集合
+         */
         List<E> load();
     }
 
-    public static abstract class PageLoader<E> implements Loader<E> {
+    /**
+     * 偏移量数据加载器
+     *
+     * @param <E> 数据类型
+     */
+    public static abstract class OffsetLoader<E> implements Loader<E> {
 
-        private long pageNumber = 1;
+        /**
+         * 当前偏移量，默认从0开始
+         */
+        private long offset = 0;
 
         @Override
         public List<E> load() {
-            return load(pageNumber++);
+            return load(offset++);
         }
 
-        protected abstract List<E> load(long pageNumber);
+        /**
+         * 根据当前偏移量加载
+         *
+         * @param offset 当前偏移量
+         * @return 数据集合
+         */
+        protected abstract List<E> load(long offset);
     }
 }

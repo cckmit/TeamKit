@@ -1,7 +1,11 @@
 package org.team4u.exporter.infrastructure.exporter;
 
+import cn.hutool.core.annotation.Alias;
+
 public class TestBean {
+    @Alias("1")
     private String a;
+    @Alias("2")
     private String b;
 
     public TestBean(String a, String b) {
