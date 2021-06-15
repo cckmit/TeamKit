@@ -23,4 +23,18 @@ public class SimpleExcelExporterTest {
                 )
         );
     }
+
+    @Test
+    public void exportBean() {
+        RowContext c = new RowContext()
+                .setOutputStream(FileUtil.getOutputStream("test.xls"))
+                .setTitles(CollUtil.newArrayList(
+                        new Title("a", "1"),
+                        new Title("b", "2")
+                ))
+                .setRows(CollUtil.newArrayList(new TestBean("11", "22"))
+                );
+
+        exporter.export(c);
+    }
 }
