@@ -21,6 +21,10 @@ public class ProcessInstanceDo {
      */
     private String processInstanceId;
     /**
+     * 流程实例类型
+     */
+    private String processInstanceType;
+    /**
      * 流程实例名称
      */
     private String processInstanceName;
@@ -81,6 +85,14 @@ public class ProcessInstanceDo {
 
     public void setProcessInstanceId(String processInstanceId) {
         this.processInstanceId = processInstanceId;
+    }
+
+    public String getProcessInstanceType() {
+        return processInstanceType;
+    }
+
+    public void setProcessInstanceType(String processInstanceType) {
+        this.processInstanceType = processInstanceType;
     }
 
     public String getProcessInstanceName() {

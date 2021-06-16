@@ -123,6 +123,7 @@ public class ProcessAppService {
 
         ProcessInstance instance = ProcessInstance.create(
                 ObjectUtil.defaultIfBlank(command.getProcessInstanceId(), IdUtil.fastSimpleUUID()),
+                command.getProcessInstanceType(),
                 command.getProcessInstanceName(),
                 ProcessDefinitionId.of(command.getProcessDefinitionId()),
                 command.getOperatorId(),

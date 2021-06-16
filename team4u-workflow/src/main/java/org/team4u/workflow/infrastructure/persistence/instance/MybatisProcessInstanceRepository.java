@@ -37,7 +37,8 @@ public class MybatisProcessInstanceRepository
     public MybatisProcessInstanceRepository(EventStore eventStore,
                                             ProcessInstanceMapper instanceMapper,
                                             ProcessAssigneeMapper assigneeMapper,
-                                            ProcessInstanceDetailMapper instanceDetailMapper, ProcessDefinitionRepository definitionRepository) {
+                                            ProcessInstanceDetailMapper instanceDetailMapper,
+                                            ProcessDefinitionRepository definitionRepository) {
         super(eventStore);
 
         this.instanceMapper = instanceMapper;
@@ -72,6 +73,7 @@ public class MybatisProcessInstanceRepository
                                               ProcessInstanceDetailDo instanceDetailDo) {
         ProcessInstance instance = new ProcessInstance(
                 instanceDo.getProcessInstanceId(),
+                instanceDo.getProcessInstanceType(),
                 instanceDo.getProcessInstanceName(),
                 definition.getProcessDefinitionId(),
                 definition.processNodeOf(instanceDo.getCurrentNodeId()),

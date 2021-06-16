@@ -2,6 +2,7 @@ create table `process_instance`
 (
     `id`                         bigint(20) unsigned not null auto_increment comment '自增长标识',
     `process_instance_id`        varchar(32)         not null default '' comment '流程实例标识',
+    `process_instance_type`      varchar(32)         not null default '' comment '流程实例类型',
     `process_instance_name`      varchar(100)        not null default '' comment '流程实例名称',
     `process_definition_id`      varchar(32)         not null default '' comment '流程流程定义标识',
     `process_definition_version` int unsigned        not null default 0 comment '流程定义版本',

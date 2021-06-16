@@ -36,6 +36,7 @@ public class TestUtil {
         return new ProcessInstance(
                 TEST,
                 TEST,
+                TEST,
                 ProcessDefinitionId.of(TEST),
                 null,
                 TEST,

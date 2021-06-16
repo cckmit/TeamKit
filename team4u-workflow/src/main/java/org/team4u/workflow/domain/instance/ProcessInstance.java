@@ -28,6 +28,10 @@ public class ProcessInstance extends ConcurrencySafeAggregateRoot {
      */
     private String processInstanceId;
     /**
+     * 流程实例类型
+     */
+    private String processInstanceType;
+    /**
      * 流程实例名称
      */
     private String processInstanceName;
@@ -65,12 +69,14 @@ public class ProcessInstance extends ConcurrencySafeAggregateRoot {
     private Date updateTime;
 
     public ProcessInstance(String processInstanceId,
+                           String processInstanceType,
                            String processInstanceName,
                            ProcessDefinitionId processDefinitionId,
                            ProcessNode currentNode,
                            String createdBy,
                            ProcessInstanceDetail processInstanceDetail) {
         setProcessInstanceId(processInstanceId);
+        setProcessInstanceType(processInstanceType);
         setProcessInstanceName(processInstanceName);
         setProcessDefinitionId(processDefinitionId);
         setCurrentNode(currentNode);
@@ -85,6 +91,7 @@ public class ProcessInstance extends ConcurrencySafeAggregateRoot {
      * 开始新流程
      *
      * @param processInstanceId   流程实例标识
+     * @param processInstanceType 流程实例类型
      * @param processInstanceName 流程名称
      * @param processDefinitionId 流程定义标识
      * @param createdBy           创建人
@@ -92,6 +99,7 @@ public class ProcessInstance extends ConcurrencySafeAggregateRoot {
      * @return 流程实例
      */
     public static ProcessInstance create(String processInstanceId,
+                                         String processInstanceType,
                                          String processInstanceName,
                                          ProcessDefinitionId processDefinitionId,
                                          String createdBy,
@@ -99,6 +107,7 @@ public class ProcessInstance extends ConcurrencySafeAggregateRoot {
                                          ProcessInstanceDetail processInstanceDetail) {
         ProcessInstance instance = new ProcessInstance(
                 processInstanceId,
+                processInstanceType,
                 processInstanceName,
                 processDefinitionId,
                 startNode,
@@ -196,6 +205,15 @@ public class ProcessInstance extends ConcurrencySafeAggregateRoot {
 
     public ProcessInstance setProcessInstanceId(String processInstanceId) {
         this.processInstanceId = processInstanceId;
+        return this;
+    }
+
+    public String getProcessInstanceType() {
+        return processInstanceType;
+    }
+
+    public ProcessInstance setProcessInstanceType(String processInstanceType) {
+        this.processInstanceType = processInstanceType;
         return this;
     }
 
