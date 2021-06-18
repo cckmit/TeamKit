@@ -1,9 +1,12 @@
 package org.team4u.base.lang;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.Filter;
 import cn.hutool.core.util.ClassUtil;
+import cn.hutool.core.util.ReflectUtil;
 import org.team4u.base.error.SystemDataNotExistException;
 
+import java.lang.annotation.Annotation;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -37,6 +40,44 @@ public abstract class IdObjectService<K, V extends IdObject<K>> {
                 saveIdObject(obj);
             }
         }
+    }
+
+    /**
+     * 通过扫描包创建服务
+     *
+     * @param packageName 包路径
+     * @param classFilter 类过滤器
+     */
+    public void saveObjectsByFilter(String packageName, Filter<Class<?>> classFilter) {
+        saveObjects(ClassUtil.scanPackage(packageName, classFilter));
+    }
+
+    /**
+     * 通过扫描包创建服务
+     *
+     * @param packageName 包路径
+     * @param valueClass  类型
+     */
+    public void saveObjectsBySuper(String packageName, Class<?> valueClass) {
+        saveObjects(ClassUtil.scanPackageBySuper(packageName, valueClass));
+    }
+
+    /**
+     * 通过扫描包创建服务
+     *
+     * @param packageName     包路径
+     * @param annotationClass 注解类型
+     */
+    public void saveObjectsByAnnotation(String packageName, Class<? extends Annotation> annotationClass) {
+        saveObjects(ClassUtil.scanPackageByAnnotation(packageName, annotationClass));
+    }
+
+    @SuppressWarnings("unchecked")
+    private void saveObjects(Collection<Class<?>> classList) {
+        classList.stream()
+                .filter(ClassUtil::isNormalClass)
+                .map(it -> (V) ReflectUtil.newInstance(it))
+                .forEach(this::saveIdObject);
     }
 
     /**
