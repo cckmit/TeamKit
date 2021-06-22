@@ -9,9 +9,11 @@ import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.TypeUtil;
 import cn.hutool.json.JSONUtil;
+import cn.hutool.log.Log;
 import net.bytebuddy.matcher.ElementMatchers;
 import org.team4u.base.aop.MethodInterceptor;
 import org.team4u.base.aop.SimpleAop;
+import org.team4u.base.log.LogMessage;
 import org.team4u.config.domain.SimpleConfig;
 import org.team4u.config.domain.SimpleConfigConverter;
 import org.team4u.config.domain.SimpleConfigRepository;
@@ -23,6 +25,8 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 public class ProxySimpleConfigConverter implements SimpleConfigConverter {
+
+    private final Log log = Log.get();
 
     private final SimpleConfigRepository simpleConfigRepository;
 
@@ -103,7 +107,7 @@ public class ProxySimpleConfigConverter implements SimpleConfigConverter {
             return currentSimpleConfigs.equals(allConfigs());
         }
 
-        private Object beanOf(Class<?> classType) {
+        private synchronized Object beanOf(Class<?> classType) {
             if (isNoChange()) {
                 return proxy;
             }
@@ -132,6 +136,11 @@ public class ProxySimpleConfigConverter implements SimpleConfigConverter {
                     },
                     CopyOptions.create());
 
+
+            log.info(LogMessage.create(ProxySimpleConfigConverter.class.getSimpleName(), "buildProxy")
+                    .success()
+                    .append("type", classType.getSimpleName())
+                    .toString());
             return proxy;
         }
 
