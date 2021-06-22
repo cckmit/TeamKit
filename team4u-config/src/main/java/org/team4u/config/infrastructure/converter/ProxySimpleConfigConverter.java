@@ -25,7 +25,6 @@ import java.util.concurrent.Callable;
 public class ProxySimpleConfigConverter implements SimpleConfigConverter {
 
     private final SimpleConfigRepository simpleConfigRepository;
-    private final static String METHOD_NAME_MATCHES = "is|get(\\w+)";
 
     public ProxySimpleConfigConverter(SimpleConfigRepository simpleConfigRepository) {
         this.simpleConfigRepository = simpleConfigRepository;
@@ -35,7 +34,7 @@ public class ProxySimpleConfigConverter implements SimpleConfigConverter {
     public <T> T to(Class<T> toType, String configType) {
         return SimpleAop.proxyOf(
                 toType,
-                ElementMatchers.nameMatches(METHOD_NAME_MATCHES),
+                ElementMatchers.any(),
                 new ValueMethodInterceptor(toType, configType)
         );
     }

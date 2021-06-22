@@ -25,8 +25,18 @@ public class MapSimpleConfigRepository implements SimpleConfigRepository {
                 .stream()
                 .map(it -> {
                     String[] typeAndKey = StrUtil.splitToArray(it.getKey().toString(), ".");
+                    String type;
+                    String key;
+                    if (typeAndKey.length == 1) {
+                        type = "";
+                        key = typeAndKey[0];
+                    } else {
+                        type = typeAndKey[0];
+                        key = typeAndKey[1];
+                    }
+
                     return new SimpleConfig(
-                            new SimpleConfigId(typeAndKey[0], typeAndKey[1]),
+                            new SimpleConfigId(type, key),
                             it.getValue().toString(),
                             null,
                             0,
