@@ -96,7 +96,7 @@ public class ProxySimpleConfigConverter implements SimpleConfigConverter {
             return ReflectUtil.invoke(beanOf(targetType), method, parameters);
         }
 
-        private boolean isNoChanged() {
+        private boolean isNoChange() {
             if (proxy == null) {
                 return false;
             }
@@ -105,7 +105,7 @@ public class ProxySimpleConfigConverter implements SimpleConfigConverter {
         }
 
         private Object beanOf(Class<?> classType) {
-            if (isNoChanged()) {
+            if (isNoChange()) {
                 return proxy;
             }
 
