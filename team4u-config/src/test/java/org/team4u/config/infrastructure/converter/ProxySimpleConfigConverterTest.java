@@ -71,6 +71,11 @@ public class ProxySimpleConfigConverterTest {
             return a;
         }
 
+        public TestConfig setA(int a) {
+            this.a = a;
+            return this;
+        }
+
         public String[] getB() {
             return b;
         }

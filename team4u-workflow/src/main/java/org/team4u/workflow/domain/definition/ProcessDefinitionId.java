@@ -21,7 +21,7 @@ public class ProcessDefinitionId extends ValueObject {
     private final int version;
 
     public ProcessDefinitionId(String id) {
-        String[] idAndVersion = StrUtil.split(id, "|");
+        String[] idAndVersion = StrUtil.splitToArray(id, "|");
 
         switch (idAndVersion.length) {
             case 0:

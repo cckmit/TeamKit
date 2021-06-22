@@ -30,7 +30,7 @@
         <spring.version>5.2.7.RELEASE</spring.version>
         <beetl.version>3.3.2.RELEASE</beetl.version>
         <fastjson.version>1.2.76</fastjson.version>
-        <byte-buddy.version>1.11.0</byte-buddy.version>
+        <byte-buddy.version>1.11.5</byte-buddy.version>
         <camel.version>3.9.0</camel.version>
         <testable.version>0.6.4</testable.version>
         <smart-http-server.version>1.1.4</smart-http-server.version>

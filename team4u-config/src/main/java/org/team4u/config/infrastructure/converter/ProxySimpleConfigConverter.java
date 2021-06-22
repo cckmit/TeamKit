@@ -1,9 +1,13 @@
 package org.team4u.config.infrastructure.converter;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
+import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ClassUtil;
-import cn.hutool.core.util.ReUtil;
+import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.TypeUtil;
 import cn.hutool.json.JSONUtil;
 import net.bytebuddy.matcher.ElementMatchers;
 import org.team4u.base.aop.MethodInterceptor;
@@ -31,37 +35,27 @@ public class ProxySimpleConfigConverter implements SimpleConfigConverter {
     public <T> T to(Class<T> toType, String configType) {
         return SimpleAop.proxyOf(
                 toType,
-                ElementMatchers.any(),
-                new ValueMethodInterceptor(configType)
+                ElementMatchers.nameMatches(METHOD_NAME_MATCHES),
+                new ValueMethodInterceptor(toType, configType)
         );
     }
 
     @Override
-    public <T> T to(Class<T> toType, String configType, String configKey) {
-        SimpleConfig config = filterConfig(allConfigs(), configType, configKey);
-        if (config == null || config.getConfigValue() == null) {
-            return null;
-        }
-
-        if (ClassUtil.isSimpleTypeOrArray(toType)) {
-            return Convert.convert(toType, config.getConfigValue());
-        } else {
-            return JSONUtil.toBean(config.getConfigValue(), toType);
-        }
-    }
-
-    @Override
     public <T> T to(Type toType, String configType, String configKey) {
-        SimpleConfig config = filterConfig(allConfigs(), configType, configKey);
-        if (config == null || config.getConfigValue() == null) {
+        String value = value(configType, configKey);
+        if (value == null) {
             return null;
         }
 
-        return JSONUtil.toBean(config.getConfigValue(), toType, false);
+        if (ClassUtil.isSimpleTypeOrArray(TypeUtil.getClass(toType))) {
+            return Convert.convert(toType, value);
+        } else {
+            return JSONUtil.toBean(value, toType, false);
+        }
     }
 
     @Override
-    public String to(String configType, String configKey) {
+    public String value(String configType, String configKey) {
         SimpleConfig config = filterConfig(allConfigs(), configType, configKey);
         if (config == null) {
             return null;
@@ -86,24 +80,48 @@ public class ProxySimpleConfigConverter implements SimpleConfigConverter {
     private class ValueMethodInterceptor implements MethodInterceptor {
 
         private final String configType;
+        private final Class<?> targetType;
 
-        private ValueMethodInterceptor(String configType) {
+        private Object proxy = null;
+        private List<SimpleConfig> oldSimpleConfigs;
+
+        private ValueMethodInterceptor(Class<?> targetType, String configType) {
+            this.targetType = targetType;
             this.configType = configType;
+            oldSimpleConfigs = allConfigs();
         }
 
         @Override
         public Object intercept(Object instance, Object[] parameters, Method method, Callable<?> superMethod) {
-            String configKey = StrUtil.lowerFirst(ReUtil.get(METHOD_NAME_MATCHES, method.getName(), 1));
-            if (configKey == null) {
-                return null;
+            return ReflectUtil.invoke(beanOf(targetType), method, parameters);
+        }
+
+        private boolean isNoChanged() {
+            return oldSimpleConfigs.equals(allConfigs());
+        }
+
+        private Object beanOf(Class<?> classType) {
+            if (proxy != null && isNoChanged()) {
+                return proxy;
             }
 
-            SimpleConfig simpleConfig = filterConfig(allConfigs(), configType, configKey);
-            if (simpleConfig == null || simpleConfig.getConfigValue() == null) {
-                return null;
-            }
+            oldSimpleConfigs = allConfigs();
 
-            return toValue(method.getReturnType(), method.getGenericReturnType(), simpleConfig.getConfigValue());
+            proxy = BeanUtil.fillBean(ReflectUtil.newInstanceIfPossible(classType),
+                    new ValueProvider<String>() {
+                        @Override
+                        public Object value(String key, Type valueType) {
+                            return toValue(key, valueType);
+                        }
+
+                        @Override
+                        public boolean containsKey(String key) {
+                            return filterConfig(allConfigs(), configType, key) != null;
+                        }
+                    },
+                    CopyOptions.create());
+
+            return proxy;
         }
 
         private <T> T toValue(Class<?> toTypeClass, Type toValueType, String valueString) {
@@ -115,6 +133,16 @@ public class ProxySimpleConfigConverter implements SimpleConfigConverter {
 
             // 复杂类型只支持json格式
             return JSONUtil.toBean(valueString, toValueType, false);
+        }
+
+        private Object toValue(String key, Type valueType) {
+            SimpleConfig simpleConfig = filterConfig(allConfigs(), configType, key);
+
+            if (simpleConfig == null || simpleConfig.getConfigValue() == null) {
+                return null;
+            }
+
+            return toValue(TypeUtil.getClass(valueType), valueType, simpleConfig.getConfigValue());
         }
     }
 }

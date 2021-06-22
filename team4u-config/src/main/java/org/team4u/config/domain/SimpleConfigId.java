@@ -6,7 +6,7 @@ import java.util.Objects;
 
 public class SimpleConfigId {
 
-    private final static String SEPARATOR = "|";
+    private final static char SEPARATOR = '|';
 
     private final String configType;
 
@@ -26,7 +26,7 @@ public class SimpleConfigId {
     }
 
     public static SimpleConfigId of(String id) {
-        String[] typeAndKey = StrUtil.split(id, SEPARATOR);
+        String[] typeAndKey = StrUtil.splitToArray(id, SEPARATOR);
         return new SimpleConfigId(typeAndKey[0], typeAndKey[1]);
     }
 

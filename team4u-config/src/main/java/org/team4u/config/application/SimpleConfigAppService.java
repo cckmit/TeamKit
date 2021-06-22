@@ -18,15 +18,11 @@ public class SimpleConfigAppService {
         return simpleConfigConverter.to(toType, configType);
     }
 
-    public <T> T to(Class<T> toType, String configType, String configKey) {
-        return simpleConfigConverter.to(toType, configType, configKey);
-    }
-
     public <T> T to(Type toType, String configType, String configKey) {
         return simpleConfigConverter.to(toType, configType, configKey);
     }
 
-    public String to(String configType, String configKey) {
-        return simpleConfigConverter.to(configType, configKey);
+    public String value(String configType, String configKey) {
+        return simpleConfigConverter.value(configType, configKey);
     }
 }

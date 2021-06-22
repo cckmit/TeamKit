@@ -24,14 +24,14 @@ public class SimpleConfigService implements ConfigService {
     @Override
     public String get(String key) {
         Pair<String, String> typeAndKey = getConfigType(key);
-        return simpleConfigAppService.to(typeAndKey.getKey(), typeAndKey.getValue());
+        return simpleConfigAppService.value(typeAndKey.getKey(), typeAndKey.getValue());
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public <T> T get(String key, T defaultValue) {
         Pair<String, String> typeAndKey = getConfigType(key);
-        return (T) simpleConfigAppService.to(
+        return simpleConfigAppService.to(
                 defaultValue.getClass(),
                 typeAndKey.getKey(),
                 typeAndKey.getValue()

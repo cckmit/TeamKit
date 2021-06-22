@@ -5,6 +5,7 @@ import org.team4u.config.domain.event.*;
 import org.team4u.ddd.domain.model.AggregateRoot;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class SimpleConfig extends AggregateRoot {
 
@@ -194,5 +195,18 @@ public class SimpleConfig extends AggregateRoot {
 
     private void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SimpleConfig that = (SimpleConfig) o;
+        return sequenceNo == that.sequenceNo && configId.equals(that.configId) && Objects.equals(configValue, that.configValue) && Objects.equals(description, that.description) && enabled.equals(that.enabled);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(configId, configValue, description, sequenceNo, enabled);
     }
 }
