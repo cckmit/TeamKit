@@ -83,12 +83,12 @@ public class ProxySimpleConfigConverter implements SimpleConfigConverter {
         private final Class<?> targetType;
 
         private Object proxy = null;
-        private List<SimpleConfig> oldSimpleConfigs;
+        private List<SimpleConfig> currentSimpleConfigs;
 
         private ValueMethodInterceptor(Class<?> targetType, String configType) {
             this.targetType = targetType;
             this.configType = configType;
-            oldSimpleConfigs = allConfigs();
+            currentSimpleConfigs = allConfigs();
         }
 
         @Override
@@ -97,16 +97,28 @@ public class ProxySimpleConfigConverter implements SimpleConfigConverter {
         }
 
         private boolean isNoChanged() {
-            return oldSimpleConfigs.equals(allConfigs());
+            if (proxy == null) {
+                return false;
+            }
+
+            return currentSimpleConfigs.equals(allConfigs());
         }
 
         private Object beanOf(Class<?> classType) {
-            if (proxy != null && isNoChanged()) {
+            if (isNoChanged()) {
                 return proxy;
             }
 
-            oldSimpleConfigs = allConfigs();
+            refreshConfigs();
 
+            return buildProxy(classType);
+        }
+
+        private void refreshConfigs() {
+            currentSimpleConfigs = allConfigs();
+        }
+
+        private Object buildProxy(Class<?> classType) {
             proxy = BeanUtil.fillBean(ReflectUtil.newInstanceIfPossible(classType),
                     new ValueProvider<String>() {
                         @Override
@@ -116,7 +128,7 @@ public class ProxySimpleConfigConverter implements SimpleConfigConverter {
 
                         @Override
                         public boolean containsKey(String key) {
-                            return filterConfig(allConfigs(), configType, key) != null;
+                            return filterConfig(currentSimpleConfigs, configType, key) != null;
                         }
                     },
                     CopyOptions.create());
