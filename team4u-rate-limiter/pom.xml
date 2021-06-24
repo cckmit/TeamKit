@@ -15,7 +15,7 @@
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-redis</artifactId>
-            <version>1.4.0.RELEASE</version>
+            <version>${spring-data-jpa.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
