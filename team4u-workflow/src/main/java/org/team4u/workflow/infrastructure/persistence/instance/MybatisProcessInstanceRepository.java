@@ -1,7 +1,6 @@
 package org.team4u.workflow.infrastructure.persistence.instance;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.dao.DuplicateKeyException;
 import org.team4u.base.error.IdempotentException;
@@ -12,11 +11,9 @@ import org.team4u.workflow.domain.definition.ProcessDefinitionId;
 import org.team4u.workflow.domain.definition.ProcessDefinitionRepository;
 import org.team4u.workflow.domain.instance.ProcessAssignee;
 import org.team4u.workflow.domain.instance.ProcessInstance;
-import org.team4u.workflow.domain.instance.ProcessInstanceDetail;
 import org.team4u.workflow.domain.instance.ProcessInstanceRepository;
 
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.List;
 
 /**
  * 基于数据库的流程实例资源库
@@ -55,52 +52,18 @@ public class MybatisProcessInstanceRepository
                 instanceDo.getProcessDefinitionVersion()
         ).toString());
 
-        return toProcessInstance(definition, instanceDo)
-                .setAssignees(toProcessAssignees(definition, domainId));
-    }
-
-    private ProcessInstance toProcessInstance(ProcessDefinition definition,
-                                              ProcessInstanceDo instanceDo) {
-        ProcessInstance instance = new ProcessInstance(
-                instanceDo.getProcessInstanceId(),
-                instanceDo.getProcessInstanceType(),
-                instanceDo.getProcessInstanceName(),
-                definition.getProcessDefinitionId(),
-                definition.processNodeOf(instanceDo.getCurrentNodeId()),
-                instanceDo.getCreateBy(),
-                new ProcessInstanceDetail(instanceDo.getProcessInstanceDetail())
-        );
-
-        BeanUtil.copyProperties(
+        return ProcessInstanceConverter.instance().toProcessInstance(
+                definition,
                 instanceDo,
-                instance,
-                "processDefinitionId", "processInstanceDetail"
+                loadAssignees(domainId)
         );
-        return instance;
     }
 
-    private Set<ProcessAssignee> toProcessAssignees(ProcessDefinition definition, String processInstanceId) {
+    private List<ProcessAssigneeDo> loadAssignees(String processInstanceId) {
         return assigneeMapper.selectList(
                 new LambdaQueryWrapper<ProcessAssigneeDo>()
                         .eq(ProcessAssigneeDo::getProcessInstanceId, processInstanceId)
-        )
-                .stream()
-                .map(it -> toProcessAssignee(definition, it))
-                .collect(Collectors.toSet());
-    }
-
-    private ProcessAssignee toProcessAssignee(ProcessDefinition definition, ProcessAssigneeDo assigneeDo) {
-        ProcessAssignee assignee = new ProcessAssignee(
-                assigneeDo.getNodeId(),
-                assigneeDo.getAssignee()
         );
-
-        if (StrUtil.isNotBlank(assigneeDo.getActionId())) {
-            assignee.handle(definition.availableActionOf(assigneeDo.getActionId()));
-        }
-
-        BeanUtil.copyProperties(assigneeDo, assignee);
-        return assignee;
     }
 
     @Override

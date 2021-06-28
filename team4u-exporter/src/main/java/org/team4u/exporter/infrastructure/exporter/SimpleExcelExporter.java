@@ -24,10 +24,14 @@ public class SimpleExcelExporter implements Exporter<RowContext> {
         ExcelWriter writer = createExcelWriter(context);
 
         writeHeader(writer, context);
-        writer.write(context.getRows());
+        writeBody(writer, context);
 
         writer.flush(context.getOutputStream(), context.isCloseOut());
         writer.close();
+    }
+
+    private void writeBody(ExcelWriter writer, RowContext context) {
+        writer.write(context.getRows());
     }
 
     private void writeHeader(ExcelWriter writer, RowContext context) {
@@ -45,6 +49,8 @@ public class SimpleExcelExporter implements Exporter<RowContext> {
     }
 
     protected ExcelWriter createExcelWriter(RowContext context) {
-        return ExcelUtil.getBigWriter();
+        ExcelWriter writer = ExcelUtil.getBigWriter();
+        writer.setOnlyAlias(true);
+        return writer;
     }
 }
