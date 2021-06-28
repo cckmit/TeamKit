@@ -8,6 +8,8 @@ import org.team4u.base.config.LocalJsonConfigService;
 import org.team4u.ddd.event.EventStore;
 import org.team4u.ddd.infrastructure.persistence.memory.LogOnlyEventStore;
 import org.team4u.test.spring.DbTestBeanConfig;
+import org.team4u.workflow.application.ProcessAppQueryService;
+import org.team4u.workflow.domain.definition.ProcessDefinitionRepository;
 import org.team4u.workflow.domain.instance.ProcessInstanceRepository;
 import org.team4u.workflow.infrastructure.persistence.definition.JsonProcessDefinitionRepository;
 import org.team4u.workflow.infrastructure.persistence.instance.MybatisProcessInstanceRepository;
@@ -20,6 +22,11 @@ import org.team4u.workflow.infrastructure.persistence.instance.ProcessInstanceMa
 public class BeanConfig {
 
     @Bean
+    public ProcessDefinitionRepository processDefinitionRepository() {
+        return new JsonProcessDefinitionRepository(new LocalJsonConfigService());
+    }
+
+    @Bean
     public EventStore eventStore() {
         return new LogOnlyEventStore();
     }
@@ -27,12 +34,19 @@ public class BeanConfig {
     @Bean
     public ProcessInstanceRepository processInstanceRepository(EventStore eventStore,
                                                                ProcessInstanceMapper instanceMapper,
-                                                               ProcessAssigneeMapper assigneeMapper) {
+                                                               ProcessAssigneeMapper assigneeMapper,
+                                                               ProcessDefinitionRepository definitionRepository) {
         return new MybatisProcessInstanceRepository(
                 eventStore,
                 instanceMapper,
                 assigneeMapper,
-                new JsonProcessDefinitionRepository(new LocalJsonConfigService())
+                definitionRepository
         );
+    }
+
+    @Bean
+    public ProcessAppQueryService processAppQueryService(ProcessInstanceMapper instanceMapper,
+                                                         ProcessDefinitionRepository definitionRepository) {
+        return new ProcessAppQueryService(instanceMapper, definitionRepository);
     }
 }

@@ -1,9 +1,9 @@
 package org.team4u.workflow.application;
 
 import cn.hutool.db.PageResult;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.team4u.workflow.application.command.InstancesQuery;
 import org.team4u.workflow.domain.definition.ProcessDefinition;
 import org.team4u.workflow.domain.definition.ProcessDefinitionId;
 import org.team4u.workflow.domain.definition.ProcessDefinitionRepository;
@@ -32,31 +32,45 @@ public class ProcessAppQueryService {
         this.processDefinitionRepository = processDefinitionRepository;
     }
 
-    public List<ProcessInstance> instancesOfPending(String assignee, int pageNumber, int pageSize) {
+    /**
+     * 获取待审批流程实例集合
+     *
+     * @param query 查询条件
+     * @return 待审批流程实例集合
+     */
+    public List<ProcessInstance> instancesOfPending(InstancesQuery query) {
         return toPageResult(
-                pageNumber,
-                pageSize,
-                page -> processInstanceMapper.instancesOfPending(page, assignee)
+                query.getPageNumber(),
+                query.getPageSize(),
+                page -> processInstanceMapper.instancesOfPending(page, query)
         );
     }
 
-    public List<ProcessInstance> instancesOfHistory(String assignee, int pageNumber, int pageSize) {
+    /**
+     * 获取申请流程实例集合
+     *
+     * @param query 查询条件
+     * @return 申请流程实例集合
+     */
+    public List<ProcessInstance> instancesOfHistory(InstancesQuery query) {
         return toPageResult(
-                pageNumber,
-                pageSize,
-                page -> processInstanceMapper.instancesOfHistory(page, assignee)
+                query.getPageNumber(),
+                query.getPageSize(),
+                page -> processInstanceMapper.instancesOfHistory(page, query)
         );
     }
 
-    public PageResult<ProcessInstance> instancesOfApply(String creator, int pageNumber, int pageSize) {
+    /**
+     * 获取历史审批流程实例集合
+     *
+     * @param query 查询条件
+     * @return 历史审批流程实例集合
+     */
+    public PageResult<ProcessInstance> instancesOfApply(InstancesQuery query) {
         return toPageResult(
-                pageNumber,
-                pageSize,
-                page -> processInstanceMapper.selectPage(
-                        page,
-                        new LambdaQueryWrapper<ProcessInstanceDo>()
-                                .eq(ProcessInstanceDo::getCreateBy, creator)
-                )
+                query.getPageNumber(),
+                query.getPageSize(),
+                page -> processInstanceMapper.instancesOfApply(page, query)
         );
     }
 

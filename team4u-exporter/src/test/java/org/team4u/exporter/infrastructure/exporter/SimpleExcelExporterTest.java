@@ -19,7 +19,7 @@ public class SimpleExcelExporterTest {
                         new Title("b", "2")
                 ))
                 .setRows(CollUtil.newArrayList(
-                        Dict.create().set("b", "22").set("a", "11"))
+                        Dict.create().set("b", "22").set("a", "11").set("c", "33"))
                 )
         );
     }

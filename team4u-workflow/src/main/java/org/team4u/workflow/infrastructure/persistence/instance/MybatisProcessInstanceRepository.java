@@ -136,12 +136,16 @@ public class MybatisProcessInstanceRepository
                     instance.getProcessDefinitionId().toString()
             );
 
-            instanceDo.setProcessInstanceName(definition.getProcessDefinitionName());
-
+            instanceDo.setProcessDefinitionName(definition.getProcessDefinitionName());
             processDefinitionId = definition.getProcessDefinitionId();
         }
 
-        instanceDo.setProcessInstanceDetail(instance.getProcessInstanceDetail().getBody());
+        if (instance.getProcessInstanceDetail() == null ||
+                instance.getProcessInstanceDetail().getBody() == null) {
+            instanceDo.setProcessInstanceDetail("{}");
+        } else {
+            instanceDo.setProcessInstanceDetail(instance.getProcessInstanceDetail().getBody());
+        }
         instanceDo.setProcessDefinitionId(processDefinitionId.getId());
         instanceDo.setProcessDefinitionVersion(processDefinitionId.getVersion());
         instanceDo.setConcurrencyVersion(instance.concurrencyVersion());
