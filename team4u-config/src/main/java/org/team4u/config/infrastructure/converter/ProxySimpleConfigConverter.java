@@ -137,9 +137,9 @@ public class ProxySimpleConfigConverter implements SimpleConfigConverter {
                     CopyOptions.create());
 
 
-            log.info(LogMessage.create(ProxySimpleConfigConverter.class.getSimpleName(), "buildProxy")
+            log.info(LogMessage.create(ProxySimpleConfigConverter.class.getSimpleName(), "build")
                     .success()
-                    .append("type", classType.getSimpleName())
+                    .append("type", classType.getName())
                     .toString());
             return proxy;
         }
