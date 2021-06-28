@@ -99,7 +99,7 @@ public class ProcessFormAppServiceTest extends SpringDbTest {
         ProcessFormModel model = processFormAppService.formOf(TEST, TEST);
         System.out.println(JSON.toJSONString(model));
 
-        Assert.assertEquals(detail, model.getInstance().getProcessInstanceDetail().toDetailObject());
+        Assert.assertEquals(detail, model.getInstance().getProcessInstanceDetail().toDetailObject(detail.getClass()));
         Assert.assertEquals("[reject, approve]", model.getActions().toString());
 
         Assert.assertEquals("[nodeId=created,actionId=submit,nextNodeId=pending,remark='null',operator='test1']", model.getEvents().toString());
@@ -137,7 +137,7 @@ public class ProcessFormAppServiceTest extends SpringDbTest {
 
         Assert.assertEquals(
                 new Dict().set("x", TEST),
-                model.getInstance().getProcessInstanceDetail().toDetailObject()
+                model.getInstance().getProcessInstanceDetail().toDetailObject(Dict.class)
         );
         Assert.assertEquals("rejected", model.getInstance().getCurrentNode().getNodeId());
         Assert.assertEquals(2, model.getEvents().size());

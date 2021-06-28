@@ -4,6 +4,7 @@ create table `process_instance`
     `process_instance_id`        varchar(32)         not null default '' comment '流程实例标识',
     `process_instance_type`      varchar(32)         not null default '' comment '流程实例类型',
     `process_instance_name`      varchar(100)        not null default '' comment '流程实例名称',
+    `process_instance_detail`    varchar(1000)       not null default null comment '流程明细内容',
     `process_definition_id`      varchar(32)         not null default '' comment '流程流程定义标识',
     `process_definition_version` int unsigned        not null default 0 comment '流程定义版本',
     `process_definition_name`    varchar(100)        not null default '' comment '流程流程定义名称',
@@ -30,15 +31,3 @@ create table `process_assignee`
     primary key (`id`),
     unique index `idx_process_assignee` (`process_instance_id`, node_id)
 ) comment ='流程处理人';
-
-create table if not exists `process_instance_detail`
-(
-    `id`                  bigint(20) unsigned not null auto_increment comment '自增长标识',
-    `process_instance_id` varchar(32)         not null default '' comment '流程实例标识',
-    `type`                varchar(100)        not null default '' comment '明细类型',
-    `body`                varchar(21800)      not null default '' comment '明细内容',
-    `create_time`         timestamp           not null default '1970-01-01 23:59:59' comment '创建时间',
-    `update_time`         timestamp           not null default current_timestamp on update current_timestamp,
-    primary key (`id`),
-    unique index `uniq_process_instance_id2` (`process_instance_id`)
-) comment ='流程实例明细';

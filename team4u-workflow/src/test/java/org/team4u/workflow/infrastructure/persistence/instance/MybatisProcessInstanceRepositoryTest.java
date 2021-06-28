@@ -35,7 +35,7 @@ public class MybatisProcessInstanceRepositoryTest extends SpringDbTest {
         Assert.assertNotNull(instance.getCurrentNode());
         Assert.assertEquals(
                 Dict.create().set("x", 1),
-                instance.getProcessInstanceDetail().toDetailObject()
+                instance.getProcessInstanceDetail().toDetailObject(Dict.class)
         );
     }
 

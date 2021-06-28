@@ -15,7 +15,6 @@ import org.team4u.workflow.domain.instance.ProcessInstance;
 import org.team4u.workflow.domain.instance.ProcessInstanceDetail;
 import org.team4u.workflow.domain.instance.ProcessInstanceRepository;
 
-import java.util.Date;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -30,20 +29,17 @@ public class MybatisProcessInstanceRepository
 
     private final ProcessInstanceMapper instanceMapper;
     private final ProcessAssigneeMapper assigneeMapper;
-    private final ProcessInstanceDetailMapper instanceDetailMapper;
 
     private final ProcessDefinitionRepository definitionRepository;
 
     public MybatisProcessInstanceRepository(EventStore eventStore,
                                             ProcessInstanceMapper instanceMapper,
                                             ProcessAssigneeMapper assigneeMapper,
-                                            ProcessInstanceDetailMapper instanceDetailMapper,
                                             ProcessDefinitionRepository definitionRepository) {
         super(eventStore);
 
         this.instanceMapper = instanceMapper;
         this.assigneeMapper = assigneeMapper;
-        this.instanceDetailMapper = instanceDetailMapper;
         this.definitionRepository = definitionRepository;
     }
 
@@ -54,23 +50,17 @@ public class MybatisProcessInstanceRepository
                         .eq(ProcessInstanceDo::getProcessInstanceId, domainId)
         );
 
-        ProcessInstanceDetailDo instanceDetailDo = instanceDetailMapper.selectOne(
-                new LambdaQueryWrapper<ProcessInstanceDetailDo>()
-                        .eq(ProcessInstanceDetailDo::getProcessInstanceId, domainId)
-        );
-
         ProcessDefinition definition = definitionRepository.domainOf(new ProcessDefinitionId(
                 instanceDo.getProcessDefinitionId(),
                 instanceDo.getProcessDefinitionVersion()
         ).toString());
 
-        return toProcessInstance(definition, instanceDo, instanceDetailDo)
+        return toProcessInstance(definition, instanceDo)
                 .setAssignees(toProcessAssignees(definition, domainId));
     }
 
     private ProcessInstance toProcessInstance(ProcessDefinition definition,
-                                              ProcessInstanceDo instanceDo,
-                                              ProcessInstanceDetailDo instanceDetailDo) {
+                                              ProcessInstanceDo instanceDo) {
         ProcessInstance instance = new ProcessInstance(
                 instanceDo.getProcessInstanceId(),
                 instanceDo.getProcessInstanceType(),
@@ -78,28 +68,15 @@ public class MybatisProcessInstanceRepository
                 definition.getProcessDefinitionId(),
                 definition.processNodeOf(instanceDo.getCurrentNodeId()),
                 instanceDo.getCreateBy(),
-                toInstanceDetail(instanceDetailDo)
+                new ProcessInstanceDetail(instanceDo.getProcessInstanceDetail())
         );
 
         BeanUtil.copyProperties(
                 instanceDo,
                 instance,
-                "processDefinitionId"
+                "processDefinitionId", "processInstanceDetail"
         );
         return instance;
-    }
-
-    private ProcessInstanceDetail toInstanceDetail(ProcessInstanceDetailDo instanceDetailDo) {
-        if (instanceDetailDo == null) {
-            return null;
-        }
-
-        ProcessInstanceDetail detail = new ProcessInstanceDetail(
-                instanceDetailDo.getType(),
-                instanceDetailDo.getBody()
-        );
-        BeanUtil.copyProperties(instanceDetailDo, detail);
-        return detail;
     }
 
     private Set<ProcessAssignee> toProcessAssignees(ProcessDefinition definition, String processInstanceId) {
@@ -131,7 +108,6 @@ public class MybatisProcessInstanceRepository
         try {
             saveProcessInstance(instance);
             saveAssignee(instance);
-            saveInstanceDetail(instance);
         } catch (DuplicateKeyException e) {
             throw new IdempotentException(String.format(
                     "processInstanceId=%s",
@@ -164,35 +140,6 @@ public class MybatisProcessInstanceRepository
                 assigneeMapper.updateById(assigneeDo);
             }
         }
-    }
-
-    private void saveInstanceDetail(ProcessInstance instance) {
-        ProcessInstanceDetailDo instanceDetailDo = toProcessInstanceDetailDo(instance);
-        if (instanceDetailDo == null) {
-            return;
-        }
-
-        instanceDetailDo.setUpdateTime(new Date());
-
-        if (instanceDetailDo.getId() == null) {
-            instanceDetailDo.setCreateTime(instanceDetailDo.getUpdateTime());
-            instanceDetailMapper.insert(instanceDetailDo);
-
-            instance.getProcessInstanceDetail().setId(instanceDetailDo.getId());
-        } else {
-            instanceDetailMapper.updateById(instanceDetailDo);
-        }
-    }
-
-    private ProcessInstanceDetailDo toProcessInstanceDetailDo(ProcessInstance instance) {
-        if (instance.getProcessInstanceDetail() == null) {
-            return null;
-        }
-
-        ProcessInstanceDetailDo instanceDetailDo = new ProcessInstanceDetailDo();
-        BeanUtil.copyProperties(instance.getProcessInstanceDetail(), instanceDetailDo);
-        instanceDetailDo.setProcessInstanceId(instance.getProcessInstanceId());
-        return instanceDetailDo;
     }
 
     private ProcessAssigneeDo toProcessAssigneeDo(String instanceId, ProcessAssignee assignee) {
@@ -231,6 +178,7 @@ public class MybatisProcessInstanceRepository
             processDefinitionId = definition.getProcessDefinitionId();
         }
 
+        instanceDo.setProcessInstanceDetail(instance.getProcessInstanceDetail().getBody());
         instanceDo.setProcessDefinitionId(processDefinitionId.getId());
         instanceDo.setProcessDefinitionVersion(processDefinitionId.getVersion());
         instanceDo.setConcurrencyVersion(instance.concurrencyVersion());

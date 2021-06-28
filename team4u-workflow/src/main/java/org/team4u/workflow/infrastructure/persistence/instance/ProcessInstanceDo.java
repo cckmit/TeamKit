@@ -29,6 +29,10 @@ public class ProcessInstanceDo {
      */
     private String processInstanceName;
     /**
+     * 流程实例明细
+     */
+    private String processInstanceDetail;
+    /**
      * 流程流程定义标识
      */
     private String processDefinitionId;
@@ -101,6 +105,14 @@ public class ProcessInstanceDo {
 
     public void setProcessInstanceName(String processInstanceName) {
         this.processInstanceName = processInstanceName;
+    }
+
+    public String getProcessInstanceDetail() {
+        return processInstanceDetail;
+    }
+
+    public void setProcessInstanceDetail(String processInstanceDetail) {
+        this.processInstanceDetail = processInstanceDetail;
     }
 
     public String getProcessDefinitionId() {

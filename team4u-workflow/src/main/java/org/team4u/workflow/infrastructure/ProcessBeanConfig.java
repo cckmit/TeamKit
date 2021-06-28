@@ -10,7 +10,6 @@ import org.team4u.workflow.infrastructure.persistence.definition.MybatisProcessD
 import org.team4u.workflow.infrastructure.persistence.definition.ProcessDefinitionMapper;
 import org.team4u.workflow.infrastructure.persistence.instance.MybatisProcessInstanceRepository;
 import org.team4u.workflow.infrastructure.persistence.instance.ProcessAssigneeMapper;
-import org.team4u.workflow.infrastructure.persistence.instance.ProcessInstanceDetailMapper;
 import org.team4u.workflow.infrastructure.persistence.instance.ProcessInstanceMapper;
 
 /**
@@ -36,13 +35,11 @@ public class ProcessBeanConfig {
             EventStore eventStore,
             ProcessInstanceMapper instanceMapper,
             ProcessAssigneeMapper assigneeMapper,
-            ProcessInstanceDetailMapper instanceDetailMapper,
             ProcessDefinitionRepository processDefinitionRepository) {
         return new MybatisProcessInstanceRepository(
                 eventStore,
                 instanceMapper,
                 assigneeMapper,
-                instanceDetailMapper,
                 processDefinitionRepository
         );
     }
