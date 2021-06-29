@@ -21,6 +21,7 @@
         <module>team4u-test</module>
         <module>team4u-rate-limiter</module>
         <module>team4u-exporter</module>
+        <module>team4u-sql</module>
     </modules>
 
     <properties>
