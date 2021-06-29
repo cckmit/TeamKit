@@ -18,7 +18,7 @@ public class NumberTemplateFunction implements TemplateFunction {
     /**
      * 当前时间戳
      */
-    public long now() {
+    public static long now() {
         return System.currentTimeMillis();
     }
 }

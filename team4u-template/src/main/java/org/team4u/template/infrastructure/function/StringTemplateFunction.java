@@ -16,14 +16,14 @@ public class StringTemplateFunction implements TemplateFunction {
     /**
      * 大写md5值
      */
-    public String md5u(String value) {
+    public static String md5u(String value) {
         return SecureUtil.md5(value).toUpperCase();
     }
 
     /**
      * 小写md5值
      */
-    public String md5l(String value) {
+    public static String md5l(String value) {
         return md5u(value).toLowerCase();
     }
 }

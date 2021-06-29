@@ -24,6 +24,12 @@
             <optional>true</optional>
         </dependency>
         <dependency>
+            <groupId>com.github.subchen</groupId>
+            <artifactId>jetbrick-template</artifactId>
+            <version>${jetbrick.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
             <groupId>org.team4u</groupId>
             <artifactId>team4u-test</artifactId>
             <version>${parent.version}</version>

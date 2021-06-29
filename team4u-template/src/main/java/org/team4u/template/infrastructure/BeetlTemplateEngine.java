@@ -3,14 +3,14 @@ package org.team4u.template.infrastructure;
 import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.ReflectUtil;
-import org.team4u.template.InterpretContext;
-import org.team4u.template.TemplateEngine;
-import org.team4u.template.TemplateFunction;
-import org.team4u.template.TemplateFunctionService;
 import org.beetl.core.Configuration;
 import org.beetl.core.GroupTemplate;
 import org.beetl.core.Template;
 import org.beetl.core.resource.StringTemplateResourceLoader;
+import org.team4u.template.InterpretContext;
+import org.team4u.template.TemplateEngine;
+import org.team4u.template.TemplateFunction;
+import org.team4u.template.TemplateFunctionService;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -23,7 +23,7 @@ import java.util.Map;
  */
 public class BeetlTemplateEngine implements TemplateEngine {
 
-    private TemplateFunctionService templateFunctionService;
+    private final TemplateFunctionService templateFunctionService;
     private GroupTemplate groupTemplate;
 
     public BeetlTemplateEngine(TemplateFunctionService templateFunctionService) {
@@ -71,7 +71,7 @@ public class BeetlTemplateEngine implements TemplateEngine {
         for (TemplateFunction idObject : templateFunctionService.idObjects()) {
             for (Method method : ReflectUtil.getMethods(idObject.getClass())) {
                 gt.registerFunction(
-                        idObject.id() + "." + method.getName(),
+                        method.getName(),
                         (paras, ctx) -> ReflectUtil.invoke(idObject, method, paras)
                 );
             }

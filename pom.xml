@@ -29,6 +29,7 @@
         <spring-data-jpa.version>2.5.2</spring-data-jpa.version>
         <spring.version>5.3.8</spring.version>
         <beetl.version>3.3.2.RELEASE</beetl.version>
+        <jetbrick.version>2.1.10</jetbrick.version>
         <fastjson.version>1.2.76</fastjson.version>
         <byte-buddy.version>1.11.5</byte-buddy.version>
         <camel.version>3.9.0</camel.version>
