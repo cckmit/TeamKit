@@ -71,7 +71,7 @@ public class BeetlTemplateEngine implements TemplateEngine {
         for (TemplateFunction idObject : templateFunctionService.idObjects()) {
             for (Method method : ReflectUtil.getMethods(idObject.getClass())) {
                 gt.registerFunction(
-                        method.getName(),
+                        idObject.id() + "." + method.getName(),
                         (paras, ctx) -> ReflectUtil.invoke(idObject, method, paras)
                 );
             }
