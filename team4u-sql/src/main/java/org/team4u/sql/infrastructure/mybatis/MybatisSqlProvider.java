@@ -17,6 +17,7 @@ import java.util.Map;
 public class MybatisSqlProvider {
 
     private final Log log = Log.get();
+
     private final TemplateEngine engine;
     private final SqlResourceAppService sqlResourceAppService;
 
@@ -26,6 +27,13 @@ public class MybatisSqlProvider {
         this.sqlResourceAppService = sqlResourceAppService;
     }
 
+    /**
+     * 提供执行的sql
+     *
+     * @param context 上下文
+     * @param params  sql入参
+     * @return sql
+     */
     public String sql(ProviderContext context, Map<String, Object> params) {
         LogMessage lm = LogMessage.create(this.getClass().getSimpleName(), "sql");
 
@@ -33,7 +41,7 @@ public class MybatisSqlProvider {
         String sqlContent = sqlResourceAppService.sql(sqlId);
         String result = engine.render(sqlContent, params);
 
-        lm.append("sqlContent", result).append("sqlId", sqlId);
+        lm.append("id", sqlId).append("content", result);
         log.debug(lm.toString());
 
         return result;
