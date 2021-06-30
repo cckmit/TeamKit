@@ -17,7 +17,7 @@ where pi.process_instance_id = pa.process_instance_id
   #end
   #if(query.createEndTime)
   and pi.create_time <=          #{query.createEndTime}
-  # #end
+  #end
 order by id;
 
 /* ProcessInstanceMapper.instancesOfHistory */
