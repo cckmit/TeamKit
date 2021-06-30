@@ -79,7 +79,7 @@ public abstract class SimplePolicyService<C, P extends SimplePolicy<C>> {
     }
 
     /**
-     * 根据标识获取对象
+     * 根据标识获取策略
      */
     public SimplePolicy<C> policyOf(C context) {
         return policies.stream()
@@ -92,14 +92,14 @@ public abstract class SimplePolicyService<C, P extends SimplePolicy<C>> {
      * 获取合适的策略
      *
      * @param context 上下文
-     * @return 可用对象
-     * @see SystemDataNotExistException 若对象不存在则抛出此异常
+     * @return 可用策略
+     * @see SystemDataNotExistException 若策略不存在则抛出此异常
      */
     public SimplePolicy<C> availablePolicyOf(C context) {
         SimplePolicy<C> policy = policyOf(context);
 
         if (policy == null) {
-            throw new SystemDataNotExistException("Unable to find a suitable policy|context=" + context);
+            throw new SystemDataNotExistException("Unable to find a available policy|context=" + context);
         }
 
         return policy;
@@ -108,14 +108,14 @@ public abstract class SimplePolicyService<C, P extends SimplePolicy<C>> {
     /**
      * 注册策略
      *
-     * @param p 对象
+     * @param p 策略
      */
     public void register(P p) {
         policies.add(p);
     }
 
     /**
-     * 获取所有注册对象集合
+     * 获取所有注册策略集合
      */
     public List<P> policies() {
         return policies;
