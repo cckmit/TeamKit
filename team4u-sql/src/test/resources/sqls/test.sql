@@ -8,7 +8,7 @@ from stored_event
 #if(id)
 where id = #{id}
 #end
-#if(none)
-  and id !=
-#{id}
+#if(eventId)
+  and event_id =
+#{eventId}
 #end

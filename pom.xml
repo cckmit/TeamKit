@@ -36,7 +36,7 @@
         <camel.version>3.9.0</camel.version>
         <testable.version>0.6.4</testable.version>
         <smart-http-server.version>1.1.4</smart-http-server.version>
-        <liteflow.version>2.5.5</liteflow.version>
+        <liteflow.version>2.5.7</liteflow.version>
         <org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
     </properties>
 

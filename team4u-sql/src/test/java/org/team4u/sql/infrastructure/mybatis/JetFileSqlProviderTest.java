@@ -1,5 +1,6 @@
 package org.team4u.sql.infrastructure.mybatis;
 
+import cn.hutool.core.lang.Dict;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ public class JetFileSqlProviderTest extends SpringDbTest {
     public void eventOf() {
         StoredEventEntity entity = new StoredEventEntity().setEventId(1);
         testMapper.insert(entity);
+        MybatisSqlProvider.extraParams(Dict.create().set("eventId", 1));
         Assert.assertEquals(1, testMapper.eventOf(entity.getId()).getEventId());
     }
 

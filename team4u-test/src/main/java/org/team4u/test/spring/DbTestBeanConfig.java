@@ -34,6 +34,7 @@ public class DbTestBeanConfig {
     @Bean
     public MybatisSqlSessionFactoryBean sqlSessionFactory(DataSource dataSource,
                                                           List<InnerInterceptor> interceptors) {
+        org.apache.ibatis.logging.LogFactory.useLog4JLogging();
         MybatisSqlSessionFactoryBean bean = new MybatisSqlSessionFactoryBean();
         bean.setDataSource(dataSource);
         MybatisPlusInterceptor mybatisPlusInterceptor = new MybatisPlusInterceptor();
