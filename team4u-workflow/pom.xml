@@ -18,22 +18,22 @@
             <version>${parent.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.team4u</groupId>
-            <artifactId>team4u-selector</artifactId>
-            <version>${parent.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>${fastjson.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>com.ibeetl</groupId>
-            <artifactId>beetl</artifactId>
-            <version>${beetl.version}</version>
-            <scope>test</scope>
+            <groupId>org.team4u</groupId>
+            <artifactId>team4u-sql</artifactId>
+            <version>${parent.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.team4u</groupId>
+            <artifactId>team4u-selector</artifactId>
+            <version>${parent.version}</version>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>com.baomidou</groupId>
@@ -47,10 +47,17 @@
             <version>${spring-data-jpa.version}</version>
             <optional>true</optional>
         </dependency>
+
         <dependency>
             <groupId>org.team4u</groupId>
             <artifactId>team4u-test</artifactId>
             <version>${parent.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.ibeetl</groupId>
+            <artifactId>beetl</artifactId>
+            <version>${beetl.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

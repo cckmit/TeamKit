@@ -1,4 +1,4 @@
-drop table `process_instance`;
+drop table if exists `process_instance`;
 create table `process_instance`
 (
     `id`                         bigint(20) unsigned not null auto_increment comment '自增长标识',
@@ -26,7 +26,7 @@ create table `process_instance`
     index `idx_update_time` (`update_time`)
 ) comment ='流程实例';
 
-drop table `process_assignee`;
+drop table if exists `process_assignee`;
 create table `process_assignee`
 (
     `id`                  bigint(20) unsigned not null auto_increment comment '自增长标识',
@@ -41,7 +41,7 @@ create table `process_assignee`
     index `idx_assignee` (`assignee`)
 ) comment ='流程处理人';
 
-drop table `process_definition`;
+drop table if exists `process_definition`;
 create table `process_definition`
 (
     `id`                         bigint(20) unsigned not null auto_increment comment '自增长标识',
@@ -59,7 +59,7 @@ create table `process_definition`
     index `idx_update_time` (`update_time`)
 ) comment ='流程定义';
 
-drop table `stored_event`;
+drop table if exists `stored_event`;
 create table `stored_event`
 (
     `id`          bigint(20) unsigned not null auto_increment comment '自增长标识',

@@ -52,8 +52,6 @@ public class ProcessAppQueryServiceTest extends SpringDbTest {
 
     @Test
     public void instancesOfPending() {
-        org.apache.ibatis.logging.LogFactory.useStdOutLogging();
-
         ProcessInstance instance = insert(TEST);
         List<ProcessInstance> instances = queryService.instancesOfPending(
                 new InstancesQuery().setOperator(instance.getCreateBy())
@@ -69,8 +67,6 @@ public class ProcessAppQueryServiceTest extends SpringDbTest {
 
     @Test
     public void instancesOfApply() {
-        org.apache.ibatis.logging.LogFactory.useStdOutLogging();
-
         insert(TEST + 1);
         ProcessInstance instance = insert(TEST + 2);
         PageResult<ProcessInstance> instances = queryService.instancesOfApply(

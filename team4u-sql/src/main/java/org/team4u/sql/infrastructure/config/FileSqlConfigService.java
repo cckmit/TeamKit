@@ -64,7 +64,7 @@ public class FileSqlConfigService implements ConfigService {
     }
 
     private void watch() {
-        if (!config.isWatch()) {
+        if (!config.isWatch() || !FileUtil.exist(config.getPath())) {
             return;
         }
 
@@ -178,7 +178,10 @@ public class FileSqlConfigService implements ConfigService {
     }
 
     public void saveSql(Map<String, String> sqlList, String key, String value) {
-        log.debug("key=[{}], sql=[{}]", key, value);
+        log.trace(LogMessage.create(this.getClass().getSimpleName(), "saveSql")
+                .append("key", key)
+                .append("value", value)
+                .toString());
         Assert.isFalse(!config.isAllowDuplicate() && sqlList.containsKey(key), "Duplicate sql key=[" + key + "]");
         sqlList.put(key, value);
     }

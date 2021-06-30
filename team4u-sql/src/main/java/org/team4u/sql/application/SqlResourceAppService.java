@@ -24,6 +24,6 @@ public class SqlResourceAppService {
             throw new SystemDataNotExistException("sql|id=" + id);
         }
 
-        return resource.getContent();
+        return resource.getContent().replace(";", "");
     }
 }
