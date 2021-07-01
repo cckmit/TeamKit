@@ -3,6 +3,7 @@ package org.team4u.workflow.infrastructure;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.team4u.ddd.event.EventStore;
+import org.team4u.workflow.application.ProcessAppQueryService;
 import org.team4u.workflow.application.ProcessAppService;
 import org.team4u.workflow.domain.definition.ProcessDefinitionRepository;
 import org.team4u.workflow.domain.instance.ProcessInstanceRepository;
@@ -28,6 +29,12 @@ public class ProcessBeanConfig {
                 processInstanceRepository,
                 processDefinitionRepository
         );
+    }
+
+    @Bean
+    public ProcessAppQueryService processAppQueryService(ProcessInstanceMapper instanceMapper,
+                                                         ProcessDefinitionRepository definitionRepository) {
+        return new ProcessAppQueryService(instanceMapper, definitionRepository);
     }
 
     @Bean

@@ -16,17 +16,6 @@ import org.team4u.workflow.application.command.InstancesQuery;
  */
 @Repository
 public interface ProcessInstanceMapper extends BaseMapper<ProcessInstanceDo> {
-
-    /**
-     * 获取申请流程实例集合
-     *
-     * @param query 查询条件
-     * @return 申请流程实例集合
-     */
-    @SelectProvider(type = JetFileSqlProvider.class, method = "sql")
-    IPage<ProcessInstanceDo> instancesOfApply(@Param("page") Page<ProcessInstanceDo> page,
-                                              @Param("query") InstancesQuery query);
-
     /**
      * 获取待审批流程实例集合
      *
@@ -44,6 +33,16 @@ public interface ProcessInstanceMapper extends BaseMapper<ProcessInstanceDo> {
      * @return 历史审批流程实例集合
      */
     @SelectProvider(type = JetFileSqlProvider.class, method = "sql")
-    IPage<ProcessInstanceDo> instancesOfHistory(@Param("page") Page<ProcessInstanceDo> page,
-                                                @Param("query") InstancesQuery query);
+    IPage<ProcessInstanceDo> instancesOfReviewed(@Param("page") Page<ProcessInstanceDo> page,
+                                                 @Param("query") InstancesQuery query);
+
+    /**
+     * 获取所有流程实例集合
+     *
+     * @param query 查询条件
+     * @return 历史审批流程实例集合
+     */
+    @SelectProvider(type = JetFileSqlProvider.class, method = "sql")
+    IPage<ProcessInstanceDo> allInstances(@Param("page") Page<ProcessInstanceDo> page,
+                                          @Param("query") InstancesQuery query);
 }

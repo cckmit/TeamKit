@@ -20,7 +20,7 @@ where pi.process_instance_id = pa.process_instance_id
   #end
 order by id;
 
-/* ProcessInstanceMapper.instancesOfHistory */
+/* ProcessInstanceMapper.instancesOfReviewed */
 select pi.*
 from process_instance pi,
      process_assignee pa
@@ -42,10 +42,13 @@ where pi.process_instance_id = pa.process_instance_id
   #end
 order by id desc;
 
-/* ProcessInstanceMapper.instancesOfApply */
+/* ProcessInstanceMapper.allInstances */
 select pi.*
 from process_instance pi
-where pi.create_by =             #{query.operator}
+where 1 = 1
+  #if(query.operator)
+  and pi.create_by =             #{query.operator}
+  #end
   #if(query.processInstanceId)
   and pi.process_instance_id =   #{query.processInstanceId}"
   #end

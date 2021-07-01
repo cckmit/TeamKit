@@ -47,30 +47,30 @@ public class ProcessAppQueryService {
     }
 
     /**
-     * 获取申请流程实例集合
+     * 获取已审批申请流程实例集合
      *
      * @param query 查询条件
      * @return 申请流程实例集合
      */
-    public List<ProcessInstance> instancesOfHistory(InstancesQuery query) {
+    public List<ProcessInstance> instancesOfReviewed(InstancesQuery query) {
         return toPageResult(
                 query.getPageNumber(),
                 query.getPageSize(),
-                page -> processInstanceMapper.instancesOfHistory(page, query)
+                page -> processInstanceMapper.instancesOfReviewed(page, query)
         );
     }
 
     /**
-     * 获取历史审批流程实例集合
+     * 获取所有流程实例集合
      *
      * @param query 查询条件
      * @return 历史审批流程实例集合
      */
-    public PageResult<ProcessInstance> instancesOfApply(InstancesQuery query) {
+    public PageResult<ProcessInstance> allInstances(InstancesQuery query) {
         return toPageResult(
                 query.getPageNumber(),
                 query.getPageSize(),
-                page -> processInstanceMapper.instancesOfApply(page, query)
+                page -> processInstanceMapper.allInstances(page, query)
         );
     }
 

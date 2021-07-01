@@ -62,14 +62,10 @@ public class ProcessAppQueryServiceTest extends SpringDbTest {
     }
 
     @Test
-    public void instancesOfHistory() {
-    }
-
-    @Test
-    public void instancesOfApply() {
+    public void allInstances() {
         insert(TEST + 1);
         ProcessInstance instance = insert(TEST + 2);
-        PageResult<ProcessInstance> instances = queryService.instancesOfApply(
+        PageResult<ProcessInstance> instances = queryService.allInstances(
                 new InstancesQuery().setOperator(instance.getCreateBy())
                         .setProcessInstanceName("t")
                         .setPageSize(1)
