@@ -1,6 +1,5 @@
 package org.team4u.workflow.infrastructure;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.team4u.ddd.event.EventStore;
@@ -8,7 +7,7 @@ import org.team4u.workflow.application.ProcessAppQueryService;
 import org.team4u.workflow.application.ProcessAppService;
 import org.team4u.workflow.domain.definition.ProcessDefinitionRepository;
 import org.team4u.workflow.domain.instance.ProcessInstanceRepository;
-import org.team4u.workflow.domain.instance.node.handler.ProcessNodeHandler;
+import org.team4u.workflow.domain.instance.node.handler.bean.LogBeanHandler;
 import org.team4u.workflow.domain.instance.node.handler.bean.ProcessBeanHandler;
 import org.team4u.workflow.infrastructure.persistence.definition.MybatisProcessDefinitionRepository;
 import org.team4u.workflow.infrastructure.persistence.definition.ProcessDefinitionMapper;
@@ -28,8 +27,7 @@ public class ProcessBeanConfig {
 
     @Bean
     public ProcessAppService processAppService(
-            @Autowired(required = false) List<ProcessBeanHandler> processBeanHandlers,
-            @Autowired(required = false) List<ProcessNodeHandler> processNodeHandlers,
+            List<ProcessBeanHandler> processBeanHandlers,
             ProcessInstanceRepository processInstanceRepository,
             ProcessDefinitionRepository processDefinitionRepository) {
         ProcessAppService processAppService = new ProcessAppService(
@@ -39,12 +37,6 @@ public class ProcessBeanConfig {
 
         if (processBeanHandlers != null) {
             processAppService.registerBeanHandlers(processBeanHandlers);
-        }
-
-        if (processNodeHandlers != null) {
-            for (ProcessNodeHandler processNodeHandler : processNodeHandlers) {
-                processAppService.registerNodeHandler(processNodeHandler);
-            }
         }
 
         return processAppService;
@@ -78,5 +70,10 @@ public class ProcessBeanConfig {
                 eventStore,
                 definitionMapper
         );
+    }
+
+    @Bean
+    public ProcessBeanHandler logBeanHandler() {
+        return new LogBeanHandler();
     }
 }

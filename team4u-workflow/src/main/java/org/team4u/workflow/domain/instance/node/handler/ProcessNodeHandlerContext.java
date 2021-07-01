@@ -161,4 +161,14 @@ public class ProcessNodeHandlerContext {
             return processNodeHandlerContext;
         }
     }
+
+    @Override
+    public String toString() {
+        return "|node=" + node.toString() +
+                "|instance=" + instance.toString() +
+                "|definitionId=" + definition.getProcessDefinitionId().toString() +
+                "|actionId=" + action.toString() +
+                "|operatorId=" + operatorId +
+                "|remark=" + remark;
+    }
 }

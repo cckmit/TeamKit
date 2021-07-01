@@ -12,7 +12,6 @@ import org.team4u.workflow.infrastructure.persistence.instance.ProcessInstanceCo
 import org.team4u.workflow.infrastructure.persistence.instance.ProcessInstanceDo;
 import org.team4u.workflow.infrastructure.persistence.instance.ProcessInstanceMapper;
 
-import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -38,7 +37,7 @@ public class ProcessAppQueryService {
      * @param query 查询条件
      * @return 待审批流程实例集合
      */
-    public List<ProcessInstance> instancesOfPending(InstancesQuery query) {
+    public PageResult<ProcessInstance> instancesOfPending(InstancesQuery query) {
         return toPageResult(
                 query.getPageNumber(),
                 query.getPageSize(),
@@ -52,7 +51,7 @@ public class ProcessAppQueryService {
      * @param query 查询条件
      * @return 申请流程实例集合
      */
-    public List<ProcessInstance> instancesOfReviewed(InstancesQuery query) {
+    public PageResult<ProcessInstance> instancesOfReviewed(InstancesQuery query) {
         return toPageResult(
                 query.getPageNumber(),
                 query.getPageSize(),
