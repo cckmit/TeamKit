@@ -1,5 +1,6 @@
 package org.team4u.workflow.infrastructure;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.team4u.ddd.event.EventStore;
@@ -7,11 +8,15 @@ import org.team4u.workflow.application.ProcessAppQueryService;
 import org.team4u.workflow.application.ProcessAppService;
 import org.team4u.workflow.domain.definition.ProcessDefinitionRepository;
 import org.team4u.workflow.domain.instance.ProcessInstanceRepository;
+import org.team4u.workflow.domain.instance.node.handler.ProcessNodeHandler;
+import org.team4u.workflow.domain.instance.node.handler.bean.ProcessBeanHandler;
 import org.team4u.workflow.infrastructure.persistence.definition.MybatisProcessDefinitionRepository;
 import org.team4u.workflow.infrastructure.persistence.definition.ProcessDefinitionMapper;
 import org.team4u.workflow.infrastructure.persistence.instance.MybatisProcessInstanceRepository;
 import org.team4u.workflow.infrastructure.persistence.instance.ProcessAssigneeMapper;
 import org.team4u.workflow.infrastructure.persistence.instance.ProcessInstanceMapper;
+
+import java.util.List;
 
 /**
  * 流程bean定义
@@ -23,12 +28,26 @@ public class ProcessBeanConfig {
 
     @Bean
     public ProcessAppService processAppService(
+            @Autowired(required = false) List<ProcessBeanHandler> processBeanHandlers,
+            @Autowired(required = false) List<ProcessNodeHandler> processNodeHandlers,
             ProcessInstanceRepository processInstanceRepository,
             ProcessDefinitionRepository processDefinitionRepository) {
-        return new ProcessAppService(
+        ProcessAppService processAppService = new ProcessAppService(
                 processInstanceRepository,
                 processDefinitionRepository
         );
+
+        if (processBeanHandlers != null) {
+            processAppService.registerBeanHandlers(processBeanHandlers);
+        }
+
+        if (processNodeHandlers != null) {
+            for (ProcessNodeHandler processNodeHandler : processNodeHandlers) {
+                processAppService.registerNodeHandler(processNodeHandler);
+            }
+        }
+
+        return processAppService;
     }
 
     @Bean
