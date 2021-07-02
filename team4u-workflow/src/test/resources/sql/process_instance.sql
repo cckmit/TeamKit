@@ -7,7 +7,6 @@ create table `process_instance`
     `process_instance_detail`    varchar(1000)       not null default '' comment '流程明细内容',
     `process_definition_id`      varchar(32)         not null default '' comment '流程流程定义标识',
     `process_definition_version` int unsigned        not null default 0 comment '流程定义版本',
-    `process_definition_name`    varchar(100)        not null default '' comment '流程流程定义名称',
     `current_node_id`            varchar(32)         not null default '' comment '当前流程节点标识',
     `current_node_name`          varchar(100)        not null default '' comment '当前流程节点名称',
     `concurrency_version`        int unsigned        not null default 0 comment '乐观锁版本',

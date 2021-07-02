@@ -37,10 +37,6 @@ public class ProcessInstanceDo {
      */
     private String processDefinitionId;
     /**
-     * 流程流程定义名称
-     */
-    private String processDefinitionName;
-    /**
      * 流程流程定义版本
      */
     private int processDefinitionVersion;
@@ -129,14 +125,6 @@ public class ProcessInstanceDo {
 
     public void setProcessDefinitionVersion(int processDefinitionVersion) {
         this.processDefinitionVersion = processDefinitionVersion;
-    }
-
-    public String getProcessDefinitionName() {
-        return processDefinitionName;
-    }
-
-    public void setProcessDefinitionName(String processDefinitionName) {
-        this.processDefinitionName = processDefinitionName;
     }
 
     public String getCurrentNodeId() {

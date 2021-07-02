@@ -1,6 +1,5 @@
 package org.team4u.workflow.infrastructure.persistence.instance;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.dao.DuplicateKeyException;
 import org.team4u.base.error.IdempotentException;
@@ -80,7 +79,19 @@ public class MybatisProcessInstanceRepository
     }
 
     private void saveProcessInstance(ProcessInstance instance) {
-        ProcessInstanceDo instanceDo = toProcessInstanceDo(instance);
+        ProcessDefinitionId definitionId = instance.getProcessDefinitionId();
+
+        // 没有版本号，获取最新的流程定义标识
+        if (!instance.getProcessDefinitionId().hasVersion()) {
+            ProcessDefinition definition = definitionRepository.domainOf(
+                    instance.getProcessDefinitionId().toString()
+            );
+
+            definitionId = definition.getProcessDefinitionId();
+        }
+
+        ProcessInstanceDo instanceDo = ProcessInstanceConverter.instance().toProcessInstanceDo(instance, definitionId);
+
         if (instance.getId() == null) {
             instanceMapper.insert(instanceDo);
             instance.setId(instanceDo.getId());
@@ -95,7 +106,9 @@ public class MybatisProcessInstanceRepository
 
     private void saveAssignee(ProcessInstance instance) {
         for (ProcessAssignee assignee : instance.getAssignees()) {
-            ProcessAssigneeDo assigneeDo = toProcessAssigneeDo(instance.getProcessInstanceId(), assignee);
+            ProcessAssigneeDo assigneeDo = ProcessInstanceConverter.instance().toProcessAssigneeDo(
+                    instance.getProcessInstanceId(), assignee
+            );
             if (assignee.getId() == null) {
                 assigneeMapper.insert(assigneeDo);
                 assignee.setId(assigneeDo.getId());
@@ -103,52 +116,5 @@ public class MybatisProcessInstanceRepository
                 assigneeMapper.updateById(assigneeDo);
             }
         }
-    }
-
-    private ProcessAssigneeDo toProcessAssigneeDo(String instanceId, ProcessAssignee assignee) {
-        ProcessAssigneeDo assigneeDo = new ProcessAssigneeDo();
-        assigneeDo.setProcessInstanceId(instanceId);
-
-        BeanUtil.copyProperties(assignee, assigneeDo);
-
-        if (assignee.getAction() != null) {
-            assigneeDo.setActionId(assignee.getAction().getActionId());
-        }
-
-        return assigneeDo;
-    }
-
-    private ProcessInstanceDo toProcessInstanceDo(ProcessInstance instance) {
-        ProcessInstanceDo instanceDo = new ProcessInstanceDo();
-
-        BeanUtil.copyProperties(instance, instanceDo, "processDefinitionId");
-
-        // 当前节点
-        instanceDo.setCurrentNodeId(instance.getCurrentNode().getNodeId());
-        instanceDo.setCurrentNodeName(instance.getCurrentNode().getNodeName());
-
-        // 流程定义
-        ProcessDefinitionId processDefinitionId = instance.getProcessDefinitionId();
-
-        // 没有版本号，获取最新的流程定义标识
-        if (!instance.getProcessDefinitionId().hasVersion()) {
-            ProcessDefinition definition = definitionRepository.domainOf(
-                    instance.getProcessDefinitionId().toString()
-            );
-
-            instanceDo.setProcessDefinitionName(definition.getProcessDefinitionName());
-            processDefinitionId = definition.getProcessDefinitionId();
-        }
-
-        if (instance.getProcessInstanceDetail() == null ||
-                instance.getProcessInstanceDetail().getBody() == null) {
-            instanceDo.setProcessInstanceDetail("{}");
-        } else {
-            instanceDo.setProcessInstanceDetail(instance.getProcessInstanceDetail().getBody());
-        }
-        instanceDo.setProcessDefinitionId(processDefinitionId.getId());
-        instanceDo.setProcessDefinitionVersion(processDefinitionId.getVersion());
-        instanceDo.setConcurrencyVersion(instance.concurrencyVersion());
-        return instanceDo;
     }
 }
