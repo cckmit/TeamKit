@@ -1,5 +1,21 @@
 /* ProcessInstanceMapper.instancesOfPending */
-select pi.*
+select pi.id,
+       pi.process_instance_id,
+       pi.process_instance_type,
+       pi.process_instance_name,
+       #if(query.withDetail)
+       pi.process_instance_detail,
+       #end
+       pi.process_definition_id,
+       pi.process_definition_version,
+       pi.process_definition_name,
+       pi.current_node_id,
+       pi.current_node_name,
+       pi.concurrency_version,
+       pi.create_by,
+       pi.update_by,
+       pi.create_time,
+       pi.update_time
 from process_instance pi,
      process_assignee pa
 where pi.process_instance_id = pa.process_instance_id
@@ -21,7 +37,23 @@ where pi.process_instance_id = pa.process_instance_id
 order by id;
 
 /* ProcessInstanceMapper.instancesOfReviewed */
-select pi.*
+select pi.id,
+       pi.process_instance_id,
+       pi.process_instance_type,
+       pi.process_instance_name,
+       #if(query.withDetail)
+       pi.process_instance_detail,
+       #end
+       pi.process_definition_id,
+       pi.process_definition_version,
+       pi.process_definition_name,
+       pi.current_node_id,
+       pi.current_node_name,
+       pi.concurrency_version,
+       pi.create_by,
+       pi.update_by,
+       pi.create_time,
+       pi.update_time
 from process_instance pi,
      process_assignee pa
 where pi.process_instance_id = pa.process_instance_id
@@ -43,7 +75,23 @@ where pi.process_instance_id = pa.process_instance_id
 order by id desc;
 
 /* ProcessInstanceMapper.allInstances */
-select pi.*
+select pi.id,
+       pi.process_instance_id,
+       pi.process_instance_type,
+       pi.process_instance_name,
+       #if(query.withDetail)
+       pi.process_instance_detail,
+       #end
+       pi.process_definition_id,
+       pi.process_definition_version,
+       pi.process_definition_name,
+       pi.current_node_id,
+       pi.current_node_name,
+       pi.concurrency_version,
+       pi.create_by,
+       pi.update_by,
+       pi.create_time,
+       pi.update_time
 from process_instance pi
 where 1 = 1
   #if(query.operator)

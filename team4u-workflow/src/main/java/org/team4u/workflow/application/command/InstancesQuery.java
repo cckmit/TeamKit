@@ -11,6 +11,10 @@ public class InstancesQuery {
     private Date createEndTime;
     private int pageNumber = 1;
     private int pageSize = 10;
+    /**
+     * 是否加载detail数据
+     */
+    private boolean withDetail = false;
 
     public String getProcessInstanceId() {
         return processInstanceId;
@@ -81,6 +85,15 @@ public class InstancesQuery {
 
     public InstancesQuery setPageSize(int pageSize) {
         this.pageSize = pageSize;
+        return this;
+    }
+
+    public boolean isWithDetail() {
+        return withDetail;
+    }
+
+    public InstancesQuery setWithDetail(boolean withDetail) {
+        this.withDetail = withDetail;
         return this;
     }
 }
