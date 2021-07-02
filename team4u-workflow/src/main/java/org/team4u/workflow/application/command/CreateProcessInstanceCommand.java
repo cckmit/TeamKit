@@ -7,10 +7,6 @@ package org.team4u.workflow.application.command;
  */
 public class CreateProcessInstanceCommand extends AbstractHandleProcessInstanceCommand {
     /**
-     * 自定义流程实例标识（可选）
-     */
-    private String processInstanceId;
-    /**
      * 流程实例类型
      */
     private String processInstanceType;
@@ -22,14 +18,6 @@ public class CreateProcessInstanceCommand extends AbstractHandleProcessInstanceC
      * 流程定义标识
      */
     private String processDefinitionId;
-
-    public String getProcessInstanceId() {
-        return processInstanceId;
-    }
-
-    public void setProcessInstanceId(String processInstanceId) {
-        this.processInstanceId = processInstanceId;
-    }
 
     public String getProcessInstanceType() {
         return processInstanceType;

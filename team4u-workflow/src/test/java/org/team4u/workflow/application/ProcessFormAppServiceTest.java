@@ -84,10 +84,10 @@ public class ProcessFormAppServiceTest extends SpringDbTest {
         processFormAppService.start(StartProcessFormCommand.Builder.create()
                 .withActionId("submit")
                 .withOperatorId(creator)
+                .withProcessInstanceId(TEST)
                 .withProcessInstanceDetail(detail)
                 .withFormIndex(
                         TestFormIndex.Builder.newBuilder()
-                                .withProcessInstanceId(TEST)
                                 .withName(TEST)
                                 .build()
                 )
@@ -122,10 +122,10 @@ public class ProcessFormAppServiceTest extends SpringDbTest {
                         .withActionId("reject")
                         .withOperatorId(TEST)
                         .withRemark(TEST)
+                        .withProcessInstanceId(TEST)
                         .withProcessInstanceDetail(new Dict().set("x", TEST1))
                         .withFormIndex(
                                 TestFormIndex.Builder.newBuilder()
-                                        .withProcessInstanceId(TEST)
                                         .build()
                         )
                         .build()

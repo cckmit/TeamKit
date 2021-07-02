@@ -1,6 +1,7 @@
 package org.team4u.workflow.domain.instance;
 
 import com.alibaba.fastjson.JSON;
+import org.team4u.base.util.ConvertUtil;
 import org.team4u.ddd.domain.model.IdentifiedValueObject;
 
 /**
@@ -33,7 +34,7 @@ public class ProcessInstanceDetail extends IdentifiedValueObject {
 
     @SuppressWarnings("unchecked")
     public <T> T toDetailObject(Class<?> type) {
-        return (T) JSON.parseObject(getBody(), type);
+        return (T) ConvertUtil.convert(getBody(), type);
     }
 
     public String getBody() {

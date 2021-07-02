@@ -13,10 +13,6 @@ public class StartProcessInstanceCommand extends AbstractHandleProcessInstanceCo
      */
     private String actionId;
     /**
-     * 流程实例标识
-     */
-    private String processInstanceId;
-    /**
      * 附加信息
      */
     private Map<String, Object> ext;
@@ -27,14 +23,6 @@ public class StartProcessInstanceCommand extends AbstractHandleProcessInstanceCo
 
     public void setActionId(String actionId) {
         this.actionId = actionId;
-    }
-
-    public String getProcessInstanceId() {
-        return processInstanceId;
-    }
-
-    public void setProcessInstanceId(String processInstanceId) {
-        this.processInstanceId = processInstanceId;
     }
 
     public Map<String, Object> getExt() {

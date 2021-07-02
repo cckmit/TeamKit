@@ -7,7 +7,7 @@ import org.junit.Test;
 
 public class FileSqlConfigServiceTest {
 
-    private final FileSqlConfigService s = new FileSqlConfigService(new FileSqlConfigService.Config());
+    private final SpringResourceSqlConfigService s = new SpringResourceSqlConfigService(new SimpleFileSqlConfigService.Config());
 
     @Test
     public void demo1() {

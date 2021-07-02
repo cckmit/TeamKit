@@ -7,6 +7,10 @@ package org.team4u.workflow.application.command;
  */
 public abstract class AbstractHandleProcessInstanceCommand {
     /**
+     * 流程实例标识
+     */
+    private String processInstanceId;
+    /**
      * 当前处理人
      */
     private String operatorId;
@@ -18,6 +22,15 @@ public abstract class AbstractHandleProcessInstanceCommand {
      * 流程实例明细
      */
     private Object processInstanceDetail;
+
+    public String getProcessInstanceId() {
+        return processInstanceId;
+    }
+
+    public AbstractHandleProcessInstanceCommand setProcessInstanceId(String processInstanceId) {
+        this.processInstanceId = processInstanceId;
+        return this;
+    }
 
     public String getOperatorId() {
         return operatorId;

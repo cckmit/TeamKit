@@ -35,10 +35,6 @@ public class StartProcessFormCommand extends AbstractHandleProcessInstanceComman
         return formIndex;
     }
 
-    public FormIndex getProcessForm() {
-        return formIndex;
-    }
-
     public void setFormIndex(FormIndex formIndex) {
         this.formIndex = formIndex;
     }
@@ -56,6 +52,7 @@ public class StartProcessFormCommand extends AbstractHandleProcessInstanceComman
         private String actionId;
         private String remark;
         private Map<String, Object> ext;
+        private String processInstanceId;
         private Object processInstanceDetail;
         private FormIndex formIndex;
 
@@ -86,6 +83,11 @@ public class StartProcessFormCommand extends AbstractHandleProcessInstanceComman
             return this;
         }
 
+        public Builder withProcessInstanceId(String processInstanceId) {
+            this.processInstanceId = processInstanceId;
+            return this;
+        }
+
         public Builder withProcessInstanceDetail(Object processInstanceDetail) {
             this.processInstanceDetail = processInstanceDetail;
             return this;
@@ -102,6 +104,7 @@ public class StartProcessFormCommand extends AbstractHandleProcessInstanceComman
             startProcessFormCommand.setActionId(actionId);
             startProcessFormCommand.setRemark(remark);
             startProcessFormCommand.setExt(ext);
+            startProcessFormCommand.setProcessInstanceId(processInstanceId);
             startProcessFormCommand.setProcessInstanceDetail(processInstanceDetail);
             startProcessFormCommand.setFormIndex(formIndex);
             return startProcessFormCommand;

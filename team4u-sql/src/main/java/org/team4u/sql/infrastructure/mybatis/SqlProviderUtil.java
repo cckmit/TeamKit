@@ -2,7 +2,8 @@ package org.team4u.sql.infrastructure.mybatis;
 
 import org.team4u.sql.application.SqlResourceAppService;
 import org.team4u.sql.domain.ConfigSqlResourceRepository;
-import org.team4u.sql.infrastructure.config.FileSqlConfigService;
+import org.team4u.sql.infrastructure.config.SimpleFileSqlConfigService;
+import org.team4u.sql.infrastructure.config.SpringResourceSqlConfigService;
 import org.team4u.template.TemplateEngine;
 import org.team4u.template.TemplateFunctionService;
 import org.team4u.template.infrastructure.JetbrickTemplateEngine;
@@ -23,8 +24,8 @@ public class SqlProviderUtil {
     public static SqlResourceAppService fileSqlResourceAppService() {
         return new SqlResourceAppService(
                 new ConfigSqlResourceRepository(
-                        new FileSqlConfigService(
-                                new FileSqlConfigService.Config()
+                        new SpringResourceSqlConfigService(
+                                new SimpleFileSqlConfigService.Config()
                         )
                 )
         );

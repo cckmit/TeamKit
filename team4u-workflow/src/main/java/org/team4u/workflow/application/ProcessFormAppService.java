@@ -111,12 +111,15 @@ public class ProcessFormAppService {
     @Transactional(rollbackFor = Exception.class)
     public void start(StartProcessFormCommand command) {
         // 准备数据
-        FormIndex newForm = command.getProcessForm();
-        ProcessInstance instance = processAppService.availableProcessInstanceOf(newForm.getProcessInstanceId());
-        newForm.setProcessInstanceId(instance.getProcessInstanceId());
+        ProcessInstance instance = processAppService.availableProcessInstanceOf(command.getProcessInstanceId());
 
-        FormIndex oldForm = formIndexRepository.formOf(instance.getProcessInstanceId());
-        newForm.setId(oldForm.getId());
+        FormIndex newForm = command.getFormIndex();
+        if (newForm != null) {
+            newForm.setProcessInstanceId(instance.getProcessInstanceId());
+
+            FormIndex oldForm = formIndexRepository.formOf(instance.getProcessInstanceId());
+            newForm.setId(oldForm.getId());
+        }
 
         ProcessFormAction action = actionOf(instance.getProcessDefinitionId().toString(), command.getActionId());
         initCommandExt(command, newForm, instance, action);
@@ -130,7 +133,7 @@ public class ProcessFormAppService {
                         .create()
                         .withActionId(command.getActionId())
                         .withOperatorId(command.getOperatorId())
-                        .withProcessInstanceId(newForm.getProcessInstanceId())
+                        .withProcessInstanceId(command.getProcessInstanceId())
                         // 不保存表单，流程实例明细也不做保存
                         .withProcessInstanceDetail(isSaveForm ? command.getProcessInstanceDetail() : null)
                         .withRemark(command.getRemark())
@@ -268,18 +271,18 @@ public class ProcessFormAppService {
     }
 
     private void initCommandExt(StartProcessFormCommand command,
-                                FormIndex form,
+                                FormIndex formIndex,
                                 ProcessInstance instance,
                                 ProcessFormAction action) {
         if (command.getExt() == null) {
             command.setExt(new HashMap<>(2));
         }
 
-        command.getExt().put(FormContextKeys.PROCESS_FORM, form);
+        command.getExt().put(FormContextKeys.PROCESS_FORM, formIndex);
 
         command.getExt().put(FormContextKeys.OPERATOR_ACTION_PERMISSIONS,
                 operatorPermissionsOf(
-                        form,
+                        formIndex,
                         instance,
                         action,
                         command.getOperatorId())

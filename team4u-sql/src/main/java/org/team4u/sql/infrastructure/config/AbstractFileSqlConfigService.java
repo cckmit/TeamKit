@@ -15,12 +15,13 @@ import org.team4u.base.config.ConfigService;
 import org.team4u.base.log.LogMessage;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
 import java.nio.file.Path;
 import java.nio.file.WatchEvent;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -29,7 +30,7 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @author jay.wu
  */
-public class FileSqlConfigService implements ConfigService {
+public abstract class AbstractFileSqlConfigService implements ConfigService {
 
     private final Log log = Log.get();
 
@@ -37,7 +38,7 @@ public class FileSqlConfigService implements ConfigService {
 
     protected Map<String, String> sqlList = new ConcurrentHashMap<>();
 
-    public FileSqlConfigService(Config config) {
+    public AbstractFileSqlConfigService(Config config) {
         this.config = config;
 
         refresh();
@@ -94,18 +95,19 @@ public class FileSqlConfigService implements ConfigService {
     public void refresh() {
         Map<String, String> sqlList = new HashMap<>();
 
-        for (File file : FileUtil.loopFiles(config.getPath())) {
-            refresh(sqlList, file);
+        for (InputStream inputStream : loadResources(config.getPath())) {
+            refresh(sqlList, inputStream);
         }
 
         this.sqlList = sqlList;
     }
 
-    private void refresh(Map<String, String> sqlList, File file) {
-        LogMessage lm = new LogMessage(this.getClass().getSimpleName(), "refresh")
-                .append("fileName", file.getName());
+    protected abstract List<InputStream> loadResources(String path);
+
+    private void refresh(Map<String, String> sqlList, InputStream inputStream) {
+        LogMessage lm = new LogMessage(this.getClass().getSimpleName(), "refresh");
         try {
-            parseFile(sqlList, ResourceUtil.getReader(file.getPath(), CharsetUtil.CHARSET_UTF_8));
+            parseFile(sqlList, IoUtil.getReader(inputStream, CharsetUtil.CHARSET_UTF_8));
         } catch (IOException e) {
             log.debug(lm.fail().toString(), e);
         }

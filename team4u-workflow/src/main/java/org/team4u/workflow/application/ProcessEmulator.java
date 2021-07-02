@@ -152,7 +152,8 @@ public class ProcessEmulator {
                 .withExt(step.getExt())
                 .withOperatorId(step.getOperatorId())
                 .withActionId(step.getActionId())
-                .withFormIndex(formIndex.setProcessInstanceId(processInstanceId))
+                .withProcessInstanceId(processInstanceId)
+                .withFormIndex(formIndex)
                 .build();
         formAppService.start(command);
 
