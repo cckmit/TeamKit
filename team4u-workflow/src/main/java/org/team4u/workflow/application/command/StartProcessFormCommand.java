@@ -1,7 +1,6 @@
 package org.team4u.workflow.application.command;
 
 import org.team4u.workflow.domain.form.FormIndex;
-import org.team4u.workflow.domain.instance.ProcessInstanceDetail;
 
 import java.util.Map;
 
@@ -57,7 +56,7 @@ public class StartProcessFormCommand extends AbstractHandleProcessInstanceComman
         private String actionId;
         private String remark;
         private Map<String, Object> ext;
-        private ProcessInstanceDetail processInstanceDetail;
+        private Object processInstanceDetail;
         private FormIndex formIndex;
 
         private Builder() {
@@ -87,7 +86,7 @@ public class StartProcessFormCommand extends AbstractHandleProcessInstanceComman
             return this;
         }
 
-        public Builder withProcessInstanceDetail(ProcessInstanceDetail processInstanceDetail) {
+        public Builder withProcessInstanceDetail(Object processInstanceDetail) {
             this.processInstanceDetail = processInstanceDetail;
             return this;
         }

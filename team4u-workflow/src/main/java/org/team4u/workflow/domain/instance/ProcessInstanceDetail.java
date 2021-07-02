@@ -14,10 +14,6 @@ public class ProcessInstanceDetail extends IdentifiedValueObject {
      */
     private String body;
 
-    public ProcessInstanceDetail(String body) {
-        this.body = body;
-    }
-
     public ProcessInstanceDetail(Object body) {
         setBodyObject(body);
     }
@@ -29,6 +25,7 @@ public class ProcessInstanceDetail extends IdentifiedValueObject {
 
         if (formBody instanceof String) {
             setBody((String) formBody);
+            return;
         }
 
         setBody(JSON.toJSONString(formBody));

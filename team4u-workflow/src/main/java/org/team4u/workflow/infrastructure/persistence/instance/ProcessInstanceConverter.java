@@ -5,7 +5,6 @@ import cn.hutool.core.util.StrUtil;
 import org.team4u.workflow.domain.definition.ProcessDefinition;
 import org.team4u.workflow.domain.instance.ProcessAssignee;
 import org.team4u.workflow.domain.instance.ProcessInstance;
-import org.team4u.workflow.domain.instance.ProcessInstanceDetail;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,7 +27,7 @@ public class ProcessInstanceConverter {
                 definition.getProcessDefinitionId(),
                 definition.processNodeOf(instanceDo.getCurrentNodeId()),
                 instanceDo.getCreateBy(),
-                new ProcessInstanceDetail(instanceDo.getProcessInstanceDetail())
+                instanceDo.getProcessInstanceDetail()
         );
 
         if (assigneeDoList != null) {

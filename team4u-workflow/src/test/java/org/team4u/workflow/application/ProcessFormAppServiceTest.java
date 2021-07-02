@@ -20,7 +20,6 @@ import org.team4u.workflow.domain.definition.ProcessAction;
 import org.team4u.workflow.domain.definition.ProcessDefinition;
 import org.team4u.workflow.domain.definition.ProcessDefinitionId;
 import org.team4u.workflow.domain.form.DefaultFormPermissionService;
-import org.team4u.workflow.domain.instance.ProcessInstanceDetail;
 import org.team4u.workflow.domain.instance.node.handler.DynamicChoiceNodeHandler;
 import org.team4u.workflow.infrastructure.BeanConfig;
 import org.team4u.workflow.infrastructure.persistence.definition.JsonProcessDefinitionRepository;
@@ -73,7 +72,7 @@ public class ProcessFormAppServiceTest extends SpringDbTest {
                         .withProcessInstanceId(TEST)
                         .withProcessInstanceName(TEST)
                         .withOperatorId(creator)
-                        .withProcessInstanceDetail(new ProcessInstanceDetail(detail))
+                        .withProcessInstanceDetail(detail)
                         .withFormIndex(
                                 TestFormIndex.Builder.newBuilder()
                                         .withName(TEST)
@@ -85,7 +84,7 @@ public class ProcessFormAppServiceTest extends SpringDbTest {
         processFormAppService.start(StartProcessFormCommand.Builder.create()
                 .withActionId("submit")
                 .withOperatorId(creator)
-                .withProcessInstanceDetail(new ProcessInstanceDetail(detail))
+                .withProcessInstanceDetail(detail)
                 .withFormIndex(
                         TestFormIndex.Builder.newBuilder()
                                 .withProcessInstanceId(TEST)
@@ -123,7 +122,7 @@ public class ProcessFormAppServiceTest extends SpringDbTest {
                         .withActionId("reject")
                         .withOperatorId(TEST)
                         .withRemark(TEST)
-                        .withProcessInstanceDetail(new ProcessInstanceDetail(new Dict().set("x", TEST1)))
+                        .withProcessInstanceDetail(new Dict().set("x", TEST1))
                         .withFormIndex(
                                 TestFormIndex.Builder.newBuilder()
                                         .withProcessInstanceId(TEST)

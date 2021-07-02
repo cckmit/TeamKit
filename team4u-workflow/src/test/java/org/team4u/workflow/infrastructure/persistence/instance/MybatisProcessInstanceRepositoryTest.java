@@ -12,7 +12,6 @@ import org.team4u.test.spring.SpringDbTest;
 import org.team4u.workflow.domain.definition.ProcessDefinition;
 import org.team4u.workflow.domain.instance.ProcessAssignee;
 import org.team4u.workflow.domain.instance.ProcessInstance;
-import org.team4u.workflow.domain.instance.ProcessInstanceDetail;
 import org.team4u.workflow.domain.instance.ProcessInstanceRepository;
 import org.team4u.workflow.infrastructure.BeanConfig;
 
@@ -76,7 +75,6 @@ public class MybatisProcessInstanceRepositoryTest extends SpringDbTest {
     private ProcessInstance newInstance() {
         ProcessDefinition definition = definitionOf("simple");
 
-        ProcessInstanceDetail item = new ProcessInstanceDetail(Dict.create().set("x", 1));
         ProcessInstance instance = new ProcessInstance(
                 TEST,
                 TEST,
@@ -84,7 +82,7 @@ public class MybatisProcessInstanceRepositoryTest extends SpringDbTest {
                 definition.getProcessDefinitionId(),
                 staticNode("created"),
                 TEST,
-                item
+                Dict.create().set("x", 1)
         );
 
         instance.changeCurrentNodeTo(

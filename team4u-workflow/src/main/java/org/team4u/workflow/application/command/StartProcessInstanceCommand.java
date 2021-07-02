@@ -1,7 +1,5 @@
 package org.team4u.workflow.application.command;
 
-import org.team4u.workflow.domain.instance.ProcessInstanceDetail;
-
 import java.util.Map;
 
 /**
@@ -53,7 +51,7 @@ public class StartProcessInstanceCommand extends AbstractHandleProcessInstanceCo
         private String remark;
         private Map<String, Object> ext;
         private String processInstanceId;
-        private ProcessInstanceDetail processInstanceDetail;
+        private Object processInstanceDetail;
 
         private Builder() {
         }
@@ -87,7 +85,7 @@ public class StartProcessInstanceCommand extends AbstractHandleProcessInstanceCo
             return this;
         }
 
-        public Builder withProcessInstanceDetail(ProcessInstanceDetail processInstanceDetail) {
+        public Builder withProcessInstanceDetail(Object processInstanceDetail) {
             this.processInstanceDetail = processInstanceDetail;
             return this;
         }

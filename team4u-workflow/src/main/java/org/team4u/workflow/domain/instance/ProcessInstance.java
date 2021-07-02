@@ -74,7 +74,7 @@ public class ProcessInstance extends ConcurrencySafeAggregateRoot {
                            ProcessDefinitionId processDefinitionId,
                            ProcessNode currentNode,
                            String createdBy,
-                           ProcessInstanceDetail processInstanceDetail) {
+                           Object processInstanceDetail) {
         setProcessInstanceId(processInstanceId);
         setProcessInstanceType(processInstanceType);
         setProcessInstanceName(processInstanceName);
@@ -104,7 +104,7 @@ public class ProcessInstance extends ConcurrencySafeAggregateRoot {
                                          ProcessDefinitionId processDefinitionId,
                                          String createdBy,
                                          ProcessNode startNode,
-                                         ProcessInstanceDetail processInstanceDetail) {
+                                         Object processInstanceDetail) {
         ProcessInstance instance = new ProcessInstance(
                 processInstanceId,
                 processInstanceType,
@@ -112,7 +112,8 @@ public class ProcessInstance extends ConcurrencySafeAggregateRoot {
                 processDefinitionId,
                 startNode,
                 createdBy,
-                processInstanceDetail);
+                processInstanceDetail
+        );
 
         instance.publishEvent(new ProcessInstanceCreatedEvent(
                 instance.getProcessInstanceId(),
@@ -294,8 +295,8 @@ public class ProcessInstance extends ConcurrencySafeAggregateRoot {
         return processInstanceDetail;
     }
 
-    public ProcessInstance setProcessInstanceDetail(ProcessInstanceDetail processInstanceDetail) {
-        this.processInstanceDetail = processInstanceDetail;
+    public ProcessInstance setProcessInstanceDetail(Object processInstanceDetail) {
+        this.processInstanceDetail = new ProcessInstanceDetail(processInstanceDetail);
         return this;
     }
 

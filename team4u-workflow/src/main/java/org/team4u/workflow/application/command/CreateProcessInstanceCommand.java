@@ -1,7 +1,5 @@
 package org.team4u.workflow.application.command;
 
-import org.team4u.workflow.domain.instance.ProcessInstanceDetail;
-
 /**
  * 创建新流程实例命令
  *
@@ -64,7 +62,7 @@ public class CreateProcessInstanceCommand extends AbstractHandleProcessInstanceC
         private String processInstanceId;
         private String processInstanceName;
         private String processDefinitionId;
-        private ProcessInstanceDetail processInstanceDetail;
+        private Object processInstanceDetail;
 
         private Builder() {
         }
@@ -98,7 +96,7 @@ public class CreateProcessInstanceCommand extends AbstractHandleProcessInstanceC
             return this;
         }
 
-        public Builder withProcessInstanceDetail(ProcessInstanceDetail processInstanceDetail) {
+        public Builder withProcessInstanceDetail(Object processInstanceDetail) {
             this.processInstanceDetail = processInstanceDetail;
             return this;
         }
