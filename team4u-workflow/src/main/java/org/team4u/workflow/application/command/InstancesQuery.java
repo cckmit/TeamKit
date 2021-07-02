@@ -9,7 +9,10 @@ public class InstancesQuery {
     private String operator;
     private Date createStartTime;
     private Date createEndTime;
-    private int pageNumber = 1;
+    /**
+     * 页码，0表示第一页
+     */
+    private int pageNumber = 0;
     private int pageSize = 10;
     /**
      * 是否加载detail数据

@@ -77,11 +77,11 @@ public class ProcessAppQueryService {
                                                      Function<Page<ProcessInstanceDo>, IPage<ProcessInstanceDo>> worker) {
         IPage<ProcessInstanceDo> page = worker.apply(
                 new Page<ProcessInstanceDo>()
-                        .setCurrent(pageNumber)
+                        .setCurrent(pageNumber + 1)
                         .setSize(pageSize)
         );
 
-        PageResult<ProcessInstance> result = new PageResult<>(pageNumber - 1, pageSize, (int) page.getTotal());
+        PageResult<ProcessInstance> result = new PageResult<>(pageNumber, pageSize, (int) page.getTotal());
         result.addAll(page.getRecords().stream()
                 .map(it -> {
                     ProcessDefinition definition = processDefinitionRepository.domainOf(new ProcessDefinitionId(

@@ -30,7 +30,7 @@ public class ProcessAppQueryServiceTest extends SpringDbTest {
     @Autowired
     private ProcessAppQueryService queryService;
 
-    public static ProcessInstance newInstance(String id, String... assignees) {
+    private ProcessInstance newInstance(String id, String... assignees) {
         ProcessDefinition definition = definitionOf("simple");
 
         return new ProcessInstance(
@@ -65,11 +65,12 @@ public class ProcessAppQueryServiceTest extends SpringDbTest {
     public void allInstances() {
         insert(TEST + 1);
         ProcessInstance instance = insert(TEST + 2);
+
         PageResult<ProcessInstance> instances = queryService.allInstances(
                 new InstancesQuery().setOperator(instance.getCreateBy())
                         .setProcessInstanceName("t")
                         .setPageSize(1)
-                        .setPageNumber(2)
+                        .setPageNumber(1)
         );
 
         System.out.println(JSON.toJSONString(instances));
