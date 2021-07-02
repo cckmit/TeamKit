@@ -25,12 +25,10 @@ public class DefaultFormPermissionService implements FormPermissionService {
         }
 
         if (canEdit(context)) {
-            permissions.add(VIEW.name());
             permissions.add(EDIT.name());
         }
 
         if (canReview(context)) {
-            permissions.add(VIEW.name());
             permissions.add(REVIEW.name());
         }
 
@@ -58,17 +56,18 @@ public class DefaultFormPermissionService implements FormPermissionService {
     }
 
     protected boolean canView(Context context) {
+        if (canEdit(context) || canReview(context)) {
+            return true;
+        }
+
         return context.getChangedEvents()
                 .stream()
                 .anyMatch(it -> StrUtil.equals(it.getOperator(), context.getOperatorId()));
     }
 
     protected boolean canEdit(Context context) {
-        if (context.getInstance() == null) {
-            return true;
-        }
-
-        return StrUtil.equals(context.getInstance().getCreateBy(), context.getOperatorId());
+        // 仅新建表单时可编辑
+        return context.getInstance() == null || context.getInstance().getId() == null;
     }
 
     protected boolean canReview(Context context) {
