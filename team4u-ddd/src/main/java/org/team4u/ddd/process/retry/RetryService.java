@@ -38,22 +38,24 @@ public class RetryService {
             return true;
         }
 
-        if (ArrayUtil.isNotEmpty(retryForClass)) {
-            if (Arrays.stream(retryForClass)
-                    .anyMatch(it -> it.isAssignableFrom(throwable.getClass()))) {
-                return true;
-            }
+        // 未定义异常类，默认全部重试
+        if (ArrayUtil.isEmpty(retryForClass) || ArrayUtil.isEmpty(noRetryForClass)) {
+            return true;
         }
 
-        if (ArrayUtil.isNotEmpty(noRetryForClass)) {
-            if (Arrays.stream(noRetryForClass)
-                    .anyMatch(it -> it.isAssignableFrom(throwable.getClass()))) {
-                return false;
-            }
+        if (anyMatch(retryForClass, throwable)) {
+            return true;
         }
 
-        // 未命中已定义的异常类，默认全部重试
-        return true;
+        return !anyMatch(noRetryForClass, throwable);
+    }
+
+    private boolean anyMatch(Class<? extends Throwable>[] throwableClass, Throwable throwable) {
+        if (ArrayUtil.isNotEmpty(throwableClass)) {
+            return false;
+        }
+
+        return Arrays.stream(throwableClass).anyMatch(it -> it.isAssignableFrom(throwable.getClass()));
     }
 
     /**
