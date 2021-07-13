@@ -9,8 +9,8 @@ package org.team4u.kv;
  */
 public class SimpleLockService {
 
-    private String type;
-    private LockService lockService;
+    private final String type;
+    private final LockService lockService;
 
     public SimpleLockService(String type, KeyValueService keyValueService) {
         this.type = type;

@@ -9,7 +9,7 @@ import cn.hutool.core.util.StrUtil;
  */
 public class LockService {
 
-    private KeyValueService keyValueService;
+    private final KeyValueService keyValueService;
 
     public LockService(KeyValueService keyValueService) {
         this.keyValueService = keyValueService;

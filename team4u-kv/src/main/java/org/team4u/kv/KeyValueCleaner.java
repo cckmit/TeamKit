@@ -1,6 +1,5 @@
 package org.team4u.kv;
 
-import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 import org.team4u.base.lang.LongTimeThread;
@@ -20,8 +19,10 @@ import java.util.concurrent.TimeUnit;
  */
 public class KeyValueCleaner extends LongTimeThread {
 
-    private static final String LOCK_ID = "KVC";
     private final Log log = LogFactory.get();
+
+    private static final String LOCK_ID = "KVC";
+
     private final Config config;
     private final SimpleLockService lockService;
 
