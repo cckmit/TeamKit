@@ -41,10 +41,10 @@ public class CompositeRateLimiter implements RateLimiter {
      * @return 成功访问次数
      */
     @Override
-    public long countAcquired(String key) {
+    public long countTryAcquireTimes(String key) {
         return limiters
                 .stream()
-                .map(it -> it.countAcquired(key))
+                .map(it -> it.countTryAcquireTimes(key))
                 .max(Long::compareTo)
                 .orElse(0L);
     }

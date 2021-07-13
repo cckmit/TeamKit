@@ -1,6 +1,7 @@
 package org.team4u.rl.infrastructure.limiter;
 
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -30,41 +31,61 @@ public class RedisCountRateLimiter implements RateLimiter {
 
     @Override
     public boolean tryAcquire(String key) {
+        if (!canAcquire(key)) {
+            return false;
+        }
+
         try {
-            long count = redisTemplate.opsForValue().increment(key, 1);
+            long count = ObjectUtil.defaultIfNull(redisTemplate.opsForValue().increment(key, 1), 0L);
+
+            expireKey(key);
 
             if (count > config.getThreshold()) {
                 return false;
             }
         } catch (Exception e) {
-            // 限流器本身异常情况不能影响业务流程，返回true
+            // 限流器本身异常情况不能影响业务流程
             log.error(e,
                     LogMessage.create(this.getClass().getSimpleName(), "tryAcquire")
                             .fail()
                             .append("key", key)
                             .toString());
-        } finally {
-            try {
-                //　防止异常情况没有设置过期时间
-                if (redisTemplate.getExpire(key) == -1) {
-                    redisTemplate.expire(key, config.getExpirationMillis(), TimeUnit.MILLISECONDS);
-                }
-            } catch (Exception e) {
-                // Ignore error
-            }
         }
-
         return true;
     }
 
+    private void expireKey(String key) {
+        try {
+            if (ObjectUtil.defaultIfNull(redisTemplate.getExpire(key), -1L) == -1) {
+                redisTemplate.expire(key, config.getExpirationMillis(), TimeUnit.MILLISECONDS);
+            }
+        } catch (Exception e) {
+            log.error(e,
+                    LogMessage.create(this.getClass().getSimpleName(), "expire")
+                            .fail()
+                            .append("key", key)
+                            .toString());
+        }
+    }
+
     @Override
-    public long countAcquired(String key) {
-        return Convert.toLong(redisTemplate.opsForValue().get(key), 0L);
+    public long countTryAcquireTimes(String key) {
+        try {
+            return Convert.toLong(redisTemplate.opsForValue().get(key), 0L);
+        } catch (Exception e) {
+            log.error(e,
+                    LogMessage.create(this.getClass().getSimpleName(), "countTryAcquireTimes")
+                            .fail()
+                            .append("key", key)
+                            .toString());
+
+            return 0;
+        }
     }
 
     @Override
     public boolean canAcquire(String key) {
-        return countAcquired(key) < config.getThreshold();
+        return countTryAcquireTimes(key) < config.getThreshold();
     }
 
     public static class Factory implements RateLimiterFactory {

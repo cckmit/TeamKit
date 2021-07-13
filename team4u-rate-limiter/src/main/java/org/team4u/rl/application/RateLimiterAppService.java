@@ -33,11 +33,11 @@ public class RateLimiterAppService {
     }
 
     /**
-     * 根据类型尝试是否允许访问
+     * 根据类型尝试是否允许获取
      *
      * @param type 类型
      * @param key  键值
-     * @return true为可以访问，false为拒绝访问
+     * @return true为可以获取，false为拒绝获取
      */
     public boolean tryAcquire(String type, String key) {
         RateLimiter rateLimiter = limiterRefresher.limiterOf(type);
@@ -62,13 +62,13 @@ public class RateLimiterAppService {
     }
 
     /**
-     * 统计尝试访问次数
+     * 统计尝试获取次数
      *
      * @param type 类型
      * @param key  键值
-     * @return 成功访问次数
+     * @return 成功获取次数
      */
-    public long countAcquired(String type, String key) {
+    public long countTryAcquireTimes(String type, String key) {
         RateLimiter rateLimiter = limiterRefresher.limiterOf(type);
 
         LogMessage lm = logMessageOf(rateLimiter, "countAcquired", type, key);
@@ -81,7 +81,7 @@ public class RateLimiterAppService {
             return 0;
         }
 
-        long result = rateLimiter.countAcquired(key);
+        long result = rateLimiter.countTryAcquireTimes(key);
 
         if (log.isDebugEnabled()) {
             log.debug(lm.success().append("result", result).toString());
@@ -91,11 +91,11 @@ public class RateLimiterAppService {
     }
 
     /**
-     * 是否可以访问
+     * 是否可以获取
      *
      * @param type 类型
      * @param key  键值
-     * @return 是否可以访问
+     * @return 是否可以获取
      */
     public boolean canAcquire(String type, String key) {
         RateLimiter rateLimiter = limiterRefresher.limiterOf(type);

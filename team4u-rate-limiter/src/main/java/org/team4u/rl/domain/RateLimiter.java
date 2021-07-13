@@ -21,7 +21,7 @@ public interface RateLimiter {
      * @param key 关键key
      * @return 成功访问次数
      */
-    long countAcquired(String key);
+    long countTryAcquireTimes(String key);
 
     /**
      * 是否可以访问

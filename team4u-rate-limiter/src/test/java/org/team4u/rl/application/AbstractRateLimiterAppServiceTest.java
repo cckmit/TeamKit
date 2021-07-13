@@ -25,15 +25,15 @@ public abstract class AbstractRateLimiterAppServiceTest {
     @Test
     public void countAcquired() {
         // 无请求，次数=0
-        Assert.assertEquals(0, service.countAcquired("test", "1"));
+        Assert.assertEquals(0, service.countTryAcquireTimes("test", "1"));
 
         // 请求1次
         service.tryAcquire("test", "1");
-        Assert.assertEquals(1, service.countAcquired("test", "1"));
+        Assert.assertEquals(1, service.countTryAcquireTimes("test", "1"));
 
         // 超时后重置，次数=0
         ThreadUtil.safeSleep(201);
-        Assert.assertEquals(0, service.countAcquired("test", "1"));
+        Assert.assertEquals(0, service.countTryAcquireTimes("test", "1"));
     }
 
     @Test

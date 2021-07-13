@@ -55,11 +55,11 @@ public class HistoryLogsLimiter implements RateLimiter {
         }
 
         logs.add(System.currentTimeMillis());
-        return countAcquired(key) <= config.getThreshold();
+        return countTryAcquireTimes(key) <= config.getThreshold();
     }
 
     @Override
-    public long countAcquired(String key) {
+    public long countTryAcquireTimes(String key) {
         List<Long> datasource = HistoryLogsLimiter.DATASOURCE.get();
         if (CollUtil.isEmpty(datasource)) {
             return 0;
@@ -73,7 +73,7 @@ public class HistoryLogsLimiter implements RateLimiter {
 
     @Override
     public boolean canAcquire(String key) {
-        return countAcquired(key) < config.getThreshold();
+        return countTryAcquireTimes(key) < config.getThreshold();
     }
 
     public static class Factory implements RateLimiterFactory {
