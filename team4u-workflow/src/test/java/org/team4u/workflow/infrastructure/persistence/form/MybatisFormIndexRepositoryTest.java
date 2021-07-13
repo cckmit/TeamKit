@@ -17,11 +17,11 @@ public class MybatisFormIndexRepositoryTest extends SpringDbTest {
     @Autowired
     private TestFormIndexMapper testFormIndexMapper;
 
-    private TestFormIndeRepository repository;
+    private TestFormIndexRepository repository;
 
     @PostConstruct
     public void repository() {
-        repository = new TestFormIndeRepository(testFormIndexMapper);
+        repository = new TestFormIndexRepository(testFormIndexMapper);
     }
 
     @Test

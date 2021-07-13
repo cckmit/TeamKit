@@ -1,8 +1,8 @@
 package org.team4u.workflow.infrastructure.persistence.form;
 
-public class TestFormIndeRepository extends MybatisFormIndexRepository<TestFormIndex, TestFormIndexDo> {
+public class TestFormIndexRepository extends MybatisFormIndexRepository<TestFormIndex, TestFormIndexDo> {
 
-    public TestFormIndeRepository(TestFormIndexMapper testFormIndexMapper) {
+    public TestFormIndexRepository(TestFormIndexMapper testFormIndexMapper) {
         super(testFormIndexMapper);
     }
 

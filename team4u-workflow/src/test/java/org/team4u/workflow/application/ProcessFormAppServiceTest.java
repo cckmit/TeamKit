@@ -23,9 +23,9 @@ import org.team4u.workflow.domain.form.DefaultFormPermissionService;
 import org.team4u.workflow.domain.instance.node.handler.DynamicChoiceNodeHandler;
 import org.team4u.workflow.infrastructure.BeanConfig;
 import org.team4u.workflow.infrastructure.persistence.definition.JsonProcessDefinitionRepository;
-import org.team4u.workflow.infrastructure.persistence.form.TestFormIndeRepository;
 import org.team4u.workflow.infrastructure.persistence.form.TestFormIndex;
 import org.team4u.workflow.infrastructure.persistence.form.TestFormIndexMapper;
+import org.team4u.workflow.infrastructure.persistence.form.TestFormIndexRepository;
 import org.team4u.workflow.infrastructure.persistence.instance.InMemoryProcessInstanceRepository;
 
 import javax.annotation.PostConstruct;
@@ -56,7 +56,7 @@ public class ProcessFormAppServiceTest extends SpringDbTest {
         processFormAppService = new ProcessFormAppService(
                 eventStore,
                 appService,
-                new TestFormIndeRepository(testFormIndexMapper),
+                new TestFormIndexRepository(testFormIndexMapper),
                 new DefaultFormPermissionService()
         );
     }
