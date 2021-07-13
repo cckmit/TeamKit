@@ -20,11 +20,13 @@ import java.util.concurrent.TimeoutException;
  */
 public class SentinelCacheService {
 
+    private final Log log = LogFactory.get();
+
     private final static String LOCK_TYPE = "SC_LOCK";
     private final static String RESULT_TYPE = "SC_RESULT";
-    private final Log log = LogFactory.get();
-    private LockService lockService;
-    private KeyValueService resultCacheService;
+
+    private final LockService lockService;
+    private final KeyValueService resultCacheService;
 
     public SentinelCacheService(KeyValueRepository keyValueRepository,
                                 KeyValueCleaner keyValueCleaner) {
@@ -45,16 +47,13 @@ public class SentinelCacheService {
             return result;
         }
 
-        boolean lock = false;
         try {
-            lock = lockService.tryLock(LOCK_TYPE, command.getId(), command.getLockTtlMillis());
+            if (lockService.tryLock(LOCK_TYPE, command.getId(), command.getLockTtlMillis())) {
+                // 获得锁，成为哨兵，执行方法
+                return resultOfLocker(command);
+            }
         } catch (Exception e) {
             log.error(e, LogMessageContext.get().fail("tryLock fail").toString());
-        }
-
-        if (lock) {
-            // 获得锁，成为哨兵，执行方法
-            return resultOfLocker(command);
         }
 
         // 获取独占锁失败，自旋等待缓存结果
