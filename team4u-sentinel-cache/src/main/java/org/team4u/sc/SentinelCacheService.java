@@ -65,16 +65,17 @@ public class SentinelCacheService {
      */
     private Object resultOfCache(String id, Class<?> resultClass) {
         Object result = resultCacheService.get(RESULT_TYPE, id, resultClass);
-        if (result != null) {
-            // 处于防刷时间窗口，使用结果缓存
-            log.info(LogMessageContext.get()
-                    .success()
-                    .append("resultOfCache", true)
-                    .toString());
-            return result;
+        if (result == null) {
+            return null;
         }
 
-        return null;
+        // 处于防刷时间窗口，使用结果缓存
+        log.info(LogMessageContext.get()
+                .success()
+                .append("resultOfCache", true)
+                .toString());
+
+        return result;
     }
 
     /**
@@ -147,7 +148,7 @@ public class SentinelCacheService {
                     .fail("waitingResultOfCache error")
                     .toString());
 
-            return null;
+            throw e;
         }
     }
 }
