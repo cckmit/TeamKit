@@ -6,6 +6,7 @@ public class InstancesQuery {
     private String processInstanceId;
     private String processInstanceType;
     private String processInstanceName;
+    private String processInstanceNodeId;
     private String operator;
     private Date createStartTime;
     private Date createEndTime;
@@ -43,6 +44,15 @@ public class InstancesQuery {
 
     public InstancesQuery setProcessInstanceName(String processInstanceName) {
         this.processInstanceName = processInstanceName;
+        return this;
+    }
+
+    public String getProcessInstanceNodeId() {
+        return processInstanceNodeId;
+    }
+
+    public InstancesQuery setProcessInstanceNodeId(String processInstanceNodeId) {
+        this.processInstanceNodeId = processInstanceNodeId;
         return this;
     }
 

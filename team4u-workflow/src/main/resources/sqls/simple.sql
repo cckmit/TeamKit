@@ -100,6 +100,10 @@ where 1 = 1
   #if(query.processInstanceType)
   and pi.process_instance_type = #{query.processInstanceType}
   #end
+  #end
+  #if(query.processInstanceNodeId)
+  and pi.currentNodeId =         #{query.processInstanceNodeId}
+  #end
   #if(query.createStartTime)
   and pi.create_time >=          #{query.createStartTime}
   #end
