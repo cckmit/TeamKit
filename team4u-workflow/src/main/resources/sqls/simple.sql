@@ -102,7 +102,7 @@ where 1 = 1
   #end
   #end
   #if(query.processInstanceNodeId)
-  and pi.currentNodeId =         #{query.processInstanceNodeId}
+  and pi.current_node_id =       #{query.processInstanceNodeId}
   #end
   #if(query.createStartTime)
   and pi.create_time >=          #{query.createStartTime}
