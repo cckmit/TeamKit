@@ -26,6 +26,9 @@ public class SimpleExcelExporterTest {
                         Dict.create().set("b", "22").set("a", "11").set("c", "33"))
                 )
         );
+
+        List<TestBean> data = ExcelUtil.getReader("test.xls").readAll(TestBean.class);
+        Assert.assertEquals("[1122]", data.toString());
     }
 
     @Test
