@@ -30,4 +30,9 @@ public class TestBean {
         this.b = b;
         return this;
     }
+
+    @Override
+    public String toString() {
+        return a + b;
+    }
 }
