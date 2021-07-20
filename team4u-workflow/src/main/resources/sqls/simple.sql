@@ -100,7 +100,6 @@ where 1 = 1
   #if(query.processInstanceType)
   and pi.process_instance_type = #{query.processInstanceType}
   #end
-  #end
   #if(query.processInstanceNodeId)
   and pi.current_node_id =       #{query.processInstanceNodeId}
   #end
