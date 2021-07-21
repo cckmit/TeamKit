@@ -36,7 +36,7 @@ create table `process_assignee`
     `create_time`         timestamp           not null default '1970-01-01 23:59:59' comment '创建时间',
     `update_time`         timestamp           not null default current_timestamp on update current_timestamp comment '更新时间',
     primary key (`id`),
-    unique index `uniq_process_assignee` (`process_instance_id`, node_id),
+    index `uniq_process_assignee` (`process_instance_id`, node_id),
     index `idx_assignee` (`assignee`)
 ) comment ='流程处理人';
 
