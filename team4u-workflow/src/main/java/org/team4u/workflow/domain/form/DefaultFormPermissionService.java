@@ -77,6 +77,7 @@ public class DefaultFormPermissionService implements FormPermissionService {
 
         return context.getInstance().getAssignees()
                 .stream()
+                .filter(it -> it.getAction() != null)
                 .anyMatch(it -> StrUtil.equals(it.getAssignee(), context.getOperatorId()));
     }
 }

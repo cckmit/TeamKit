@@ -59,7 +59,7 @@ public class ProcessInstanceConverter {
         );
 
         if (StrUtil.isNotBlank(assigneeDo.getActionId())) {
-            assignee.handle(definition.availableActionOf(assigneeDo.getActionId()));
+            assignee.setAction(definition.availableActionOf(assigneeDo.getActionId()));
         }
 
         BeanUtil.copyProperties(assigneeDo, assignee);

@@ -69,7 +69,7 @@ public class ProcessAssignee extends IdentifiedValueObject {
         return action;
     }
 
-    private void setAction(ProcessAction action) {
+    public void setAction(ProcessAction action) {
         this.action = action;
     }
 
