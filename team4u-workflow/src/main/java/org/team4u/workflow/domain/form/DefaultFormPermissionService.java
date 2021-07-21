@@ -77,8 +77,11 @@ public class DefaultFormPermissionService implements FormPermissionService {
 
         return context.getInstance().getAssignees()
                 .stream()
+                // 审批人未处理
                 .filter(it -> it.getAction() == null)
-                .anyMatch(it -> StrUtil.equals(it.getAssignee(), context.getOperatorId()) &&
-                        StrUtil.equals(it.getNodeId(), context.getInstance().getCurrentNode().getNodeId()));
+                // 当前状态
+                .filter(it -> StrUtil.equals(it.getNodeId(), context.getInstance().getCurrentNode().getNodeId()))
+                // 当前处理人是审批人
+                .anyMatch(it -> StrUtil.equals(it.getAssignee(), context.getOperatorId()));
     }
 }
