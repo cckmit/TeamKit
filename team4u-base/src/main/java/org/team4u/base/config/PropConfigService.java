@@ -4,11 +4,16 @@ import cn.hutool.core.util.StrUtil;
 
 import java.util.Properties;
 
+/**
+ * 基于配置文件的配置服务
+ *
+ * @author jay.wu
+ */
 public class PropConfigService implements ConfigService {
 
     private final String prefix;
 
-    private final Properties properties = new Properties();
+    private Properties properties = new Properties();
 
     public PropConfigService() {
         this(null);
@@ -25,6 +30,11 @@ public class PropConfigService implements ConfigService {
 
     public Properties getProperties() {
         return properties;
+    }
+
+    public PropConfigService setProperties(Properties properties) {
+        this.properties = properties;
+        return this;
     }
 
     private String standardizedPrefix(String prefix) {
