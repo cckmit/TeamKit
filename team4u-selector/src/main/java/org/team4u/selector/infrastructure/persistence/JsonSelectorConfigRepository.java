@@ -1,5 +1,6 @@
 package org.team4u.selector.infrastructure.persistence;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import org.team4u.base.config.ConfigService;
 import org.team4u.selector.domain.selector.SelectorConfig;
@@ -21,6 +22,11 @@ public class JsonSelectorConfigRepository implements SelectorConfigRepository {
     @Override
     public SelectorConfig selectorConfigOfId(String id) {
         String json = configService.get(id);
+
+        if (StrUtil.isEmpty(json)) {
+            return null;
+        }
+
         return JSONUtil.toBean(json, SelectorConfig.class);
     }
 }

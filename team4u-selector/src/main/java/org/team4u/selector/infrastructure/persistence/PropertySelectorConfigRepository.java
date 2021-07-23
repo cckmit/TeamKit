@@ -10,6 +10,9 @@ import org.team4u.selector.domain.selector.SelectorConfigRepository;
  * 基于配置的选择器资源库
  *
  * @author jay.wu
+ * @see JsonSelectorConfigRepository
+ * @see org.team4u.base.config.PropConfigService
+ * @deprecated Use JsonSelectorConfigRepository instead
  */
 public class PropertySelectorConfigRepository implements SelectorConfigRepository {
 
