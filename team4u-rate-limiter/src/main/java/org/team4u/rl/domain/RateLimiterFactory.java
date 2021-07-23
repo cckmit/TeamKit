@@ -10,8 +10,8 @@ public interface RateLimiterFactory {
     /**
      * 创建限流器
      *
-     * @param rule 规则
+     * @param config 规则
      * @return 限流器
      */
-    RateLimiter create(RateLimiterConfig.Rule rule);
+    RateLimiter create(RateLimiterConfig config);
 }

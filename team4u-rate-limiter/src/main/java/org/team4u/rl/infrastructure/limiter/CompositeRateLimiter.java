@@ -1,5 +1,6 @@
 package org.team4u.rl.infrastructure.limiter;
 
+import cn.hutool.core.collection.CollUtil;
 import org.team4u.rl.domain.RateLimiter;
 import org.team4u.rl.domain.RateLimiterConfig;
 import org.team4u.rl.domain.RateLimiterFactory;
@@ -62,6 +63,11 @@ public class CompositeRateLimiter implements RateLimiter {
                 .allMatch(it -> it.canAcquire(key));
     }
 
+    @Override
+    public RateLimiterConfig config() {
+        return CollUtil.getFirst(limiters).config();
+    }
+
     public static class Factory implements RateLimiterFactory {
 
         private final RateLimiterFactory[] factories;
@@ -71,9 +77,9 @@ public class CompositeRateLimiter implements RateLimiter {
         }
 
         @Override
-        public RateLimiter create(RateLimiterConfig.Rule rule) {
+        public RateLimiter create(RateLimiterConfig config) {
             return new CompositeRateLimiter(Arrays.stream(factories)
-                    .map(it -> it.create(rule))
+                    .map(it -> it.create(config))
                     .collect(Collectors.toList()));
         }
     }

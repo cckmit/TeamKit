@@ -16,9 +16,9 @@ import java.util.List;
 public class HistoryLogsLimiter implements RateLimiter {
 
     private static final ThreadLocal<List<Long>> DATASOURCE = new ThreadLocal<>();
-    private final RateLimiterConfig.Rule config;
+    private final RateLimiterConfig config;
 
-    public HistoryLogsLimiter(RateLimiterConfig.Rule config) {
+    public HistoryLogsLimiter(RateLimiterConfig config) {
         this.config = config;
     }
 
@@ -76,10 +76,15 @@ public class HistoryLogsLimiter implements RateLimiter {
         return countTryAcquireTimes(key) < config.getThreshold();
     }
 
+    @Override
+    public RateLimiterConfig config() {
+        return config;
+    }
+
     public static class Factory implements RateLimiterFactory {
         @Override
-        public RateLimiter create(RateLimiterConfig.Rule rule) {
-            return new HistoryLogsLimiter(rule);
+        public RateLimiter create(RateLimiterConfig config) {
+            return new HistoryLogsLimiter(config);
         }
     }
 }

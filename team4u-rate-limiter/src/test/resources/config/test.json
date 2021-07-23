@@ -1,9 +1,5 @@
 {
-  "rules": [
-    {
-      "type": "test",
-      "expirationMillis": 200,
-      "threshold": 1
-    }
-  ]
+  "type": "test",
+  "expirationMillis": 200,
+  "threshold": 1
 }

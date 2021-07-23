@@ -54,15 +54,12 @@ public abstract class AbstractRateLimiterAppServiceTest {
 
     private RateLimiterAppService rateLimiterAppService() {
         return new RateLimiterAppService(
-                new RateLimiterAppService.LimitersRefresher.Config()
-                        .setConfigId("config/test")
-                        .setRefreshConfigIntervalMillis(50),
                 newRateLimiterFactory(),
                 rateLimitConfigRepository()
         );
     }
 
     protected RateLimitConfigRepository rateLimitConfigRepository() {
-        return new JsonRateLimitConfigRepository(new LocalJsonConfigService());
+        return new JsonRateLimitConfigRepository(new LocalJsonConfigService("config/"));
     }
 }

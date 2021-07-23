@@ -1,8 +1,6 @@
 package org.team4u.base.config;
 
-import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.log.Log;
 import org.team4u.base.util.PathUtil;
 
@@ -15,20 +13,27 @@ public class LocalJsonConfigService extends ResourceJsonConfigService {
 
     private final Log log = Log.get();
 
+    private final String path;
+
+    public LocalJsonConfigService() {
+        this("");
+    }
+
+    public LocalJsonConfigService(String path) {
+        this.path = path;
+    }
+
     @Override
     public String get(String key) {
         try {
-            return FileUtil.readUtf8String(PathUtil.runningPath(key + ".json"));
+            return FileUtil.readUtf8String(PathUtil.runningPath(path + key + ".json"));
         } catch (Exception e) {
             log.warn(e.getMessage());
             return null;
         }
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public <T> T get(String key, T defaultValue) {
-        T value = Convert.convert((Class<T>) defaultValue.getClass(), get(key));
-        return ObjectUtil.defaultIfNull(value, defaultValue);
+    public String getPath() {
+        return path;
     }
 }

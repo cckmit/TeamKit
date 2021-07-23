@@ -21,10 +21,10 @@ public class RedisCountRateLimiter implements RateLimiter {
 
     private final Log log = LogFactory.get();
 
-    private final RateLimiterConfig.Rule config;
+    private final RateLimiterConfig config;
     private final RedisTemplate<String, String> redisTemplate;
 
-    public RedisCountRateLimiter(RateLimiterConfig.Rule config, RedisTemplate<String, String> redisTemplate) {
+    public RedisCountRateLimiter(RateLimiterConfig config, RedisTemplate<String, String> redisTemplate) {
         this.config = config;
         this.redisTemplate = redisTemplate;
     }
@@ -88,6 +88,11 @@ public class RedisCountRateLimiter implements RateLimiter {
         return countTryAcquireTimes(key) < config.getThreshold();
     }
 
+    @Override
+    public RateLimiterConfig config() {
+        return config;
+    }
+
     public static class Factory implements RateLimiterFactory {
 
         private final RedisTemplate<String, String> redisTemplate;
@@ -97,8 +102,8 @@ public class RedisCountRateLimiter implements RateLimiter {
         }
 
         @Override
-        public RateLimiter create(RateLimiterConfig.Rule rule) {
-            return new RedisCountRateLimiter(rule, redisTemplate);
+        public RateLimiter create(RateLimiterConfig config) {
+            return new RedisCountRateLimiter(config, redisTemplate);
         }
     }
 }

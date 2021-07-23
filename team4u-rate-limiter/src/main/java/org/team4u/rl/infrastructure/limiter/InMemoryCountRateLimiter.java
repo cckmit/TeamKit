@@ -15,10 +15,10 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class InMemoryCountRateLimiter implements RateLimiter {
 
-    private final RateLimiterConfig.Rule config;
+    private final RateLimiterConfig config;
     private final Cache<String, AtomicLong> counters;
 
-    public InMemoryCountRateLimiter(RateLimiterConfig.Rule config) {
+    public InMemoryCountRateLimiter(RateLimiterConfig config) {
         this.config = config;
         this.counters = new TimedCache<>(config.getExpirationMillis());
     }
@@ -54,11 +54,16 @@ public class InMemoryCountRateLimiter implements RateLimiter {
         return countTryAcquireTimes(key) < config.getThreshold();
     }
 
+    @Override
+    public RateLimiterConfig config() {
+        return config;
+    }
+
     public static class Factory implements RateLimiterFactory {
 
         @Override
-        public RateLimiter create(RateLimiterConfig.Rule rule) {
-            return new InMemoryCountRateLimiter(rule);
+        public RateLimiter create(RateLimiterConfig config) {
+            return new InMemoryCountRateLimiter(config);
         }
     }
 }

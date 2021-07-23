@@ -30,4 +30,9 @@ public interface RateLimiter {
      * @return 是否可以访问
      */
     boolean canAcquire(String key);
+
+    /**
+     * 当前配置
+     */
+    RateLimiterConfig config();
 }
