@@ -22,6 +22,10 @@ public interface ConfigService {
      */
     @SuppressWarnings("unchecked")
     default <T> T get(String key, T defaultValue) {
+        if (defaultValue == null) {
+            return (T) get(key);
+        }
+
         T value = Convert.convert((Class<T>) defaultValue.getClass(), get(key));
         return ObjectUtil.defaultIfNull(value, defaultValue);
     }
