@@ -131,12 +131,13 @@ public class SelectorAppServiceTest {
     @Test
     public void modProbabilitySelect() {
         SelectorAppService s = createService("config/modProbabilityConfig.json");
+        checkMatchAndNoneCount(s, 0, 100, 0, 100, 0);
         checkMatchAndNoneCount(s, 1, 100, 100, 0, 0);
         checkMatchAndNoneCount(s, 2, 100, 0, 100, 0);
     }
 
     private void checkMatchAndNoneCount(SelectorAppService s,
-                                        int cnd,
+                                        int binding,
                                         int repeatTimes,
                                         int expectedMatchCount,
                                         int expectedNoneCount,
@@ -145,7 +146,7 @@ public class SelectorAppServiceTest {
         int b = 0;
 
         for (int i = 0; i < repeatTimes; i++) {
-            switch (s.select("test", new SingleValueBinding(cnd))) {
+            switch (s.select("test", new SingleValueBinding(binding))) {
                 case ProbabilitySelector.MATCH: {
                     a++;
                     break;
