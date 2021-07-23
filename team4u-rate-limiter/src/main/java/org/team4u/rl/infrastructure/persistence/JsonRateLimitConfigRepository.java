@@ -5,6 +5,11 @@ import org.team4u.base.config.ConfigService;
 import org.team4u.rl.domain.RateLimitConfigRepository;
 import org.team4u.rl.domain.RateLimiterConfig;
 
+/**
+ * 基于json的配置资源库
+ *
+ * @author jay.wu
+ */
 public class JsonRateLimitConfigRepository implements RateLimitConfigRepository {
 
     private final ConfigService configService;
