@@ -1,6 +1,7 @@
 package org.team4u.base.util;
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.StrUtil;
 
 import java.io.File;
 
@@ -29,5 +30,13 @@ public class PathUtil {
         }
 
         return result + File.separatorChar + path;
+    }
+
+    public static String standardizedPrefix(String prefix, String joiner) {
+        if (StrUtil.isBlank(prefix)) {
+            return "";
+        } else {
+            return prefix.endsWith(joiner) ? prefix.substring(0, prefix.length() - 1) : prefix;
+        }
     }
 }

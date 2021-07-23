@@ -60,6 +60,6 @@ public abstract class AbstractRateLimiterAppServiceTest {
     }
 
     protected RateLimitConfigRepository rateLimitConfigRepository() {
-        return new JsonRateLimitConfigRepository(new LocalJsonConfigService("config/"));
+        return new JsonRateLimitConfigRepository(new LocalJsonConfigService("config"));
     }
 }
