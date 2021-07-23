@@ -1,42 +1,41 @@
 package org.team4u.base.lang;
 
-import cn.hutool.core.lang.func.Func0;
+import cn.hutool.cache.Cache;
+import cn.hutool.core.lang.func.Func1;
 import org.team4u.base.error.NestedException;
 
 import java.util.Arrays;
 
 /**
- * 可缓存结果的无参数函数
+ * 可缓存结果的单参数函数
+ * <p>
+ * 注意：仅缓存最近一次的请求结果
  *
+ * @param <P> 入参类型
  * @param <R> 返回值类型
  * @author jay.wu
  */
-public abstract class CacheableFunc0<R> implements Func0<R> {
-
-    /**
-     * 未初始化结果值
-     */
-    private static final Object NOT_INIT = new Object();
+public abstract class CacheableFunc1<P, R> implements Func1<P, R> {
 
     private final Class<?>[] cacheForExceptionClasses;
-
     /**
      * 缓存的执行结果
      */
-    private Object result = NOT_INIT;
+    private final Cache<P, R> cache;
     /**
      * 缓存的执行异常
      */
     private Exception e;
 
-    public CacheableFunc0() {
-        this(null);
+    public CacheableFunc1(Cache<P, R> cache) {
+        this(cache, null);
     }
 
     /**
      * @param cacheForExceptionClasses 需要缓存的异常类型，为null时不缓存
      */
-    public CacheableFunc0(Class<?>[] cacheForExceptionClasses) {
+    public CacheableFunc1(Cache<P, R> cache, Class<?>[] cacheForExceptionClasses) {
+        this.cache = cache;
         this.cacheForExceptionClasses = cacheForExceptionClasses;
     }
 
@@ -46,24 +45,25 @@ public abstract class CacheableFunc0<R> implements Func0<R> {
      * @return 函数执行结果，初次执行后将缓存结果，后续再次执行时直接返回缓存结果
      * @throws Exception 自定义异常
      */
-    @SuppressWarnings("unchecked")
-    public R callWithCache() throws Exception {
+    public R callWithCache(P parameter) throws Exception {
         if (e != null) {
             throw e;
         }
 
-        if (result != NOT_INIT) {
-            return (R) result;
+        // 入参相同，且已有结果，直接返回
+        if (cache.containsKey(parameter)) {
+            return cache.get(parameter);
         }
 
         synchronized (this) {
-            if (result != NOT_INIT) {
-                return (R) result;
+            if (cache.containsKey(parameter)) {
+                return cache.get(parameter);
             }
 
             try {
-                result = call();
-                return (R) result;
+                R result = call(parameter);
+                cache.put(parameter, result);
+                return result;
             } catch (Exception e) {
                 if (canCacheForError(e)) {
                     this.e = e;
@@ -75,9 +75,9 @@ public abstract class CacheableFunc0<R> implements Func0<R> {
     }
 
     @Override
-    public R callWithRuntimeException() {
+    public R callWithRuntimeException(P parameter) {
         try {
-            return call();
+            return call(parameter);
         } catch (RuntimeException e) {
             throw e;
         } catch (Exception e) {
@@ -90,9 +90,9 @@ public abstract class CacheableFunc0<R> implements Func0<R> {
      *
      * @return 函数执行结果，初次执行后将缓存结果，后续再次执行时直接返回缓存结果
      */
-    public R callWithCacheAndRuntimeException() {
+    public R callWithCacheAndRuntimeException(P parameter) {
         try {
-            return callWithCache();
+            return callWithCache(parameter);
         } catch (RuntimeException e) {
             throw e;
         } catch (Exception e) {
@@ -104,7 +104,7 @@ public abstract class CacheableFunc0<R> implements Func0<R> {
      * 重置缓存结果
      */
     public void reset() {
-        result = NOT_INIT;
+        cache.clear();
         e = null;
     }
 

@@ -20,7 +20,7 @@ public class PropConfigService implements ConfigService {
     }
 
     public PropConfigService(String prefix) {
-        this.prefix = PathUtil.standardizedPrefix(".", prefix);
+        this.prefix = PathUtil.standardizedPrefix(prefix, ".");
     }
 
     @Override

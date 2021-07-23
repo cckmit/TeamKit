@@ -1,8 +1,10 @@
 package org.team4u.selector.infrastructure.persistence;
 
+import cn.hutool.cache.CacheUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import org.team4u.base.config.ConfigService;
+import org.team4u.base.lang.CacheableFunc1;
 import org.team4u.selector.domain.selector.SelectorConfig;
 import org.team4u.selector.domain.selector.SelectorConfigRepository;
 
@@ -27,6 +29,11 @@ public class JsonSelectorConfigRepository implements SelectorConfigRepository {
             return null;
         }
 
-        return JSONUtil.toBean(json, SelectorConfig.class);
+        return new CacheableFunc1<String, SelectorConfig>(CacheUtil.newLRUCache(1000)) {
+            @Override
+            public SelectorConfig call(String parameter) {
+                return JSONUtil.toBean(parameter, SelectorConfig.class);
+            }
+        }.callWithCacheAndRuntimeException(json);
     }
 }
