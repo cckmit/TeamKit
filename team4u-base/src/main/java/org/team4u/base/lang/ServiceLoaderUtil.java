@@ -26,6 +26,8 @@ public class ServiceLoaderUtil extends cn.hutool.core.util.ServiceLoaderUtil {
      * @return 可用的服务列表
      */
     public static <T> List<T> loadAvailableList(Class<T> clazz) {
+        LogMessage lm = LogMessage.create(ServiceLoaderUtil.class.getSimpleName(), "loadAvailableList");
+
         Iterator<T> iterator = load(clazz).iterator();
         List<T> result = new ArrayList<>();
 
@@ -33,16 +35,11 @@ public class ServiceLoaderUtil extends cn.hutool.core.util.ServiceLoaderUtil {
             try {
                 result.add(iterator.next());
             } catch (ServiceConfigurationError e) {
-                log.info(LogMessage.create(ServiceLoaderUtil.class.getSimpleName(), "loadAvailableList")
-                        .fail(e.getMessage())
-                        .toString());
+                log.info(lm.fail(e.getMessage()).toString());
             }
         }
 
-        log.info(LogMessage.create(ServiceLoaderUtil.class.getSimpleName(), "loadAvailableList")
-                .success()
-                .append("result", result)
-                .toString());
+        log.info(lm.success().append("result", result).toString());
         return result;
     }
 }
