@@ -32,8 +32,10 @@ public class ServiceLoaderUtil extends cn.hutool.core.util.ServiceLoaderUtil {
         while (iterator.hasNext()) {
             try {
                 result.add(iterator.next());
-            } catch (ServiceConfigurationError ignore) {
-                // ignore
+            } catch (ServiceConfigurationError e) {
+                log.info(LogMessage.create(ServiceLoaderUtil.class.getSimpleName(), "loadAvailableList")
+                        .fail(e.getMessage())
+                        .toString());
             }
         }
 
