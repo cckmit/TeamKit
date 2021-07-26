@@ -1,8 +1,8 @@
 package org.team4u.ddd.notification;
 
-import org.team4u.ddd.domain.model.DomainEvent;
-import org.team4u.ddd.infrastructure.serializer.FastJsonSerializer;
 import org.junit.Test;
+import org.team4u.base.serializer.FastJsonSerializer;
+import org.team4u.ddd.domain.model.DomainEvent;
 
 import static org.junit.Assert.assertEquals;
 

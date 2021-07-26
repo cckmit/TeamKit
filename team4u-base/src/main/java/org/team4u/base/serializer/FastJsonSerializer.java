@@ -1,15 +1,20 @@
-package org.team4u.ddd.infrastructure.serializer;
+package org.team4u.base.serializer;
 
-import cn.hutool.core.lang.TypeReference;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
-import org.team4u.ddd.serializer.Serializer;
 
+import java.lang.reflect.Type;
+
+/**
+ * 基于fastjson的Json序列化器
+ *
+ * @author jay.wu
+ */
 public class FastJsonSerializer implements Serializer {
 
     private final static Serializer instance = new FastJsonSerializer();
 
-    private SerializerFeature[] features;
+    private final SerializerFeature[] features;
 
     public FastJsonSerializer(SerializerFeature... features) {
         this.features = features;
@@ -30,7 +35,7 @@ public class FastJsonSerializer implements Serializer {
     }
 
     @Override
-    public <T> T deserialize(String serialization, TypeReference<T> typeReference) {
-        return JSON.parseObject(serialization, typeReference.getType());
+    public <T> T deserialize(String serialization, Type type) {
+        return JSON.parseObject(serialization, type);
     }
 }

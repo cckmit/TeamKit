@@ -1,8 +1,9 @@
 package org.team4u.ddd.notification;
 
-import cn.hutool.core.lang.TypeReference;
-import org.team4u.ddd.infrastructure.serializer.FastJsonSerializer;
-import org.team4u.ddd.serializer.Serializer;
+import org.team4u.base.serializer.FastJsonSerializer;
+import org.team4u.base.serializer.Serializer;
+
+import java.lang.reflect.Type;
 
 public class NotificationSerializer implements Serializer {
 
@@ -24,7 +25,7 @@ public class NotificationSerializer implements Serializer {
     }
 
     @Override
-    public <T> T deserialize(String serialization, TypeReference<T> typeReference) {
-        return FastJsonSerializer.instance().deserialize(serialization, typeReference);
+    public <T> T deserialize(String serialization, Type type) {
+        return FastJsonSerializer.instance().deserialize(serialization, type);
     }
 }
