@@ -8,12 +8,13 @@ import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.TypeUtil;
-import cn.hutool.json.JSONUtil;
 import cn.hutool.log.Log;
 import net.bytebuddy.matcher.ElementMatchers;
 import org.team4u.base.aop.MethodInterceptor;
 import org.team4u.base.aop.SimpleAop;
 import org.team4u.base.log.LogMessage;
+import org.team4u.base.serializer.HutoolJsonCacheSerializer;
+import org.team4u.base.serializer.HutoolJsonSerializer;
 import org.team4u.config.domain.SimpleConfig;
 import org.team4u.config.domain.SimpleConfigConverter;
 import org.team4u.config.domain.SimpleConfigRepository;
@@ -53,7 +54,7 @@ public class ProxySimpleConfigConverter implements SimpleConfigConverter {
         if (ClassUtil.isSimpleTypeOrArray(TypeUtil.getClass(toType))) {
             return Convert.convert(toType, value);
         } else {
-            return JSONUtil.toBean(value, toType, false);
+            return HutoolJsonCacheSerializer.instance().deserialize(value, toType);
         }
     }
 
@@ -152,7 +153,7 @@ public class ProxySimpleConfigConverter implements SimpleConfigConverter {
             }
 
             // 复杂类型只支持json格式
-            return JSONUtil.toBean(valueString, toValueType, false);
+            return HutoolJsonSerializer.instance().deserialize(valueString, toValueType);
         }
 
         private Object toValue(String key, Type valueType) {
