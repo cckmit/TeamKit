@@ -2,13 +2,12 @@ package org.team4u.base.filter;
 
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
+import org.team4u.base.lang.ServiceLoaderUtil;
 import org.team4u.base.log.LogMessage;
 import org.team4u.base.log.LogMessages;
 import org.team4u.base.log.LogService;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.ServiceLoader;
 import java.util.stream.Collectors;
 
 /**
@@ -26,14 +25,7 @@ public class FilterService<C> {
     }
 
     public FilterService(Class<? extends Filter<C>> filterClass) {
-        ServiceLoader<? extends Filter<C>> serviceLoader = ServiceLoader.load(filterClass);
-
-        List<Filter<C>> filters = new ArrayList<>();
-        for (Filter<C> filter : serviceLoader) {
-            filters.add(filter);
-        }
-
-        buildFilterChainByFilters(filters);
+        buildFilterChainByFilters(ServiceLoaderUtil.loadAvailableList(filterClass));
     }
 
     public FilterService(List<? extends Filter<C>> filters) {

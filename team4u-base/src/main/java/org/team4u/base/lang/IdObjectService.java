@@ -27,10 +27,8 @@ public abstract class IdObjectService<K, V extends IdObject<K>> {
     }
 
     public IdObjectService(Class<V> valueClass) {
-        ServiceLoader<V> serviceLoader = ServiceLoader.load(valueClass);
-
-        for (V handler : serviceLoader) {
-            saveIdObject(handler);
+        for (V v : ServiceLoaderUtil.loadAvailableList(valueClass)) {
+            saveIdObject(v);
         }
     }
 

@@ -2,7 +2,6 @@ package org.team4u.base.id;
 
 
 import cn.hutool.core.lang.Snowflake;
-import cn.hutool.core.util.IdUtil;
 
 /**
  * 基于雪花算法的主键生成器
@@ -25,7 +24,7 @@ public class SnowflakeIdentityFactory implements NumberIdentityFactory {
     public SnowflakeIdentityFactory(long workerId, long dataCenterId) {
         this.workerId = workerId;
         this.dataCenterId = dataCenterId;
-        snowflake = IdUtil.createSnowflake(workerId, dataCenterId);
+        snowflake = new Snowflake(workerId, dataCenterId);
     }
 
     @Override

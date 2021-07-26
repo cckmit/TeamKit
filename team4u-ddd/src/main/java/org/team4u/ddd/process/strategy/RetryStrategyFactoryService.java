@@ -2,8 +2,7 @@ package org.team4u.ddd.process.strategy;
 
 
 import org.team4u.base.lang.IdObjectService;
-
-import java.util.ServiceLoader;
+import org.team4u.base.lang.ServiceLoaderUtil;
 
 /**
  * 重试策略工厂服务
@@ -14,9 +13,7 @@ public class RetryStrategyFactoryService extends IdObjectService<String, RetrySt
 
     @SuppressWarnings("rawtypes")
     public RetryStrategyFactoryService() {
-        ServiceLoader<RetryStrategyFactory> serviceLoader = ServiceLoader.load(RetryStrategyFactory.class);
-
-        for (RetryStrategyFactory selectorFactory : serviceLoader) {
+        for (RetryStrategyFactory selectorFactory : ServiceLoaderUtil.loadAvailableList(RetryStrategyFactory.class)) {
             saveIdObject(selectorFactory);
         }
     }

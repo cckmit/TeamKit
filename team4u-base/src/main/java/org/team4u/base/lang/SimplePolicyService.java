@@ -6,7 +6,10 @@ import cn.hutool.core.util.ReflectUtil;
 import org.team4u.base.error.SystemDataNotExistException;
 
 import java.lang.annotation.Annotation;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -25,9 +28,7 @@ public abstract class SimplePolicyService<C, P extends SimplePolicy<C>> {
     }
 
     public SimplePolicyService(Class<P> valueClass) {
-        ServiceLoader<P> serviceLoader = ServiceLoader.load(valueClass);
-
-        for (P handler : serviceLoader) {
+        for (P handler : ServiceLoaderUtil.loadAvailableList(valueClass)) {
             register(handler);
         }
     }
