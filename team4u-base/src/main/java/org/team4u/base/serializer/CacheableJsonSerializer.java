@@ -2,7 +2,6 @@ package org.team4u.base.serializer;
 
 import cn.hutool.cache.Cache;
 import cn.hutool.core.lang.Pair;
-import cn.hutool.core.util.StrUtil;
 import org.team4u.base.lang.CacheableFunc1;
 
 import java.lang.reflect.Type;
@@ -54,10 +53,6 @@ public class CacheableJsonSerializer implements Serializer {
 
         @Override
         public String call(Object parameter) throws Exception {
-            if (parameter == null) {
-                return null;
-            }
-
             return serializer.serialize(parameter);
         }
     }
@@ -70,11 +65,6 @@ public class CacheableJsonSerializer implements Serializer {
 
         @Override
         public Object call(Pair<Class<?>, String> parameter) throws Exception {
-            if (StrUtil.isEmpty(parameter.getValue())) {
-                return null;
-            }
-
-
             return serializer.deserialize(parameter.getValue(), parameter.getKey());
         }
     }
@@ -87,10 +77,6 @@ public class CacheableJsonSerializer implements Serializer {
 
         @Override
         public Object call(Pair<Type, String> parameter) throws Exception {
-            if (StrUtil.isEmpty(parameter.getValue())) {
-                return null;
-            }
-
             return serializer.deserialize(parameter.getValue(), parameter.getKey());
         }
     }

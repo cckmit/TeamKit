@@ -5,31 +5,35 @@ import cn.hutool.core.lang.TypeReference;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class SimpleCacheableJsonSerializerTest {
+import java.util.List;
+
+public abstract class AbstractCacheSerializerTest {
 
     @Test
     public void serialize() {
         Dict data = Dict.create().set("a", "1");
-        String a = HutoolJsonCacheSerializer.instance().serialize(data);
-        String b = HutoolJsonCacheSerializer.instance().serialize(data);
+        String a = serializer().serialize(data);
+        String b = serializer().serialize(data);
         Assert.assertEquals(a, b);
     }
 
     @Test
     public void classDeserialize() {
         String json = "{ 'a' : 1 }";
-        Dict a = HutoolJsonCacheSerializer.instance().deserialize(json, Dict.class);
-        Dict b = HutoolJsonCacheSerializer.instance().deserialize(json, Dict.class);
+        Dict a = serializer().deserialize(json, Dict.class);
+        Dict b = serializer().deserialize(json, Dict.class);
         Assert.assertEquals(a, b);
     }
 
     @Test
     public void typeDeserialize() {
         String json = "[{ 'a' : 1 }]";
-        Dict a = HutoolJsonCacheSerializer.instance().deserialize(json, new TypeReference<Dict>() {
+        List<Dict> a = serializer().deserialize(json, new TypeReference<List<Dict>>() {
         }.getType());
-        Dict b = HutoolJsonCacheSerializer.instance().deserialize(json, new TypeReference<Dict>() {
+        List<Dict> b = serializer().deserialize(json, new TypeReference<List<Dict>>() {
         }.getType());
         Assert.assertEquals(a, b);
     }
+
+    protected abstract CacheableJsonSerializer serializer();
 }
