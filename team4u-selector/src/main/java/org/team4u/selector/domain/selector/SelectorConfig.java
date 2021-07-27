@@ -1,6 +1,7 @@
 package org.team4u.selector.domain.selector;
 
 import cn.hutool.core.lang.Assert;
+import org.team4u.base.config.IdentifiedConfig;
 import org.team4u.selector.domain.interceptor.InterceptorConfig;
 
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.List;
  *
  * @author jay.wu
  */
-public class SelectorConfig extends InterceptorConfig {
+public class SelectorConfig extends IdentifiedConfig {
 
     /**
      * 选择器类型
