@@ -13,5 +13,5 @@ public interface ProcessEmulatorScriptRepository {
      * @param scriptId 脚本标识
      * @return 模拟器脚本
      */
-    ProcessEmulatorScript scriptOf(String scriptId);
+    ProcessEmulatorScript configOfId(String scriptId);
 }

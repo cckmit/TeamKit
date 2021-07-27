@@ -1,13 +1,10 @@
 package org.team4u.selector;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.json.JSONUtil;
 import org.junit.Assert;
 import org.junit.Test;
+import org.team4u.base.config.LocalJsonConfigService;
 import org.team4u.selector.application.SelectorAppService;
 import org.team4u.selector.domain.selector.Selector;
-import org.team4u.selector.domain.selector.SelectorConfig;
 import org.team4u.selector.domain.selector.SelectorValueHandler;
 import org.team4u.selector.domain.selector.SelectorValueService;
 import org.team4u.selector.domain.selector.binding.ListBinding;
@@ -16,7 +13,7 @@ import org.team4u.selector.domain.selector.binding.SingleValueBinding;
 import org.team4u.selector.domain.selector.expression.ExpressionSelectorFactory;
 import org.team4u.selector.domain.selector.map.DynamicMapSelector;
 import org.team4u.selector.domain.selector.probability.ProbabilitySelector;
-import org.team4u.selector.infrastructure.persistence.InMemorySelectorConfigRepository;
+import org.team4u.selector.infrastructure.persistence.JsonSelectorConfigRepository;
 import org.team4u.template.TemplateFunctionService;
 import org.team4u.template.infrastructure.BeetlTemplateEngine;
 
@@ -26,6 +23,8 @@ import org.team4u.template.infrastructure.BeetlTemplateEngine;
  * @author jay.wu
  */
 public class SelectorAppServiceTest {
+
+    private final SelectorAppService s = createService();
 
     @Test
     public void dynamicMap() {
@@ -42,48 +41,45 @@ public class SelectorAppServiceTest {
             }
         });
 
-        SelectorAppService s = createService("config/dynamicMap.json");
+
         checkDynamicMap(s, valueService, "a", "x");
         checkDynamicMap(s, valueService, "b", "y");
         checkDynamicMap(s, valueService, "c", "z");
     }
 
-    private void checkDynamicMap(SelectorAppService s, SelectorValueService valueService,
+    private void checkDynamicMap(SelectorAppService s,
+                                 SelectorValueService valueService,
                                  String expected, String key) {
         Assert.assertEquals(
                 expected,
-                s.select("test", new DynamicMapSelector.Binding(key, valueService))
+                s.select("dynamicMap", new DynamicMapSelector.Binding(key, valueService))
         );
     }
 
     @Test
     public void map() {
-        SelectorAppService s = createService("config/map.json");
-        Assert.assertEquals("1", s.select("test", new SingleValueBinding("x")));
-        Assert.assertEquals("2", s.select("test", new SingleValueBinding("y")));
-        Assert.assertEquals(Selector.NONE, s.select("test", new SingleValueBinding("z")));
+        Assert.assertEquals("1", s.select("map", new SingleValueBinding("x")));
+        Assert.assertEquals("2", s.select("map", new SingleValueBinding("y")));
+        Assert.assertEquals(Selector.NONE, s.select("map", new SingleValueBinding("z")));
     }
 
     @Test
     public void whitelist() {
-        SelectorAppService s = createService("config/whitelistConfig.json");
-        Assert.assertTrue(s.match("test", new SimpleMapBinding().set("a", 1)));
-        Assert.assertFalse(s.match("test", new SimpleMapBinding().set("a", 2)));
-        Assert.assertTrue(s.match("test", new SimpleMapBinding().set("b", 3)));
-        Assert.assertTrue(s.match("test", new SimpleMapBinding().set("d", 1)));
-        Assert.assertFalse(s.match("test", new SimpleMapBinding().set("d", 2)));
+        Assert.assertTrue(s.match("whitelistConfig", new SimpleMapBinding().set("a", 1)));
+        Assert.assertFalse(s.match("whitelistConfig", new SimpleMapBinding().set("a", 2)));
+        Assert.assertTrue(s.match("whitelistConfig", new SimpleMapBinding().set("b", 3)));
+        Assert.assertTrue(s.match("whitelistConfig", new SimpleMapBinding().set("d", 1)));
+        Assert.assertFalse(s.match("whitelistConfig", new SimpleMapBinding().set("d", 2)));
     }
 
     @Test
     public void weightSelect() {
-        SelectorAppService s = createService("config/weightConfig.json");
-
         int a = 0;
         int b = 0;
         int c = 0;
 
         for (int i = 0; i < 100; i++) {
-            switch (s.select("test", new ListBinding().addValue("a").addValue("b"))) {
+            switch (s.select("weightConfig", new ListBinding().addValue("a").addValue("b"))) {
                 case "a": {
                     a++;
                     break;
@@ -107,12 +103,10 @@ public class SelectorAppServiceTest {
 
     @Test
     public void zeroWeightSelect() {
-        SelectorAppService s = createService("config/weightConfig.json");
-
         int none = 0;
 
         for (int i = 0; i < 100; i++) {
-            if (Selector.NONE.equals(s.select("test", new ListBinding().addValue("c")))) {
+            if (Selector.NONE.equals(s.select("weightConfig", new ListBinding().addValue("c")))) {
                 none++;
             }
         }
@@ -121,22 +115,20 @@ public class SelectorAppServiceTest {
 
     @Test
     public void probabilitySelect() {
-        SelectorAppService s = createService("config/probabilityConfig.json");
-        checkMatchAndNoneCount(s, 1, 100, 100, 0, 0);
-        checkMatchAndNoneCount(s, 2, 100, 100, 0, 0);
-        checkMatchAndNoneCount(s, 3, 100, 0, 100, 0);
-        checkMatchAndNoneCount(s, 4, 100, 1, 99, 5);
+        checkMatchAndNoneCount("probabilityConfig", 1, 100, 100, 0, 0);
+        checkMatchAndNoneCount("probabilityConfig", 2, 100, 100, 0, 0);
+        checkMatchAndNoneCount("probabilityConfig", 3, 100, 0, 100, 0);
+        checkMatchAndNoneCount("probabilityConfig", 4, 100, 1, 99, 5);
     }
 
     @Test
     public void modProbabilitySelect() {
-        SelectorAppService s = createService("config/modProbabilityConfig.json");
-        checkMatchAndNoneCount(s, 0, 100, 0, 100, 0);
-        checkMatchAndNoneCount(s, 1, 100, 100, 0, 0);
-        checkMatchAndNoneCount(s, 2, 100, 0, 100, 0);
+        checkMatchAndNoneCount("modProbabilityConfig", 0, 100, 0, 100, 0);
+        checkMatchAndNoneCount("modProbabilityConfig", 1, 100, 100, 0, 0);
+        checkMatchAndNoneCount("modProbabilityConfig", 2, 100, 0, 100, 0);
     }
 
-    private void checkMatchAndNoneCount(SelectorAppService s,
+    private void checkMatchAndNoneCount(String configId,
                                         int binding,
                                         int repeatTimes,
                                         int expectedMatchCount,
@@ -146,7 +138,7 @@ public class SelectorAppServiceTest {
         int b = 0;
 
         for (int i = 0; i < repeatTimes; i++) {
-            switch (s.select("test", new SingleValueBinding(binding))) {
+            switch (s.select(configId, new SingleValueBinding(binding))) {
                 case ProbabilitySelector.MATCH: {
                     a++;
                     break;
@@ -171,7 +163,7 @@ public class SelectorAppServiceTest {
 
     @Test
     public void expressionSelect() {
-        SelectorAppService s = createService("config/expressionConfig.json")
+        SelectorAppService s = createService()
                 .registerSelectorFactory(
                         new ExpressionSelectorFactory(
                                 new BeetlTemplateEngine(new TemplateFunctionService())
@@ -180,17 +172,15 @@ public class SelectorAppServiceTest {
 
         SimpleMapBinding binding = new SimpleMapBinding();
         binding.set("a", 1);
-        String result = s.select("test", binding);
+        String result = s.select("expressionConfig", binding);
         Assert.assertEquals("x", result);
 
         binding.set("a", 2);
-        result = s.select("test", binding);
+        result = s.select("expressionConfig", binding);
         Assert.assertEquals("y", result);
     }
 
-    private SelectorAppService createService(String configPath) {
-        SelectorConfig item = JSONUtil.toBean(FileUtil.readUtf8String(configPath), SelectorConfig.class);
-        InMemorySelectorConfigRepository repository = new InMemorySelectorConfigRepository(CollUtil.newArrayList(item));
-        return new SelectorAppService(repository);
+    private SelectorAppService createService() {
+        return new SelectorAppService(new JsonSelectorConfigRepository(new LocalJsonConfigService("config")));
     }
 }

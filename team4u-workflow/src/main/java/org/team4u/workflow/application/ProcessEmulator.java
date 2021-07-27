@@ -110,7 +110,7 @@ public class ProcessEmulator {
     }
 
     private ProcessEmulatorScript scriptOf(String scriptId) {
-        ProcessEmulatorScript script = processEmulatorScriptRepository.scriptOf(scriptId);
+        ProcessEmulatorScript script = processEmulatorScriptRepository.configOfId(scriptId);
 
         if (script == null) {
             throw new ProcessEmulatorScriptNotExistException(scriptId);

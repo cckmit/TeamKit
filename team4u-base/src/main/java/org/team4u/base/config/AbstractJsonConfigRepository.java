@@ -1,8 +1,11 @@
 package org.team4u.base.config;
 
+import cn.hutool.cache.CacheUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.StrUtil;
-import org.team4u.base.serializer.HutoolJsonCacheSerializer;
+import org.team4u.base.serializer.CacheableJsonSerializer;
+import org.team4u.base.serializer.HutoolJsonSerializer;
+import org.team4u.base.serializer.Serializer;
 
 /**
  * 基于json的抽象配置资源库
@@ -12,6 +15,10 @@ import org.team4u.base.serializer.HutoolJsonCacheSerializer;
 public abstract class AbstractJsonConfigRepository<T> {
 
     private final ConfigService configService;
+
+    private final CacheableJsonSerializer cacheSerializer = new CacheableJsonSerializer(
+            serializer(), CacheUtil.newLRUCache(1000)
+    );
 
     @SuppressWarnings("unchecked")
     private final Class<T> configClass = (Class<T>) ClassUtil.getTypeArgument(this.getClass());
@@ -46,6 +53,10 @@ public abstract class AbstractJsonConfigRepository<T> {
     }
 
     protected T deserialize(String configString, Class<T> configClass) {
-        return HutoolJsonCacheSerializer.instance().deserialize(configString, configClass);
+        return cacheSerializer.deserialize(configString, configClass);
+    }
+
+    protected Serializer serializer() {
+        return HutoolJsonSerializer.instance();
     }
 }

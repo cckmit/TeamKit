@@ -1,6 +1,6 @@
 package org.team4u.workflow.domain.emulator;
 
-import org.team4u.ddd.domain.model.AggregateRoot;
+import org.team4u.base.config.IdentifiedConfig;
 
 import java.util.List;
 
@@ -9,21 +9,11 @@ import java.util.List;
  *
  * @author jay.wu
  */
-public class ProcessEmulatorScript extends AggregateRoot {
-
-    private String scriptId;
+public class ProcessEmulatorScript extends IdentifiedConfig {
 
     private String processDefinitionId;
 
     private List<ProcessEmulatorScriptStep> steps;
-
-    public String getScriptId() {
-        return scriptId;
-    }
-
-    public void setScriptId(String scriptId) {
-        this.scriptId = scriptId;
-    }
 
     public String getProcessDefinitionId() {
         return processDefinitionId;

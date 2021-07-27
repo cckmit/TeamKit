@@ -1,6 +1,6 @@
 package org.team4u.workflow.infrastructure.persistence.emulator;
 
-import com.alibaba.fastjson.JSON;
+import org.team4u.base.config.AbstractJsonConfigRepository;
 import org.team4u.base.config.ConfigService;
 import org.team4u.workflow.domain.emulator.ProcessEmulatorScript;
 import org.team4u.workflow.domain.emulator.ProcessEmulatorScriptRepository;
@@ -10,17 +10,11 @@ import org.team4u.workflow.domain.emulator.ProcessEmulatorScriptRepository;
  *
  * @author jay.wu
  */
-public class JsonProcessEmulatorScriptRepository implements ProcessEmulatorScriptRepository {
-
-    private final ConfigService configService;
+public class JsonProcessEmulatorScriptRepository
+        extends AbstractJsonConfigRepository<ProcessEmulatorScript>
+        implements ProcessEmulatorScriptRepository {
 
     public JsonProcessEmulatorScriptRepository(ConfigService configService) {
-        this.configService = configService;
-    }
-
-    @Override
-    public ProcessEmulatorScript scriptOf(String scriptId) {
-        String json = configService.get(scriptId);
-        return JSON.parseObject(json, ProcessEmulatorScript.class);
+        super(configService);
     }
 }

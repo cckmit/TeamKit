@@ -3,6 +3,7 @@ package org.team4u.command.infrastructure.config;
 import org.team4u.base.config.AbstractJsonConfigRepository;
 import org.team4u.base.config.ConfigService;
 import org.team4u.base.serializer.FastJsonCacheSerializer;
+import org.team4u.base.serializer.Serializer;
 import org.team4u.command.domain.config.CommandConfig;
 import org.team4u.command.domain.config.CommandConfigRepository;
 
@@ -25,7 +26,7 @@ public class JsonCommandConfigRepository
     }
 
     @Override
-    protected CommandConfig deserialize(String configString, Class<CommandConfig> configClass) {
-        return FastJsonCacheSerializer.instance().deserialize(configString, configClass);
+    protected Serializer serializer() {
+        return FastJsonCacheSerializer.instance();
     }
 }
