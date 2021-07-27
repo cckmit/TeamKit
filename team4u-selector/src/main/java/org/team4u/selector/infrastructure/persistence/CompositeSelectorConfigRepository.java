@@ -26,9 +26,9 @@ public class CompositeSelectorConfigRepository implements SelectorConfigReposito
     }
 
     @Override
-    public SelectorConfig selectorConfigOfId(String id) {
+    public SelectorConfig configOfId(String id) {
         for (SelectorConfigRepository repository : repositories) {
-            SelectorConfig selectorConfig = repository.selectorConfigOfId(id);
+            SelectorConfig selectorConfig = repository.configOfId(id);
             if (selectorConfig != null) {
                 return selectorConfig;
             }

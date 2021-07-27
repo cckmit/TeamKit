@@ -1,23 +1,14 @@
 package org.team4u.rl.domain;
 
+import org.team4u.base.config.IdentifiedConfig;
+
 import java.util.Objects;
 
-public class RateLimiterConfig {
-
-    private String type;
+public class RateLimiterConfig extends IdentifiedConfig {
 
     private long expirationMillis;
 
     private long threshold;
-
-    public String getType() {
-        return type;
-    }
-
-    public RateLimiterConfig setType(String type) {
-        this.type = type;
-        return this;
-    }
 
     public long getExpirationMillis() {
         return expirationMillis;
@@ -44,11 +35,11 @@ public class RateLimiterConfig {
         RateLimiterConfig config = (RateLimiterConfig) o;
         return expirationMillis == config.expirationMillis &&
                 threshold == config.threshold &&
-                type.equals(config.type);
+                getId().equals(config.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(type, expirationMillis, threshold);
+        return Objects.hash(getId(), expirationMillis, threshold);
     }
 }

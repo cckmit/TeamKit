@@ -126,7 +126,7 @@ public class SelectorAppService {
      * 获取选择器配置
      */
     private SelectorConfig selectorConfigOfId(String selectorConfigId) {
-        return selectorConfigRepository.selectorConfigOfId(selectorConfigId);
+        return selectorConfigRepository.configOfId(selectorConfigId);
     }
 
     /**

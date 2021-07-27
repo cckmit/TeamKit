@@ -22,7 +22,6 @@ public class RateLimiterAppServiceTest {
 
     private void checkConfig(int threshold) {
         propConfigService.getProperties().setProperty("test", "{\n" +
-                "  \"type\": \"test\",\n" +
                 "  \"expirationMillis\": 200,\n" +
                 "  \"threshold\": " + threshold + "\n" +
                 "}");

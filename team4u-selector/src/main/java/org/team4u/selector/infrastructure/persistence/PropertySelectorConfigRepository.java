@@ -25,7 +25,7 @@ public class PropertySelectorConfigRepository implements SelectorConfigRepositor
     }
 
     @Override
-    public SelectorConfig selectorConfigOfId(String id) {
+    public SelectorConfig configOfId(String id) {
         String jsonString = configService.get(config.getPropertyPrefix() + id);
         if (StrUtil.isEmpty(jsonString)) {
             return null;

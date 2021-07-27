@@ -148,7 +148,7 @@ public class RateLimiterAppService {
         }
 
         public RateLimiter limiterOf(String limiterType) {
-            RateLimiterConfig config = rateLimitConfigRepository.configOf(limiterType);
+            RateLimiterConfig config = rateLimitConfigRepository.configOfId(limiterType);
             RateLimiter limiter = rateLimiters.get(limiterType);
 
             // 存在限流器，且配置未变化，直接返回

@@ -23,7 +23,7 @@ public class InMemorySelectorConfigRepository implements SelectorConfigRepositor
     }
 
     @Override
-    public SelectorConfig selectorConfigOfId(String id) {
+    public SelectorConfig configOfId(String id) {
         return selectorMap.get(id);
     }
 }

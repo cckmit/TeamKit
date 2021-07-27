@@ -10,5 +10,5 @@ public interface SelectorConfigRepository {
     /**
      * 根据选择器标识获取选择器
      */
-    SelectorConfig selectorConfigOfId(String id);
+    SelectorConfig configOfId(String id);
 }

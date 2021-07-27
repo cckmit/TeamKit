@@ -1,5 +1,4 @@
 {
-  "type": "test",
   "expirationMillis": 200,
   "threshold": 1
 }

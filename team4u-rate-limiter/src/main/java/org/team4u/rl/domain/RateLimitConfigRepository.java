@@ -13,5 +13,5 @@ public interface RateLimitConfigRepository {
      * @param configId 配置标识
      * @return 配置
      */
-    RateLimiterConfig configOf(String configId);
+    RateLimiterConfig configOfId(String configId);
 }
