@@ -16,7 +16,7 @@ public abstract class AbstractJsonConfigRepository<T> {
 
     private final ConfigService configService;
 
-    private final CacheableJsonSerializer cacheSerializer = new CacheableJsonSerializer(
+    private final CacheableJsonSerializer cacheableJsonSerializer = new CacheableJsonSerializer(
             serializer(), CacheUtil.newLRUCache(1000)
     );
 
@@ -53,7 +53,7 @@ public abstract class AbstractJsonConfigRepository<T> {
     }
 
     protected T deserialize(String configString, Class<T> configClass) {
-        return cacheSerializer.deserialize(configString, configClass);
+        return cacheableJsonSerializer.deserialize(configString, configClass);
     }
 
     protected Serializer serializer() {

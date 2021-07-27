@@ -13,30 +13,31 @@ import org.team4u.workflow.domain.definition.ProcessDefinitionRepository;
  */
 public class CacheableProcessDefinitionRepository implements ProcessDefinitionRepository {
 
-    private final CacheFunc cacheFunc;
+    private final CacheWorker cacheWorker;
+
     private final ProcessDefinitionRepository delegate;
 
     public CacheableProcessDefinitionRepository(ProcessDefinitionRepository delegate,
                                                 int timeoutMillis) {
         this.delegate = delegate;
-        this.cacheFunc = new CacheFunc(CacheUtil.newTimedCache(timeoutMillis));
+        this.cacheWorker = new CacheWorker(CacheUtil.newTimedCache(timeoutMillis));
     }
 
     @Override
     public ProcessDefinition domainOf(String domainId) {
-        return cacheFunc.callWithCache(domainId);
+        return cacheWorker.callWithCache(domainId);
     }
 
     @Override
     public void save(ProcessDefinition domain) {
         delegate.save(domain);
         // 保存后及时更新缓存
-        cacheFunc.removeCache(domain.getProcessDefinitionId().toString());
+        cacheWorker.removeCache(domain.getProcessDefinitionId().toString());
     }
 
-    private class CacheFunc extends CacheableFunc1<String, ProcessDefinition> {
+    private class CacheWorker extends CacheableFunc1<String, ProcessDefinition> {
 
-        public CacheFunc(Cache<String, ProcessDefinition> cache) {
+        public CacheWorker(Cache<String, ProcessDefinition> cache) {
             super(cache);
         }
 
