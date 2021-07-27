@@ -1,15 +1,14 @@
 package org.team4u.rl.application;
 
+import cn.hutool.cache.CacheUtil;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
+import org.team4u.base.lang.CacheableFunc1;
 import org.team4u.base.log.LogMessage;
 import org.team4u.rl.domain.RateLimitConfigRepository;
 import org.team4u.rl.domain.RateLimiter;
 import org.team4u.rl.domain.RateLimiterConfig;
 import org.team4u.rl.domain.RateLimiterFactory;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 限流器应用服务
@@ -133,57 +132,33 @@ public class RateLimiterAppService {
         return lm.append("type", type).append("key", key);
     }
 
-    public static class RateLimiters {
+    public static class RateLimiters extends CacheableFunc1<RateLimiterConfig, RateLimiter> {
         private final Log log = LogFactory.get();
 
         private final RateLimiterFactory rateLimiterFactory;
         private final RateLimitConfigRepository rateLimitConfigRepository;
 
-        private final Map<String, RateLimiter> rateLimiters = new ConcurrentHashMap<>();
-
         public RateLimiters(RateLimiterFactory rateLimiterFactory,
                             RateLimitConfigRepository rateLimitConfigRepository) {
+            super(CacheUtil.newLRUCache(1000));
+
             this.rateLimiterFactory = rateLimiterFactory;
             this.rateLimitConfigRepository = rateLimitConfigRepository;
         }
 
         public RateLimiter limiterOf(String limiterType) {
-            RateLimiterConfig config = rateLimitConfigRepository.configOfId(limiterType);
-            RateLimiter limiter = rateLimiters.get(limiterType);
-
-            // 存在限流器，且配置未变化，直接返回
-            if (limiter != null) {
-                if (limiter.config().equals(config)) {
-                    return limiter;
-                }
-
-                log.info(LogMessage.create(this.getClass().getSimpleName(), "limiterOf")
-                        .success()
-                        .append("limiter", limiterType)
-                        .append("hasConfigChange", true)
-                        .toString());
-            }
-
-            synchronized (this) {
-                // 确保不会并发创建
-                if (limiter == null) {
-                    limiter = rateLimiters.get(limiterType);
-                    if (limiter != null) {
-                        return limiter;
-                    }
-                }
-
-                return createRateLimiter(limiterType, config);
-            }
+            return callWithCache(
+                    rateLimitConfigRepository.configOfId(limiterType)
+            );
         }
 
-        private RateLimiter createRateLimiter(String limiterType, RateLimiterConfig config) {
+        @Override
+        public RateLimiter call(RateLimiterConfig config) {
             RateLimiter limiter = rateLimiterFactory.create(config);
-            rateLimiters.put(limiterType, limiter);
 
             log.info(LogMessage.create(this.getClass().getSimpleName(), "createRateLimiter")
                     .success()
-                    .append("limiter", limiterType)
+                    .append("limiter", config.getConfigId())
                     .toString());
 
             return limiter;
