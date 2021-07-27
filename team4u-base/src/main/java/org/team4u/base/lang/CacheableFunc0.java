@@ -26,9 +26,8 @@ public abstract class CacheableFunc0<R> implements Func0<R> {
      * 执行函数并缓存结果
      *
      * @return 函数执行结果，初次执行后将缓存结果，后续再次执行时直接返回缓存结果
-     * @throws Exception 自定义异常
      */
-    public R callWithCache() throws Exception {
+    public R callWithCache() {
         return delegate.callWithCache(this.getClass());
     }
 
@@ -44,6 +43,13 @@ public abstract class CacheableFunc0<R> implements Func0<R> {
      */
     public R callWithCacheAndRuntimeException() {
         return delegate.callWithCacheAndRuntimeException(this.getClass());
+    }
+
+    /**
+     * 删除缓存*
+     */
+    public void removeCache() {
+        delegate.removeCache(this.getClass());
     }
 
     public void reset() {

@@ -31,9 +31,8 @@ public abstract class CacheableFunc1<P, R> implements Func1<P, R> {
      * 执行函数并缓存结果
      *
      * @return 函数执行结果，初次执行后将缓存结果，后续再次执行时直接返回缓存结果
-     * @throws Exception 自定义异常
      */
-    public R callWithCache(P parameter) throws Exception {
+    public R callWithCache(P parameter) {
         // 入参相同，且已有结果，直接返回
         if (cache.containsKey(parameter)) {
             return cache.get(parameter);
@@ -44,7 +43,7 @@ public abstract class CacheableFunc1<P, R> implements Func1<P, R> {
                 return cache.get(parameter);
             }
 
-            R result = call(parameter);
+            R result = callWithRuntimeException(parameter);
             cache.put(parameter, result);
 
             logForCall(parameter);
@@ -85,6 +84,15 @@ public abstract class CacheableFunc1<P, R> implements Func1<P, R> {
         } catch (Exception e) {
             throw new NestedException(e);
         }
+    }
+
+    /**
+     * 删除缓存
+     *
+     * @param parameter 入参
+     */
+    public void removeCache(P parameter) {
+        cache.remove(parameter);
     }
 
     /**
