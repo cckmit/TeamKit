@@ -72,7 +72,7 @@ public abstract class IdObjectService<K, V extends IdObject<K>> {
     private void saveObjects(Collection<Class<?>> classList) {
         classList.stream()
                 .filter(ClassUtil::isNormalClass)
-                .map(it -> (V) ReflectUtil.newInstance(it))
+                .map(it -> (V) ReflectUtil.newInstanceIfPossible(it))
                 .forEach(this::saveIdObject);
     }
 

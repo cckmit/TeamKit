@@ -1,5 +1,6 @@
 package org.team4u.base.lang;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
@@ -27,13 +28,13 @@ public abstract class SimplePolicyService<C, P extends SimplePolicy<C>> {
         this(Collections.emptyList());
     }
 
-    public SimplePolicyService(Class<P> valueClass) {
-        this(ServiceLoaderUtil.loadAvailableList(valueClass));
+    public SimplePolicyService(Class<P> policyClass) {
+        this(ServiceLoaderUtil.loadAvailableList(policyClass));
     }
 
-    public SimplePolicyService(List<P> objects) {
-        if (objects != null) {
-            for (P obj : objects) {
+    public SimplePolicyService(List<P> policies) {
+        if (policies != null) {
+            for (P obj : policies) {
                 register(obj);
             }
         }
@@ -53,10 +54,10 @@ public abstract class SimplePolicyService<C, P extends SimplePolicy<C>> {
      * 通过扫描包创建服务
      *
      * @param packageName 包路径
-     * @param valueClass  类型
+     * @param policyClass 类型
      */
-    public void registerBySuper(String packageName, Class<?> valueClass) {
-        register(ClassUtil.scanPackageBySuper(packageName, valueClass));
+    public void registerBySuper(String packageName, Class<?> policyClass) {
+        register(ClassUtil.scanPackageBySuper(packageName, policyClass));
     }
 
     /**
@@ -73,18 +74,24 @@ public abstract class SimplePolicyService<C, P extends SimplePolicy<C>> {
     private void register(Collection<Class<?>> classList) {
         classList.stream()
                 .filter(ClassUtil::isNormalClass)
-                .map(it -> (P) ReflectUtil.newInstance(it))
+                .map(it -> (P) ReflectUtil.newInstanceIfPossible(it))
                 .forEach(this::register);
     }
 
     /**
-     * 根据标识获取策略
+     * 根据上下文获取策略
      */
     public SimplePolicy<C> policyOf(C context) {
+        return CollUtil.getFirst(policiesOf(context));
+    }
+
+    /**
+     * 根据上下文获取策略集合
+     */
+    public List<SimplePolicy<C>> policiesOf(C context) {
         return policies.stream()
                 .filter(it -> it.isSupport(context))
-                .findFirst()
-                .orElse(null);
+                .collect(Collectors.toList());
     }
 
     /**
@@ -107,17 +114,17 @@ public abstract class SimplePolicyService<C, P extends SimplePolicy<C>> {
     /**
      * 注册策略
      *
-     * @param p 策略
+     * @param policy 策略
      */
-    public void register(P p) {
-        policies.add(p);
+    public void register(P policy) {
+        policies.add(policy);
     }
 
     /**
      * 获取所有注册策略集合
      */
-    public List<P> policies() {
-        return policies;
+    public Collection<P> policies() {
+        return Collections.unmodifiableCollection(policies);
     }
 
     /**
