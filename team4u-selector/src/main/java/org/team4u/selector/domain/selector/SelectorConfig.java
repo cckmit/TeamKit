@@ -10,12 +10,7 @@ import java.util.List;
  *
  * @author jay.wu
  */
-public class SelectorConfig {
-
-    /**
-     * 选择器标识
-     */
-    public String id;
+public class SelectorConfig extends InterceptorConfig {
 
     /**
      * 选择器类型
@@ -30,16 +25,6 @@ public class SelectorConfig {
      * 拦截器集合
      */
     private List<InterceptorConfig> interceptors;
-
-    public String getId() {
-        return id;
-    }
-
-    public SelectorConfig setId(String id) {
-        Assert.notNull(id, "Selector id is null");
-        this.id = id;
-        return this;
-    }
 
     public String getType() {
         return type;

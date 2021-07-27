@@ -18,7 +18,8 @@ public class DynamicChoiceNode extends ChoiceNode implements TransientNode {
                              String nodeName,
                              SelectorConfig rule) {
         super(nodeId, nodeName);
-        this.rule = rule.setId(getNodeId());
+        rule.setId(getNodeId());
+        this.rule = rule;
     }
 
     public SelectorConfig getRule() {
