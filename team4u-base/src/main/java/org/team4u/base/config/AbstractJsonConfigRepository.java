@@ -36,8 +36,8 @@ public abstract class AbstractJsonConfigRepository<T> {
     }
 
     private void setConfigId(IdentifiedConfig config, String id) {
-        if (StrUtil.isBlank(config.getId())) {
-            config.setId(id);
+        if (StrUtil.isBlank(config.getConfigId())) {
+            config.setConfigId(id);
         }
     }
 

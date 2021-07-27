@@ -42,7 +42,7 @@ public class CommandAppServiceTest {
                                          CommandConfig config,
                                          MockCommandRequest request,
                                          MockCommandResponse response) {
-        Mockito.when(configRepository.configOf(commandId)).thenReturn(config);
+        Mockito.when(configRepository.configOfId(commandId)).thenReturn(config);
         Mockito.when(commandExecutor.execute(commandId, config, request)).thenReturn(response);
 
         return new CommandAppService(commandExecutor, configRepository);

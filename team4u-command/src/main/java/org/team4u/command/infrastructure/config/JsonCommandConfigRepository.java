@@ -1,7 +1,8 @@
 package org.team4u.command.infrastructure.config;
 
-import com.alibaba.fastjson.JSON;
+import org.team4u.base.config.AbstractJsonConfigRepository;
 import org.team4u.base.config.ConfigService;
+import org.team4u.base.serializer.FastJsonCacheSerializer;
 import org.team4u.command.domain.config.CommandConfig;
 import org.team4u.command.domain.config.CommandConfigRepository;
 
@@ -10,27 +11,21 @@ import org.team4u.command.domain.config.CommandConfigRepository;
  *
  * @author jay.wu
  */
-public class JsonCommandConfigRepository implements CommandConfigRepository {
-
-    private final ConfigService configService;
+public class JsonCommandConfigRepository
+        extends AbstractJsonConfigRepository<CommandConfig>
+        implements CommandConfigRepository {
 
     public JsonCommandConfigRepository(ConfigService configService) {
-        this.configService = configService;
-    }
-
-    @Override
-    public CommandConfig configOf(String id) {
-        CommandConfig config = JSON.parseObject(configService.get(id), CommandConfig.class);
-
-        if (config == null) {
-            return null;
-        }
-
-        return config.setConfigId(id);
+        super(configService);
     }
 
     @Override
     public void save(CommandConfig config) {
         throw new UnsupportedOperationException("save");
+    }
+
+    @Override
+    protected CommandConfig deserialize(String configString, Class<CommandConfig> configClass) {
+        return FastJsonCacheSerializer.instance().deserialize(configString, configClass);
     }
 }

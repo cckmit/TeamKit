@@ -72,7 +72,7 @@ public class SelectorAppService {
             return Selector.NONE;
         }
 
-        lm.append("selectorConfigId", selectorConfig.getId());
+        lm.append("selectorConfigId", selectorConfig.getConfigId());
 
         // 获取拦截器集合
         List<SelectorInterceptor> interceptors = interceptorsOfConfig(selectorConfig);

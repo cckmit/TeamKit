@@ -1,6 +1,7 @@
 package org.team4u.workflow.domain.form;
 
 import org.team4u.workflow.domain.definition.ProcessAction;
+import org.team4u.workflow.domain.definition.ProcessDefinition;
 import org.team4u.workflow.domain.form.process.definition.ProcessFormAction;
 import org.team4u.workflow.domain.instance.ProcessInstance;
 import org.team4u.workflow.domain.instance.event.ProcessNodeChangedEvent;
@@ -36,17 +37,20 @@ public interface FormPermissionService {
     class Context {
         private final FormIndex formIndex;
         private final ProcessInstance instance;
+        private final ProcessDefinition definition;
         private final List<ProcessNodeChangedEvent> changedEvents;
         private final ProcessAction action;
         private final String operatorId;
 
         public Context(FormIndex formIndex,
                        ProcessInstance instance,
+                       ProcessDefinition definition,
                        List<ProcessNodeChangedEvent> changedEvents,
                        ProcessAction action,
                        String operatorId) {
             this.formIndex = formIndex;
             this.instance = instance;
+            this.definition = definition;
             this.changedEvents = changedEvents;
             this.action = action;
             this.operatorId = operatorId;
@@ -58,6 +62,10 @@ public interface FormPermissionService {
 
         public ProcessInstance getInstance() {
             return instance;
+        }
+
+        public ProcessDefinition getDefinition() {
+            return definition;
         }
 
         public List<ProcessNodeChangedEvent> getChangedEvents() {

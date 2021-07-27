@@ -2,6 +2,7 @@ package org.team4u.command.domain.config;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.lang.Dict;
+import org.team4u.base.config.IdentifiedConfig;
 
 import java.util.Map;
 
@@ -10,7 +11,7 @@ import java.util.Map;
  *
  * @author jay.wu
  */
-public class CommandConfig {
+public class CommandConfig extends IdentifiedConfig {
 
     /**
      * 命令配置明细项
@@ -19,22 +20,9 @@ public class CommandConfig {
      * value = 配置集合
      */
     private final Map<String, Dict> items;
-    /**
-     * 配置标识
-     */
-    private String configId;
 
     public CommandConfig(Map<String, Dict> items) {
         this.items = items;
-    }
-
-    public String getConfigId() {
-        return configId;
-    }
-
-    public CommandConfig setConfigId(String configId) {
-        this.configId = configId;
-        return this;
     }
 
     /**

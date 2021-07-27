@@ -60,14 +60,39 @@ public class DefaultFormPermissionService implements FormPermissionService {
             return true;
         }
 
+        // 历史处理人均可查看
+        return isHistoryOperator(context);
+    }
+
+    protected boolean isHistoryOperator(Context context) {
         return context.getChangedEvents()
                 .stream()
                 .anyMatch(it -> StrUtil.equals(it.getOperator(), context.getOperatorId()));
     }
 
     protected boolean canEdit(Context context) {
-        // 仅新建表单时可编辑
-        return context.getInstance() == null || context.getInstance().getId() == null;
+        if (context.getInstance() == null) {
+            return true;
+        }
+
+        // 非创建人不允许编辑
+        if (!isCreator(context)) {
+            return false;
+        }
+
+        // 仅初始节点可编辑
+        return isRootNode(context);
+    }
+
+    protected boolean isRootNode(Context context) {
+        return context.getInstance().getCurrentNode() == context.getDefinition().rootNode();
+    }
+
+    protected boolean isCreator(Context context) {
+        return StrUtil.equals(
+                context.getInstance().getCreateBy(),
+                context.getOperatorId()
+        );
     }
 
     protected boolean canReview(Context context) {

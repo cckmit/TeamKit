@@ -35,11 +35,11 @@ public class RateLimiterConfig extends IdentifiedConfig {
         RateLimiterConfig config = (RateLimiterConfig) o;
         return expirationMillis == config.expirationMillis &&
                 threshold == config.threshold &&
-                getId().equals(config.getId());
+                getConfigId().equals(config.getConfigId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), expirationMillis, threshold);
+        return Objects.hash(getConfigId(), expirationMillis, threshold);
     }
 }

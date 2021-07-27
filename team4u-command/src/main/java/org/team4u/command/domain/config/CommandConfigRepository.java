@@ -13,7 +13,7 @@ public interface CommandConfigRepository {
      * @param id 命令标识
      * @return 命令配置
      */
-    CommandConfig configOf(String id);
+    CommandConfig configOfId(String id);
 
     /**
      * 保存命令配置

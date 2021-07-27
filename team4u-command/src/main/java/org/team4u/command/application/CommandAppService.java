@@ -80,7 +80,7 @@ public class CommandAppService {
      * @return 命令配置
      */
     public CommandConfig commandConfigOf(String commandId) {
-        return commandConfigRepository.configOf(commandId);
+        return commandConfigRepository.configOfId(commandId);
     }
 
     public CommandExecutor getCommandExecutor() {

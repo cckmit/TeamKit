@@ -75,11 +75,20 @@ public class ProcessFormAppService {
 
         formModel.setInstance(processAppService.availableProcessInstanceOf(instanceId));
 
-        if (!hasViewPermission(formModel.getFormIndex(), formModel.getInstance(), operatorId)) {
+        ProcessDefinition definition = processAppService.availableProcessDefinitionOf(
+                formModel.getInstance().getProcessDefinitionId().toString()
+        );
+
+        if (!hasViewPermission(formModel.getFormIndex(), formModel.getInstance(), definition, operatorId)) {
             throw new NoPermissionException("您没有权限查看请表单");
         }
 
-        formModel.setActions(availableActionsOf(formModel.getFormIndex(), formModel.getInstance(), operatorId));
+        formModel.setActions(availableActionsOf(
+                formModel.getFormIndex(),
+                formModel.getInstance(),
+                definition,
+                operatorId
+        ));
 
         formModel.setEvents(processNodeChangedEventsOf(
                 formModel.getInstance().getProcessInstanceId()
@@ -121,8 +130,11 @@ public class ProcessFormAppService {
             newForm.setId(oldForm.getId());
         }
 
-        ProcessFormAction action = actionOf(instance.getProcessDefinitionId().toString(), command.getActionId());
-        initCommandExt(command, newForm, instance, action);
+        ProcessDefinition definition = processAppService.availableProcessDefinitionOf(
+                instance.getProcessDefinitionId().toString()
+        );
+        ProcessFormAction action = actionOf(definition, command.getActionId());
+        initCommandExt(command, newForm, instance, definition, action);
 
         // 保存表单
         boolean isSaveForm = saveForm(instance, action, newForm);
@@ -147,11 +159,8 @@ public class ProcessFormAppService {
      */
     public List<ProcessAction> availableActionsOf(FormIndex form,
                                                   ProcessInstance instance,
+                                                  ProcessDefinition definition,
                                                   String operatorId) {
-        ProcessDefinition definition = processAppService.availableProcessDefinitionOf(
-                instance.getProcessDefinitionId().toString()
-        );
-
         if (!(instance.getCurrentNode() instanceof StaticNode)) {
             return Collections.emptyList();
         }
@@ -164,7 +173,7 @@ public class ProcessFormAppService {
             return Collections.emptyList();
         }
 
-        Set<String> permissions = operatorPermissionsOf(form, instance, null, operatorId);
+        Set<String> permissions = operatorPermissionsOf(form, instance, definition, null, operatorId);
 
         return ((ActionChoiceNode) nextNode).getActionNodes()
                 .stream()
@@ -217,13 +226,6 @@ public class ProcessFormAppService {
         handler.registerPolicy(policy);
     }
 
-    private ProcessFormAction actionOf(String processDefinitionId, String actionId) {
-        ProcessDefinition definition = processAppService.availableProcessDefinitionOf(
-                processDefinitionId
-        );
-        return actionOf(definition, actionId);
-    }
-
     private ProcessFormAction actionOf(ProcessDefinition definition, String actionId) {
         ProcessAction action = definition.availableActionOf(actionId);
         if (action instanceof ProcessFormAction) {
@@ -233,19 +235,24 @@ public class ProcessFormAppService {
         return new ProcessFormAction(actionId, action.getActionName(), Collections.emptyList());
     }
 
-    private boolean hasViewPermission(FormIndex form, ProcessInstance instance, String operatorId) {
-        Set<String> permissions = operatorPermissionsOf(form, instance, null, operatorId);
+    private boolean hasViewPermission(FormIndex form,
+                                      ProcessInstance instance,
+                                      ProcessDefinition definition,
+                                      String operatorId) {
+        Set<String> permissions = operatorPermissionsOf(form, instance, definition, null, operatorId);
         return permissions.contains(ProcessFormAction.Permission.VIEW.name());
     }
 
     private Set<String> operatorPermissionsOf(FormIndex form,
                                               ProcessInstance instance,
+                                              ProcessDefinition definition,
                                               ProcessAction action,
                                               String operatorId) {
         return formPermissionService.operatorPermissionsOf(
                 new FormPermissionService.Context(
                         form,
                         instance,
+                        definition,
                         Optional.ofNullable(instance)
                                 .map(it -> processNodeChangedEventsOf(it.getProcessInstanceId()))
                                 .orElse(Collections.emptyList()),
@@ -273,6 +280,7 @@ public class ProcessFormAppService {
     private void initCommandExt(StartProcessFormCommand command,
                                 FormIndex formIndex,
                                 ProcessInstance instance,
+                                ProcessDefinition definition,
                                 ProcessFormAction action) {
         if (command.getExt() == null) {
             command.setExt(new HashMap<>(2));
@@ -284,6 +292,7 @@ public class ProcessFormAppService {
                 operatorPermissionsOf(
                         formIndex,
                         instance,
+                        definition,
                         action,
                         command.getOperatorId())
         );

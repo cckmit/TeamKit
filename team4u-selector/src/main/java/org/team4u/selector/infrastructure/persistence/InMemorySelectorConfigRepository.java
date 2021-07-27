@@ -18,7 +18,7 @@ public class InMemorySelectorConfigRepository implements SelectorConfigRepositor
 
     public InMemorySelectorConfigRepository(List<SelectorConfig> values) {
         for (SelectorConfig value : values) {
-            selectorMap.put(value.getId(), value);
+            selectorMap.put(value.getConfigId(), value);
         }
     }
 

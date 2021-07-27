@@ -13,6 +13,6 @@ public class TestUtil {
             = new JsonCommandConfigRepository(new CommandConfigService());
 
     public static CommandConfig configOf(String path) {
-        return jsonCommandConfigRepository.configOf(path);
+        return jsonCommandConfigRepository.configOfId(path);
     }
 }

@@ -20,6 +20,7 @@ import org.team4u.workflow.domain.definition.ProcessAction;
 import org.team4u.workflow.domain.definition.ProcessDefinition;
 import org.team4u.workflow.domain.definition.ProcessDefinitionId;
 import org.team4u.workflow.domain.form.DefaultFormPermissionService;
+import org.team4u.workflow.domain.instance.ProcessInstance;
 import org.team4u.workflow.domain.instance.node.handler.DynamicChoiceNodeHandler;
 import org.team4u.workflow.infrastructure.BeanConfig;
 import org.team4u.workflow.infrastructure.persistence.definition.JsonProcessDefinitionRepository;
@@ -156,12 +157,14 @@ public class ProcessFormAppServiceTest extends SpringDbTest {
     private void checkAvailableActions(String operator, String expectedActions) {
         ProcessDefinition definition = TestUtil.definitionOf("simple");
 
+        ProcessInstance instance = newInstance()
+                .setCurrentNode(definition.processNodeOf("created"))
+                .setProcessDefinitionId(ProcessDefinitionId.of("simple"));
+
         List<ProcessAction> actions = processFormAppService.availableActionsOf(
                 null,
-                TestUtil.newInstance()
-                        .setCurrentNode(definition.processNodeOf("created"))
-                        .setProcessDefinitionId(ProcessDefinitionId.of("simple")),
-                operator
+                instance,
+                definition, operator
         );
         Assert.assertEquals(expectedActions, actions.toString());
     }

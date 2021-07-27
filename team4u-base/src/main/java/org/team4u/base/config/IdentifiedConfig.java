@@ -7,14 +7,14 @@ package org.team4u.base.config;
  */
 public class IdentifiedConfig {
 
-    private String id;
+    private String configId;
 
-    public String getId() {
-        return id;
+    public String getConfigId() {
+        return configId;
     }
 
-    public IdentifiedConfig setId(String id) {
-        this.id = id;
+    public IdentifiedConfig setConfigId(String configId) {
+        this.configId = configId;
         return this;
     }
 }
