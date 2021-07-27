@@ -1,4 +1,4 @@
-package org.team4u.base.debug;
+package org.team4u.test;
 
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
@@ -11,14 +11,14 @@ import java.util.concurrent.atomic.AtomicLong;
 public class Counter {
 
     private static final Log log = LogFactory.get();
-    private AtomicLong i = new AtomicLong();
-    private Timer timer;
+    private final AtomicLong i = new AtomicLong();
+    private final Timer timer;
 
-    private String name;
+    private final String name;
 
-    private boolean enable;
+    private final boolean enable;
 
-    private int period;
+    private final int period;
 
     public Counter(String name, boolean enable, int watchPeriod) {
         this.enable = enable;

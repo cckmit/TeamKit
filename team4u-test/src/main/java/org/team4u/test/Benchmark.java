@@ -1,4 +1,4 @@
-package org.team4u.base.debug;
+package org.team4u.test;
 
 import java.util.LinkedList;
 import java.util.Timer;
@@ -10,12 +10,12 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class Benchmark {
 
-    private Status status = new Status();
-    private LinkedList<Status> snapshotList = new LinkedList<Status>();
     private long snapshotInterval = 1000;
     private long statInterval = 10000;
-
     private boolean printError = false;
+
+    private final Status status = new Status();
+    private final LinkedList<Status> snapshotList = new LinkedList<Status>();
 
     private void initTimer() {
         Timer timer = new Timer("BenchmarkTimerThread", true);
@@ -75,25 +75,22 @@ public class Benchmark {
         final long startTime = System.currentTimeMillis();
 
         for (int i = 0; i < threadCount; i++) {
-            threadPool.execute(new Runnable() {
-                @Override
-                public void run() {
-                    while (maxRunningTime <= 0 || System.currentTimeMillis() - startTime < maxRunningTime) {
-                        try {
-                            long startTime = System.currentTimeMillis();
-                            worker.run();
-                            long endTime = System.currentTimeMillis();
-                            status.success(endTime - startTime);
-                        } catch (Exception e) {
-                            if (printError) {
-                                e.printStackTrace();
-                            }
-                            status.failedCount.incrementAndGet();
+            threadPool.execute(() -> {
+                while (maxRunningTime <= 0 || System.currentTimeMillis() - startTime < maxRunningTime) {
+                    try {
+                        long startTime1 = System.currentTimeMillis();
+                        worker.run();
+                        long endTime = System.currentTimeMillis();
+                        status.success(endTime - startTime1);
+                    } catch (Exception e) {
+                        if (printError) {
+                            e.printStackTrace();
                         }
+                        status.failedCount.incrementAndGet();
                     }
-
-                    countDownLatch.countDown();
                 }
+
+                countDownLatch.countDown();
             });
         }
 
@@ -133,7 +130,7 @@ public class Benchmark {
     }
 
 
-    private class Status {
+    private static class Status {
 
         AtomicLong maxRt = new AtomicLong(0L);
 
