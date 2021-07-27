@@ -15,19 +15,11 @@ public abstract class CacheableFunc0<R> implements Func0<R> {
     private final Delegate delegate;
 
     public CacheableFunc0() {
-        this((Class<?>[]) null);
-    }
-
-    public CacheableFunc0(Class<?>[] cacheForExceptionClasses) {
-        this(CacheUtil.newLRUCache(1), cacheForExceptionClasses);
+        this(CacheUtil.newLRUCache(1));
     }
 
     public CacheableFunc0(Cache<Class<?>, R> cache) {
-        this(cache, null);
-    }
-
-    public CacheableFunc0(Cache<Class<?>, R> cache, Class<?>[] cacheForExceptionClasses) {
-        delegate = new Delegate(cache, cacheForExceptionClasses);
+        delegate = new Delegate(cache);
     }
 
     /**
@@ -62,10 +54,6 @@ public abstract class CacheableFunc0<R> implements Func0<R> {
 
         public Delegate(Cache<Class<?>, R> cache) {
             super(cache);
-        }
-
-        public Delegate(Cache<Class<?>, R> cache, Class<?>[] cacheForExceptionClasses) {
-            super(cache, cacheForExceptionClasses);
         }
 
         @Override
