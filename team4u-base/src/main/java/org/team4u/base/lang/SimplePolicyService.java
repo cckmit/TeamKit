@@ -28,9 +28,7 @@ public abstract class SimplePolicyService<C, P extends SimplePolicy<C>> {
     }
 
     public SimplePolicyService(Class<P> valueClass) {
-        for (P handler : ServiceLoaderUtil.loadAvailableList(valueClass)) {
-            register(handler);
-        }
+        this(ServiceLoaderUtil.loadAvailableList(valueClass));
     }
 
     public SimplePolicyService(List<P> objects) {

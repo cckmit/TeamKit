@@ -27,9 +27,7 @@ public abstract class IdObjectService<K, V extends IdObject<K>> {
     }
 
     public IdObjectService(Class<V> valueClass) {
-        for (V v : ServiceLoaderUtil.loadAvailableList(valueClass)) {
-            saveIdObject(v);
-        }
+        this(ServiceLoaderUtil.loadAvailableList(valueClass));
     }
 
     public IdObjectService(List<V> objects) {
