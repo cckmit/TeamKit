@@ -25,6 +25,6 @@ public class SmartHttpDemo {
                 httpResponse.write(JSONUtil.toJsonStr(httpRequest.getParameters()).getBytes(StandardCharsets.UTF_8));
             }
         });
-        new HttpBootstrap().pipeline(routeHandler).setPort(8080).start();
+        new HttpBootstrap().httpHandler(routeHandler).setPort(8080).start();
     }
 }

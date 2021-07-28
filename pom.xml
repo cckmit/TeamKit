@@ -35,7 +35,7 @@
         <byte-buddy.version>1.11.8</byte-buddy.version>
         <camel.version>3.11.0</camel.version>
         <testable.version>0.6.7</testable.version>
-        <smart-http-server.version>1.1.6</smart-http-server.version>
+        <smart-http-server.version>1.1.7</smart-http-server.version>
         <liteflow.version>2.5.10</liteflow.version>
         <org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
     </properties>
