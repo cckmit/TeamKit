@@ -1,6 +1,7 @@
 package org.team4u.base.lang;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -31,6 +32,12 @@ public class IdCardTest {
 
         front = new IdCard.Front("jay ", null, null, null);
         Assert.assertNull(front.getName());
+
+        front = new IdCard.Front(StrUtil.repeat("中", 21), null, null, null);
+        Assert.assertNull(front.getName());
+
+        front = new IdCard.Front(StrUtil.repeat("中", 20), null, null, null);
+        Assert.assertEquals(StrUtil.repeat("中", 20), front.getName());
     }
 
     @Test

@@ -122,6 +122,10 @@ public class IdCard {
 
             name = name.replace(" ", "");
 
+            if (name.length() > 20) {
+                return;
+            }
+
             if (!Validator.isMatchRegex(NAME_PATTERN, name)) {
                 return;
             }
