@@ -16,6 +16,24 @@ public class IdCardTest {
     }
 
     @Test
+    public void name() {
+        IdCard.Front front = new IdCard.Front("", null, null, null);
+        Assert.assertNull(front.getName());
+
+        front = new IdCard.Front(" 中 ", null, null, null);
+        Assert.assertEquals("中", front.getName());
+
+        front = new IdCard.Front(" 中·大 ", null, null, null);
+        Assert.assertEquals("中·大", front.getName());
+
+        front = new IdCard.Front(" 中·大1 ", null, null, null);
+        Assert.assertNull(front.getName());
+
+        front = new IdCard.Front("jay ", null, null, null);
+        Assert.assertNull(front.getName());
+    }
+
+    @Test
     public void longValidityPeriod() {
         IdCard.Back back = new IdCard.Back(null, "长期");
         Assert.assertEquals(IdCard.Back.ValidityPeriodType.LONG, back.getValidityPeriodType());

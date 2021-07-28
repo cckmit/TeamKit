@@ -3,11 +3,14 @@ package org.team4u.base.lang;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.RegexPool;
+import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.IdcardUtil;
 import cn.hutool.core.util.StrUtil;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * 身份证值对象
@@ -94,6 +97,8 @@ public class IdCard {
     }
 
     public static class Front {
+        public final static Pattern NAME_PATTERN = Pattern.compile(RegexPool.CHINESES + "[·•]*" + RegexPool.CHINESE + "*");
+
         private String name;
         private String address;
         private String nation;
@@ -111,6 +116,16 @@ public class IdCard {
         }
 
         private void setName(String name) {
+            if (StrUtil.isBlank(name)) {
+                return;
+            }
+
+            name = name.replace(" ", "");
+
+            if (!Validator.isMatchRegex(NAME_PATTERN, name)) {
+                return;
+            }
+
             this.name = name;
         }
 
