@@ -27,8 +27,8 @@
     <properties>
         <mybatis-plus.version>3.4.3.1</mybatis-plus.version>
         <hutool.version>5.7.5</hutool.version>
-        <spring-data-jpa.version>2.5.2</spring-data-jpa.version>
-        <spring.version>5.3.8</spring.version>
+        <spring-data-jpa.version>2.5.3</spring-data-jpa.version>
+        <spring.version>5.3.9</spring.version>
         <beetl.version>3.4.0.RELEASE</beetl.version>
         <jetbrick.version>2.1.10</jetbrick.version>
         <fastjson.version>1.2.76</fastjson.version>
