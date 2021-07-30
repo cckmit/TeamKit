@@ -2,7 +2,6 @@ package org.team4u.rl.application;
 
 import cn.hutool.cache.CacheUtil;
 import cn.hutool.log.Log;
-import cn.hutool.log.LogFactory;
 import org.team4u.base.lang.CacheableFunc1;
 import org.team4u.base.log.LogMessage;
 import org.team4u.rl.domain.RateLimitConfigRepository;
@@ -132,8 +131,7 @@ public class RateLimiterAppService {
         return lm.append("type", type).append("key", key);
     }
 
-    public static class RateLimiters extends CacheableFunc1<RateLimiterConfig, RateLimiter> {
-        private final Log log = LogFactory.get();
+    private class RateLimiters extends CacheableFunc1<RateLimiterConfig, RateLimiter> {
 
         private final RateLimiterFactory rateLimiterFactory;
         private final RateLimitConfigRepository rateLimitConfigRepository;
