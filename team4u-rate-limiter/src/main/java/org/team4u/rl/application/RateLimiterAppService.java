@@ -147,9 +147,13 @@ public class RateLimiterAppService {
         }
 
         public RateLimiter limiterOf(String limiterType) {
-            return callWithCache(
-                    rateLimitConfigRepository.configOfId(limiterType)
-            );
+            RateLimiterConfig config = rateLimitConfigRepository.configOfId(limiterType);
+
+            if (config == null) {
+                return null;
+            }
+
+            return callWithCache(config);
         }
 
         @Override
