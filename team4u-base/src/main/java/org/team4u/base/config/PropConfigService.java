@@ -1,6 +1,6 @@
 package org.team4u.base.config;
 
-import org.team4u.base.util.PathUtil;
+import cn.hutool.core.util.StrUtil;
 
 import java.util.Properties;
 
@@ -11,6 +11,8 @@ import java.util.Properties;
  */
 public class PropConfigService implements ConfigService {
 
+    private final static String JOINER = ".";
+
     private final String prefix;
 
     private Properties properties = new Properties();
@@ -20,12 +22,12 @@ public class PropConfigService implements ConfigService {
     }
 
     public PropConfigService(String prefix) {
-        this.prefix = PathUtil.standardizedPrefix(prefix, ".");
+        this.prefix = standardizedPrefix(prefix);
     }
 
     @Override
     public String get(String key) {
-        return properties.getProperty(prefix + key);
+        return getProperties().getProperty(prefix + key);
     }
 
     public Properties getProperties() {
@@ -35,5 +37,13 @@ public class PropConfigService implements ConfigService {
     public PropConfigService setProperties(Properties properties) {
         this.properties = properties;
         return this;
+    }
+
+    private String standardizedPrefix(String prefix) {
+        if (StrUtil.isBlank(prefix)) {
+            return "";
+        }
+
+        return prefix.endsWith(JOINER) ? prefix : (prefix + JOINER);
     }
 }
