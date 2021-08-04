@@ -108,14 +108,19 @@ public class ProxySimpleConfigConverter implements SimpleConfigConverter {
             return currentSimpleConfigs.equals(allConfigs());
         }
 
-        private synchronized Object beanOf(Class<?> classType) {
+        private Object beanOf(Class<?> classType) {
             if (isNoChange()) {
                 return proxy;
             }
 
-            refreshConfigs();
+            synchronized (this) {
+                if (isNoChange()) {
+                    return proxy;
+                }
 
-            return buildProxy(classType);
+                refreshConfigs();
+                return buildProxy(classType);
+            }
         }
 
         private void refreshConfigs() {

@@ -3,6 +3,7 @@ package org.team4u.exporter.domain;
 import cn.hutool.core.collection.CollUtil;
 import org.junit.Assert;
 import org.junit.Test;
+import org.team4u.base.lang.LazyList;
 
 import java.util.ArrayList;
 import java.util.List;

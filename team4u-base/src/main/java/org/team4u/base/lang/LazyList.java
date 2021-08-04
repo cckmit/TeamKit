@@ -1,4 +1,4 @@
-package org.team4u.exporter.domain;
+package org.team4u.base.lang;
 
 import cn.hutool.core.collection.CollUtil;
 
