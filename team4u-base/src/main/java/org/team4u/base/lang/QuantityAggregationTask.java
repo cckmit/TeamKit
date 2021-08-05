@@ -4,7 +4,6 @@ package org.team4u.base.lang;
 import lombok.Getter;
 
 import java.io.Closeable;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,7 +51,7 @@ public class QuantityAggregationTask<T> implements Closeable {
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
         flush();
     }
 
