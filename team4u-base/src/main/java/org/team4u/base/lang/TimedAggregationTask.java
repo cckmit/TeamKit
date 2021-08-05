@@ -10,12 +10,12 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 聚合任务
+ * 时间限制的聚合任务
  *
  * @author jay.wu
  */
 
-public class AggregationTask<T> extends LongTimeThread {
+public class TimedAggregationTask<T> extends LongTimeThread {
 
     @Getter
     private final int maxBufferSize;
@@ -31,7 +31,7 @@ public class AggregationTask<T> extends LongTimeThread {
      * @param timeoutMillis 每个批次等待超时时间
      * @param listener      监听器
      */
-    public AggregationTask(int maxBufferSize, long timeoutMillis, Listener<T> listener) {
+    public TimedAggregationTask(int maxBufferSize, long timeoutMillis, Listener<T> listener) {
         this.maxBufferSize = maxBufferSize;
         this.timeoutMillis = timeoutMillis;
         this.listener = listener;
@@ -39,7 +39,7 @@ public class AggregationTask<T> extends LongTimeThread {
         tasks = new LinkedBlockingQueue<T>(maxBufferSize);
     }
 
-    public AggregationTask<T> add(T value) {
+    public TimedAggregationTask<T> add(T value) {
         try {
             tasks.put(value);
         } catch (InterruptedException e) {
@@ -51,13 +51,7 @@ public class AggregationTask<T> extends LongTimeThread {
     @Override
     protected void onRun() {
         List<T> buffer = poll();
-
-        if (buffer.isEmpty()) {
-            listener.onEmpty(this);
-            return;
-        }
-
-        listener.onFull(this, buffer);
+        listener.onFlush(this, buffer);
     }
 
     private List<T> poll() {
@@ -76,11 +70,15 @@ public class AggregationTask<T> extends LongTimeThread {
                 break;
             }
 
-            buffer.add(value);
-            listener.onAdd(this, value);
+            receive(buffer, value);
         }
 
         return buffer;
+    }
+
+    private void receive(List<T> buffer, T value) {
+        buffer.add(value);
+        listener.onReceive(this, value);
     }
 
     @Override
@@ -91,22 +89,17 @@ public class AggregationTask<T> extends LongTimeThread {
     public interface Listener<T> {
 
         /**
-         * 超时无数据时回调
-         */
-        void onEmpty(AggregationTask<T> task);
-
-        /**
-         * 每次新增数据时回调
+         * 新增数据时回调
          *
          * @param value 新增数据
          */
-        void onAdd(AggregationTask<T> task, T value);
+        void onReceive(TimedAggregationTask<T> task, T value);
 
         /**
-         * 已满一个批次时回调
+         * 需要刷新数据时回调
          *
-         * @param values 一个批次集合
+         * @param values 需要刷新的数据集合，若为空则表示超时仍然无数据
          */
-        void onFull(AggregationTask<T> task, List<T> values);
+        void onFlush(TimedAggregationTask<T> task, List<T> values);
     }
 }
