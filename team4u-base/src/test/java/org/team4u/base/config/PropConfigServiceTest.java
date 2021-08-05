@@ -8,7 +8,6 @@ import java.util.Properties;
 public class PropConfigServiceTest {
 
     private final Properties properties = new Properties();
-
     {
         {
             properties.put("a.x", "1");
@@ -17,15 +16,16 @@ public class PropConfigServiceTest {
 
     @Test
     public void get() {
-        check("a");
-        check("a.");
+        check(null, "a.x");
+        check("a", "x");
+        check("a.", "x");
     }
 
-    private void check(String prefix) {
+    private void check(String prefix, String key) {
         PropConfigService configService = new PropConfigService(prefix);
         configService.setProperties(properties);
 
-        Assert.assertEquals("1", configService.get("x"));
+        Assert.assertEquals("1", configService.get(key));
         Assert.assertNull(configService.get("y"));
     }
 }

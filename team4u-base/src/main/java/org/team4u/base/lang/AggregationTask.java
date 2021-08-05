@@ -2,45 +2,44 @@ package org.team4u.base.lang;
 
 
 import cn.hutool.core.exceptions.ExceptionUtil;
-import cn.hutool.core.lang.func.VoidFunc1;
-import cn.hutool.log.Log;
-import cn.hutool.log.LogFactory;
+import lombok.Getter;
 
-import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-public class AggregationTask<T> implements Closeable {
+/**
+ * 聚合任务
+ *
+ * @author jay.wu
+ */
 
-    private static final Log log = LogFactory.get();
-    private final ExecutorService threadExecutor = Executors.newSingleThreadExecutor();
-    private boolean isClosed = false;
-    private LinkedBlockingQueue<T> tasks;
-    private VoidFunc1<List<T>> worker;
-    private int maxBufferSize = 1;
-    private long timeoutMillis = 1000;
+public class AggregationTask<T> extends LongTimeThread {
 
-    public AggregationTask<T> start() {
-        if (!isClosed) {
-            throw new IllegalStateException("BufferTask already closed");
-        }
+    @Getter
+    private final int maxBufferSize;
+    @Getter
+    private final long timeoutMillis;
+    @Getter
+    private final Listener<T> listener;
+
+    private final LinkedBlockingQueue<T> tasks;
+
+    /**
+     * @param maxBufferSize 每个批次最大数量
+     * @param timeoutMillis 每个批次等待超时时间
+     * @param listener      监听器
+     */
+    public AggregationTask(int maxBufferSize, long timeoutMillis, Listener<T> listener) {
+        this.maxBufferSize = maxBufferSize;
+        this.timeoutMillis = timeoutMillis;
+        this.listener = listener;
 
         tasks = new LinkedBlockingQueue<T>(maxBufferSize);
-
-        threadExecutor.execute(() -> {
-            while (!isClosed || !tasks.isEmpty()) {
-                execute();
-            }
-        });
-
-        return this;
     }
 
-    public AggregationTask<T> put(T value) {
+    public AggregationTask<T> add(T value) {
         try {
             tasks.put(value);
         } catch (InterruptedException e) {
@@ -49,7 +48,19 @@ public class AggregationTask<T> implements Closeable {
         return this;
     }
 
-    private void execute() {
+    @Override
+    protected void onRun() {
+        List<T> buffer = poll();
+
+        if (buffer.isEmpty()) {
+            listener.onEmpty(this);
+            return;
+        }
+
+        listener.onFull(this, buffer);
+    }
+
+    private List<T> poll() {
         List<T> buffer = new ArrayList<>();
 
         while (buffer.size() < maxBufferSize) {
@@ -66,58 +77,36 @@ public class AggregationTask<T> implements Closeable {
             }
 
             buffer.add(value);
+            listener.onAdd(this, value);
         }
 
-        if (buffer.isEmpty()) {
-            return;
-        }
-
-        try {
-            worker.call(buffer);
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-        }
-    }
-
-    public VoidFunc1<List<T>> getWorker() {
-        return worker;
-    }
-
-    public AggregationTask<T> setWorker(VoidFunc1<List<T>> worker) {
-        this.worker = worker;
-        return this;
-    }
-
-    public long getTimeoutMillis() {
-        return timeoutMillis;
-    }
-
-    public AggregationTask<T> setTimeout(long timeout, TimeUnit unit) {
-        this.timeoutMillis = unit.toMillis(timeout);
-        return this;
-    }
-
-    public int getMaxBufferSize() {
-        return maxBufferSize;
-    }
-
-    public AggregationTask<T> setMaxBufferSize(int maxBufferSize) {
-        this.maxBufferSize = maxBufferSize;
-        return this;
-    }
-
-    public void awaitTermination(long awaitTerminationTimeout, TimeUnit unit) {
-        try {
-            //noinspection ResultOfMethodCallIgnored
-            threadExecutor.awaitTermination(awaitTerminationTimeout, unit);
-        } catch (InterruptedException e) {
-            throw ExceptionUtil.wrapRuntime(e);
-        }
+        return buffer;
     }
 
     @Override
-    public void close() {
-        isClosed = true;
-        threadExecutor.shutdown();
+    protected Number runIntervalMillis() {
+        return null;
+    }
+
+    public interface Listener<T> {
+
+        /**
+         * 超时无数据时回调
+         */
+        void onEmpty(AggregationTask<T> task);
+
+        /**
+         * 每次新增数据时回调
+         *
+         * @param value 新增数据
+         */
+        void onAdd(AggregationTask<T> task, T value);
+
+        /**
+         * 已满一个批次时回调
+         *
+         * @param values 一个批次集合
+         */
+        void onFull(AggregationTask<T> task, List<T> values);
     }
 }
