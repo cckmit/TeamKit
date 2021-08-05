@@ -3,6 +3,8 @@ package org.team4u.base.lang;
 
 import lombok.Getter;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +15,7 @@ import java.util.List;
  *
  * @author jay.wu
  */
-public class QuantityAggregationTask<T> {
+public class QuantityAggregationTask<T> implements Closeable {
 
     private final List<T> buffer = new ArrayList<>();
 
@@ -47,6 +49,11 @@ public class QuantityAggregationTask<T> {
     private void receive(T value) {
         buffer.add(value);
         listener.onReceive(value);
+    }
+
+    @Override
+    public void close() throws IOException {
+        flush();
     }
 
     public interface Listener<T> {
