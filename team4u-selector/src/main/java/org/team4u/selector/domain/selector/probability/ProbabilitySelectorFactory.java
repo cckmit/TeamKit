@@ -1,11 +1,13 @@
 package org.team4u.selector.domain.selector.probability;
 
+import cn.hutool.cache.Cache;
+import cn.hutool.cache.CacheUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import org.team4u.selector.domain.selector.AbstractSelectorFactoryFactory;
 import org.team4u.selector.domain.selector.Selector;
-import org.team4u.selector.domain.selector.SelectorFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,10 +17,18 @@ import java.util.Map;
  *
  * @author jay.wu
  */
-public class ProbabilitySelectorFactory implements SelectorFactory {
+public class ProbabilitySelectorFactory extends AbstractSelectorFactoryFactory {
+
+    public ProbabilitySelectorFactory() {
+        this(CacheUtil.newLRUCache(1000));
+    }
+
+    public ProbabilitySelectorFactory(Cache<String, Selector> cache) {
+        super(cache);
+    }
 
     @Override
-    public Selector create(String jsonConfig) {
+    public Selector call(String jsonConfig) {
         JSONArray config = JSONUtil.parseArray(jsonConfig);
         Map<String, Double> weightObjs = new HashMap<>();
 
