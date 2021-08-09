@@ -1,9 +1,11 @@
-package org.team4u.base.lang;
+package org.team4u.base.lang.aggregation;
 
 
 import cn.hutool.core.exceptions.ExceptionUtil;
 import lombok.Getter;
+import org.team4u.base.lang.LongTimeThread;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -15,15 +17,12 @@ import java.util.concurrent.TimeUnit;
  * @author jay.wu
  */
 
-public class TimedAggregationTask<T> extends LongTimeThread {
+public class TimedAggregationTask<T> extends AbstractAggregationTask<T> {
 
-    @Getter
-    private final int maxBufferSize;
     @Getter
     private final long timeoutMillis;
-    @Getter
-    private final Listener<T> listener;
 
+    private final Worker worker;
     private final LinkedBlockingQueue<T> tasks;
 
     /**
@@ -31,33 +30,28 @@ public class TimedAggregationTask<T> extends LongTimeThread {
      * @param timeoutMillis 每个批次等待超时时间
      * @param listener      监听器
      */
-    public TimedAggregationTask(int maxBufferSize, long timeoutMillis, Listener<T> listener) {
-        this.maxBufferSize = maxBufferSize;
+    public TimedAggregationTask(int maxBufferSize, long timeoutMillis, AggregationTaskListener<T> listener) {
+        super(maxBufferSize, listener);
         this.timeoutMillis = timeoutMillis;
-        this.listener = listener;
 
         tasks = new LinkedBlockingQueue<T>(maxBufferSize);
+
+        this.worker = new Worker();
+        worker.start();
     }
 
-    public TimedAggregationTask<T> add(T value) {
+    public void add(T value) {
         try {
             tasks.put(value);
         } catch (InterruptedException e) {
             throw ExceptionUtil.wrapRuntime(e);
         }
-        return this;
     }
 
-    @Override
-    protected void onRun() {
-        List<T> buffer = poll();
-        listener.onFlush(this, buffer);
-    }
-
-    private List<T> poll() {
+    private void poll() {
         List<T> buffer = new ArrayList<>();
 
-        while (buffer.size() < maxBufferSize) {
+        while (buffer.size() < getMaxBufferSize()) {
             T value;
 
             try {
@@ -73,33 +67,38 @@ public class TimedAggregationTask<T> extends LongTimeThread {
             receive(buffer, value);
         }
 
-        return buffer;
+        flush(buffer);
+    }
+
+    private void flush(List<T> buffer) {
+        getListener().onFlush(this, buffer);
+
+        getStatistic().incrementFlushSize(buffer.size());
     }
 
     private void receive(List<T> buffer, T value) {
         buffer.add(value);
-        listener.onReceive(this, value);
+
+        getListener().onReceive(this, value);
+
+        getStatistic().incrementReceiveSize();
     }
 
     @Override
-    protected Number runIntervalMillis() {
-        return null;
+    public void close() throws IOException {
+        worker.close();
     }
 
-    public interface Listener<T> {
+    private class Worker extends LongTimeThread {
 
-        /**
-         * 新增数据时回调
-         *
-         * @param value 新增数据
-         */
-        void onReceive(TimedAggregationTask<T> task, T value);
+        @Override
+        protected void onRun() {
+            poll();
+        }
 
-        /**
-         * 需要刷新数据时回调
-         *
-         * @param values 需要刷新的数据集合，若为空则表示超时仍然无数据
-         */
-        void onFlush(TimedAggregationTask<T> task, List<T> values);
+        @Override
+        protected Number runIntervalMillis() {
+            return null;
+        }
     }
 }
