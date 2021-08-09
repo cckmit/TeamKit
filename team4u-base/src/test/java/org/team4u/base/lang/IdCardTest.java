@@ -21,8 +21,12 @@ public class IdCardTest {
         IdCard.Front front = new IdCard.Front("", null, null, null);
         Assert.assertNull(front.getName());
 
+
         front = new IdCard.Front(" 中 ", null, null, null);
         Assert.assertEquals("中", front.getName());
+
+        front = new IdCard.Front(" 中1", null, null, null);
+        Assert.assertNull(front.getName());
 
         front = new IdCard.Front(" 中·大 ", null, null, null);
         Assert.assertEquals("中·大", front.getName());
