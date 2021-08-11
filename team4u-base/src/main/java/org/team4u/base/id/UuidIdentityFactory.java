@@ -11,6 +11,6 @@ public class UuidIdentityFactory implements StringIdentityFactory {
 
     @Override
     public String create() {
-        return IdUtil.simpleUUID();
+        return IdUtil.fastSimpleUUID();
     }
 }
