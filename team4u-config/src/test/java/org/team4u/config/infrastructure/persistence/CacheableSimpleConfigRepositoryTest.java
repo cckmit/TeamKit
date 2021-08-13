@@ -79,7 +79,7 @@ public class CacheableSimpleConfigRepositoryTest {
         private AbstractDomainEvent event;
 
         @Override
-        protected void internalProcessMessage(AbstractDomainEvent message) throws Throwable {
+        protected void internalOnMessage(AbstractDomainEvent message) throws Throwable {
             event = message;
         }
 

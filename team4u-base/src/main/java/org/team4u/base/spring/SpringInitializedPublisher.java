@@ -7,6 +7,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.team4u.base.bean.ApplicationInitializedEvent;
+import org.team4u.base.bean.BeanInitializedEvent;
 import org.team4u.base.message.MessagePublisher;
 import org.team4u.base.message.MessageSubscriber;
 
@@ -21,15 +22,19 @@ import java.util.List;
 public class SpringInitializedPublisher implements BeanPostProcessor, ApplicationListener<ContextRefreshedEvent> {
 
     @Autowired(required = false)
-    public SpringInitializedPublisher(List<MessageSubscriber<?>> subscribers) {
+    public void setMessageSubscribers(List<MessageSubscriber<?>> subscribers) {
         MessagePublisher.instance().subscribe(subscribers);
     }
 
     @Override
-    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        MessagePublisher.instance().publish(bean);
+    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+        return bean;
+    }
 
-        return BeanPostProcessor.super.postProcessAfterInitialization(bean, beanName);
+    @Override
+    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+        MessagePublisher.instance().publish(new BeanInitializedEvent(bean));
+        return bean;
     }
 
     @Override

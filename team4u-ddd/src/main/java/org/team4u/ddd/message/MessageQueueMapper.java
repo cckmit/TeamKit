@@ -49,7 +49,7 @@ public class MessageQueueMapper implements Closeable {
         @Override
         public void call(Object message) {
             Object target = messageConverter.convert(message, messageConsumer.messageType());
-            messageConsumer.processMessage(target);
+            messageConsumer.onMessage(target);
         }
     }
 }

@@ -234,7 +234,7 @@ public abstract class IdObjectService<K, V extends IdObject<K>> {
     private class BeanInitializedEventSubscriber extends AbstractMessageSubscriber<BeanInitializedEvent> {
 
         @Override
-        protected void internalProcessMessage(BeanInitializedEvent message) {
+        protected void internalOnMessage(BeanInitializedEvent message) {
             if (valueType().isAssignableFrom(message.getBean().getClass())) {
                 saveIdObject(message.getBean());
             }

@@ -44,7 +44,7 @@ public class TimeConstrainedProcessTrackerTest {
         DomainEventPublisher.instance().subscribe(new AbstractMessageConsumer<ProcessTimedOutEvent>() {
 
             @Override
-            protected void internalProcessMessage(ProcessTimedOutEvent message) throws Throwable {
+            protected void internalOnMessage(ProcessTimedOutEvent message) throws Throwable {
                 x.set(message);
             }
         });

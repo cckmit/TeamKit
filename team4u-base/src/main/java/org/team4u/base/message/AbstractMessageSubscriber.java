@@ -19,6 +19,9 @@ public abstract class AbstractMessageSubscriber<M> implements MessageSubscriber<
 
     protected final Log log = LogFactory.get(this.getClass());
 
+    @SuppressWarnings("unchecked")
+    private final Class<M> messageType = (Class<M>) ClassUtil.getTypeArgument(this.getClass());
+
     /**
      * 队列堆积任务超过阈值未处理，丢弃处理
      */
@@ -34,32 +37,32 @@ public abstract class AbstractMessageSubscriber<M> implements MessageSubscriber<
     }
 
     @Override
-    public void processMessage(M message) {
+    public void onMessage(M message) {
         if (!supports(message)) {
             return;
         }
 
         if (executorService == null) {
-            logAndProcessMessage(message);
+            onMessageWithLog(message);
             return;
         }
 
         executorService.execute(() -> {
             try {
-                logAndProcessMessage(message);
+                onMessageWithLog(message);
             } catch (Exception e) {
                 // ignore error
             }
         });
     }
 
-    protected void logAndProcessMessage(M message) {
-        LogMessage lm = LogMessage.create(this.getClass().getSimpleName(), "processMessage")
+    protected void onMessageWithLog(M message) {
+        LogMessage lm = LogMessage.create(this.getClass().getSimpleName(), "onMessage")
                 .append("messageType", message.getClass().getSimpleName())
                 .append("message", message);
 
         try {
-            internalProcessMessage(message);
+            internalOnMessage(message);
             log.info(lm.success().toString());
         } catch (Throwable e) {
             LogService.logForError(log, lm, e);
@@ -79,7 +82,7 @@ public abstract class AbstractMessageSubscriber<M> implements MessageSubscriber<
      * @param message 要处理的事件
      * @throws Throwable 异常
      */
-    protected abstract void internalProcessMessage(M message) throws Throwable;
+    protected abstract void internalOnMessage(M message) throws Throwable;
 
     /**
      * 判断是否监听指定的事件类型
@@ -88,10 +91,12 @@ public abstract class AbstractMessageSubscriber<M> implements MessageSubscriber<
         return messageType().isAssignableFrom(message.getClass());
     }
 
-
-    @Override
-    @SuppressWarnings("unchecked")
+    /**
+     * 消息类型
+     *
+     * @return 消息类型
+     */
     public Class<M> messageType() {
-        return (Class<M>) ClassUtil.getTypeArgument(this.getClass());
+        return messageType;
     }
 }

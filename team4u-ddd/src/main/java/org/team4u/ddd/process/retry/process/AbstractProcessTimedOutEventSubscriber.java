@@ -33,7 +33,7 @@ public abstract class AbstractProcessTimedOutEventSubscriber<E extends ProcessTi
     }
 
     @Override
-    protected void internalProcessMessage(E event) throws Exception {
+    protected void internalOnMessage(E event) throws Exception {
         TimeConstrainedProcessTracker tracker = trackerAppService.trackerOfProcessId(
                 event.getDomainId(),
                 messageType()

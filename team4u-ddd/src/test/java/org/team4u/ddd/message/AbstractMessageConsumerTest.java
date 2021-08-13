@@ -10,7 +10,7 @@ public class AbstractMessageConsumerTest {
     public void handleWithExpectedEvent() {
         FakeEvent1Subscriber s = new FakeEvent1Subscriber();
         FakeEvent1 e = new FakeEvent1("");
-        s.processMessage(e);
+        s.onMessage(e);
         Assert.assertEquals(e, s.getEvent());
     }
 
@@ -18,7 +18,7 @@ public class AbstractMessageConsumerTest {
     public void handleWithNotExpectedEvent() {
         FakeEvent1Subscriber s = new FakeEvent1Subscriber();
         FakeEvent2 e = new FakeEvent2("");
-        s.processMessage(e);
+        s.onMessage(e);
         Assert.assertNull(s.getEvent());
     }
 
@@ -28,7 +28,7 @@ public class AbstractMessageConsumerTest {
         private DomainEvent event;
 
         @Override
-        protected void internalProcessMessage(DomainEvent event) {
+        protected void internalOnMessage(DomainEvent event) {
             this.event = event;
         }
 

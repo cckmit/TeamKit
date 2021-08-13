@@ -37,15 +37,15 @@ public abstract class AbstractRetryableProcessCombinedEventSubscriber<
 
     @SuppressWarnings("unchecked")
     @Override
-    public void internalProcessMessage(DomainEvent event) {
+    public void internalOnMessage(DomainEvent event) {
         if (!supports(event)) {
             return;
         }
 
         if (event instanceof AbstractRetryableProcessTimedOutEvent) {
-            retryableProcessTimedOutEventSubscriber.processMessage((R) event);
+            retryableProcessTimedOutEventSubscriber.onMessage((R) event);
         } else {
-            retryableProcessEventSubscriber.processMessage((P) event);
+            retryableProcessEventSubscriber.onMessage((P) event);
         }
     }
 

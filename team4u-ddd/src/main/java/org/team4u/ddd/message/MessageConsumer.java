@@ -9,4 +9,10 @@ import org.team4u.base.message.MessageSubscriber;
  */
 public interface MessageConsumer<M> extends MessageSubscriber<M> {
 
+    /**
+     * 消息类型
+     *
+     * @return 消息类型
+     */
+    Class<M> messageType();
 }

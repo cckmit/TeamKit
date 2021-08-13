@@ -42,7 +42,7 @@ public class MessagePublisher {
     @SuppressWarnings({"unchecked", "rawtypes"})
     public void publish(Object event) {
         for (MessageSubscriber subscriber : subscribers) {
-            subscriber.processMessage(event);
+            subscriber.onMessage(event);
         }
     }
 

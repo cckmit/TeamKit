@@ -40,16 +40,16 @@ public abstract class AbstractRetryableProcessEventSubscriber<E extends DomainEv
     }
 
     @Override
-    public void processMessage(E event) {
+    public void onMessage(E event) {
         if (supports(event)) {
             createAndSaveTracker(event);
         }
 
-        super.processMessage(event);
+        super.onMessage(event);
     }
 
     @Override
-    protected void internalProcessMessage(E event) throws Exception {
+    protected void internalOnMessage(E event) throws Exception {
         TimeConstrainedProcessTracker tracker = trackerAppService.trackerOfProcessId(
                 event.getDomainId(),
                 timedOutEventClass()

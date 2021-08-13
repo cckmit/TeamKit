@@ -158,7 +158,7 @@ public abstract class SimplePolicyService<C, P extends SimplePolicy<C>> {
     private class BeanInitializedEventSubscriber extends AbstractMessageSubscriber<BeanInitializedEvent> {
 
         @Override
-        protected void internalProcessMessage(BeanInitializedEvent message) {
+        protected void internalOnMessage(BeanInitializedEvent message) {
             if (policyType.isAssignableFrom(message.getBean().getClass())) {
                 //noinspection unchecked
                 register((P) message.getBean());
