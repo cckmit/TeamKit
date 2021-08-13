@@ -17,5 +17,3 @@ CREATE TABLE `time_constrained_process_tracker`
     UNIQUE INDEX `uniq_tracker_id` (`tracker_id`),
     UNIQUE INDEX `uniq_tracker_process_id_type` (`process_id`, `process_timed_out_event_type`)
 )
-    COMMENT ='超时跟踪器'
-;

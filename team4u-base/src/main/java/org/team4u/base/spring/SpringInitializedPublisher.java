@@ -20,7 +20,7 @@ import java.util.List;
 @Component
 public class SpringInitializedPublisher implements BeanPostProcessor, ApplicationListener<ContextRefreshedEvent> {
 
-    @Autowired
+    @Autowired(required = false)
     public SpringInitializedPublisher(List<MessageSubscriber<?>> subscribers) {
         MessagePublisher.instance().subscribe(subscribers);
     }

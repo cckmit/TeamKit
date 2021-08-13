@@ -11,5 +11,3 @@ CREATE TABLE `published_notification_tracker`
     UNIQUE INDEX `uniq_tracker_id` (`tracker_id`),
     UNIQUE INDEX `uniq_type_name` (`type_name`)
 )
-    COMMENT ='已发布通知跟踪器'
-;
