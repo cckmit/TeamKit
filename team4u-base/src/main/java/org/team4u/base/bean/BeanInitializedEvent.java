@@ -21,4 +21,9 @@ public class BeanInitializedEvent implements Event {
         //noinspection unchecked
         return (T) bean;
     }
+
+    @Override
+    public String toString() {
+        return bean.getClass().getName();
+    }
 }

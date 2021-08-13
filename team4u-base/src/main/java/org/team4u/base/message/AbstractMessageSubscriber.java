@@ -23,7 +23,7 @@ public abstract class AbstractMessageSubscriber<M> implements MessageSubscriber<
     private final Class<M> messageType = (Class<M>) ClassUtil.getTypeArgument(this.getClass());
 
     /**
-     * 队列堆积任务超过阈值未处理，丢弃处理
+     * 线程池
      */
     private final ExecutorService executorService;
 
@@ -74,7 +74,6 @@ public abstract class AbstractMessageSubscriber<M> implements MessageSubscriber<
             }
         }
     }
-
 
     /**
      * 内部处理消息

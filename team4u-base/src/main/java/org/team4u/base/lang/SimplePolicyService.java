@@ -4,10 +4,10 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
+import org.team4u.base.bean.AbstractBeanInitializedEventSubscriber;
 import org.team4u.base.bean.BeanInitializedEvent;
 import org.team4u.base.bean.ServiceLoaderUtil;
 import org.team4u.base.error.SystemDataNotExistException;
-import org.team4u.base.message.AbstractMessageSubscriber;
 import org.team4u.base.message.MessagePublisher;
 
 import java.lang.annotation.Annotation;
@@ -155,14 +155,16 @@ public abstract class SimplePolicyService<C, P extends SimplePolicy<C>> {
                 .collect(Collectors.toList());
     }
 
-    private class BeanInitializedEventSubscriber extends AbstractMessageSubscriber<BeanInitializedEvent> {
+    private class BeanInitializedEventSubscriber extends AbstractBeanInitializedEventSubscriber {
+
+        protected BeanInitializedEventSubscriber() {
+            super(policyType);
+        }
 
         @Override
         protected void internalOnMessage(BeanInitializedEvent message) {
-            if (policyType.isAssignableFrom(message.getBean().getClass())) {
-                //noinspection unchecked
-                register((P) message.getBean());
-            }
+            //noinspection unchecked
+            register((P) message.getBean());
         }
     }
 }
