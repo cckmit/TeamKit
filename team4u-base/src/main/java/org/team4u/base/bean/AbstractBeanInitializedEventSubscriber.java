@@ -19,11 +19,11 @@ public abstract class AbstractBeanInitializedEventSubscriber extends AbstractMes
     }
 
     @Override
-    protected boolean supports(BeanInitializedEvent message) {
+    protected boolean supports(Object message) {
         if (!super.supports(message)) {
             return false;
         }
 
-        return beanType.isAssignableFrom(message.getBean().getClass());
+        return beanType.isAssignableFrom(((BeanInitializedEvent) message).getBean().getClass());
     }
 }

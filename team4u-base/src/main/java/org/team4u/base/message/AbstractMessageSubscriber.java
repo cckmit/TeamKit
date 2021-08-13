@@ -86,7 +86,7 @@ public abstract class AbstractMessageSubscriber<M> implements MessageSubscriber<
     /**
      * 判断是否监听指定的事件类型
      */
-    protected boolean supports(M message) {
+    protected boolean supports(Object message) {
         return messageType().isAssignableFrom(message.getClass());
     }
 

@@ -50,7 +50,7 @@ public abstract class AbstractRetryableProcessCombinedEventSubscriber<
     }
 
     @Override
-    protected boolean supports(DomainEvent event) {
+    protected boolean supports(Object event) {
         return Stream.of(TypeUtil.getTypeArguments(this.getClass()))
                 .anyMatch(it -> ((Class<?>) it).isAssignableFrom(event.getClass()));
     }

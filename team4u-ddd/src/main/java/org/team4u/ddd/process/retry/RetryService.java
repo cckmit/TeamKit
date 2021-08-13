@@ -39,7 +39,7 @@ public class RetryService {
         }
 
         // 未定义异常类，默认全部重试
-        if (ArrayUtil.isEmpty(retryForClass) || ArrayUtil.isEmpty(noRetryForClass)) {
+        if (ArrayUtil.isEmpty(retryForClass) && ArrayUtil.isEmpty(noRetryForClass)) {
             return true;
         }
 
@@ -51,7 +51,7 @@ public class RetryService {
     }
 
     private boolean anyMatch(Class<? extends Throwable>[] throwableClass, Throwable throwable) {
-        if (ArrayUtil.isNotEmpty(throwableClass)) {
+        if (ArrayUtil.isEmpty(throwableClass)) {
             return false;
         }
 
