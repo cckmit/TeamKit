@@ -56,10 +56,10 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.team4u</groupId>
-            <artifactId>team4u-test</artifactId>
-            <version>${parent.version}</version>
-            <scope>test</scope>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>RELEASE</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>

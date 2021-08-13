@@ -95,6 +95,8 @@ public class AssigneeActionChoiceNodeHandler extends AbstractActionChoiceNodeHan
     public static class PolicyService extends IdObjectService<String, Policy> {
         public PolicyService() {
             super(Policy.class);
+
+            saveObjectByBeanInitializedEvent();
         }
     }
 

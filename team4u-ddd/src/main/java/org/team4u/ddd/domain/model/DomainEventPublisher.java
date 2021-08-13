@@ -1,11 +1,12 @@
 package org.team4u.ddd.domain.model;
 
-import cn.hutool.log.Log;
-import cn.hutool.log.LogFactory;
-import org.team4u.base.log.LogMessage;
+import org.team4u.base.message.MessagePublisher;
 import org.team4u.ddd.message.MessageConsumer;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 领域事件发布者
@@ -15,33 +16,23 @@ import java.util.*;
 public class DomainEventPublisher {
 
     private static final DomainEventPublisher INSTANCE = new DomainEventPublisher();
-    private final Log log = LogFactory.get();
-    private final Set<MessageConsumer<? extends DomainEvent>> subscribers = new HashSet<>();
+
+    private final MessagePublisher messagePublisher = new MessagePublisher();
 
     public static DomainEventPublisher instance() {
         return INSTANCE;
     }
 
     public void subscribe(List<MessageConsumer<? extends DomainEvent>> listeners) {
-        for (MessageConsumer<? extends DomainEvent> listener : listeners) {
-            subscribe(listener);
-        }
+        messagePublisher.subscribe(listeners);
     }
 
     public void subscribe(MessageConsumer<? extends DomainEvent> listener) {
-        subscribers.add(listener);
-
-        log.info(LogMessage.create(this.getClass().getSimpleName(), "subscribe")
-                .success()
-                .append("subscriber", listener.getClass().getSimpleName())
-                .toString());
+        messagePublisher.subscribe(listener);
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
     public <T extends DomainEvent> void publish(T event) {
-        for (MessageConsumer subscriber : subscribers) {
-            subscriber.processMessage(event);
-        }
+        messagePublisher.publish(event);
     }
 
     public void publishAll(Collection<DomainEvent> domainEvents) {
@@ -50,7 +41,11 @@ public class DomainEventPublisher {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public Set<MessageConsumer<? extends DomainEvent>> subscribers() {
-        return Collections.unmodifiableSet(subscribers);
+        return messagePublisher.subscribers()
+                .stream()
+                .map(it -> (MessageConsumer<? extends DomainEvent>) it)
+                .collect(Collectors.toSet());
     }
 }

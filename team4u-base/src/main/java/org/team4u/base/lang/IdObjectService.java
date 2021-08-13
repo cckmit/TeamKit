@@ -4,7 +4,11 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
+import org.team4u.base.bean.BeanInitializedEvent;
+import org.team4u.base.bean.ServiceLoaderUtil;
 import org.team4u.base.error.SystemDataNotExistException;
+import org.team4u.base.message.AbstractMessageSubscriber;
+import org.team4u.base.message.MessagePublisher;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
@@ -22,6 +26,13 @@ public abstract class IdObjectService<K, V extends IdObject<K>> {
 
     private final Map<K, V> idObjectMap = new ConcurrentHashMap<>();
 
+    @SuppressWarnings("unchecked")
+    private final Class<K> keyType = (Class<K>) ClassUtil.getTypeArgument(this.getClass());
+    @SuppressWarnings("unchecked")
+    private final Class<V> valueType = (Class<V>) ClassUtil.getTypeArgument(this.getClass(), 1);
+
+    private final BeanInitializedEventSubscriber beanInitializedEventSubscriber = new BeanInitializedEventSubscriber();
+
     public IdObjectService() {
         this(Collections.emptyList());
     }
@@ -36,6 +47,15 @@ public abstract class IdObjectService<K, V extends IdObject<K>> {
                 saveIdObject(obj);
             }
         }
+    }
+
+    /**
+     * 通过监听BeanInitializedEvent，注册value对象
+     *
+     * @see BeanInitializedEvent
+     */
+    public void saveObjectByBeanInitializedEvent() {
+        MessagePublisher.instance().subscribe(beanInitializedEventSubscriber);
     }
 
     /**
@@ -157,7 +177,7 @@ public abstract class IdObjectService<K, V extends IdObject<K>> {
      */
     @SuppressWarnings("unchecked")
     public Class<V> valueType() {
-        return (Class<V>) ClassUtil.getTypeArgument(this.getClass());
+        return valueType;
     }
 
     /**
@@ -167,7 +187,7 @@ public abstract class IdObjectService<K, V extends IdObject<K>> {
      */
     @SuppressWarnings("unchecked")
     public Class<K> keyType() {
-        return (Class<K>) ClassUtil.getTypeArgument(this.getClass(), 1);
+        return keyType;
     }
 
     /**
@@ -208,6 +228,16 @@ public abstract class IdObjectService<K, V extends IdObject<K>> {
     public void removeObjects(List<K> keyList) {
         for (K key : keyList) {
             removeObject(key);
+        }
+    }
+
+    private class BeanInitializedEventSubscriber extends AbstractMessageSubscriber<BeanInitializedEvent> {
+
+        @Override
+        protected void internalProcessMessage(BeanInitializedEvent message) {
+            if (valueType().isAssignableFrom(message.getBean().getClass())) {
+                saveIdObject(message.getBean());
+            }
         }
     }
 }

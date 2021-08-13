@@ -3,15 +3,14 @@ package org.team4u.selector.domain.selector.expression;
 import cn.hutool.cache.Cache;
 import cn.hutool.cache.CacheUtil;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import org.team4u.selector.domain.selector.AbstractSelectorFactoryFactory;
 import org.team4u.selector.domain.selector.Selector;
 import org.team4u.template.TemplateEngine;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 表达式选择器构建工厂
@@ -32,24 +31,16 @@ public class ExpressionSelectorFactory extends AbstractSelectorFactoryFactory {
     }
 
     public static Map<String, String> toConfig(String jsonConfig) {
-        JSONArray config = JSONUtil.parseArray(jsonConfig);
-        Map<String, String> valueExpressions = new HashMap<>();
-
-        for (Object o : config) {
-            JSONObject weightObj = (JSONObject) o;
-            for (Map.Entry<String, Object> w : weightObj.entrySet()) {
-                valueExpressions.put(w.getKey(), Convert.toStr(w.getValue()));
-            }
-        }
-
-        return valueExpressions;
+        return JSONUtil.parseArray(jsonConfig)
+                .stream()
+                .flatMap(it -> ((JSONObject) it).entrySet().stream())
+                .collect(Collectors.toMap(Map.Entry::getKey, it -> Convert.toStr(it.getValue())));
     }
 
     @Override
     public Selector call(String jsonConfig) {
         return new ExpressionSelector(templateEngine, toConfig(jsonConfig));
     }
-
 
     @Override
     public String id() {

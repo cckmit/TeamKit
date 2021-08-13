@@ -1,12 +1,14 @@
-package org.team4u.base.lang;
+package org.team4u.base.bean;
 
 import cn.hutool.log.Log;
+import cn.hutool.log.level.Level;
 import org.team4u.base.log.LogMessage;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ServiceConfigurationError;
+import java.util.stream.Collectors;
 
 /**
  * SPI机制中的服务加载工具类
@@ -35,11 +37,20 @@ public class ServiceLoaderUtil extends cn.hutool.core.util.ServiceLoaderUtil {
             try {
                 result.add(iterator.next());
             } catch (ServiceConfigurationError e) {
-                log.info(lm.fail(e.getMessage()).toString());
+                String errorLm = lm.copy().fail(e.getMessage()).toString();
+                if (log.isEnabled(Level.DEBUG)) {
+                    log.debug(e, errorLm);
+                } else {
+                    log.info(errorLm);
+                }
             }
         }
 
-        log.info(lm.success().append("result", result).toString());
+        log.info(lm.success()
+                .append("result", result.stream()
+                        .map(it -> it.getClass().getName())
+                        .collect(Collectors.toList()))
+                .toString());
         return result;
     }
 }

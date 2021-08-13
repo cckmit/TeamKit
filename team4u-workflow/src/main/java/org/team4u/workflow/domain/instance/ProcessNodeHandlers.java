@@ -39,6 +39,8 @@ public class ProcessNodeHandlers extends IdObjectService<Class<? extends Process
         saveIdObject(new BeanChoiceNodeHandler(beanHandlers));
         saveIdObject(new BeanProcessingNodeHandler(beanHandlers));
         saveIdObject(new BeanActionChoiceNodeHandler(beanHandlers));
+
+        saveObjectByBeanInitializedEvent();
     }
 
     /**

@@ -81,6 +81,8 @@ public class AssigneeStaticNodeHandler extends AbstractStaticProcessNodeHandler<
     public static class PolicyService extends IdObjectService<String, Policy> {
         public PolicyService() {
             super(Policy.class);
+
+            saveObjectByBeanInitializedEvent();
         }
     }
 

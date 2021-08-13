@@ -2,7 +2,7 @@ package org.team4u.base.filter;
 
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
-import org.team4u.base.lang.ServiceLoaderUtil;
+import org.team4u.base.bean.ServiceLoaderUtil;
 import org.team4u.base.log.LogMessage;
 import org.team4u.base.log.LogMessages;
 import org.team4u.base.log.LogService;

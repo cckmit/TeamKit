@@ -19,6 +19,10 @@ public class FilterInterceptorService<Context,
         Interceptor extends FilterInterceptor<Context, F>>
         extends IdObjectService<String, Interceptor> {
 
+    public FilterInterceptorService() {
+        saveObjectByBeanInitializedEvent();
+    }
+
     public FilterInterceptorService(List<Interceptor> objects) {
         super(objects);
     }

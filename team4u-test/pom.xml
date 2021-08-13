@@ -13,6 +13,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.team4u</groupId>
+            <artifactId>team4u-base</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.smartboot.http</groupId>
             <artifactId>smart-http-server</artifactId>
             <version>${smart-http-server.version}</version>

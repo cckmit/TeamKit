@@ -4,7 +4,11 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
+import org.team4u.base.bean.BeanInitializedEvent;
+import org.team4u.base.bean.ServiceLoaderUtil;
 import org.team4u.base.error.SystemDataNotExistException;
+import org.team4u.base.message.AbstractMessageSubscriber;
+import org.team4u.base.message.MessagePublisher;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -24,6 +28,11 @@ public abstract class SimplePolicyService<C, P extends SimplePolicy<C>> {
 
     private List<P> policies = new ArrayList<>();
 
+    @SuppressWarnings("unchecked")
+    private final Class<P> policyType = (Class<P>) ClassUtil.getTypeArgument(this.getClass(), 1);
+
+    private final BeanInitializedEventSubscriber beanInitializedEventSubscriber = new BeanInitializedEventSubscriber();
+
     public SimplePolicyService() {
         this(Collections.emptyList());
     }
@@ -39,6 +48,16 @@ public abstract class SimplePolicyService<C, P extends SimplePolicy<C>> {
             }
         }
     }
+
+    /**
+     * 通过监听BeanInitializedEvent，注册策略
+     *
+     * @see BeanInitializedEvent
+     */
+    public void registerByBeanInitializedEvent() {
+        MessagePublisher.instance().subscribe(beanInitializedEventSubscriber);
+    }
+
 
     /**
      * 通过扫描包创建服务
@@ -134,5 +153,16 @@ public abstract class SimplePolicyService<C, P extends SimplePolicy<C>> {
         policies = policies.stream()
                 .filter(it -> !policy.getClass().equals(it.getClass()))
                 .collect(Collectors.toList());
+    }
+
+    private class BeanInitializedEventSubscriber extends AbstractMessageSubscriber<BeanInitializedEvent> {
+
+        @Override
+        protected void internalProcessMessage(BeanInitializedEvent message) {
+            if (policyType.isAssignableFrom(message.getBean().getClass())) {
+                //noinspection unchecked
+                register((P) message.getBean());
+            }
+        }
     }
 }

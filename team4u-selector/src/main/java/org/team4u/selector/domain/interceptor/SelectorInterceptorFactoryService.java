@@ -11,5 +11,7 @@ public class SelectorInterceptorFactoryService extends IdObjectService<String, S
 
     public SelectorInterceptorFactoryService() {
         super(SelectorInterceptorFactory.class);
+
+        saveObjectByBeanInitializedEvent();
     }
 }
