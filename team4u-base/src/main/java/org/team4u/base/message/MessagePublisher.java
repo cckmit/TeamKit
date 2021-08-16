@@ -26,10 +26,20 @@ public class MessagePublisher {
         return INSTANCE;
     }
 
-    public void subscribe(List<? extends MessageSubscriber<?>> listeners) {
-        listeners.forEach(this::subscribe);
+    /**
+     * 注册订阅者集合
+     *
+     * @param subscribers 订阅者集合
+     */
+    public void subscribe(List<? extends MessageSubscriber<?>> subscribers) {
+        subscribers.forEach(this::subscribe);
     }
 
+    /**
+     * 注册订阅者
+     *
+     * @param subscriber 订阅者
+     */
     public void subscribe(MessageSubscriber<?> subscriber) {
         subscribers.add(subscriber);
 
@@ -39,13 +49,23 @@ public class MessagePublisher {
                 .toString());
     }
 
+    /**
+     * 发布消息
+     *
+     * @param message 消息
+     */
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public void publish(Object event) {
+    public void publish(Object message) {
         for (MessageSubscriber subscriber : subscribers) {
-            subscriber.onMessage(event);
+            subscriber.onMessage(message);
         }
     }
 
+    /**
+     * 获取订阅者集合
+     *
+     * @return 订阅者集合
+     */
     public Set<MessageSubscriber<?>> subscribers() {
         return Collections.unmodifiableSet(subscribers);
     }

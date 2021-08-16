@@ -1,6 +1,6 @@
 package org.team4u.ddd.domain.model;
 
-import org.team4u.base.message.Event;
+import org.team4u.base.message.Message;
 
 import java.util.Date;
 
@@ -9,7 +9,7 @@ import java.util.Date;
  *
  * @author jay.wu
  */
-public interface DomainEvent extends Event {
+public interface DomainEvent extends Message {
 
     /**
      * 获取领域标识

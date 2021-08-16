@@ -1,6 +1,6 @@
 package org.team4u.base.bean;
 
-import org.team4u.base.message.Event;
+import org.team4u.base.message.Message;
 
 /**
  * bean初始化完成事件
@@ -9,7 +9,7 @@ import org.team4u.base.message.Event;
  * @see SimpleBeanLoader
  * @see org.team4u.base.spring.SpringInitializedPublisher
  */
-public class BeanInitializedEvent implements Event {
+public class BeanInitializedEvent implements Message {
 
     private final Object bean;
 
