@@ -5,9 +5,11 @@ import cn.hutool.core.thread.ThreadUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class FileSqlConfigServiceTest {
+import static org.team4u.sql.infrastructure.config.SpringResourceSqlConfigService.Config;
 
-    private final SpringResourceSqlConfigService s = new SpringResourceSqlConfigService(new SimpleFileSqlConfigService.Config());
+public class SpringResourceSqlConfigServiceTest {
+
+    private final SpringResourceSqlConfigService s = new SpringResourceSqlConfigService(new Config());
 
     @Test
     public void demo1() {
