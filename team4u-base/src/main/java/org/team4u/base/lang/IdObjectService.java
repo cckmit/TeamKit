@@ -4,11 +4,13 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.log.Log;
 import org.team4u.base.bean.ServiceLoaderUtil;
 import org.team4u.base.bean.event.AbstractBeanInitializedEventSubscriber;
 import org.team4u.base.bean.event.BeanInitializedEvent;
 import org.team4u.base.bean.provider.BeanProviders;
 import org.team4u.base.error.SystemDataNotExistException;
+import org.team4u.base.log.LogMessage;
 import org.team4u.base.message.MessagePublisher;
 
 import java.lang.annotation.Annotation;
@@ -23,6 +25,8 @@ import java.util.stream.Collectors;
  * @author jay.wu
  */
 public abstract class IdObjectService<K, V extends IdObject<K>> {
+
+    private final Log log = Log.get();
 
     private final Map<K, V> idObjectMap = new LinkedHashMap<>();
 
@@ -181,6 +185,14 @@ public abstract class IdObjectService<K, V extends IdObject<K>> {
      */
     public void saveIdObject(V v) {
         idObjectMap.put(v.id(), v);
+
+        if (log.isDebugEnabled()) {
+            log.debug(LogMessage.create(this.getClass().getSimpleName(), "saveIdObject")
+                    .append("id", v.id())
+                    .append("value", v.toString())
+                    .success()
+                    .toString());
+        }
     }
 
     /**
