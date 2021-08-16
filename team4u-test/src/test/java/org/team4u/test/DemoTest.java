@@ -6,6 +6,11 @@ import org.junit.Test;
 import static com.alibaba.testable.core.matcher.InvokeVerifier.verify;
 import static org.junit.Assert.assertEquals;
 
+/**
+ * https://alibaba.github.io/testable-mock/#/zh-cn/doc/use-mock
+ *
+ * @author jay.wu
+ */
 public class DemoTest {
 
     private final Demo demo = new Demo();
