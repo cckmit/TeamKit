@@ -1,7 +1,6 @@
 package org.team4u.test;
 
-public class Demo {
-
+public class TestableDemo {
     /**
      * 调用任意方法
      */
