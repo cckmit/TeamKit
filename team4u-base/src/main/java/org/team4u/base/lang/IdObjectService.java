@@ -207,7 +207,7 @@ public abstract class IdObjectService<K, V extends IdObject<K>> {
      * 获取所有注册对象集合
      */
     public Collection<V> idObjects() {
-        return idObjectMap.values();
+        return CollUtil.sortByProperty(idObjectMap.values(), "priority");
     }
 
     /**

@@ -1,6 +1,7 @@
 package org.team4u.base.bean.provider;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.team4u.base.TestUtil;
 
@@ -12,10 +13,13 @@ public class BeanProvidersTest {
     private final BeanProviders providers = new BeanProviders();
     private final MockBeanProvider mockBeanProvider = new MockBeanProvider();
 
+    @Before
+    public void setUp() {
+        providers.saveIdObject(mockBeanProvider);
+    }
+
     @Test
     public void getBeansOfType() {
-        providers.saveIdObject(mockBeanProvider);
-
         Assert.assertTrue(providers.registerBean(TestUtil.TEST, mockBeanProvider));
         Assert.assertTrue(mockBeanProvider.registerBean(TestUtil.TEST1, mockBeanProvider));
 
@@ -29,8 +33,10 @@ public class BeanProvidersTest {
 
     @Test
     public void getBean() {
-        Assert.assertTrue(providers.registerBean(TestUtil.TEST, mockBeanProvider));
-        Assert.assertEquals(mockBeanProvider, providers.getBean(TestUtil.TEST));
+        providers.registerBean(TestUtil.TEST, TestUtil.TEST1);
+        providers.availableObjectOfId(LocalBeanProvider.ID).registerBean(TestUtil.TEST, TestUtil.TEST);
+
+        Assert.assertEquals(TestUtil.TEST1, providers.getBean(TestUtil.TEST));
     }
 
     public static class MockBeanProvider extends LocalBeanProvider {
@@ -41,7 +47,7 @@ public class BeanProvidersTest {
 
         @Override
         public int priority() {
-            return super.priority() + 1;
+            return super.priority() - 1;
         }
     }
 }

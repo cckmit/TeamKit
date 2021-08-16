@@ -12,4 +12,13 @@ public interface IdObject<V> {
      * 获取标识
      */
     V id();
+
+    /**
+     * 优先级
+     * <p>
+     * 数值越小，优先级越高
+     */
+    default int priority(){
+        return 100;
+    }
 }

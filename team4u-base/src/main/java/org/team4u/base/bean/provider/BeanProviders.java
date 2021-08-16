@@ -1,7 +1,8 @@
 package org.team4u.base.bean.provider;
 
-import cn.hutool.core.collection.CollUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.team4u.base.lang.IdObjectService;
+import org.team4u.base.log.LogMessage;
 
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
  *
  * @author jay.wu
  */
+@Slf4j
 public class BeanProviders extends IdObjectService<String, BeanProvider> {
 
     private static final BeanProviders instance = new BeanProviders();
@@ -23,18 +25,10 @@ public class BeanProviders extends IdObjectService<String, BeanProvider> {
 
     public BeanProviders() {
         super(BeanProvider.class);
-
-        sortByPriority();
     }
 
     public BeanProviders(List<BeanProvider> objects) {
         super(objects);
-
-        sortByPriority();
-    }
-
-    private void sortByPriority() {
-        saveIdObjects(CollUtil.sortByProperty(idObjects(), "priority"));
     }
 
     /**
@@ -93,12 +87,25 @@ public class BeanProviders extends IdObjectService<String, BeanProvider> {
      * @param bean bean
      */
     public <T> boolean registerBean(String beanName, T bean) {
-        return idObjects()
+        LogMessage lm = LogMessage.create(this.getClass().getSimpleName(), "registerBean")
+                .append("beanName", beanName)
+                .append("bean", bean);
+
+        boolean result = idObjects()
                 .stream()
                 .map(it -> it.registerBean(beanName, bean))
                 .filter(it -> it)
                 .findFirst()
                 .orElse(false);
+
+        if (result) {
+            lm.success();
+        } else {
+            lm.fail();
+        }
+
+        log.info(lm.toString());
+        return result;
     }
 
     /**
@@ -108,11 +115,6 @@ public class BeanProviders extends IdObjectService<String, BeanProvider> {
      * @param bean bean
      */
     public <T> boolean registerBean(T bean) {
-        return idObjects()
-                .stream()
-                .map(it -> it.registerBean(bean))
-                .filter(it -> it)
-                .findFirst()
-                .orElse(false);
+        return registerBean(bean.getClass().getSimpleName(), bean);
     }
 }

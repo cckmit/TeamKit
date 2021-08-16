@@ -49,21 +49,4 @@ public interface BeanProvider extends IdObject<String> {
      * @param bean     bean
      */
     <T> boolean registerBean(String beanName, T bean);
-
-    /**
-     * 注册Bean
-     *
-     * @param <T>  Bean类型
-     * @param bean bean
-     */
-    default <T> boolean registerBean(T bean) {
-        return registerBean(bean.getClass().getSimpleName(), bean);
-    }
-
-    /**
-     * 优先级
-     * <p>
-     * 数值越小，优先级越高
-     */
-    int priority();
 }
