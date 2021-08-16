@@ -15,7 +15,7 @@ public class ProcessBeanHandlers extends IdObjectService<String, ProcessBeanHand
     public ProcessBeanHandlers() {
         super(ProcessBeanHandler.class);
 
-        saveObjectByBeanInitializedEvent();
+        saveObjectsByBeanProvidersAndEvent();
     }
 
     public ProcessBeanHandlers(List<ProcessBeanHandler> objects) {

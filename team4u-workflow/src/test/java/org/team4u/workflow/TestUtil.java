@@ -43,7 +43,7 @@ public class TestUtil {
                 null
         ).setAssignees(
                 Optional.ofNullable(assignees)
-                        .map(it -> Arrays.stream(assignees)
+                        .map(it -> Arrays.stream(it)
                                 .map(assignee -> new ProcessAssignee(TEST, assignee))
                                 .collect(Collectors.toSet()))
                         .orElse(Collections.emptySet())

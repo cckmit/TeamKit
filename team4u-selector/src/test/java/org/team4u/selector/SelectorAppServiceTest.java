@@ -2,7 +2,7 @@ package org.team4u.selector;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.team4u.base.bean.SimpleBeanLoader;
+import org.team4u.base.bean.provider.BeanProviders;
 import org.team4u.base.config.LocalJsonConfigService;
 import org.team4u.selector.application.SelectorAppService;
 import org.team4u.selector.domain.selector.Selector;
@@ -164,7 +164,7 @@ public class SelectorAppServiceTest {
 
     @Test
     public void expressionSelect() {
-        SimpleBeanLoader.registerBean(
+        BeanProviders.getInstance().registerBean(
                 new ExpressionSelectorFactory(
                         new BeetlTemplateEngine(new TemplateFunctionService())
                 )

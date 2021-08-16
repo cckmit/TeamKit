@@ -20,7 +20,7 @@ public class FilterInterceptorService<Context,
         extends IdObjectService<String, Interceptor> {
 
     public FilterInterceptorService() {
-        saveObjectByBeanInitializedEvent();
+        saveObjectsByBeanProvidersAndEvent();
     }
 
     public FilterInterceptorService(List<Interceptor> objects) {

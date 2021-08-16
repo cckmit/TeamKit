@@ -14,13 +14,13 @@ public class SelectorValueService extends IdObjectService<String, SelectorValueH
     public SelectorValueService() {
         super();
 
-        saveObjectByBeanInitializedEvent();
+        saveObjectsByBeanProvidersAndEvent();
     }
 
     public SelectorValueService(Class<SelectorValueHandler> valueClass) {
         super(valueClass);
 
-        saveObjectByBeanInitializedEvent();
+        saveObjectsByBeanProvidersAndEvent();
     }
 
     public SelectorValueService(List<SelectorValueHandler> objects) {

@@ -4,8 +4,6 @@ package org.team4u.base;
 import cn.hutool.core.io.FileUtil;
 import com.alibaba.fastjson.JSON;
 
-import java.io.File;
-
 public class TestUtil {
 
     public static String format(Object value) {
@@ -19,4 +17,7 @@ public class TestUtil {
     public static Object loadJsonObject(String path) {
         return JSON.parse(FileUtil.readUtf8String(path));
     }
+
+    public static final String TEST = "test";
+    public static final String TEST1 = "test1";
 }

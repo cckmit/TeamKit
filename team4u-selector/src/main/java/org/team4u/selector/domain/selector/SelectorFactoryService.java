@@ -12,6 +12,6 @@ public class SelectorFactoryService extends IdObjectService<String, SelectorFact
     public SelectorFactoryService() {
         super(SelectorFactory.class);
 
-        saveObjectByBeanInitializedEvent();
+        saveObjectsByBeanProvidersAndEvent();
     }
 }

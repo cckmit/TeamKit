@@ -96,7 +96,7 @@ public class AssigneeActionChoiceNodeHandler extends AbstractActionChoiceNodeHan
         public PolicyService() {
             super(Policy.class);
 
-            saveObjectByBeanInitializedEvent();
+            saveObjectsByBeanProvidersAndEvent();
         }
     }
 

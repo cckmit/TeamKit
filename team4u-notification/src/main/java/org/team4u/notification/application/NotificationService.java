@@ -21,7 +21,7 @@ public class NotificationService extends IdObjectService<String, NotificationSen
     private final Log log = LogFactory.get();
 
     public NotificationService() {
-        saveObjectByBeanInitializedEvent();
+        saveObjectsByBeanProvidersAndEvent();
     }
 
     public NotificationService(List<NotificationSender<? extends Notification>> objects) {

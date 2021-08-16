@@ -4,15 +4,15 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
-import org.team4u.base.bean.AbstractBeanInitializedEventSubscriber;
-import org.team4u.base.bean.BeanInitializedEvent;
 import org.team4u.base.bean.ServiceLoaderUtil;
+import org.team4u.base.bean.event.AbstractBeanInitializedEventSubscriber;
+import org.team4u.base.bean.event.BeanInitializedEvent;
+import org.team4u.base.bean.provider.BeanProviders;
 import org.team4u.base.error.SystemDataNotExistException;
 import org.team4u.base.message.MessagePublisher;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
  */
 public abstract class IdObjectService<K, V extends IdObject<K>> {
 
-    private final Map<K, V> idObjectMap = new ConcurrentHashMap<>();
+    private final Map<K, V> idObjectMap = new LinkedHashMap<>();
 
     @SuppressWarnings("unchecked")
     private final Class<K> keyType = (Class<K>) ClassUtil.getTypeArgument(this.getClass());
@@ -50,11 +50,31 @@ public abstract class IdObjectService<K, V extends IdObject<K>> {
     }
 
     /**
+     * 根据通过BeanProviders和bean初始化事件保存value对象
+     */
+    public void saveObjectsByBeanProvidersAndEvent() {
+        saveObjectsByBeanProviders(BeanProviders.getInstance());
+        saveObjectsByBeanInitializedEvent();
+    }
+
+    /**
+     * 通过BeanProviders保存value对象
+     *
+     * @param beanProviders bean提供者服务
+     * @see BeanProviders
+     */
+    public void saveObjectsByBeanProviders(BeanProviders beanProviders) {
+        saveIdObjects(beanProviders.getBeansOfType(valueType()).values());
+    }
+
+    /**
      * 通过监听BeanInitializedEvent，注册value对象
+     * <p>
+     * 注意，
      *
      * @see BeanInitializedEvent
      */
-    public void saveObjectByBeanInitializedEvent() {
+    public void saveObjectsByBeanInitializedEvent() {
         MessagePublisher.instance().subscribe(beanInitializedEventSubscriber);
     }
 
@@ -65,7 +85,7 @@ public abstract class IdObjectService<K, V extends IdObject<K>> {
      * @param classFilter 类过滤器
      */
     public void saveObjectsByFilter(String packageName, Filter<Class<?>> classFilter) {
-        saveObjects(ClassUtil.scanPackage(packageName, classFilter));
+        saveObjectsByClasses(ClassUtil.scanPackage(packageName, classFilter));
     }
 
     /**
@@ -75,7 +95,7 @@ public abstract class IdObjectService<K, V extends IdObject<K>> {
      * @param valueClass  类型
      */
     public void saveObjectsBySuper(String packageName, Class<?> valueClass) {
-        saveObjects(ClassUtil.scanPackageBySuper(packageName, valueClass));
+        saveObjectsByClasses(ClassUtil.scanPackageBySuper(packageName, valueClass));
     }
 
     /**
@@ -85,11 +105,11 @@ public abstract class IdObjectService<K, V extends IdObject<K>> {
      * @param annotationClass 注解类型
      */
     public void saveObjectsByAnnotation(String packageName, Class<? extends Annotation> annotationClass) {
-        saveObjects(ClassUtil.scanPackageByAnnotation(packageName, annotationClass));
+        saveObjectsByClasses(ClassUtil.scanPackageByAnnotation(packageName, annotationClass));
     }
 
     @SuppressWarnings("unchecked")
-    private void saveObjects(Collection<Class<?>> classList) {
+    private void saveObjectsByClasses(Collection<Class<?>> classList) {
         classList.stream()
                 .filter(ClassUtil::isNormalClass)
                 .map(it -> (V) ReflectUtil.newInstanceIfPossible(it))
@@ -164,6 +184,14 @@ public abstract class IdObjectService<K, V extends IdObject<K>> {
     }
 
     /**
+     * 保存对象集合
+     */
+    public void saveIdObjects(Collection<V> values) {
+        Optional.ofNullable(values)
+                .ifPresent(it -> it.forEach(this::saveIdObject));
+    }
+
+    /**
      * 获取所有注册对象集合
      */
     public Collection<V> idObjects() {
@@ -230,7 +258,6 @@ public abstract class IdObjectService<K, V extends IdObject<K>> {
             removeObject(key);
         }
     }
-
 
     private class BeanInitializedEventSubscriber extends AbstractBeanInitializedEventSubscriber {
 

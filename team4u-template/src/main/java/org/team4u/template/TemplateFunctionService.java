@@ -15,7 +15,7 @@ public class TemplateFunctionService extends IdObjectService<String, TemplateFun
     public TemplateFunctionService() {
         super(TemplateFunction.class);
 
-        saveObjectByBeanInitializedEvent();
+        saveObjectsByBeanProvidersAndEvent();
     }
 
     public TemplateFunctionService(List<TemplateFunction> functions) {

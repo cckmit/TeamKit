@@ -6,8 +6,8 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
-import org.team4u.base.bean.ApplicationInitializedEvent;
-import org.team4u.base.bean.BeanInitializedEvent;
+import org.team4u.base.bean.event.ApplicationInitializedEvent;
+import org.team4u.base.bean.event.BeanInitializedEvent;
 import org.team4u.base.message.MessagePublisher;
 import org.team4u.base.message.MessageSubscriber;
 
@@ -33,7 +33,7 @@ public class SpringInitializedPublisher implements BeanPostProcessor, Applicatio
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        MessagePublisher.instance().publish(new BeanInitializedEvent(bean));
+        MessagePublisher.instance().publish(new BeanInitializedEvent(beanName, bean));
         return bean;
     }
 

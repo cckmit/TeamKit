@@ -1,4 +1,4 @@
-package org.team4u.base.bean;
+package org.team4u.base.bean.event;
 
 import org.team4u.base.message.AbstractMessageSubscriber;
 

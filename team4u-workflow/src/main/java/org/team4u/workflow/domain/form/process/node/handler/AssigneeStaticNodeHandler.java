@@ -82,7 +82,7 @@ public class AssigneeStaticNodeHandler extends AbstractStaticProcessNodeHandler<
         public PolicyService() {
             super(Policy.class);
 
-            saveObjectByBeanInitializedEvent();
+            saveObjectsByBeanProvidersAndEvent();
         }
     }
 

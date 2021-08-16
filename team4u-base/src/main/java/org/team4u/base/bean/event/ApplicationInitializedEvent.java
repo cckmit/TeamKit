@@ -1,4 +1,4 @@
-package org.team4u.base.bean;
+package org.team4u.base.bean.event;
 
 /**
  * 应用启动完成事件
