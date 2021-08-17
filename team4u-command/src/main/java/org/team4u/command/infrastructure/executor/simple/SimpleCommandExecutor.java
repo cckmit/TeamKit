@@ -17,7 +17,9 @@ import java.util.Map;
  *
  * @author jay.wu
  */
-public class SimpleCommandExecutor extends IdObjectService<String, CommandRoutesBuilder> implements CommandExecutor {
+public class SimpleCommandExecutor
+        extends IdObjectService<String, CommandRoutesBuilder>
+        implements CommandExecutor {
 
     private final Map<String, FilterChain<CommandHandler.Context>> filterChainMap = new HashMap<>();
 

@@ -37,15 +37,16 @@ public class BeanProviders extends IdObjectService<String, BeanProvider> {
      * @param <T>  Bean类型
      * @param name Bean名称
      * @return Bean
+     * @throws NoSuchBeanDefinitionException 无法找到bean时抛出此异常
      */
     @SuppressWarnings("unchecked")
-    public <T> T getBean(String name) {
+    public <T> T getBean(String name) throws NoSuchBeanDefinitionException {
         return idObjects()
                 .stream()
                 .map(it -> (T) it.getBean(name))
                 .filter(Objects::nonNull)
                 .findFirst()
-                .orElse(null);
+                .orElseThrow(() -> new NoSuchBeanDefinitionException(name));
     }
 
     /**
@@ -54,14 +55,15 @@ public class BeanProviders extends IdObjectService<String, BeanProvider> {
      * @param <T>  Bean类型
      * @param type Bean类
      * @return Bean对象
+     * @throws NoSuchBeanDefinitionException 无法找到bean时抛出此异常
      */
-    public <T> T getBean(Class<T> type) {
+    public <T> T getBean(Class<T> type) throws NoSuchBeanDefinitionException {
         return idObjects()
                 .stream()
                 .map(it -> it.getBean(type))
                 .filter(Objects::nonNull)
                 .findFirst()
-                .orElse(null);
+                .orElseThrow(() -> new NoSuchBeanDefinitionException(type.getName()));
     }
 
     /**

@@ -1,6 +1,7 @@
 package org.team4u.base.bean.provider;
 
 import cn.hutool.extra.spring.SpringUtil;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.team4u.base.bean.event.BeanInitializedEvent;
 import org.team4u.base.message.MessagePublisher;
 
@@ -23,7 +24,11 @@ public class SpringBeanProvider implements BeanProvider {
             return null;
         }
 
-        return SpringUtil.getBean(name);
+        try {
+            return SpringUtil.getBean(name);
+        } catch (NoSuchBeanDefinitionException e) {
+            return null;
+        }
     }
 
     @Override
@@ -32,7 +37,11 @@ public class SpringBeanProvider implements BeanProvider {
             return null;
         }
 
-        return SpringUtil.getBean(type);
+        try {
+            return SpringUtil.getBean(type);
+        } catch (NoSuchBeanDefinitionException e) {
+            return null;
+        }
     }
 
     @Override
@@ -41,7 +50,11 @@ public class SpringBeanProvider implements BeanProvider {
             return Collections.emptyMap();
         }
 
-        return SpringUtil.getBeansOfType(type);
+        try {
+            return SpringUtil.getBeansOfType(type);
+        } catch (Exception e) {
+            return Collections.emptyMap();
+        }
     }
 
     @Override

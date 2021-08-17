@@ -41,6 +41,16 @@ public class BeanProvidersTest {
         Assert.assertEquals(TestUtil.TEST1, providers.getBean(TestUtil.TEST));
     }
 
+    @Test
+    public void notExistBean() {
+        try {
+            providers.getBean("x");
+            Assert.fail();
+        } catch (NoSuchBeanDefinitionException e) {
+            Assert.assertEquals("x", e.getMessage());
+        }
+    }
+
     public static class MockBeanProvider extends LocalBeanProvider {
         @Override
         public String id() {
