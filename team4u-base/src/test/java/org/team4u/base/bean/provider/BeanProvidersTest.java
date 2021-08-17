@@ -10,25 +10,27 @@ import java.util.stream.Collectors;
 
 public class BeanProvidersTest {
 
-    private final BeanProviders providers = new BeanProviders();
+    private BeanProviders providers;
     private final MockBeanProvider mockBeanProvider = new MockBeanProvider();
 
     @Before
     public void setUp() {
+        providers = new BeanProviders();
         providers.saveIdObject(mockBeanProvider);
     }
 
     @Test
     public void getBeansOfType() {
-        Assert.assertTrue(providers.registerBean(TestUtil.TEST, mockBeanProvider));
-        Assert.assertTrue(mockBeanProvider.registerBean(TestUtil.TEST1, mockBeanProvider));
+        providers.availableObjectOfId(LocalBeanProvider.ID).registerBean(TestUtil.TEST, TestUtil.TEST);
+        Assert.assertTrue(mockBeanProvider.registerBean(TestUtil.TEST1, TestUtil.TEST1));
+        Assert.assertTrue(mockBeanProvider.registerBean(TestUtil.TEST, TestUtil.TEST2));
 
-        List<String> result = providers.getBeansOfType(BeanProvider.class)
+        List<String> result = providers.getBeansOfType(String.class)
                 .entrySet()
                 .stream()
-                .map(it -> it.getKey() + "=" + mockBeanProvider.equals(it.getValue()))
+                .map(it -> it.getKey() + "=" + it.getValue())
                 .collect(Collectors.toList());
-        Assert.assertEquals("[test=true, test1=true]", result.toString());
+        Assert.assertEquals("[test=test2, test1=test1]", result.toString());
     }
 
     @Test

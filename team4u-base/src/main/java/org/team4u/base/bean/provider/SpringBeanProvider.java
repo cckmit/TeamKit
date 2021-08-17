@@ -4,6 +4,7 @@ import cn.hutool.extra.spring.SpringUtil;
 import org.team4u.base.bean.event.BeanInitializedEvent;
 import org.team4u.base.message.MessagePublisher;
 
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -37,7 +38,7 @@ public class SpringBeanProvider implements BeanProvider {
     @Override
     public <T> Map<String, T> getBeansOfType(Class<T> type) {
         if (!isSpringContext()) {
-            return null;
+            return Collections.emptyMap();
         }
 
         return SpringUtil.getBeansOfType(type);

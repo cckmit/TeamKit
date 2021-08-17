@@ -20,4 +20,5 @@ public class TestUtil {
 
     public static final String TEST = "test";
     public static final String TEST1 = "test1";
+    public static final String TEST2 = "test2";
 }

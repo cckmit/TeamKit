@@ -1,13 +1,15 @@
 package org.team4u.base.bean.provider;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import org.team4u.base.lang.IdObjectService;
 import org.team4u.base.log.LogMessage;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * bean提供者服务
@@ -17,10 +19,8 @@ import java.util.stream.Collectors;
 @Slf4j
 public class BeanProviders extends IdObjectService<String, BeanProvider> {
 
-    private static final BeanProviders instance = new BeanProviders();
-
     public static BeanProviders getInstance() {
-        return instance;
+        return Singleton.get(BeanProviders.class);
     }
 
     public BeanProviders() {
@@ -72,12 +72,14 @@ public class BeanProviders extends IdObjectService<String, BeanProvider> {
      * @return 类型对应的bean，key是bean注册的name，value是Bean
      */
     public <T> Map<String, T> getBeansOfType(Class<T> type) {
-        return idObjects()
+        // 反转以确保高优先级的key不会被低优先级的覆盖
+        return CollUtil.reverse(idObjects())
                 .stream()
                 .map(it -> it.getBeansOfType(type))
-                .filter(Objects::nonNull)
-                .flatMap(it -> it.entrySet().stream())
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+                .reduce(new HashMap<>(), (a, b) -> {
+                    a.putAll(b);
+                    return a;
+                });
     }
 
     /**
