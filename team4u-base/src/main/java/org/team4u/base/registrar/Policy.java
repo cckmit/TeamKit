@@ -3,6 +3,7 @@ package org.team4u.base.registrar;
 /**
  * 策略
  *
+ * @param <C> 策略上下文类型
  * @author jay.wu
  */
 public interface Policy<C> {

@@ -22,8 +22,8 @@ import java.util.stream.Collectors;
 /**
  * 策略注册器
  *
- * @param <C>
- * @param <P>
+ * @param <C> 策略上下文类型
+ * @param <P> 策略类型
  * @author jay.wu
  */
 public abstract class PolicyRegistrar<C, P extends Policy<C>> {
