@@ -11,7 +11,6 @@ import org.team4u.base.bean.ServiceLoaderUtil;
 import org.team4u.base.bean.event.AbstractBeanInitializedEventSubscriber;
 import org.team4u.base.bean.event.BeanInitializedEvent;
 import org.team4u.base.bean.provider.BeanProviders;
-import org.team4u.base.error.SystemDataNotExistException;
 import org.team4u.base.log.LogMessage;
 import org.team4u.base.message.MessagePublisher;
 
@@ -131,21 +130,28 @@ public abstract class PolicyRegistrar<C, P extends Policy<C>> {
      * @param policy 策略
      */
     public void register(P policy) {
+        if (policy == null) {
+            return;
+        }
+
         policies.add(policy);
 
         // 每次注册后重新排序
         sortPolicies();
 
-        if (log.isDebugEnabled()) {
-            log.debug(LogMessage.create(this.getClass().getSimpleName(), "register")
-                    .append("policy", policy.policyName())
-                    .append("priority", policy.priority())
-                    .append("policies", policies.stream().map(Policy::policyName).collect(Collectors.toList()))
-                    .success()
-                    .toString());
-        }
+        log.info(LogMessage.create(this.getClass().getSimpleName(), "register")
+                .append("policy", policy.policyName())
+                .append("priority", policy.priority())
+                .append("policies", policies.stream().map(Policy::policyName).collect(Collectors.toList()))
+                .success()
+                .toString());
     }
 
+    /**
+     * 对策略集合排序
+     * <p>
+     * 确保策略集合按优先级从高到低保存
+     */
     private void sortPolicies() {
         policies = policies.stream()
                 .sorted(Comparator.comparingInt(Policy::priority))
@@ -153,7 +159,7 @@ public abstract class PolicyRegistrar<C, P extends Policy<C>> {
     }
 
     /**
-     * 注册策略结合
+     * 注册策略集合
      *
      * @param policies 策略集合
      */
@@ -165,6 +171,8 @@ public abstract class PolicyRegistrar<C, P extends Policy<C>> {
 
     /**
      * 根据上下文获取策略
+     *
+     * @return 返回匹配上下文且优先级最高的策略
      */
     public P policyOf(C context) {
         return CollUtil.getFirst(policiesOf(context));
@@ -174,14 +182,14 @@ public abstract class PolicyRegistrar<C, P extends Policy<C>> {
      * 获取合适的策略
      *
      * @param context 上下文
-     * @return 可用策略
-     * @see SystemDataNotExistException 若策略不存在则抛出此异常
+     * @return 返回匹配上下文且优先级最高的策略
+     * @see NoSuchPolicyException 若无匹配的策略则抛出此异常
      */
-    public P availablePolicyOf(C context) {
+    public P availablePolicyOf(C context) throws NoSuchPolicyException {
         P policy = policyOf(context);
 
         if (policy == null) {
-            throw new SystemDataNotExistException("Unable to find a available policy|context=" + context);
+            throw new NoSuchPolicyException("Unable to find policy|context=" + context);
         }
 
         return policy;
@@ -189,6 +197,8 @@ public abstract class PolicyRegistrar<C, P extends Policy<C>> {
 
     /**
      * 根据上下文获取策略集合
+     *
+     * @return 返回所有匹配上下文的策略集合
      */
     public List<P> policiesOf(C context) {
         return policies.stream()
@@ -208,8 +218,14 @@ public abstract class PolicyRegistrar<C, P extends Policy<C>> {
      */
     public void unregister(P policy) {
         policies = policies.stream()
-                .filter(it -> ObjectUtil.equals(it, policy))
+                .filter(it -> !ObjectUtil.equals(it, policy))
                 .collect(Collectors.toList());
+
+        log.info(LogMessage.create(this.getClass().getSimpleName(), "unregister")
+                .append("policy", policy.policyName())
+                .append("policies", policies.stream().map(Policy::policyName).collect(Collectors.toList()))
+                .success()
+                .toString());
     }
 
     private class BeanInitializedEventSubscriber extends AbstractBeanInitializedEventSubscriber {

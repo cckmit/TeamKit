@@ -26,7 +26,7 @@ public interface Policy<C> {
     /**
      * 优先级
      * <p>
-     * 数值越小，优先级越高
+     * - 数值越小，优先级越高
      */
     default int priority() {
         return LOWEST_PRECEDENCE;
