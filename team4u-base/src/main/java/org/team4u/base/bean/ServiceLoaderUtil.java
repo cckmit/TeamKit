@@ -23,14 +23,15 @@ public class ServiceLoaderUtil extends cn.hutool.core.util.ServiceLoaderUtil {
     /**
      * 加载可用的服务列表
      *
-     * @param clazz 服务接口
-     * @param <T>   接口类型
+     * @param type 服务接口
+     * @param <T>  接口类型
      * @return 可用的服务列表
      */
-    public static <T> List<T> loadAvailableList(Class<T> clazz) {
-        LogMessage lm = LogMessage.create(ServiceLoaderUtil.class.getSimpleName(), "loadAvailableList");
+    public static <T> List<T> loadAvailableList(Class<T> type) {
+        LogMessage lm = LogMessage.create(ServiceLoaderUtil.class.getSimpleName(), "loadAvailableList")
+                .append("type", type);
 
-        Iterator<T> iterator = load(clazz).iterator();
+        Iterator<T> iterator = load(type).iterator();
         List<T> result = new ArrayList<>();
 
         while (iterator.hasNext()) {

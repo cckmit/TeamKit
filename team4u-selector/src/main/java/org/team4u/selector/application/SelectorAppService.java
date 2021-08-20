@@ -110,7 +110,7 @@ public class SelectorAppService {
      * 注册选择器构建工厂
      */
     public SelectorAppService registerSelectorFactory(SelectorFactory factory) {
-        selectorFactoryService.saveIdObject(factory);
+        selectorFactoryService.register(factory);
         return this;
     }
 
@@ -133,7 +133,7 @@ public class SelectorAppService {
      * 获取选择器
      */
     private Selector selectorOfConfig(SelectorConfig selectorConfig) {
-        SelectorFactory factory = selectorFactoryService.objectOfId(selectorConfig.getType());
+        SelectorFactory factory = selectorFactoryService.policyOf(selectorConfig.getType());
 
         if (factory == null) {
             return null;

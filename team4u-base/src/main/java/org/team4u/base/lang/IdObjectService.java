@@ -12,6 +12,8 @@ import org.team4u.base.bean.provider.BeanProviders;
 import org.team4u.base.error.SystemDataNotExistException;
 import org.team4u.base.log.LogMessage;
 import org.team4u.base.message.MessagePublisher;
+import org.team4u.base.registrar.IdPolicy;
+import org.team4u.base.registrar.PolicyRegistrar;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
@@ -23,6 +25,9 @@ import java.util.stream.Collectors;
  * @param <K>
  * @param <V>
  * @author jay.wu
+ * @see IdPolicy
+ * @see PolicyRegistrar
+ * @deprecated 已废弃，使用PolicyRegistrar和IdPolicy代替
  */
 public abstract class IdObjectService<K, V extends IdObject<K>> {
 
