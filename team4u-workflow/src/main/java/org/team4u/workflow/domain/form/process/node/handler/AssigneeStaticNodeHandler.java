@@ -58,7 +58,7 @@ public class AssigneeStaticNodeHandler extends AbstractStaticProcessNodeHandler<
      * @param policy 策略
      */
     public void registerPolicy(Policy policy) {
-        policyService.register(policy);
+        policyService.registerPolicy(policy);
     }
 
     /**
@@ -81,7 +81,7 @@ public class AssigneeStaticNodeHandler extends AbstractStaticProcessNodeHandler<
     public static class PolicyService extends PolicyRegistrar<String, Policy> {
 
         public PolicyService() {
-            registerByBeanProvidersAndEvent();
+            registerPoliciesByBeanProvidersAndEvent();
         }
     }
 

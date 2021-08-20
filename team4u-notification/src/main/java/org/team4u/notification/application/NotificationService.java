@@ -21,7 +21,7 @@ public class NotificationService extends PolicyRegistrar<String, NotificationSen
     private final Log log = LogFactory.get();
 
     public NotificationService() {
-        registerByBeanProvidersAndEvent();
+        registerPoliciesByBeanProvidersAndEvent();
     }
 
     public NotificationService(List<NotificationSender<? extends Notification>> objects) {

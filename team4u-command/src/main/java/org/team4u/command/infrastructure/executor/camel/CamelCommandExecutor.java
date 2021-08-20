@@ -40,7 +40,7 @@ public class CamelCommandExecutor extends PolicyRegistrar<String, CommandRoutesB
     }
 
     public void saveAndStart(CommandRoutesBuilder builder) {
-        register(builder);
+        registerPolicy(builder);
         start(builder);
     }
 

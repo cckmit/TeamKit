@@ -30,7 +30,7 @@ public class SelectorAppServiceTest {
     @Test
     public void dynamicMap() {
         SelectorValueService valueService = new SelectorValueService();
-        valueService.register(new SelectorValueHandler() {
+        valueService.registerPolicy(new SelectorValueHandler() {
             @Override
             public String handle(Context context) {
                 return context.getParams().getStr("name");

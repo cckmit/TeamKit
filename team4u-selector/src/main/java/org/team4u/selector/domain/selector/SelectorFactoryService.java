@@ -10,6 +10,6 @@ import org.team4u.base.registrar.PolicyRegistrar;
 public class SelectorFactoryService extends PolicyRegistrar<String, SelectorFactory> {
 
     public SelectorFactoryService() {
-        registerByBeanProvidersAndEvent();
+        registerPoliciesByBeanProvidersAndEvent();
     }
 }

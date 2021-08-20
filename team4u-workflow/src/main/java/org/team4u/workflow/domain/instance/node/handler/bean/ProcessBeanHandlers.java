@@ -13,7 +13,7 @@ import java.util.List;
 public class ProcessBeanHandlers extends PolicyRegistrar<String, ProcessBeanHandler> {
 
     public ProcessBeanHandlers() {
-        registerByBeanProvidersAndEvent();
+        registerPoliciesByBeanProvidersAndEvent();
     }
 
     public ProcessBeanHandlers(List<ProcessBeanHandler> objects) {

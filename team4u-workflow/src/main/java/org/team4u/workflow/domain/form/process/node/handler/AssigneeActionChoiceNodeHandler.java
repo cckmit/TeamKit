@@ -72,7 +72,7 @@ public class AssigneeActionChoiceNodeHandler extends AbstractActionChoiceNodeHan
      * @param policy 策略
      */
     public void registerPolicy(Policy policy) {
-        policyService.register(policy);
+        policyService.registerPolicy(policy);
     }
 
     /**
@@ -95,7 +95,7 @@ public class AssigneeActionChoiceNodeHandler extends AbstractActionChoiceNodeHan
     public static class PolicyService extends PolicyRegistrar<String, Policy> {
 
         public PolicyService() {
-            registerByBeanProvidersAndEvent();
+            registerPoliciesByBeanProvidersAndEvent();
         }
     }
 

@@ -12,7 +12,7 @@ import java.util.List;
 public class SelectorValueService extends PolicyRegistrar<String, SelectorValueHandler> {
 
     public SelectorValueService() {
-        registerByBeanProvidersAndEvent();
+        registerPoliciesByBeanProvidersAndEvent();
     }
 
     public SelectorValueService(List<SelectorValueHandler> objects) {

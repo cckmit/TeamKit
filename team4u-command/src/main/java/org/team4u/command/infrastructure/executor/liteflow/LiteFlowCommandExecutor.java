@@ -42,7 +42,7 @@ public class LiteFlowCommandExecutor extends PolicyRegistrar<String, CommandRout
     }
 
     public void saveAndInitFlow(CommandRoutesBuilder builder) {
-        register(builder);
+        registerPolicy(builder);
         initFlowExecutor(builder);
     }
 

@@ -40,86 +40,86 @@ public abstract class PolicyRegistrar<C, P extends Policy<C>> {
     private List<P> policies = new ArrayList<>();
 
     public PolicyRegistrar() {
-        registerByServiceLoader();
+        registerPoliciesByServiceLoader();
     }
 
     public PolicyRegistrar(List<? extends P> policies) {
-        register(policies);
+        registerPolicies(policies);
     }
 
     /**
-     * 通过ServiceLoader注册
+     * 通过ServiceLoader策略集合
      */
-    public void registerByServiceLoader() {
-        register(ServiceLoaderUtil.loadAvailableList(getPolicyType()));
+    public void registerPoliciesByServiceLoader() {
+        registerPolicies(ServiceLoaderUtil.loadAvailableList(getPolicyType()));
     }
 
 
     /**
-     * 根据通过BeanProviders和bean初始化事件注册
+     * 根据通过BeanProviders和bean初始化事件策略集合
      */
-    public void registerByBeanProvidersAndEvent() {
-        registerByBeanProviders(BeanProviders.getInstance());
-        registerByBeanInitializedEvent();
+    public void registerPoliciesByBeanProvidersAndEvent() {
+        registerPoliciesByBeanProviders(BeanProviders.getInstance());
+        registerPoliciesByBeanInitializedEvent();
     }
 
     /**
-     * 通过BeanProviders注册
+     * 通过BeanProviders策略集合
      *
      * @param beanProviders bean提供者服务
      * @see BeanProviders
      */
-    public void registerByBeanProviders(BeanProviders beanProviders) {
-        register(beanProviders.getBeansOfType(getPolicyType()).values());
+    public void registerPoliciesByBeanProviders(BeanProviders beanProviders) {
+        registerPolicies(beanProviders.getBeansOfType(getPolicyType()).values());
     }
 
 
     /**
-     * 通过监听BeanInitializedEvent，注册策略
+     * 通过监听BeanInitializedEvent，注册策略集合
      *
      * @see BeanInitializedEvent
      */
-    public void registerByBeanInitializedEvent() {
+    public void registerPoliciesByBeanInitializedEvent() {
         MessagePublisher.instance().subscribe(beanInitializedEventSubscriber);
     }
 
 
     /**
-     * 通过扫描包注册
+     * 通过扫描包注册策略集合
      *
      * @param packageName 包路径
      * @param classFilter 类过滤器
      */
-    public void registerByFilter(String packageName, Filter<Class<?>> classFilter) {
-        registerByClasses(ClassUtil.scanPackage(packageName, classFilter));
+    public void registerPoliciesByFilter(String packageName, Filter<Class<?>> classFilter) {
+        registerPoliciesByClasses(ClassUtil.scanPackage(packageName, classFilter));
     }
 
     /**
-     * 通过扫描包注册
+     * 通过扫描包注册策略集合
      *
      * @param packageName 包路径
      * @param policyClass 类型
      */
-    public void registerBySuper(String packageName, Class<?> policyClass) {
-        registerByClasses(ClassUtil.scanPackageBySuper(packageName, policyClass));
+    public void registerPoliciesBySuper(String packageName, Class<?> policyClass) {
+        registerPoliciesByClasses(ClassUtil.scanPackageBySuper(packageName, policyClass));
     }
 
     /**
-     * 通过扫描包注册
+     * 通过扫描包注册策略集合
      *
      * @param packageName     包路径
      * @param annotationClass 注解类型
      */
-    public void registerByAnnotation(String packageName, Class<? extends Annotation> annotationClass) {
-        registerByClasses(ClassUtil.scanPackageByAnnotation(packageName, annotationClass));
+    public void registerPoliciesByAnnotation(String packageName, Class<? extends Annotation> annotationClass) {
+        registerPoliciesByClasses(ClassUtil.scanPackageByAnnotation(packageName, annotationClass));
     }
 
     @SuppressWarnings("unchecked")
-    private void registerByClasses(Collection<Class<?>> classList) {
+    private void registerPoliciesByClasses(Collection<Class<?>> classList) {
         classList.stream()
                 .filter(ClassUtil::isNormalClass)
                 .map(it -> (P) ReflectUtil.newInstanceIfPossible(it))
-                .forEach(this::register);
+                .forEach(this::registerPolicy);
     }
 
     /**
@@ -127,7 +127,7 @@ public abstract class PolicyRegistrar<C, P extends Policy<C>> {
      *
      * @param policy 策略
      */
-    public void register(P policy) {
+    public void registerPolicy(P policy) {
         if (policy == null) {
             return;
         }
@@ -161,9 +161,8 @@ public abstract class PolicyRegistrar<C, P extends Policy<C>> {
      *
      * @param policies 策略集合
      */
-    public void register(Collection<? extends P> policies) {
-        Optional.ofNullable(policies)
-                .ifPresent(it -> it.forEach(this::register));
+    public void registerPolicies(Collection<? extends P> policies) {
+        Optional.ofNullable(policies).ifPresent(it -> it.forEach(this::registerPolicy));
     }
 
 
@@ -211,8 +210,10 @@ public abstract class PolicyRegistrar<C, P extends Policy<C>> {
 
     /**
      * 删除策略
+     *
+     * @param policy 待删除策略对象
      */
-    public void unregister(P policy) {
+    public void unregisterPolicy(P policy) {
         policies = policies.stream()
                 .filter(it -> !ObjectUtil.equals(it, policy))
                 .collect(Collectors.toList());
@@ -226,8 +227,10 @@ public abstract class PolicyRegistrar<C, P extends Policy<C>> {
 
     /**
      * 删除策略
+     *
+     * @param policyName 待删除策略名称
      */
-    public void unregister(String policyName) {
+    public void unregisterPolicy(String policyName) {
         policies = policies.stream()
                 .filter(it -> !StrUtil.equals(it.policyName(), policyName))
                 .collect(Collectors.toList());
@@ -239,8 +242,19 @@ public abstract class PolicyRegistrar<C, P extends Policy<C>> {
                 .toString());
     }
 
-    private List<String> policyNames(){
-       return policies.stream().map(Policy::policyName).collect(Collectors.toList());
+    /**
+     * 删除所有策略
+     */
+    public void unregisterAllPolicies() {
+        policies = new ArrayList<>();
+
+        log.info(LogMessage.create(this.getClass().getSimpleName(), "unregisterAll")
+                .success()
+                .toString());
+    }
+
+    private List<String> policyNames() {
+        return policies.stream().map(Policy::policyName).collect(Collectors.toList());
     }
 
     private class BeanInitializedEventSubscriber extends AbstractBeanInitializedEventSubscriber {
@@ -248,7 +262,7 @@ public abstract class PolicyRegistrar<C, P extends Policy<C>> {
         @Override
         protected void internalOnMessage(BeanInitializedEvent message) {
             //noinspection unchecked
-            register((P) message.getBean());
+            registerPolicy(message.getBean());
         }
 
         @Override

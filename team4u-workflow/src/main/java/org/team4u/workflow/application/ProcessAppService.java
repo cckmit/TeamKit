@@ -173,7 +173,7 @@ public class ProcessAppService {
      * @param handler 流程节点处理器
      */
     public void registerNodeHandler(ProcessNodeHandler handler) {
-        processNodeHandlers.register(handler);
+        processNodeHandlers.registerPolicy(handler);
     }
 
     /**
@@ -182,7 +182,7 @@ public class ProcessAppService {
      * @param handler 流程bean处理器
      */
     public void registerBeanHandler(ProcessBeanHandler handler) {
-        processNodeHandlers.beanHandlers().register(handler);
+        processNodeHandlers.beanHandlers().registerPolicy(handler);
     }
 
     /**

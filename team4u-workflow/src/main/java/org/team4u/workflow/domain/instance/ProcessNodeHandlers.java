@@ -36,12 +36,12 @@ public class ProcessNodeHandlers extends PolicyRegistrar<Class<? extends Process
     }
 
     private void initProcessNodeHandler() {
-        register(new BeanStaticNodeHandler(beanHandlers));
-        register(new BeanChoiceNodeHandler(beanHandlers));
-        register(new BeanProcessingNodeHandler(beanHandlers));
-        register(new BeanActionChoiceNodeHandler(beanHandlers));
+        registerPolicy(new BeanStaticNodeHandler(beanHandlers));
+        registerPolicy(new BeanChoiceNodeHandler(beanHandlers));
+        registerPolicy(new BeanProcessingNodeHandler(beanHandlers));
+        registerPolicy(new BeanActionChoiceNodeHandler(beanHandlers));
 
-        registerByBeanProvidersAndEvent();
+        registerPoliciesByBeanProvidersAndEvent();
     }
 
     /**

@@ -40,7 +40,7 @@ public class SimpleCommandExecutor
     }
 
     public void saveAndInitFilterChain(CommandRoutesBuilder builder) {
-        register(builder);
+        registerPolicy(builder);
         initFilterChain(builder);
     }
 

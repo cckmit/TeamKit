@@ -16,7 +16,7 @@ public class BeanProvidersTest {
     @Before
     public void setUp() {
         providers = new BeanProviders();
-        providers.register(mockBeanProvider);
+        providers.registerPolicy(mockBeanProvider);
     }
 
     @Test

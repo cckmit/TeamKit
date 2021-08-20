@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.team4u.base.TestUtil;
 import org.team4u.base.bean.provider.BeanProviders;
+import org.team4u.base.bean.provider.LocalBeanProvider;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,14 +17,16 @@ public class PolicyRegistrarTest {
 
     @Before
     public void setUp() {
-        registrar.unregister(TestUtil.TEST);
-        registrar.unregister(TestUtil.TEST1);
-        registrar.unregister(TestUtil.TEST2);
+        registrar.unregisterAllPolicies();
+        LocalBeanProvider beanProvider = (LocalBeanProvider) BeanProviders.getInstance().availablePolicyOf(
+                LocalBeanProvider.ID
+        );
+        beanProvider.unregisterAllBeans();
     }
 
     @Test
     public void keyPolicy() {
-        registrar.registerBySuper(this.getClass().getPackage().getName(), StringIdPolicy.class);
+        registrar.registerPoliciesBySuper(this.getClass().getPackage().getName(), StringIdPolicy.class);
 
         Assert.assertEquals(TestIdPolicy.class, registrar.policyOf(TestUtil.TEST).getClass());
         Assert.assertEquals(Test2IdPolicy.class, registrar.policyOf(TestUtil.TEST2).getClass());
@@ -37,7 +40,7 @@ public class PolicyRegistrarTest {
     }
 
     @Test
-    public void availablePolicyOf() {
+    public void noSuchPolicy() {
         try {
             registrar.availablePolicyOf(TestUtil.TEST);
             Assert.fail();
@@ -50,10 +53,10 @@ public class PolicyRegistrarTest {
     public void unregister() {
         TestIdPolicy policy = new TestIdPolicy();
 
-        registrar.register(policy);
+        registrar.registerPolicy(policy);
         Assert.assertNotNull(registrar.policyOf(policy.id()));
 
-        registrar.unregister(policy);
+        registrar.unregisterPolicy(policy);
         Assert.assertNull(registrar.policyOf(policy.id()));
     }
 
@@ -61,16 +64,25 @@ public class PolicyRegistrarTest {
     public void registerByBeanInitializedEvent() {
         TestIdPolicy policy = new TestIdPolicy();
 
+        registrar.registerPoliciesByBeanInitializedEvent();
         BeanProviders.getInstance().registerBean(policy);
 
-        Assert.assertNotNull(registrar.policyOf(policy.id()));
+        Assert.assertEquals(policy, registrar.policyOf(policy.id()));
+    }
 
+    @Test
+    public void registerByBeanProviders() {
+        TestIdPolicy policy = new TestIdPolicy();
+        BeanProviders.getInstance().registerBean(policy);
+
+        registrar.registerPoliciesByBeanProviders(BeanProviders.getInstance());
+
+        Assert.assertEquals(policy, registrar.policyOf(policy.id()));
     }
 
     private static class TestPolicyRegistrar extends PolicyRegistrar<String, StringIdPolicy> {
 
         public TestPolicyRegistrar() {
-            registerByBeanProvidersAndEvent();
         }
 
         public TestPolicyRegistrar(List<? extends StringIdPolicy> policies) {

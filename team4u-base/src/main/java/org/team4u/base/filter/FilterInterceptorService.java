@@ -20,7 +20,7 @@ public class FilterInterceptorService<Context,
         extends PolicyRegistrar<String, Interceptor> {
 
     public FilterInterceptorService() {
-        registerByBeanProvidersAndEvent();
+        registerPoliciesByBeanProvidersAndEvent();
     }
 
     public FilterInterceptorService(List<Interceptor> objects) {

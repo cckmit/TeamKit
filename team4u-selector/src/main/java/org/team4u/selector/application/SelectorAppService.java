@@ -110,7 +110,7 @@ public class SelectorAppService {
      * 注册选择器构建工厂
      */
     public SelectorAppService registerSelectorFactory(SelectorFactory factory) {
-        selectorFactoryService.register(factory);
+        selectorFactoryService.registerPolicy(factory);
         return this;
     }
 
@@ -118,7 +118,7 @@ public class SelectorAppService {
      * 注册选择拦截器构建工厂
      */
     public SelectorAppService registerSelectorInterceptorFactory(SelectorInterceptorFactory factory) {
-        selectorInterceptorFactoryService.register(factory);
+        selectorInterceptorFactoryService.registerPolicy(factory);
         return this;
     }
 

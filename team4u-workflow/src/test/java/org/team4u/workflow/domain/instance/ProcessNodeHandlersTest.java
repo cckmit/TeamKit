@@ -33,7 +33,7 @@ public class ProcessNodeHandlersTest {
     @Test
     public void dynamic() {
         ProcessInstance instance = TestUtil.newInstance().setCurrentNode(definition.rootNode());
-        handles.register(new DynamicChoiceNodeHandler(selectorAppService()));
+        handles.registerPolicy(new DynamicChoiceNodeHandler(selectorAppService()));
 
         handles.handle(contextBuilder()
                 .withInstance(instance)

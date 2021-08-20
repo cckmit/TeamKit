@@ -13,7 +13,7 @@ import java.util.List;
 public class TemplateFunctionService extends PolicyRegistrar<String, TemplateFunction> {
 
     public TemplateFunctionService() {
-        registerByBeanProvidersAndEvent();
+        registerPoliciesByBeanProvidersAndEvent();
     }
 
     public TemplateFunctionService(List<TemplateFunction> functions) {

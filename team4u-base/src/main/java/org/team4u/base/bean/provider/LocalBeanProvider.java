@@ -55,7 +55,7 @@ public class LocalBeanProvider implements BeanProvider {
         return true;
     }
 
-    public void reset(){
+    public void unregisterAllBeans() {
         beans.clear();
     }
 
