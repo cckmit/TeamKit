@@ -2,8 +2,10 @@ package org.team4u.base.registrar;
 
 import cn.hutool.core.collection.CollUtil;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.team4u.base.TestUtil;
+import org.team4u.base.bean.provider.BeanProviders;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,6 +13,13 @@ import java.util.stream.Collectors;
 public class PolicyRegistrarTest {
 
     private final TestPolicyRegistrar registrar = new TestPolicyRegistrar();
+
+    @Before
+    public void setUp() {
+        registrar.unregister(TestUtil.TEST);
+        registrar.unregister(TestUtil.TEST1);
+        registrar.unregister(TestUtil.TEST2);
+    }
 
     @Test
     public void keyPolicy() {
@@ -48,9 +57,20 @@ public class PolicyRegistrarTest {
         Assert.assertNull(registrar.policyOf(policy.id()));
     }
 
+    @Test
+    public void registerByBeanInitializedEvent() {
+        TestIdPolicy policy = new TestIdPolicy();
+
+        BeanProviders.getInstance().registerBean(policy);
+
+        Assert.assertNotNull(registrar.policyOf(policy.id()));
+
+    }
+
     private static class TestPolicyRegistrar extends PolicyRegistrar<String, StringIdPolicy> {
 
         public TestPolicyRegistrar() {
+            registerByBeanProvidersAndEvent();
         }
 
         public TestPolicyRegistrar(List<? extends StringIdPolicy> policies) {

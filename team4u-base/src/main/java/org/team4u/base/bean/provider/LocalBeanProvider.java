@@ -55,6 +55,10 @@ public class LocalBeanProvider implements BeanProvider {
         return true;
     }
 
+    public void reset(){
+        beans.clear();
+    }
+
     @Override
     public int priority() {
         return 100;

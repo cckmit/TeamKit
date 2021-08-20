@@ -160,14 +160,15 @@ public abstract class SimplePolicyService<C, P extends SimplePolicy<C>> {
 
     private class BeanInitializedEventSubscriber extends AbstractBeanInitializedEventSubscriber {
 
-        protected BeanInitializedEventSubscriber() {
-            super(policyType);
-        }
-
         @Override
         protected void internalOnMessage(BeanInitializedEvent message) {
             //noinspection unchecked
             register((P) message.getBean());
+        }
+
+        @Override
+        public Class<?> getBeanType() {
+            return policyType;
         }
     }
 }

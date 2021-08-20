@@ -21,7 +21,7 @@ public interface Policy<C> {
      *
      * @param context 　上下文
      */
-    boolean isSupport(C context);
+    boolean supports(C context);
 
     /**
      * 优先级

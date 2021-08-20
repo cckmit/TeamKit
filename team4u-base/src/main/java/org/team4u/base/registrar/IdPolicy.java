@@ -17,7 +17,7 @@ public interface IdPolicy<ID> extends Policy<ID> {
     ID id();
 
     @Override
-    default boolean isSupport(ID context) {
+    default boolean supports(ID context) {
         return ObjectUtil.equals(context, id());
     }
 

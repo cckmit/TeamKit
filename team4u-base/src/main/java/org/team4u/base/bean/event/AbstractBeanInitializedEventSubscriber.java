@@ -9,21 +9,17 @@ import org.team4u.base.message.AbstractMessageSubscriber;
  */
 public abstract class AbstractBeanInitializedEventSubscriber extends AbstractMessageSubscriber<BeanInitializedEvent> {
 
-    /**
-     * 指定bean类型
-     */
-    private final Class<?> beanType;
-
-    protected AbstractBeanInitializedEventSubscriber(Class<?> beanType) {
-        this.beanType = beanType;
-    }
-
     @Override
     protected boolean supports(Object message) {
         if (!super.supports(message)) {
             return false;
         }
 
-        return beanType.isAssignableFrom(((BeanInitializedEvent) message).getBean().getClass());
+        return getBeanType().isAssignableFrom(((BeanInitializedEvent) message).getBean().getClass());
     }
+
+    /**
+     * 获取指定监听的bean类型
+     */
+    public abstract Class<?> getBeanType();
 }

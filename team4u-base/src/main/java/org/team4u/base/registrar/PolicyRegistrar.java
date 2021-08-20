@@ -5,6 +5,7 @@ import cn.hutool.core.lang.Filter;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.Log;
 import lombok.Getter;
 import org.team4u.base.bean.ServiceLoaderUtil;
@@ -17,6 +18,7 @@ import org.team4u.base.message.MessagePublisher;
 import java.lang.annotation.Annotation;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 策略注册器
@@ -28,18 +30,14 @@ import java.util.stream.Collectors;
 public abstract class PolicyRegistrar<C, P extends Policy<C>> {
 
     private final Log log = Log.get();
-
-    private List<P> policies = new ArrayList<>();
-
     @Getter
     @SuppressWarnings("unchecked")
     private final Class<C> contextType = (Class<C>) ClassUtil.getTypeArgument(this.getClass());
-
     @Getter
     @SuppressWarnings("unchecked")
     private final Class<P> policyType = (Class<P>) ClassUtil.getTypeArgument(this.getClass(), 1);
-
     private final BeanInitializedEventSubscriber beanInitializedEventSubscriber = new BeanInitializedEventSubscriber();
+    private List<P> policies = new ArrayList<>();
 
     public PolicyRegistrar() {
         registerByServiceLoader();
@@ -142,7 +140,7 @@ public abstract class PolicyRegistrar<C, P extends Policy<C>> {
         log.info(LogMessage.create(this.getClass().getSimpleName(), "register")
                 .append("policy", policy.policyName())
                 .append("priority", policy.priority())
-                .append("policies", policies.stream().map(Policy::policyName).collect(Collectors.toList()))
+                .append("policies", policyNames())
                 .success()
                 .toString());
     }
@@ -186,13 +184,9 @@ public abstract class PolicyRegistrar<C, P extends Policy<C>> {
      * @see NoSuchPolicyException 若无匹配的策略则抛出此异常
      */
     public P availablePolicyOf(C context) throws NoSuchPolicyException {
-        P policy = policyOf(context);
-
-        if (policy == null) {
-            throw new NoSuchPolicyException("Unable to find policy|context=" + context);
-        }
-
-        return policy;
+        return policiesStreamOf(context)
+                .findFirst()
+                .orElseThrow(() -> new NoSuchPolicyException("Unable to find policy|context=" + context));
     }
 
     /**
@@ -201,9 +195,11 @@ public abstract class PolicyRegistrar<C, P extends Policy<C>> {
      * @return 返回所有匹配上下文的策略集合
      */
     public List<P> policiesOf(C context) {
-        return policies.stream()
-                .filter(it -> it.isSupport(context))
-                .collect(Collectors.toList());
+        return policiesStreamOf(context).collect(Collectors.toList());
+    }
+
+    private Stream<P> policiesStreamOf(C context) {
+        return policies.stream().filter(it -> it.supports(context));
     }
 
     /**
@@ -223,21 +219,41 @@ public abstract class PolicyRegistrar<C, P extends Policy<C>> {
 
         log.info(LogMessage.create(this.getClass().getSimpleName(), "unregister")
                 .append("policy", policy.policyName())
-                .append("policies", policies.stream().map(Policy::policyName).collect(Collectors.toList()))
+                .append("policies", policyNames())
                 .success()
                 .toString());
     }
 
-    private class BeanInitializedEventSubscriber extends AbstractBeanInitializedEventSubscriber {
+    /**
+     * 删除策略
+     */
+    public void unregister(String policyName) {
+        policies = policies.stream()
+                .filter(it -> !StrUtil.equals(it.policyName(), policyName))
+                .collect(Collectors.toList());
 
-        protected BeanInitializedEventSubscriber() {
-            super(getPolicyType());
-        }
+        log.info(LogMessage.create(this.getClass().getSimpleName(), "unregister")
+                .append("policy", policyName)
+                .append("policies", policyNames())
+                .success()
+                .toString());
+    }
+
+    private List<String> policyNames(){
+       return policies.stream().map(Policy::policyName).collect(Collectors.toList());
+    }
+
+    private class BeanInitializedEventSubscriber extends AbstractBeanInitializedEventSubscriber {
 
         @Override
         protected void internalOnMessage(BeanInitializedEvent message) {
             //noinspection unchecked
             register((P) message.getBean());
+        }
+
+        @Override
+        public Class<?> getBeanType() {
+            return getPolicyType();
         }
     }
 }

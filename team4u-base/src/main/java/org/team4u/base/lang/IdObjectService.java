@@ -281,13 +281,14 @@ public abstract class IdObjectService<K, V extends IdObject<K>> {
 
     private class BeanInitializedEventSubscriber extends AbstractBeanInitializedEventSubscriber {
 
-        protected BeanInitializedEventSubscriber() {
-            super(valueType);
-        }
-
         @Override
         protected void internalOnMessage(BeanInitializedEvent message) throws Throwable {
             saveIdObject(message.getBean());
+        }
+
+        @Override
+        public Class<?> getBeanType() {
+            return valueType();
         }
     }
 }
