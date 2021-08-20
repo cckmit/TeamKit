@@ -2,9 +2,9 @@ package org.team4u.workflow.domain.form.process.node.handler;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.Log;
-import org.team4u.base.lang.IdObject;
-import org.team4u.base.lang.IdObjectService;
 import org.team4u.base.log.LogMessage;
+import org.team4u.base.registrar.PolicyRegistrar;
+import org.team4u.base.registrar.StringIdPolicy;
 import org.team4u.workflow.domain.form.process.definition.node.AssigneeStaticNode;
 import org.team4u.workflow.domain.instance.ProcessAssignee;
 import org.team4u.workflow.domain.instance.node.handler.AbstractStaticProcessNodeHandler;
@@ -28,7 +28,7 @@ public class AssigneeStaticNodeHandler extends AbstractStaticProcessNodeHandler<
     public void internalHandle(ProcessNodeHandlerContext context) {
         AssigneeStaticNode node = node(context);
 
-        List<String> assignees = policyService.availableObjectOfId(node.getRuleType()).assigneesOf(
+        List<String> assignees = policyService.availablePolicyOf(node.getRuleType()).assigneesOf(
                 context,
                 node
         );
@@ -58,7 +58,7 @@ public class AssigneeStaticNodeHandler extends AbstractStaticProcessNodeHandler<
      * @param policy 策略
      */
     public void registerPolicy(Policy policy) {
-        policyService.saveIdObject(policy);
+        policyService.register(policy);
     }
 
     /**
@@ -66,7 +66,7 @@ public class AssigneeStaticNodeHandler extends AbstractStaticProcessNodeHandler<
      *
      * @author jay.wu
      */
-    public interface Policy extends IdObject<String> {
+    public interface Policy extends StringIdPolicy {
 
         /**
          * 获取处理人标识集合
@@ -78,11 +78,10 @@ public class AssigneeStaticNodeHandler extends AbstractStaticProcessNodeHandler<
         List<String> assigneesOf(ProcessNodeHandlerContext context, AssigneeStaticNode node);
     }
 
-    public static class PolicyService extends IdObjectService<String, Policy> {
-        public PolicyService() {
-            super(Policy.class);
+    public static class PolicyService extends PolicyRegistrar<String, Policy> {
 
-            saveObjectsByBeanProvidersAndEvent();
+        public PolicyService() {
+            registerByBeanProvidersAndEvent();
         }
     }
 

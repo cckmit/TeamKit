@@ -27,20 +27,20 @@ public class PolicyRegistrarTest {
 
         Assert.assertEquals(policy1, registrar.policyOf(TestUtil.TEST));
         Assert.assertEquals(policy2, registrar.policyOf(TestUtil.TEST1));
-        Assert.assertEquals(CollUtil.newArrayList(policy3, policy1, policy2), registrar.policies());
+        Assert.assertEquals(CollUtil.newArrayList(policy3,policy1, policy2), registrar.policies());
     }
 
-    private static class TestPolicyRegistrar extends PolicyRegistrar<String, IdPolicy<String>> {
+    private static class TestPolicyRegistrar extends PolicyRegistrar<String, StringIdPolicy> {
 
         public TestPolicyRegistrar() {
         }
 
-        public TestPolicyRegistrar(List<? extends IdPolicy<String>> policies) {
+        public TestPolicyRegistrar(List<? extends StringIdPolicy> policies) {
             super(policies);
         }
     }
 
-    private static class TestIdPolicy implements IdPolicy<String> {
+    private static class TestIdPolicy implements StringIdPolicy {
 
         private final String id;
 

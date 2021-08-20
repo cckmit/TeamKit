@@ -2,7 +2,7 @@ package org.team4u.command.infrastructure.executor.simple;
 
 
 import org.team4u.base.filter.Filter;
-import org.team4u.base.lang.IdObject;
+import org.team4u.base.registrar.StringIdPolicy;
 import org.team4u.command.domain.executor.handler.CommandHandler;
 
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author jay.wu
  */
-public interface CommandRoutesBuilder extends IdObject<String> {
+public interface CommandRoutesBuilder extends StringIdPolicy {
 
     /**
      * 配置处理器路由

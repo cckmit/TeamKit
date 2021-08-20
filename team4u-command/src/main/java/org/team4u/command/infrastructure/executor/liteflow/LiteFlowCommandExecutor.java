@@ -5,7 +5,7 @@ import com.yomahub.liteflow.core.FlowExecutor;
 import com.yomahub.liteflow.property.LiteflowConfig;
 import org.team4u.base.error.NestedException;
 import org.team4u.base.error.SystemDataNotExistException;
-import org.team4u.base.lang.IdObjectService;
+import org.team4u.base.registrar.PolicyRegistrar;
 import org.team4u.command.domain.config.CommandConfig;
 import org.team4u.command.domain.executor.CommandExecutor;
 import org.team4u.command.domain.executor.handler.CommandHandler;
@@ -21,13 +21,11 @@ import java.util.Map;
  *
  * @author jay.wu
  */
-public class LiteFlowCommandExecutor extends IdObjectService<String, CommandRoutesBuilder> implements CommandExecutor {
+public class LiteFlowCommandExecutor extends PolicyRegistrar<String, CommandRoutesBuilder> implements CommandExecutor {
 
     private final Map<String, FlowExecutor> flowMap = new HashMap<>();
 
     public LiteFlowCommandExecutor() {
-        super(CommandRoutesBuilder.class);
-
         initFlow();
     }
 
@@ -38,13 +36,13 @@ public class LiteFlowCommandExecutor extends IdObjectService<String, CommandRout
     }
 
     private void initFlow() {
-        for (CommandRoutesBuilder builder : idObjects()) {
+        for (CommandRoutesBuilder builder : policies()) {
             initFlowExecutor(builder);
         }
     }
 
     public void saveAndInitFlow(CommandRoutesBuilder builder) {
-        saveIdObject(builder);
+        register(builder);
         initFlowExecutor(builder);
     }
 

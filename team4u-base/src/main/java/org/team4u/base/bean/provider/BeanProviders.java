@@ -4,8 +4,8 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import org.team4u.base.bean.event.BeanInitializedEvent;
-import org.team4u.base.lang.IdObjectService;
 import org.team4u.base.log.LogMessage;
+import org.team4u.base.registrar.PolicyRegistrar;
 
 import java.util.HashMap;
 import java.util.List;
@@ -16,22 +16,21 @@ import java.util.Objects;
  * bean提供者服务
  * <p>
  * 设计目的：
- * - 很多通用服务需要一套完整的扩展服务，配合IdObjectService可以实现一部分需求，但无法方便地与spring联动
+ * - 很多通用服务需要一套完整的扩展服务，配合PolicyRegistrar可以实现一部分需求，但无法方便地与spring联动
  * - 该类提供一套简单通用的bean管理功能供通用服务扩展，在与特定框架解耦（如Spring）的同时，通过监听BeanInitializedEvent实现特定框架的回调注册
  *
  * @author jay.wu
- * @see IdObjectService
+ * @see PolicyRegistrar
  * @see BeanInitializedEvent
  */
 @Slf4j
-public class BeanProviders extends IdObjectService<String, BeanProvider> {
+public class BeanProviders extends PolicyRegistrar<String, BeanProvider> {
 
     public static BeanProviders getInstance() {
         return Singleton.get(BeanProviders.class);
     }
 
     public BeanProviders() {
-        super(BeanProvider.class);
     }
 
     public BeanProviders(List<BeanProvider> objects) {
@@ -48,7 +47,7 @@ public class BeanProviders extends IdObjectService<String, BeanProvider> {
      */
     @SuppressWarnings("unchecked")
     public <T> T getBean(String name) throws NoSuchBeanDefinitionException {
-        return idObjects()
+        return policies()
                 .stream()
                 .map(it -> (T) it.getBean(name))
                 .filter(Objects::nonNull)
@@ -65,7 +64,7 @@ public class BeanProviders extends IdObjectService<String, BeanProvider> {
      * @throws NoSuchBeanDefinitionException 无法找到bean时抛出此异常
      */
     public <T> T getBean(Class<T> type) throws NoSuchBeanDefinitionException {
-        return idObjects()
+        return policies()
                 .stream()
                 .map(it -> it.getBean(type))
                 .filter(Objects::nonNull)
@@ -84,7 +83,7 @@ public class BeanProviders extends IdObjectService<String, BeanProvider> {
      */
     public <T> Map<String, T> getBeansOfType(Class<T> type) {
         // 反转以确保高优先级的key不会被低优先级的覆盖
-        return CollUtil.reverse(idObjects())
+        return CollUtil.reverse(policies())
                 .stream()
                 .map(it -> it.getBeansOfType(type))
                 .reduce(new HashMap<>(), (a, b) -> {
@@ -107,7 +106,7 @@ public class BeanProviders extends IdObjectService<String, BeanProvider> {
                 .append("beanName", beanName)
                 .append("bean", bean);
 
-        boolean result = idObjects()
+        boolean result = policies()
                 .stream()
                 .map(it -> it.registerBean(beanName, bean))
                 .filter(it -> it)

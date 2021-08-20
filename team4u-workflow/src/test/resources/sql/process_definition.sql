@@ -1,8 +1,8 @@
 create table `process_definition`
 (
-    `id`                         bigint(20) unsigned not null auto_increment comment '自增长标识',
+    `id`                         bigint(20) not null auto_increment comment '自增长标识',
     `process_definition_id`      varchar(32)         not null default '' comment '流程定义版本',
-    `process_definition_version` int unsigned        not null default 0 comment '流程定义版本',
+    `process_definition_version` int        not null default 0 comment '流程定义版本',
     `process_definition_name`    varchar(32)         not null default '' comment '流程定义名称',
     `process_definition_body`    varchar(21800)      not null default '' comment '流程定义内容',
     `create_by`                  varchar(32)         not null default '' comment '创建者标识',
@@ -11,4 +11,4 @@ create table `process_definition`
     `update_time`                timestamp           not null default current_timestamp on update current_timestamp comment '更新时间',
     primary key (`id`),
     unique index `uniq_process_definition_id` (`process_definition_id`, process_definition_version)
-) comment ='流程定义';
+);

@@ -1,7 +1,7 @@
 package org.team4u.command.infrastructure.executor.liteflow;
 
 
-import org.team4u.base.lang.IdObject;
+import org.team4u.base.registrar.StringIdPolicy;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import java.util.List;
  *
  * @author jay.wu
  */
-public interface CommandRoutesBuilder extends IdObject<String> {
+public interface CommandRoutesBuilder extends StringIdPolicy {
 
     /**
      * 注册节点组件

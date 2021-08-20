@@ -11,8 +11,8 @@ import static org.team4u.workflow.TestUtil.*;
 
 public class ProcessNodeHandlersTest {
 
-    private final ProcessDefinition definition = TestUtil.definitionOf("simple");
-    private final ProcessNodeHandlers handles = new ProcessNodeHandlers(new MockProcessInstanceRepository());
+    private static final ProcessDefinition definition = TestUtil.definitionOf("simple");
+    private static final ProcessNodeHandlers handles = new ProcessNodeHandlers(new MockProcessInstanceRepository());
 
     @Test
     public void save() {
@@ -33,7 +33,7 @@ public class ProcessNodeHandlersTest {
     @Test
     public void dynamic() {
         ProcessInstance instance = TestUtil.newInstance().setCurrentNode(definition.rootNode());
-        handles.saveIdObject(new DynamicChoiceNodeHandler(selectorAppService()));
+        handles.register(new DynamicChoiceNodeHandler(selectorAppService()));
 
         handles.handle(contextBuilder()
                 .withInstance(instance)

@@ -98,7 +98,7 @@ public class ProcessAppService {
      */
     @SuppressWarnings("unchecked")
     public <T extends ProcessNodeHandler> T processNodeHandlerOf(Class<? extends ProcessNode> nodeClass) {
-        return (T) processNodeHandlers.objectOfId(nodeClass);
+        return (T) processNodeHandlers.policiesOf(nodeClass);
     }
 
     /**
@@ -109,7 +109,7 @@ public class ProcessAppService {
      */
     @SuppressWarnings("unchecked")
     public <T extends ProcessBeanHandler> T processBeanHandlerOf(String handlerId) {
-        return (T) processNodeHandlers.beanHandlers().objectOfId(handlerId);
+        return (T) processNodeHandlers.beanHandlers().policiesOf(handlerId);
     }
 
     /**
@@ -173,7 +173,7 @@ public class ProcessAppService {
      * @param handler 流程节点处理器
      */
     public void registerNodeHandler(ProcessNodeHandler handler) {
-        processNodeHandlers.saveIdObject(handler);
+        processNodeHandlers.register(handler);
     }
 
     /**
@@ -182,7 +182,7 @@ public class ProcessAppService {
      * @param handler 流程bean处理器
      */
     public void registerBeanHandler(ProcessBeanHandler handler) {
-        processNodeHandlers.beanHandlers().saveIdObject(handler);
+        processNodeHandlers.beanHandlers().register(handler);
     }
 
     /**

@@ -51,7 +51,7 @@ public class JetbrickTemplateEngine implements TemplateEngine {
      */
     private void registerFunctions() {
         GlobalResolver resolver = engine.getGlobalResolver();
-        for (TemplateFunction idObject : templateFunctionService.idObjects()) {
+        for (TemplateFunction idObject : templateFunctionService.policies()) {
             resolver.registerFunctions(idObject.getClass());
         }
     }

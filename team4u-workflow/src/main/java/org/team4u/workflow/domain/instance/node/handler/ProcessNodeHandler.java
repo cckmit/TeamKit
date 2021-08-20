@@ -1,6 +1,6 @@
 package org.team4u.workflow.domain.instance.node.handler;
 
-import org.team4u.base.lang.IdObject;
+import org.team4u.base.registrar.IdPolicy;
 import org.team4u.workflow.domain.definition.ProcessNode;
 
 /**
@@ -8,7 +8,7 @@ import org.team4u.workflow.domain.definition.ProcessNode;
  *
  * @author jay.wu
  */
-public interface ProcessNodeHandler extends IdObject<Class<? extends ProcessNode>> {
+public interface ProcessNodeHandler extends IdPolicy<Class<? extends ProcessNode>> {
 
     /**
      * 处理节点

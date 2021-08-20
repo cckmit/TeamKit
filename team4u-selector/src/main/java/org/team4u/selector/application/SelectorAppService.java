@@ -118,7 +118,7 @@ public class SelectorAppService {
      * 注册选择拦截器构建工厂
      */
     public SelectorAppService registerSelectorInterceptorFactory(SelectorInterceptorFactory factory) {
-        selectorInterceptorFactoryService.saveIdObject(factory);
+        selectorInterceptorFactoryService.register(factory);
         return this;
     }
 
@@ -153,7 +153,7 @@ public class SelectorAppService {
         return selectorConfig.getInterceptors()
                 .stream()
                 .map(it -> {
-                    SelectorInterceptorFactory interceptorFactory = selectorInterceptorFactoryService.objectOfId(it.getId());
+                    SelectorInterceptorFactory interceptorFactory = selectorInterceptorFactoryService.policyOf(it.getId());
                     Assert.notNull(interceptorFactory, "InterceptorFactory is null|id=" + it.getId());
 
                     return interceptorFactory.create(it.getConfig());

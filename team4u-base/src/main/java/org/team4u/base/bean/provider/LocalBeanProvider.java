@@ -45,6 +45,11 @@ public class LocalBeanProvider implements BeanProvider {
 
     @Override
     public <T> boolean registerBean(String beanName, T bean) {
+        // 重复注册，直接返回true
+        if (beans.containsKey(beanName)) {
+            return true;
+        }
+
         beans.set(beanName, bean);
         MessagePublisher.instance().publish(new BeanInitializedEvent(beanName, bean));
         return true;

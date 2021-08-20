@@ -2,14 +2,14 @@ package org.team4u.notification.domain;
 
 
 import org.team4u.base.error.RemoteCallException;
-import org.team4u.base.lang.IdObject;
+import org.team4u.base.registrar.StringIdPolicy;
 
 /**
  * 消息发送者
  *
  * @author jay.wu
  */
-public interface NotificationSender<N extends Notification> extends IdObject<String> {
+public interface NotificationSender<N extends Notification> extends StringIdPolicy {
 
     /**
      * 发送消息

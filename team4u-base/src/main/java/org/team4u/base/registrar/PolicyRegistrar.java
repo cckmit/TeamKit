@@ -3,6 +3,7 @@ package org.team4u.base.registrar;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.util.ClassUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.log.Log;
 import lombok.Getter;
@@ -75,7 +76,7 @@ public abstract class PolicyRegistrar<C, P extends Policy<C>> {
         register(beanProviders.getBeansOfType(getPolicyType()).values());
     }
 
-    
+
     /**
      * 通过监听BeanInitializedEvent，注册策略
      *
@@ -137,8 +138,9 @@ public abstract class PolicyRegistrar<C, P extends Policy<C>> {
 
         if (log.isDebugEnabled()) {
             log.debug(LogMessage.create(this.getClass().getSimpleName(), "register")
-                    .append("policy", policy.getClass().getName())
+                    .append("policy", policy.policyName())
                     .append("priority", policy.priority())
+                    .append("policies", policies.stream().map(Policy::policyName).collect(Collectors.toList()))
                     .success()
                     .toString());
         }
@@ -189,8 +191,7 @@ public abstract class PolicyRegistrar<C, P extends Policy<C>> {
      * 根据上下文获取策略集合
      */
     public List<P> policiesOf(C context) {
-        return policies()
-                .stream()
+        return policies.stream()
                 .filter(it -> it.isSupport(context))
                 .collect(Collectors.toList());
     }
@@ -199,7 +200,7 @@ public abstract class PolicyRegistrar<C, P extends Policy<C>> {
      * 获取所有注册策略集合
      */
     public List<P> policies() {
-        return Collections.unmodifiableList(policies);
+        return new ArrayList<>(policies);
     }
 
     /**
@@ -207,14 +208,14 @@ public abstract class PolicyRegistrar<C, P extends Policy<C>> {
      */
     public void unregister(P policy) {
         policies = policies.stream()
-                .filter(it -> !policy.getClass().equals(it.getClass()))
+                .filter(it -> ObjectUtil.equals(it, policy))
                 .collect(Collectors.toList());
     }
 
     private class BeanInitializedEventSubscriber extends AbstractBeanInitializedEventSubscriber {
 
         protected BeanInitializedEventSubscriber() {
-            super(policyType);
+            super(getPolicyType());
         }
 
         @Override

@@ -1,5 +1,6 @@
 package org.team4u.base.lang;
 
+import cn.hutool.core.collection.CollUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -10,7 +11,7 @@ public class SimplePolicyServiceTest {
 
     @Test
     public void policyOf() {
-        Assert.assertEquals(P1.class, s.policyOf("1").getClass());
+        Assert.assertTrue(CollUtil.newArrayList(P1.class, P3.class).contains(s.policyOf("1").getClass()));
         Assert.assertEquals(P2.class, s.policyOf("2").getClass());
     }
 

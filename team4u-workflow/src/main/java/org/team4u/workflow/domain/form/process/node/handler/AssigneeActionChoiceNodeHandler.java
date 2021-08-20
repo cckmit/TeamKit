@@ -1,8 +1,8 @@
 package org.team4u.workflow.domain.form.process.node.handler;
 
 import cn.hutool.core.util.StrUtil;
-import org.team4u.base.lang.IdObject;
-import org.team4u.base.lang.IdObjectService;
+import org.team4u.base.registrar.PolicyRegistrar;
+import org.team4u.base.registrar.StringIdPolicy;
 import org.team4u.workflow.domain.form.FormContextKeys;
 import org.team4u.workflow.domain.form.process.definition.ProcessFormAction;
 import org.team4u.workflow.domain.form.process.definition.node.AssigneeActionChoiceNode;
@@ -40,7 +40,7 @@ public class AssigneeActionChoiceNodeHandler extends AbstractActionChoiceNodeHan
 
     protected boolean canJumpToNextNode(ProcessNodeHandlerContext context) {
         AssigneeActionChoiceNode node = context.getNode();
-        return policyService.availableObjectOfId(node.getChoiceType()).canJumpToNextNode(context, node);
+        return policyService.availablePolicyOf(node.getChoiceType()).canJumpToNextNode(context, node);
     }
 
     private void checkOperatorPermissions(ProcessAssignee assignee, ProcessNodeHandlerContext context) {
@@ -72,7 +72,7 @@ public class AssigneeActionChoiceNodeHandler extends AbstractActionChoiceNodeHan
      * @param policy 策略
      */
     public void registerPolicy(Policy policy) {
-        policyService.saveIdObject(policy);
+        policyService.register(policy);
     }
 
     /**
@@ -80,7 +80,7 @@ public class AssigneeActionChoiceNodeHandler extends AbstractActionChoiceNodeHan
      *
      * @author jay.wu
      */
-    public interface Policy extends IdObject<String> {
+    public interface Policy extends StringIdPolicy {
 
         /**
          * 是否可以跳转到下一个节点
@@ -92,11 +92,10 @@ public class AssigneeActionChoiceNodeHandler extends AbstractActionChoiceNodeHan
         boolean canJumpToNextNode(ProcessNodeHandlerContext context, AssigneeActionChoiceNode node);
     }
 
-    public static class PolicyService extends IdObjectService<String, Policy> {
-        public PolicyService() {
-            super(Policy.class);
+    public static class PolicyService extends PolicyRegistrar<String, Policy> {
 
-            saveObjectsByBeanProvidersAndEvent();
+        public PolicyService() {
+            registerByBeanProvidersAndEvent();
         }
     }
 

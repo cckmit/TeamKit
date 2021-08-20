@@ -1,6 +1,6 @@
 package org.team4u.workflow.domain.instance.node.handler.bean;
 
-import org.team4u.base.lang.IdObjectService;
+import org.team4u.base.registrar.PolicyRegistrar;
 import org.team4u.workflow.domain.instance.exception.ProcessBeanHandlerNotExistException;
 
 import java.util.List;
@@ -10,12 +10,10 @@ import java.util.List;
  *
  * @author jay.wu
  */
-public class ProcessBeanHandlers extends IdObjectService<String, ProcessBeanHandler> {
+public class ProcessBeanHandlers extends PolicyRegistrar<String, ProcessBeanHandler> {
 
     public ProcessBeanHandlers() {
-        super(ProcessBeanHandler.class);
-
-        saveObjectsByBeanProvidersAndEvent();
+        registerByBeanProvidersAndEvent();
     }
 
     public ProcessBeanHandlers(List<ProcessBeanHandler> objects) {
@@ -23,7 +21,7 @@ public class ProcessBeanHandlers extends IdObjectService<String, ProcessBeanHand
     }
 
     public ProcessBeanHandler getBean(String beanName) {
-        ProcessBeanHandler handler = objectOfId(beanName);
+        ProcessBeanHandler handler = policyOf(beanName);
 
         if (handler == null) {
             throw new ProcessBeanHandlerNotExistException(beanName);

@@ -1,7 +1,7 @@
 package org.team4u.selector.domain.selector;
 
 import cn.hutool.core.lang.Dict;
-import org.team4u.base.lang.IdObject;
+import org.team4u.base.registrar.StringIdPolicy;
 import org.team4u.selector.domain.selector.binding.SelectorBinding;
 
 /**
@@ -9,7 +9,7 @@ import org.team4u.selector.domain.selector.binding.SelectorBinding;
  *
  * @author jay.wu
  */
-public interface SelectorValueHandler extends IdObject<String> {
+public interface SelectorValueHandler extends StringIdPolicy {
 
     /**
      * 处理选择值

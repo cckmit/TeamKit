@@ -27,7 +27,7 @@ import java.util.Map;
 public class JsTemplateEngine implements TemplateEngine {
 
     private final Cache<String, CompiledScript> scripts = CacheUtil.newLRUCache(1000);
-    private TemplateFunctionService templateFunctionService;
+    private final TemplateFunctionService templateFunctionService;
 
     public JsTemplateEngine(TemplateFunctionService templateFunctionService) {
         if (templateFunctionService == null) {
@@ -76,7 +76,7 @@ public class JsTemplateEngine implements TemplateEngine {
      */
     private Dict customFunctions() {
         Dict functions = Dict.create();
-        for (TemplateFunction idObject : templateFunctionService.idObjects()) {
+        for (TemplateFunction idObject : templateFunctionService.policies()) {
             functions.set(idObject.id(), idObject);
         }
 

@@ -1,7 +1,7 @@
 package org.team4u.template;
 
 
-import org.team4u.base.lang.IdObjectService;
+import org.team4u.base.registrar.PolicyRegistrar;
 
 import java.util.List;
 
@@ -10,12 +10,10 @@ import java.util.List;
  *
  * @author jay.wu
  */
-public class TemplateFunctionService extends IdObjectService<String, TemplateFunction> {
+public class TemplateFunctionService extends PolicyRegistrar<String, TemplateFunction> {
 
     public TemplateFunctionService() {
-        super(TemplateFunction.class);
-
-        saveObjectsByBeanProvidersAndEvent();
+        registerByBeanProvidersAndEvent();
     }
 
     public TemplateFunctionService(List<TemplateFunction> functions) {

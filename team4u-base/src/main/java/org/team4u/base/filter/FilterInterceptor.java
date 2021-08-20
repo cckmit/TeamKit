@@ -1,14 +1,14 @@
 package org.team4u.base.filter;
 
 
-import org.team4u.base.lang.IdObject;
+import org.team4u.base.registrar.StringIdPolicy;
 
 /**
  * 处理拦截器
  *
  * @author jay.wu
  */
-public interface FilterInterceptor<Context, F extends Filter<Context>> extends IdObject<String> {
+public interface FilterInterceptor<Context, F extends Filter<Context>> extends StringIdPolicy {
 
     /**
      * 前置处理

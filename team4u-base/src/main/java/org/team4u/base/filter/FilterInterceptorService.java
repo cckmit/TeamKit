@@ -3,7 +3,7 @@ package org.team4u.base.filter;
 import cn.hutool.core.lang.func.VoidFunc1;
 import org.team4u.base.error.NestedException;
 import org.team4u.base.error.SystemDataNotExistException;
-import org.team4u.base.lang.IdObjectService;
+import org.team4u.base.registrar.PolicyRegistrar;
 
 import java.util.Collections;
 import java.util.List;
@@ -17,10 +17,10 @@ import java.util.stream.Collectors;
 public class FilterInterceptorService<Context,
         F extends Filter<Context>,
         Interceptor extends FilterInterceptor<Context, F>>
-        extends IdObjectService<String, Interceptor> {
+        extends PolicyRegistrar<String, Interceptor> {
 
     public FilterInterceptorService() {
-        saveObjectsByBeanProvidersAndEvent();
+        registerByBeanProvidersAndEvent();
     }
 
     public FilterInterceptorService(List<Interceptor> objects) {
@@ -91,7 +91,7 @@ public class FilterInterceptorService<Context,
 
         return interceptorIds.stream()
                 .map(it -> {
-                    Interceptor interceptor = objectOfId(it);
+                    Interceptor interceptor = policyOf(it);
                     if (interceptor == null) {
                         throw new SystemDataNotExistException("FilterInterceptorId=" + it);
                     }

@@ -1,6 +1,6 @@
 package org.team4u.base.bean.provider;
 
-import org.team4u.base.lang.IdObject;
+import org.team4u.base.registrar.StringIdPolicy;
 
 import java.util.Map;
 
@@ -9,7 +9,7 @@ import java.util.Map;
  *
  * @author jay.wu
  */
-public interface BeanProvider extends IdObject<String> {
+public interface BeanProvider extends StringIdPolicy {
 
     /**
      * 通过name获取 Bean

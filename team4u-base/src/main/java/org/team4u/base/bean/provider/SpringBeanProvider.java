@@ -62,10 +62,14 @@ public class SpringBeanProvider implements BeanProvider {
         if (!isSpringContext()) {
             return false;
         }
-
-        SpringUtil.registerBean(beanName, bean);
-        MessagePublisher.instance().publish(new BeanInitializedEvent(beanName, bean));
-        return true;
+        try {
+            SpringUtil.registerBean(beanName, bean);
+            MessagePublisher.instance().publish(new BeanInitializedEvent(beanName, bean));
+            return true;
+        } catch (IllegalStateException e) {
+            // 重复注册，直接返回true
+            return true;
+        }
     }
 
     @Override

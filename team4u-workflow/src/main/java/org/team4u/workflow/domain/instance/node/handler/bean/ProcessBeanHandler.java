@@ -1,6 +1,6 @@
 package org.team4u.workflow.domain.instance.node.handler.bean;
 
-import org.team4u.base.lang.IdObject;
+import org.team4u.base.registrar.StringIdPolicy;
 import org.team4u.workflow.domain.instance.node.handler.BeanActionChoiceNodeHandler;
 import org.team4u.workflow.domain.instance.node.handler.BeanChoiceNodeHandler;
 import org.team4u.workflow.domain.instance.node.handler.ProcessNodeHandlerContext;
@@ -10,7 +10,7 @@ import org.team4u.workflow.domain.instance.node.handler.ProcessNodeHandlerContex
  *
  * @author jay.wu
  */
-public interface ProcessBeanHandler extends IdObject<String> {
+public interface ProcessBeanHandler extends StringIdPolicy {
 
     /**
      * 扩展属性key：下一个节点标识

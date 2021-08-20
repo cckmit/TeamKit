@@ -16,12 +16,12 @@ public class BeanProvidersTest {
     @Before
     public void setUp() {
         providers = new BeanProviders();
-        providers.saveIdObject(mockBeanProvider);
+        providers.register(mockBeanProvider);
     }
 
     @Test
     public void getBeansOfType() {
-        providers.availableObjectOfId(LocalBeanProvider.ID).registerBean(TestUtil.TEST, TestUtil.TEST);
+        providers.availablePolicyOf(LocalBeanProvider.ID).registerBean(TestUtil.TEST, TestUtil.TEST);
         Assert.assertTrue(mockBeanProvider.registerBean(TestUtil.TEST1, TestUtil.TEST1));
         Assert.assertTrue(mockBeanProvider.registerBean(TestUtil.TEST, TestUtil.TEST2));
 
@@ -36,7 +36,7 @@ public class BeanProvidersTest {
     @Test
     public void getBean() {
         providers.registerBean(TestUtil.TEST, TestUtil.TEST1);
-        providers.availableObjectOfId(LocalBeanProvider.ID).registerBean(TestUtil.TEST, TestUtil.TEST);
+        providers.availablePolicyOf(LocalBeanProvider.ID).registerBean(TestUtil.TEST, TestUtil.TEST);
 
         Assert.assertEquals(TestUtil.TEST1, providers.getBean(TestUtil.TEST));
     }

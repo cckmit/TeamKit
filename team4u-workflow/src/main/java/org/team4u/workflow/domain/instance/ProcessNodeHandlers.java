@@ -1,9 +1,10 @@
 package org.team4u.workflow.domain.instance;
 
 import cn.hutool.log.Log;
+import org.team4u.base.bean.provider.BeanProviders;
 import org.team4u.base.error.SystemDataNotExistException;
-import org.team4u.base.lang.IdObjectService;
 import org.team4u.base.log.LogMessage;
+import org.team4u.base.registrar.PolicyRegistrar;
 import org.team4u.workflow.domain.definition.ProcessNode;
 import org.team4u.workflow.domain.definition.exception.TransientNodeException;
 import org.team4u.workflow.domain.definition.node.StaticNode;
@@ -18,7 +19,7 @@ import org.team4u.workflow.domain.instance.node.handler.bean.ProcessBeanHandlers
  *
  * @author jay.wu
  */
-public class ProcessNodeHandlers extends IdObjectService<Class<? extends ProcessNode>, ProcessNodeHandler> {
+public class ProcessNodeHandlers extends PolicyRegistrar<Class<? extends ProcessNode>, ProcessNodeHandler> {
 
     private final Log log = Log.get();
 
@@ -26,21 +27,21 @@ public class ProcessNodeHandlers extends IdObjectService<Class<? extends Process
     private final ProcessInstanceRepository processInstanceRepository;
 
     public ProcessNodeHandlers(ProcessInstanceRepository processInstanceRepository) {
-        super(ProcessNodeHandler.class);
         this.processInstanceRepository = processInstanceRepository;
 
         beanHandlers = new ProcessBeanHandlers();
+        BeanProviders.getInstance().registerBean(beanHandlers);
 
         initProcessNodeHandler();
     }
 
     private void initProcessNodeHandler() {
-        saveIdObject(new BeanStaticNodeHandler(beanHandlers));
-        saveIdObject(new BeanChoiceNodeHandler(beanHandlers));
-        saveIdObject(new BeanProcessingNodeHandler(beanHandlers));
-        saveIdObject(new BeanActionChoiceNodeHandler(beanHandlers));
+        register(new BeanStaticNodeHandler(beanHandlers));
+        register(new BeanChoiceNodeHandler(beanHandlers));
+        register(new BeanProcessingNodeHandler(beanHandlers));
+        register(new BeanActionChoiceNodeHandler(beanHandlers));
 
-        saveObjectsByBeanProvidersAndEvent();
+        registerByBeanProvidersAndEvent();
     }
 
     /**
@@ -124,7 +125,7 @@ public class ProcessNodeHandlers extends IdObjectService<Class<? extends Process
 
     private ProcessNodeHandler processNodeHandlerOf(ProcessNode node) {
         try {
-            return availableObjectOfId(node.getClass());
+            return availablePolicyOf(node.getClass());
         } catch (SystemDataNotExistException e) {
             throw new ProcessNodeHandlerNotExistException(node.getClass().getName());
         }

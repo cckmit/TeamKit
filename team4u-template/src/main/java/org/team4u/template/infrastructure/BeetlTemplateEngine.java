@@ -68,7 +68,7 @@ public class BeetlTemplateEngine implements TemplateEngine {
      * 注册自定义函数
      */
     private void registerFunctions(GroupTemplate gt) {
-        for (TemplateFunction idObject : templateFunctionService.idObjects()) {
+        for (TemplateFunction idObject : templateFunctionService.policies()) {
             for (Method method : ReflectUtil.getMethods(idObject.getClass())) {
                 gt.registerFunction(
                         idObject.id() + "." + method.getName(),

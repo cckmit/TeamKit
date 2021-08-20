@@ -1,7 +1,7 @@
 package org.team4u.ddd.process.strategy;
 
 
-import org.team4u.base.lang.IdObject;
+import org.team4u.base.registrar.StringIdPolicy;
 
 /**
  * 重试策略构建工厂
@@ -10,7 +10,7 @@ import org.team4u.base.lang.IdObject;
  */
 public interface RetryStrategyFactory<
         R extends RetryStrategy,
-        C extends AbstractRetryStrategy.AbstractConfig<C>> extends IdObject<String> {
+        C extends AbstractRetryStrategy.AbstractConfig<C>> extends StringIdPolicy {
 
     /**
      * 创建重试策略

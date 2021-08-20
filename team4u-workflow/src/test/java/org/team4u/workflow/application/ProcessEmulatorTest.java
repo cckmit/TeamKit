@@ -4,7 +4,7 @@ import org.junit.Test;
 
 public class ProcessEmulatorTest {
 
-    private final ProcessEmulator emulator = ProcessEmulator.create();
+    private static final ProcessEmulator emulator = ProcessEmulator.create();
 
     @Test
     public void simple() {

@@ -3,7 +3,7 @@ package org.team4u.command.infrastructure.executor.simple;
 import org.team4u.base.error.SystemDataNotExistException;
 import org.team4u.base.filter.FilterChain;
 import org.team4u.base.filter.FilterChainFactory;
-import org.team4u.base.lang.IdObjectService;
+import org.team4u.base.registrar.PolicyRegistrar;
 import org.team4u.command.domain.config.CommandConfig;
 import org.team4u.command.domain.executor.CommandExecutor;
 import org.team4u.command.domain.executor.handler.CommandHandler;
@@ -18,14 +18,12 @@ import java.util.Map;
  * @author jay.wu
  */
 public class SimpleCommandExecutor
-        extends IdObjectService<String, CommandRoutesBuilder>
+        extends PolicyRegistrar<String, CommandRoutesBuilder>
         implements CommandExecutor {
 
     private final Map<String, FilterChain<CommandHandler.Context>> filterChainMap = new HashMap<>();
 
     public SimpleCommandExecutor() {
-        super(CommandRoutesBuilder.class);
-
         initFilterChains();
     }
 
@@ -36,13 +34,13 @@ public class SimpleCommandExecutor
     }
 
     private void initFilterChains() {
-        for (CommandRoutesBuilder builder : idObjects()) {
+        for (CommandRoutesBuilder builder : policies()) {
             initFilterChain(builder);
         }
     }
 
     public void saveAndInitFilterChain(CommandRoutesBuilder builder) {
-        saveIdObject(builder);
+        register(builder);
         initFilterChain(builder);
     }
 

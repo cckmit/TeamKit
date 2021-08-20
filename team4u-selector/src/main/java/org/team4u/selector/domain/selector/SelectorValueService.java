@@ -1,6 +1,6 @@
 package org.team4u.selector.domain.selector;
 
-import org.team4u.base.lang.IdObjectService;
+import org.team4u.base.registrar.PolicyRegistrar;
 
 import java.util.List;
 
@@ -9,18 +9,10 @@ import java.util.List;
  *
  * @author jay.wu
  */
-public class SelectorValueService extends IdObjectService<String, SelectorValueHandler> {
+public class SelectorValueService extends PolicyRegistrar<String, SelectorValueHandler> {
 
     public SelectorValueService() {
-        super();
-
-        saveObjectsByBeanProvidersAndEvent();
-    }
-
-    public SelectorValueService(Class<SelectorValueHandler> valueClass) {
-        super(valueClass);
-
-        saveObjectsByBeanProvidersAndEvent();
+        registerByBeanProvidersAndEvent();
     }
 
     public SelectorValueService(List<SelectorValueHandler> objects) {

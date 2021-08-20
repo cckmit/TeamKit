@@ -3,9 +3,9 @@ package org.team4u.notification.application;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 import org.team4u.base.error.RemoteCallException;
-import org.team4u.base.lang.IdObjectService;
 import org.team4u.base.log.LogMessage;
 import org.team4u.base.log.LogService;
+import org.team4u.base.registrar.PolicyRegistrar;
 import org.team4u.notification.domain.Notification;
 import org.team4u.notification.domain.NotificationSender;
 
@@ -16,12 +16,12 @@ import java.util.List;
  *
  * @author jay.wu
  */
-public class NotificationService extends IdObjectService<String, NotificationSender<? extends Notification>> {
+public class NotificationService extends PolicyRegistrar<String, NotificationSender<? extends Notification>> {
 
     private final Log log = LogFactory.get();
 
     public NotificationService() {
-        saveObjectsByBeanProvidersAndEvent();
+        registerByBeanProvidersAndEvent();
     }
 
     public NotificationService(List<NotificationSender<? extends Notification>> objects) {
@@ -37,7 +37,7 @@ public class NotificationService extends IdObjectService<String, NotificationSen
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
     public void send(String type, Notification notification) throws RemoteCallException {
-        NotificationSender sender = availableObjectOfId(type);
+        NotificationSender sender = availablePolicyOf(type);
 
         LogMessage lm = LogMessage.create(this.getClass().getSimpleName(), "send");
         lm.append("notificationId", notification.getId())

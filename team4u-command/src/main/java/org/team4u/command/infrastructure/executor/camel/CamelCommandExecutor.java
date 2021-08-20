@@ -5,7 +5,7 @@ import org.apache.camel.ExchangePattern;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.team4u.base.error.SystemDataNotExistException;
 import org.team4u.base.error.SystemException;
-import org.team4u.base.lang.IdObjectService;
+import org.team4u.base.registrar.PolicyRegistrar;
 import org.team4u.command.domain.config.CommandConfig;
 import org.team4u.command.domain.executor.CommandExecutor;
 import org.team4u.command.domain.executor.handler.CommandHandler;
@@ -19,13 +19,12 @@ import java.util.Map;
  *
  * @author jay.wu
  */
-public class CamelCommandExecutor extends IdObjectService<String, CommandRoutesBuilder>
+public class CamelCommandExecutor extends PolicyRegistrar<String, CommandRoutesBuilder>
         implements CommandExecutor {
 
     private final Map<String, CamelContext> contexts = new HashMap<>();
 
     public CamelCommandExecutor() {
-        super(CommandRoutesBuilder.class);
         start();
     }
 
@@ -35,13 +34,13 @@ public class CamelCommandExecutor extends IdObjectService<String, CommandRoutesB
     }
 
     private void start() {
-        for (CommandRoutesBuilder builder : idObjects()) {
+        for (CommandRoutesBuilder builder : policies()) {
             start(builder);
         }
     }
 
     public void saveAndStart(CommandRoutesBuilder builder) {
-        saveIdObject(builder);
+        register(builder);
         start(builder);
     }
 

@@ -30,4 +30,13 @@ public interface Policy<C> {
     default int priority() {
         return LOWEST_PRECEDENCE;
     }
+
+    /**
+     * 获取策略名称
+     *
+     * @return 策略名称
+     */
+    default String policyName() {
+        return getClass().getName();
+    }
 }
