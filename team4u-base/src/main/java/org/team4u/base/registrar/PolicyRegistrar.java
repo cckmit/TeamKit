@@ -138,6 +138,7 @@ public abstract class PolicyRegistrar<C, P extends Policy<C>> {
         if (log.isDebugEnabled()) {
             log.debug(LogMessage.create(this.getClass().getSimpleName(), "register")
                     .append("policy", policy.getClass().getName())
+                    .append("priority", policy.priority())
                     .success()
                     .toString());
         }
