@@ -30,14 +30,17 @@ import java.util.stream.Stream;
 public abstract class PolicyRegistrar<C, P extends Policy<C>> {
 
     private final Log log = Log.get();
+
+    private List<P> policies = new ArrayList<>();
+
     @Getter
     @SuppressWarnings("unchecked")
     private final Class<C> contextType = (Class<C>) ClassUtil.getTypeArgument(this.getClass());
     @Getter
     @SuppressWarnings("unchecked")
     private final Class<P> policyType = (Class<P>) ClassUtil.getTypeArgument(this.getClass(), 1);
+
     private final BeanInitializedEventSubscriber beanInitializedEventSubscriber = new BeanInitializedEventSubscriber();
-    private List<P> policies = new ArrayList<>();
 
     public PolicyRegistrar() {
         registerPoliciesByServiceLoader();
