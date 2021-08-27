@@ -1,6 +1,7 @@
 package org.team4u.base.log;
 
 import cn.hutool.core.lang.Dict;
+import lombok.Data;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -68,6 +69,10 @@ public class LogTraceProxyFactoryTest {
 
         Assert.assertEquals("[A|mask|processing|input=[\"123456\",\"*\"], A|mask|succeeded|output={\"name\":\"*\"}]",
                 logX.getMessages().toString());
+
+        a.mask2(new Request());
+        Assert.assertEquals("[A|mask|processing|input=[\"123456\",\"*\"], A|mask|succeeded|output={\"name\":\"*\"}, A|mask2|processing|input={\"name3\":\"*\"}, A|mask2|succeeded]",
+                logX.getMessages().toString());
     }
 
     private LogTraceProxyFactory.Config newConfig() {
@@ -106,5 +111,15 @@ public class LogTraceProxyFactoryTest {
         public void error() {
             throw new RuntimeException("x");
         }
+
+        public void mask2(Request request) {
+
+        }
+    }
+
+    @Data
+    public static class Request {
+
+        private String name3 = "test";
     }
 }

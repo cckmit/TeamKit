@@ -76,6 +76,10 @@ public class DynamicMasker extends AbstractMasker {
 
         for (Map.Entry<Masker, List<String>> entry : config.getMaskerExpressions().entrySet()) {
             Masker masker = entry.getKey();
+            if(masker == null){
+                continue;
+            }
+
             List<String> expressions = entry.getValue();
             for (String expression : expressions) {
                 // 表达式为指向自身，直接掩码处理
@@ -83,9 +87,11 @@ public class DynamicMasker extends AbstractMasker {
                     maskableObject = masker.mask(maskableObject);
                 } else {
                     // 表达式指向内部属性
-                    beanPropertyValueReplacer.replace(maskableObject,
+                    beanPropertyValueReplacer.replace(
+                            maskableObject,
                             standardizingBeanExpression(expression),
-                            masker::mask);
+                            masker::mask
+                    );
                 }
             }
         }
