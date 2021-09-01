@@ -1,11 +1,11 @@
 package org.team4u.base.message;
 
+import cn.hutool.core.collection.ConcurrentHashSet;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 import org.team4u.base.log.LogMessage;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -20,7 +20,7 @@ public class MessagePublisher {
 
     private static final MessagePublisher INSTANCE = new MessagePublisher();
 
-    private final Set<MessageSubscriber<?>> subscribers = new HashSet<>();
+    private final Set<MessageSubscriber<?>> subscribers = new ConcurrentHashSet<>();
 
     public static MessagePublisher instance() {
         return INSTANCE;
