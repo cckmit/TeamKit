@@ -54,7 +54,7 @@ public class DynamicMaskerTest {
     public void maskBeanSelf() {
         Maskers.instance().register("TEST", new HideMasker());
 
-        DynamicMasker masker =  DynamicMaskerService.instance().getBeanMasker();
+        DynamicMasker masker = DynamicMaskerService.instance().getBeanMasker();
 
         A a = new A("fjayblue");
         String value = masker.mask(a);

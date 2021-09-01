@@ -35,5 +35,13 @@
         "output.name"
       ]
     }
+  },
+  {
+    "configId": "A.mask2",
+    "maskerExpressions": {
+      "HIDE": [
+        "input.name3"
+      ]
+    }
   }
 ]
