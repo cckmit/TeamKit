@@ -35,11 +35,6 @@ public class SimpleMaskerTest {
     }
 
     @Test
-    public void name() {
-        Assert.assertEquals("fja*", Maskers.Type.NAME.mask("fjay"));
-    }
-
-    @Test
     public void mobile() {
         Assert.assertEquals("138****2222", Maskers.Type.MOBILE.mask("13822222222"));
     }
