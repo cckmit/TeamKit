@@ -50,8 +50,8 @@ public class Maskers {
      * 常用掩码器类型
      */
     public enum Type {
-        // 姓名(仅对最后一位掩码)
-        NAME(new SimpleMasker(-2, -1)),
+        // 姓名
+        NAME(new NameMasker()),
         // 手机号码(保留前3后4)
         MOBILE(new SimpleMasker(3, -5)),
         // 银行卡号(保留前6后4)
