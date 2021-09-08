@@ -103,7 +103,7 @@ public class RedisCountRateLimiter implements RateLimiter {
         private final RedisTemplate<String, String> redisTemplate;
 
         public Factory(RedisTemplate<String, ?> redisTemplate) {
-            // 需要确保key和value为string，否则反序列化时可能异常
+            // 需要确保key和value为string序列化模式，否则反序列化时可能异常
             if (redisTemplate instanceof StringRedisTemplate) {
                 this.redisTemplate = (StringRedisTemplate) redisTemplate;
             } else {
