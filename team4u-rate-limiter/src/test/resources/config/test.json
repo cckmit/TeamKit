@@ -1,4 +1,4 @@
 {
-  "expirationMillis": 200,
+  "expirationMillis": 1000,
   "threshold": 1
 }

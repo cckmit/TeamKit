@@ -4,12 +4,15 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
+import lombok.Getter;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.team4u.base.log.LogMessage;
 import org.team4u.rl.domain.RateLimiter;
 import org.team4u.rl.domain.RateLimiterConfig;
 import org.team4u.rl.domain.RateLimiterFactory;
 
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -21,7 +24,9 @@ public class RedisCountRateLimiter implements RateLimiter {
 
     private final Log log = LogFactory.get();
 
+    @Getter
     private final RateLimiterConfig config;
+    @Getter
     private final RedisTemplate<String, String> redisTemplate;
 
     public RedisCountRateLimiter(RateLimiterConfig config, RedisTemplate<String, String> redisTemplate) {
@@ -73,11 +78,10 @@ public class RedisCountRateLimiter implements RateLimiter {
         try {
             return Convert.toLong(redisTemplate.opsForValue().get(key), 0L);
         } catch (Exception e) {
-            log.error(e,
-                    LogMessage.create(this.getClass().getSimpleName(), "countTryAcquireTimes")
-                            .fail()
-                            .append("key", key)
-                            .toString());
+            log.error(e, LogMessage.create(this.getClass().getSimpleName(), "countTryAcquireTimes")
+                    .fail()
+                    .append("key", key)
+                    .toString());
 
             return 0;
         }
@@ -95,10 +99,18 @@ public class RedisCountRateLimiter implements RateLimiter {
 
     public static class Factory implements RateLimiterFactory {
 
+        @Getter
         private final RedisTemplate<String, String> redisTemplate;
 
-        public Factory(RedisTemplate<String, String> redisTemplate) {
-            this.redisTemplate = redisTemplate;
+        public Factory(RedisTemplate<String, ?> redisTemplate) {
+            // 需要确保key和value为string，否则反序列化时可能异常
+            if (redisTemplate instanceof StringRedisTemplate) {
+                this.redisTemplate = (StringRedisTemplate) redisTemplate;
+            } else {
+                this.redisTemplate = new StringRedisTemplate(
+                        Objects.requireNonNull(redisTemplate.getConnectionFactory())
+                );
+            }
         }
 
         @Override

@@ -11,14 +11,14 @@ import org.team4u.rl.infrastructure.persistence.JsonRateLimitConfigRepository;
 
 public abstract class AbstractRateLimiterAppServiceTest {
 
-    private final RateLimiterAppService service = rateLimiterAppService();
+    protected final RateLimiterAppService service = rateLimiterAppService();
 
     @Test
     public void tryAcquire() {
         Assert.assertTrue(service.tryAcquire("test", "1"));
         Assert.assertFalse(service.tryAcquire("test", "1"));
 
-        ThreadUtil.safeSleep(201);
+        ThreadUtil.safeSleep(1001);
         Assert.assertTrue(service.tryAcquire("test", "1"));
     }
 
@@ -32,7 +32,7 @@ public abstract class AbstractRateLimiterAppServiceTest {
         Assert.assertEquals(1, service.countTryAcquireTimes("test", "1"));
 
         // 超时后重置，次数=0
-        ThreadUtil.safeSleep(201);
+        ThreadUtil.safeSleep(1001);
         Assert.assertEquals(0, service.countTryAcquireTimes("test", "1"));
     }
 
@@ -46,7 +46,7 @@ public abstract class AbstractRateLimiterAppServiceTest {
         Assert.assertFalse(service.canAcquire("test", "1"));
 
         // 超时后重置
-        ThreadUtil.safeSleep(201);
+        ThreadUtil.safeSleep(1001);
         Assert.assertTrue(service.canAcquire("test", "1"));
     }
 
