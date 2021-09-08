@@ -7,6 +7,7 @@ import cn.hutool.log.LogFactory;
 import lombok.Getter;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.team4u.base.log.LogMessage;
 import org.team4u.rl.domain.RateLimiter;
 import org.team4u.rl.domain.RateLimiterConfig;
@@ -104,8 +105,9 @@ public class RedisCountRateLimiter implements RateLimiter {
 
         public Factory(RedisTemplate<String, ?> redisTemplate) {
             // 需要确保key和value为string序列化模式，否则反序列化时可能异常
-            if (redisTemplate instanceof StringRedisTemplate) {
-                this.redisTemplate = (StringRedisTemplate) redisTemplate;
+            if (redisTemplate.getValueSerializer() instanceof StringRedisSerializer) {
+                //noinspection unchecked
+                this.redisTemplate = (RedisTemplate<String, String>) redisTemplate;
             } else {
                 this.redisTemplate = new StringRedisTemplate(
                         Objects.requireNonNull(redisTemplate.getConnectionFactory())
