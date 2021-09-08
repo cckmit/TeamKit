@@ -64,7 +64,7 @@ public class RateLimiterAppService {
     public long countTryAcquireTimes(String type, String key) {
         RateLimiter rateLimiter = limiters.limiterOf(type);
 
-        LogMessage lm = logMessageOf(rateLimiter, "countAcquired", type, key);
+        LogMessage lm = logMessageOf(rateLimiter, "countTryAcquireTimes", type, key);
 
         // 不存在限流统计器不做拦截
         if (rateLimiter == null) {
