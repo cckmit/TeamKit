@@ -55,9 +55,9 @@ public class Maskers {
         // 手机号码(保留前3后4)
         MOBILE(new SimpleMasker(3, -5)),
         // 银行卡号(保留前6后4)
-        BANK_CARD_NO(new SimpleMasker(6, -5)),
+        BANK_CARD_NO(new SimpleMasker(6, -5, new PercentageMasker(0.66))),
         // 身份证号(保留前6后4)
-        ID_CARD_NO(new SimpleMasker(6, -5)),
+        ID_CARD_NO(new SimpleMasker(6, -5, new PercentageMasker(0.66))),
         // 对值的66%部分（2/3）掩码
         PERCENT66(new PercentageMasker(0.66)),
         // 电子邮箱（保留前2）

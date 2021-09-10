@@ -26,12 +26,22 @@ public class SimpleMasker extends AbstractMasker {
      */
     private int end;
 
+    /**
+     * 若不满足长度，使用兜底掩码器
+     */
+    private Masker masker;
+
     public SimpleMasker(int begin, int end) {
-        this('*', begin, end);
+        this('*', begin, end, null);
     }
 
-    public SimpleMasker(char replacedChar, int begin, int end) {
+    public SimpleMasker(int begin, int end, Masker masker) {
+        this('*', begin, end, masker);
+    }
+
+    public SimpleMasker(char replacedChar, int begin, int end, Masker masker) {
         setReplacedChar(replacedChar);
+        setMasker(masker);
         setBegin(begin);
         setEnd(end);
     }
@@ -43,7 +53,16 @@ public class SimpleMasker extends AbstractMasker {
         int b = actualPos(valueToMask.length(), begin());
         int e = actualPos(valueToMask.length(), end());
 
-        return StrUtil.replace(valueToMask, b, e, replacedChar);
+        String valueMasked = StrUtil.replace(valueToMask, b, e, replacedChar);
+
+        // 没有掩码成功，使用兜底掩码器
+        if (StrUtil.equals(valueMasked, valueToMask)) {
+            if (masker != null) {
+                return masker.mask(value);
+            }
+        }
+
+        return valueMasked;
     }
 
     public char replacedChar() {
@@ -73,5 +92,13 @@ public class SimpleMasker extends AbstractMasker {
     protected void setReplacedChar(char replacedChar) {
         Assert.notNull(replacedChar, "replacedChar is required");
         this.replacedChar = replacedChar;
+    }
+
+    public Masker getMasker() {
+        return masker;
+    }
+
+    protected void setMasker(Masker masker) {
+        this.masker = masker;
     }
 }

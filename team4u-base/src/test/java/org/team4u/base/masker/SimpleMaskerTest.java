@@ -42,5 +42,7 @@ public class SimpleMaskerTest {
     @Test
     public void bankCardNo() {
         Assert.assertEquals("622908********5317", Maskers.Type.BANK_CARD_NO.mask("622908311111735317"));
+
+        Assert.assertEquals("622***", Maskers.Type.BANK_CARD_NO.mask("622908"));
     }
 }
