@@ -1,5 +1,8 @@
 package org.team4u.ddd.domain.model;
 
+import cn.hutool.log.Log;
+import cn.hutool.log.LogFactory;
+import org.team4u.base.log.LogMessages;
 import org.team4u.base.message.MessagePublisher;
 import org.team4u.ddd.message.MessageConsumer;
 
@@ -17,6 +20,7 @@ public class DomainEventPublisher {
 
     private static final DomainEventPublisher INSTANCE = new DomainEventPublisher();
 
+    private final Log log = LogFactory.get();
     private final MessagePublisher messagePublisher = new MessagePublisher();
 
     public static DomainEventPublisher instance() {
@@ -32,6 +36,9 @@ public class DomainEventPublisher {
     }
 
     public <T extends DomainEvent> void publish(T event) {
+        log.info(LogMessages.create(this.getClass().getSimpleName(), "publish")
+                .append("event", event)
+                .toString());
         messagePublisher.publish(event);
     }
 

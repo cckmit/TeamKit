@@ -1,8 +1,6 @@
 package org.team4u.ddd.domain.model;
 
 
-import org.team4u.base.log.LogMessages;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,9 +22,6 @@ public abstract class Entity extends IdentifiedDomainObject {
     }
 
     protected void publishEvent(DomainEvent event) {
-        log.info(LogMessages.createWithMasker(this.getClass().getSimpleName(), "publishEvent")
-                .append("event", event)
-                .toString());
         events().add(event);
     }
 }
