@@ -45,7 +45,7 @@ public class SimpleFileKeyValueRepository extends InMemoryKeyValueRepository {
         }
     }
 
-    public void flush() {
+    public synchronized void flush() {
         List<String> lines = cache().values()
                 .stream()
                 .map(JSON::toJSONString)
