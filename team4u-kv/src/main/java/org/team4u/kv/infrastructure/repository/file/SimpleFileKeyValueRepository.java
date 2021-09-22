@@ -1,6 +1,7 @@
 package org.team4u.kv.infrastructure.repository.file;
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.RuntimeUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import lombok.AllArgsConstructor;
@@ -35,6 +36,9 @@ public class SimpleFileKeyValueRepository extends InMemoryKeyValueRepository {
         this.flushTask = initFlushTask();
 
         initCacheMap();
+
+        // 尽量确保数据不丢失
+        RuntimeUtil.addShutdownHook(this::flush);
     }
 
     private void initCacheMap() {
@@ -70,7 +74,7 @@ public class SimpleFileKeyValueRepository extends InMemoryKeyValueRepository {
         });
     }
 
-    private void flush() {
+    private synchronized void flush() {
         List<String> lines = cache().values()
                 .stream()
                 .map(JSON::toJSONString)
