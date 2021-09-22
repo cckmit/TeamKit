@@ -3,6 +3,13 @@ package org.team4u.kv.infrastructure.repository.file;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.team4u.base.lang.aggregation.AbstractAggregationTask;
+import org.team4u.base.lang.aggregation.AggregationTaskListener;
+import org.team4u.base.lang.aggregation.TimedAggregationTask;
 import org.team4u.kv.infrastructure.repository.memory.InMemoryKeyValueRepository;
 import org.team4u.kv.model.KeyValue;
 import org.team4u.kv.model.KeyValueId;
@@ -19,14 +26,18 @@ import java.util.stream.Collectors;
 public class SimpleFileKeyValueRepository extends InMemoryKeyValueRepository {
 
     private final File db;
+    private final Config config;
+    private final TimedAggregationTask<Long> flushTask;
 
-    public SimpleFileKeyValueRepository(File db) {
-        this.db = db;
+    public SimpleFileKeyValueRepository(Config config) {
+        this.config = config;
+        this.db = FileUtil.file(config.getDbPath());
+        this.flushTask = initFlushTask();
 
         initCacheMap();
     }
 
-    public void initCacheMap() {
+    private void initCacheMap() {
         if (!FileUtil.exist(db)) {
             return;
         }
@@ -45,7 +56,21 @@ public class SimpleFileKeyValueRepository extends InMemoryKeyValueRepository {
         }
     }
 
-    public synchronized void flush() {
+    private TimedAggregationTask<Long> initFlushTask() {
+        return new TimedAggregationTask<>(
+                config.getMaxBufferSize(), config.getFlushIntervalMillis(), new AggregationTaskListener<Long>() {
+            @Override
+            public void onReceive(AbstractAggregationTask<Long> task, Long value) {
+            }
+
+            @Override
+            public void onFlush(AbstractAggregationTask<Long> task, List<Long> values) {
+                flush();
+            }
+        });
+    }
+
+    private void flush() {
         List<String> lines = cache().values()
                 .stream()
                 .map(JSON::toJSONString)
@@ -54,30 +79,46 @@ public class SimpleFileKeyValueRepository extends InMemoryKeyValueRepository {
         FileUtil.writeUtf8String(StrUtil.join("\n", lines), db);
     }
 
+    private void save() {
+        flushTask.add(System.currentTimeMillis());
+    }
+
     @Override
     public KeyValueId save(KeyValue keyValue) {
         KeyValueId id = super.save(keyValue);
-        flush();
+        save();
         return id;
     }
 
     @Override
     public KeyValueId saveIfAbsent(KeyValue keyValue) {
         KeyValueId id = super.saveIfAbsent(keyValue);
-        flush();
+        save();
         return id;
     }
 
     @Override
     public void remove(KeyValueId id) {
         super.remove(id);
-        flush();
+        save();
     }
 
     @Override
     public int removeExpirationValues(int maxBatchSize) {
         int count = super.removeExpirationValues(maxBatchSize);
-        flush();
+        save();
         return count;
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Config {
+        private String dbPath;
+        @Builder.Default
+        private int maxBufferSize = 10;
+        @Builder.Default
+        private long flushIntervalMillis = 1000;
     }
 }
