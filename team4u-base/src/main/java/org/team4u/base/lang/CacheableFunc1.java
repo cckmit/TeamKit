@@ -43,21 +43,44 @@ public abstract class CacheableFunc1<P, R> implements Func1<P, R> {
                 return cache.get(parameter);
             }
 
-            R result = callWithRuntimeException(parameter);
-            cache.put(parameter, result);
+            LogMessage lm = LogMessage.create(this.getClass().getName(), "callWithCache")
+                    .append("parameter", formatParameterForLog(parameter));
 
-            logForCall(parameter);
-            return result;
+            try {
+                R result = callWithRuntimeException(parameter);
+                cache.put(parameter, result);
+
+                log.info(lm.success().append("result", formatResultForLog(result)).toString());
+                return result;
+            } catch (Exception e) {
+                log.error(lm.fail(e.getMessage()).toString());
+                throw e;
+            }
         }
     }
 
-    private void logForCall(P parameter) {
-        if (log.isDebugEnabled()) {
-            log.debug(LogMessage.create(this.getClass().getName(), "callWithCache")
-                    .append("parameter", Convert.toStr(parameter))
-                    .success()
-                    .toString());
+    protected String formatParameterForLog(P parameter) {
+        if (parameter == null) {
+            return null;
         }
+
+        if (log.isDebugEnabled()) {
+            return Convert.toStr(parameter);
+        }
+
+        return parameter.getClass().getSimpleName();
+    }
+
+    protected String formatResultForLog(R result) {
+        if (result == null) {
+            return null;
+        }
+
+        if (log.isDebugEnabled()) {
+            return Convert.toStr(result);
+        }
+
+        return result.getClass().getSimpleName();
     }
 
     @Override

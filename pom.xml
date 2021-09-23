@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.team4u</groupId>
     <artifactId>team4u-kit</artifactId>
-    <version>2.5.1</version>
+    <version>2.5.2</version>
 
     <packaging>pom</packaging>
 
@@ -35,7 +35,7 @@
         <byte-buddy.version>1.11.8</byte-buddy.version>
         <camel.version>3.11.0</camel.version>
         <testable.version>0.6.8</testable.version>
-        <liteflow.version>2.5.10</liteflow.version>
+        <liteflow.version>2.5.20</liteflow.version>
         <org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
         <lombok.version>1.18.20</lombok.version>
     </properties>
@@ -112,24 +112,24 @@
         </repository>
     </repositories>
 
-<!--        <distributionManagement>-->
-<!--            <repository>-->
-<!--                <id>vip-repo</id>-->
-<!--                <url>http://mvn1.tools.vipshop.com/nexus/content/repositories/releases</url>-->
-<!--            </repository>-->
-<!--            <snapshotRepository>-->
-<!--                <id>vip-repo</id>-->
-<!--                <url>http://mvn1.tools.vipshop.com/nexus/content/repositories/snapshots</url>-->
-<!--            </snapshotRepository>-->
-<!--        </distributionManagement>-->
-    <distributionManagement>
-        <repository>
-            <id>rdc-releases</id>
-            <url>https://packages.aliyun.com/maven/repository/2016366-release-X1rEnZ/</url>
-        </repository>
-        <snapshotRepository>
-            <id>rdc-snapshots</id>
-            <url>https://packages.aliyun.com/maven/repository/2016366-snapshot-lj2H3H/</url>
-        </snapshotRepository>
-    </distributionManagement>
+        <distributionManagement>
+            <repository>
+                <id>vip-repo</id>
+                <url>http://mvn1.tools.vipshop.com/nexus/content/repositories/releases</url>
+            </repository>
+            <snapshotRepository>
+                <id>vip-repo</id>
+                <url>http://mvn1.tools.vipshop.com/nexus/content/repositories/snapshots</url>
+            </snapshotRepository>
+        </distributionManagement>
+<!--    <distributionManagement>-->
+<!--        <repository>-->
+<!--            <id>rdc-releases</id>-->
+<!--            <url>https://packages.aliyun.com/maven/repository/2016366-release-X1rEnZ/</url>-->
+<!--        </repository>-->
+<!--        <snapshotRepository>-->
+<!--            <id>rdc-snapshots</id>-->
+<!--            <url>https://packages.aliyun.com/maven/repository/2016366-snapshot-lj2H3H/</url>-->
+<!--        </snapshotRepository>-->
+<!--    </distributionManagement>-->
 </project>
