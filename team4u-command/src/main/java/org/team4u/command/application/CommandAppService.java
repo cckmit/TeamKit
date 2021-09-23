@@ -9,6 +9,7 @@ import org.team4u.base.log.LogService;
 import org.team4u.command.domain.config.CommandConfig;
 import org.team4u.command.domain.config.CommandConfigRepository;
 import org.team4u.command.domain.executor.CommandExecutor;
+import org.team4u.command.domain.executor.handler.CommandHandler;
 
 /**
  * 命令应用服务
@@ -45,17 +46,26 @@ public class CommandAppService {
      * @param configId 配置标识
      * @return 命令响应
      */
-    @SuppressWarnings("unchecked")
     public <Response> Response execute(String commandId, String configId, Object request) {
-        LogMessage lm = LogMessages.createWithMasker(this.getClass().getSimpleName(), "execute|" + commandId)
-                .append("request", request);
+        return execute(new CommandHandler.Context(commandId, commandConfigOf(configId), request));
+    }
+
+    /**
+     * 执行命令
+     *
+     * @param context    上下文
+     * @param <Response> 命令响应
+     * @return 命令响应
+     */
+    @SuppressWarnings("unchecked")
+    public <Response> Response execute(CommandHandler.Context context) {
+        LogMessage lm = LogMessages.createWithMasker(
+                this.getClass().getSimpleName(),
+                "execute|" + context.getCommandId()
+        ).append("request", context.getRequest());
         Response response = null;
         try {
-            response = (Response) commandExecutor.execute(
-                    commandId,
-                    commandConfigOf(configId),
-                    request
-            );
+            response = (Response) commandExecutor.execute(context);
 
             log.info(lm.success()
                     .append("response", response)

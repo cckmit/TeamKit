@@ -3,6 +3,7 @@ package org.team4u.command.domain.executor.handler;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
+import lombok.Data;
 import org.team4u.command.domain.config.CommandConfig;
 
 /**
@@ -19,6 +20,7 @@ public interface CommandHandler {
      */
     void handle(Context context);
 
+    @Data
     class Context {
 
         private final String commandId;
@@ -34,22 +36,6 @@ public interface CommandHandler {
             this.request = request;
         }
 
-        public String getCommandLogId() {
-            return commandLogId;
-        }
-
-        public void setCommandLogId(String commandLogId) {
-            this.commandLogId = commandLogId;
-        }
-
-        public String getCommandId() {
-            return commandId;
-        }
-
-        public CommandConfig getConfig() {
-            return config;
-        }
-
         @SuppressWarnings("unchecked")
         public <Request> Request getRequest() {
             return (Request) request;
@@ -58,11 +44,6 @@ public interface CommandHandler {
         @SuppressWarnings("unchecked")
         public <Response> Response getResponse() {
             return (Response) response;
-        }
-
-        public Context setResponse(Object response) {
-            this.response = response;
-            return this;
         }
 
         public void setExtraAttribute(String key, Object value) {

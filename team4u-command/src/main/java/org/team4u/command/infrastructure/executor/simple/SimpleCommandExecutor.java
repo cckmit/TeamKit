@@ -4,7 +4,6 @@ import org.team4u.base.error.SystemDataNotExistException;
 import org.team4u.base.filter.FilterChain;
 import org.team4u.base.filter.FilterChainFactory;
 import org.team4u.base.registrar.PolicyRegistrar;
-import org.team4u.command.domain.config.CommandConfig;
 import org.team4u.command.domain.executor.CommandExecutor;
 import org.team4u.command.domain.executor.handler.CommandHandler;
 
@@ -50,14 +49,13 @@ public class SimpleCommandExecutor
     }
 
     @Override
-    public Object execute(String commandId, CommandConfig config, Object request) {
-        FilterChain<CommandHandler.Context> filterChain = filterChainMap.get(commandId);
+    public Object execute(CommandHandler.Context context) {
+        FilterChain<CommandHandler.Context> filterChain = filterChainMap.get(context.getCommandId());
         if (filterChain == null) {
-            throw new SystemDataNotExistException("commandId=" + commandId);
+            throw new SystemDataNotExistException("commandId=" + context.getCommandId());
         }
 
-        CommandHandler.Context handlerContext = new CommandHandler.Context(commandId, config, request);
-        filterChain.doFilter(handlerContext);
-        return handlerContext.getResponse();
+        filterChain.doFilter(context);
+        return context.getResponse();
     }
 }

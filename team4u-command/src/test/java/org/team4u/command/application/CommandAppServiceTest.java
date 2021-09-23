@@ -9,6 +9,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.team4u.command.domain.config.CommandConfig;
 import org.team4u.command.domain.config.CommandConfigRepository;
 import org.team4u.command.domain.executor.CommandExecutor;
+import org.team4u.command.domain.executor.handler.CommandHandler;
 import org.team4u.command.infrastructure.executor.MockCommandRequest;
 import org.team4u.command.infrastructure.executor.MockCommandResponse;
 
@@ -43,7 +44,7 @@ public class CommandAppServiceTest {
                                          MockCommandRequest request,
                                          MockCommandResponse response) {
         Mockito.when(configRepository.configOfId(commandId)).thenReturn(config);
-        Mockito.when(commandExecutor.execute(commandId, config, request)).thenReturn(response);
+        Mockito.when(commandExecutor.execute(new CommandHandler.Context(commandId, config, request))).thenReturn(response);
 
         return new CommandAppService(commandExecutor, configRepository);
     }

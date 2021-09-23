@@ -6,7 +6,6 @@ import com.yomahub.liteflow.property.LiteflowConfig;
 import org.team4u.base.error.NestedException;
 import org.team4u.base.error.SystemDataNotExistException;
 import org.team4u.base.registrar.PolicyRegistrar;
-import org.team4u.command.domain.config.CommandConfig;
 import org.team4u.command.domain.executor.CommandExecutor;
 import org.team4u.command.domain.executor.handler.CommandHandler;
 
@@ -59,19 +58,18 @@ public class LiteFlowCommandExecutor extends PolicyRegistrar<String, CommandRout
     }
 
     @Override
-    public Object execute(String commandId, CommandConfig config, Object request) {
-        FlowExecutor executor = flowMap.get(commandId);
+    public Object execute(CommandHandler.Context context) {
+        FlowExecutor executor = flowMap.get(context.getCommandId());
         if (executor == null) {
-            throw new SystemDataNotExistException("commandId=" + commandId);
+            throw new SystemDataNotExistException("commandId=" + context.getCommandId());
         }
 
-        CommandHandler.Context handlerContext = new CommandHandler.Context(commandId, config, request);
         try {
-            executor.execute("main", handlerContext);
+            executor.execute("main", context);
         } catch (Exception e) {
             throw new NestedException(e);
         }
 
-        return handlerContext.getResponse();
+        return context.getResponse();
     }
 }

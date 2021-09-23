@@ -6,7 +6,6 @@ import org.apache.camel.impl.DefaultCamelContext;
 import org.team4u.base.error.SystemDataNotExistException;
 import org.team4u.base.error.SystemException;
 import org.team4u.base.registrar.PolicyRegistrar;
-import org.team4u.command.domain.config.CommandConfig;
 import org.team4u.command.domain.executor.CommandExecutor;
 import org.team4u.command.domain.executor.handler.CommandHandler;
 
@@ -57,21 +56,19 @@ public class CamelCommandExecutor extends PolicyRegistrar<String, CommandRoutesB
     }
 
     @Override
-    public Object execute(String commandId, CommandConfig config, Object request) {
-        CamelContext camelContext = contexts.get(commandId);
+    public Object execute(CommandHandler.Context context) {
+        CamelContext camelContext = contexts.get(context.getCommandId());
         if (camelContext == null) {
-            throw new SystemDataNotExistException("commandId=" + commandId);
+            throw new SystemDataNotExistException("commandId=" + context.getCommandId());
         }
-
-        CommandHandler.Context handlerContext = new CommandHandler.Context(commandId, config, request);
 
         camelContext.createProducerTemplate()
                 .sendBody(
-                        "direct:" + commandId,
+                        "direct:" + context.getCommandId(),
                         ExchangePattern.InOut,
-                        handlerContext
+                        context
                 );
 
-        return handlerContext.getResponse();
+        return context.getResponse();
     }
 }
