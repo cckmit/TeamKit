@@ -6,7 +6,9 @@ import org.team4u.base.bean.event.BeanInitializedEvent;
 import org.team4u.base.message.MessagePublisher;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * 基于spring的bean提供者
@@ -51,7 +53,8 @@ public class SpringBeanProvider implements BeanProvider {
         }
 
         try {
-            return SpringUtil.getBeansOfType(type);
+            return Optional.ofNullable(SpringUtil.getBeansOfType(type))
+                    .orElseGet(HashMap::new);
         } catch (Exception e) {
             return Collections.emptyMap();
         }
