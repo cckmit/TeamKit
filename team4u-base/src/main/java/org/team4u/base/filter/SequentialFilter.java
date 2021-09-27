@@ -26,13 +26,8 @@ public abstract class SequentialFilter<T> implements Filter<T> {
     public void doFilter(T context, FilterInvoker<T> nextFilterInvoker) {
         LogMessage lm = LogMessage.create(this.getClass().getSimpleName(), "doFilter")
                 .append("context", context);
-        try {
-            doFilter(context);
-            log.info(lm.success().toString());
-        } catch (Exception e) {
-            log.error(lm.fail(e.getMessage()).toString(), e);
-            throw e;
-        }
+        doFilter(context);
+        log.info(lm.success().toString());
 
         nextFilterInvoker.invoke(context);
     }
