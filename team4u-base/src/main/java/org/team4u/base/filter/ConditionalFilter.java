@@ -1,5 +1,8 @@
 package org.team4u.base.filter;
 
+import cn.hutool.log.Log;
+import org.team4u.base.log.LogMessage;
+
 /**
  * 条件过滤器
  * <p>
@@ -9,9 +12,23 @@ package org.team4u.base.filter;
  */
 public abstract class ConditionalFilter<T> implements Filter<T> {
 
+    private final Log log = Log.get();
+
     @Override
     public void doFilter(T context, FilterInvoker<T> nextFilterInvoker) {
-        if (doFilter(context)) {
+        LogMessage lm = LogMessage.create(this.getClass().getSimpleName(), "doFilter")
+                .append("context", context);
+
+        boolean isInvokeNextFilter;
+        try {
+            isInvokeNextFilter = doFilter(context);
+            log.info(lm.success().append("isInvokeNextFilter", isInvokeNextFilter).toString());
+        } catch (Exception e) {
+            log.error(lm.fail(e.getMessage()).toString(), e);
+            throw e;
+        }
+
+        if (isInvokeNextFilter) {
             nextFilterInvoker.invoke(context);
         }
     }

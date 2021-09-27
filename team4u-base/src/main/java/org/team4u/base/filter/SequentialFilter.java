@@ -1,15 +1,20 @@
 package org.team4u.base.filter;
 
+import cn.hutool.log.Log;
+import org.team4u.base.log.LogMessage;
+
 /**
  * 顺序滤器
- *
+ * <p>
  * 无论当前过滤器执行结果如何，都将执行下一个过滤器
- *
+ * <p>
  * 仅当当前过滤器抛出异常时终止后续流程
  *
  * @author jay.wu
  */
 public abstract class SequentialFilter<T> implements Filter<T> {
+
+    private final Log log = Log.get();
 
     /**
      * 顺序执行下一个过滤器，除非抛出异常
@@ -19,7 +24,16 @@ public abstract class SequentialFilter<T> implements Filter<T> {
      */
     @Override
     public void doFilter(T context, FilterInvoker<T> nextFilterInvoker) {
-        doFilter(context);
+        LogMessage lm = LogMessage.create(this.getClass().getSimpleName(), "doFilter")
+                .append("context", context);
+        try {
+            doFilter(context);
+            log.info(lm.success().toString());
+        } catch (Exception e) {
+            log.error(lm.fail(e.getMessage()).toString(), e);
+            throw e;
+        }
+
         nextFilterInvoker.invoke(context);
     }
 
