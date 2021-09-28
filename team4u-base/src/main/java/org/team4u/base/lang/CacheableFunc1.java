@@ -3,6 +3,7 @@ package org.team4u.base.lang;
 import cn.hutool.cache.Cache;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.func.Func1;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.log.Log;
 import org.team4u.base.error.NestedException;
 import org.team4u.base.log.LogMessage;
@@ -21,10 +22,11 @@ public abstract class CacheableFunc1<P, R> implements Func1<P, R> {
     /**
      * 缓存的执行结果
      */
-    private final Cache<P, R> cache;
+    private final Cache<Object, R> cache;
 
-    public CacheableFunc1(Cache<P, R> cache) {
-        this.cache = cache;
+    @SuppressWarnings("unchecked")
+    public CacheableFunc1(Cache<?, R> cache) {
+        this.cache = (Cache<Object, R>) cache;
     }
 
     /**
@@ -33,22 +35,27 @@ public abstract class CacheableFunc1<P, R> implements Func1<P, R> {
      * @return 函数执行结果，初次执行后将缓存结果，后续再次执行时直接返回缓存结果
      */
     public R callWithCache(P parameter) {
+        Object cacheKey = cacheKey(parameter);
         // 入参相同，且已有结果，直接返回
-        if (cache.containsKey(parameter)) {
-            return cache.get(parameter);
+        if (cache.containsKey(cacheKey)) {
+            return cache.get(cacheKey);
         }
 
         synchronized (this) {
-            if (cache.containsKey(parameter)) {
-                return cache.get(parameter);
+            if (cache.containsKey(cacheKey)) {
+                return cache.get(cacheKey);
             }
 
             LogMessage lm = LogMessage.create(this.getClass().getName(), "callWithCache")
                     .append("parameter", formatParameterForLog(parameter));
 
+            if (!ObjectUtil.equals(cacheKey, parameter)) {
+                lm.append("cacheKey", cacheKey);
+            }
+
             try {
                 R result = callWithRuntimeException(parameter);
-                cache.put(parameter, result);
+                cache.put(cacheKey, result);
 
                 log.info(lm.success().append("result", formatResultForLog(result)).toString());
                 return result;
@@ -57,6 +64,16 @@ public abstract class CacheableFunc1<P, R> implements Func1<P, R> {
                 throw e;
             }
         }
+    }
+
+    /**
+     * 缓存key，默认为入参值
+     *
+     * @param parameter 入参值
+     * @return 缓存key
+     */
+    protected Object cacheKey(P parameter) {
+        return parameter;
     }
 
     protected String formatParameterForLog(P parameter) {
