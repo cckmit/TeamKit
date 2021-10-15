@@ -33,6 +33,10 @@ public class QuantityAggregationTask<T> extends AbstractAggregationTask<T> {
     }
 
     public void flush() {
+        if (buffer.isEmpty()) {
+            return;
+        }
+
         getListener().onFlush(this, buffer);
 
         getStatistic().incrementFlushSize(buffer.size());
