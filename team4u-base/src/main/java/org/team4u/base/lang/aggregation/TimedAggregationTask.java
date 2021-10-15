@@ -71,6 +71,10 @@ public class TimedAggregationTask<T> extends AbstractAggregationTask<T> {
     }
 
     private void flush(List<T> buffer) {
+        if (buffer.isEmpty()) {
+            return;
+        }
+
         getListener().onFlush(this, buffer);
 
         getStatistic().incrementFlushSize(buffer.size());
