@@ -18,8 +18,10 @@ public abstract class ConditionalFilter<T> implements Filter<T> {
     public void doFilter(T context, FilterInvoker<T> nextFilterInvoker) {
         LogMessage lm = LogMessage.create(this.getClass().getSimpleName(), "doFilter")
                 .append("context", context);
+
         boolean isInvokeNextFilter = doFilter(context);
-        log.info(lm.success().append("isInvokeNextFilter", isInvokeNextFilter).toString());
+
+        log.debug(lm.success().append("isInvokeNextFilter", isInvokeNextFilter).toString());
 
         if (isInvokeNextFilter) {
             nextFilterInvoker.invoke(context);

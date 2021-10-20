@@ -14,8 +14,7 @@ public class FilterServiceTest {
                 new A(), new C(), new B(), new D(), new E()
         ));
 
-        Dict c = Dict.create();
-        filterService.doFilter(c);
+        Dict c = filterService.doFilter(Dict.create());
 
         Assert.assertEquals(TestUtil.TEST1 + TestUtil.TEST2, c.get(TestUtil.TEST));
     }
