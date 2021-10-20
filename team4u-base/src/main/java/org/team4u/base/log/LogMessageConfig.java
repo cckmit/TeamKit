@@ -30,7 +30,7 @@ public class LogMessageConfig {
     /**
      * 最小显示耗时（毫秒）阈值
      */
-    private long minSpendTimeMillsToDisplay = 20;
+    private long minSpendTimeMillsToDisplay = 10;
 
     /**
      * 日志消息渲染器

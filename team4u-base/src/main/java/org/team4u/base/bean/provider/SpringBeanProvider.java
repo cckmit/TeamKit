@@ -12,6 +12,8 @@ import java.util.Optional;
 
 /**
  * 基于spring的bean提供者
+ * <p>
+ * 注意：需要提前注入SpringUtil
  *
  * @author jay.wu
  * @see SpringUtil
