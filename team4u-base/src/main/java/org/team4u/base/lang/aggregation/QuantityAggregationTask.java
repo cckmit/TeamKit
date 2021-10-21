@@ -32,11 +32,12 @@ public class QuantityAggregationTask<T> extends AbstractAggregationTask<T> {
         }
     }
 
+    /**
+     * 执行批量任务处理
+     * <p>
+     * 当buffer为空时，代表已经完成最后一批任务处理
+     */
     public void flush() {
-        if (buffer.isEmpty()) {
-            return;
-        }
-
         getListener().onFlush(this, buffer);
 
         getStatistic().incrementFlushSize(buffer.size());
