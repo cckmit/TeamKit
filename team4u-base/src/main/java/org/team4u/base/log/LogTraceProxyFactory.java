@@ -97,9 +97,9 @@ public class LogTraceProxyFactory {
             config.getLogX().info(logMessage.processing().toString());
         }
 
-        protected boolean afterInvoke(Object target, Method method, Object[] args, Object returnVal) {
+        protected void afterInvoke(Object target, Method method, Object[] args, Object returnVal) {
             if (!config.isEnabled()) {
-                return true;
+                return;
             }
 
             LogMessage logMessage = newLogMessage(target, method);
@@ -109,21 +109,17 @@ public class LogTraceProxyFactory {
             }
 
             config.getLogX().info(logMessage.success().toString());
-
-            return true;
         }
 
-        protected boolean afterInvokeException(Object target, Method method, Object[] args, Throwable e) {
+        protected void afterInvokeException(Object target, Method method, Object[] args, Throwable e) {
             if (!config.isEnabled()) {
-                return true;
+                return;
             }
 
             config.getLogX().error(
                     e,
                     newLogMessage(target, method).fail(e.getMessage()).toString()
             );
-
-            return true;
         }
 
         private Object formatArgs(Object[] args) {
