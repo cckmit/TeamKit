@@ -1,12 +1,19 @@
 package org.team4u.base.log;
 
 import cn.hutool.aop.aspects.Aspect;
+import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
+import net.bytebuddy.matcher.ElementMatchers;
+import org.team4u.base.aop.MethodInterceptor;
+import org.team4u.base.aop.SimpleAop;
 import org.team4u.base.aop.SpringCglibProxyFactory;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.concurrent.Callable;
 
 /**
  * 日志跟踪代理，可打印方法的输入、输出信息
@@ -14,33 +21,71 @@ import java.lang.reflect.Method;
  * @author jay.wu
  */
 public class LogTraceProxyFactory {
+
+    /**
+     * 生成可打印日志的代理类，底层使用Spring和Cglib
+     *
+     * @param target 原始对象
+     * @param <T>    代理类型
+     * @return 代理类
+     */
     public static <T> T proxy(T target) {
         return proxy(target, new Config());
     }
 
+    /**
+     * 生成可打印日志的代理类，底层使用Spring和Cglib
+     *
+     * @param target 原始对象
+     * @param config 配置
+     * @param <T>    代理类型
+     * @return 代理类
+     */
     public static <T> T proxy(T target, Config config) {
-        return new SpringCglibProxyFactory().proxy(target, new LogTraceAspect(config));
+        return new SpringCglibProxyFactory().proxy(target, new LogTraceAspect(config, target));
     }
 
-    public interface LogX {
-
-        void info(String format);
-
-        void error(Throwable t, String format);
+    /**
+     * 生成可打印日志的代理类，底层使用bytebuddy
+     *
+     * @param target 原始对象
+     * @param <T>    代理类型
+     * @return 代理类
+     */
+    public static <T> T proxy2(T target) {
+        return proxy(target, new Config());
     }
 
-    public static class LogTraceAspect implements Aspect {
+    /**
+     * 生成可打印日志的代理类，底层使用bytebuddy
+     *
+     * @param target 原始对象
+     * @param config 配置
+     * @param <T>    代理类型
+     * @return 代理类
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T proxy2(T target, Config config) {
+        return (T) SimpleAop.proxyOf(
+                target.getClass(),
+                ElementMatchers.any(),
+                new ValueMethodInterceptor(config, target)
+        );
+    }
 
-        private final Config config;
+    private static abstract class LogMethodInterceptor {
 
-        public LogTraceAspect(Config config) {
+        protected final Config config;
+        protected final Object target;
+
+        private LogMethodInterceptor(Config config, Object target) {
             this.config = config;
+            this.target = target;
         }
 
-        @Override
-        public boolean before(Object target, Method method, Object[] args) {
+        protected void beforeInvoke(Object target, Method method, Object[] args) {
             if (!config.isEnabled()) {
-                return true;
+                return;
             }
 
             LogMessage logMessage = newLogMessage(target, method);
@@ -50,22 +95,9 @@ public class LogTraceProxyFactory {
             }
 
             config.getLogX().info(logMessage.processing().toString());
-            return true;
         }
 
-        private Object formatArgs(Object[] args) {
-            Object input = args;
-            if (ArrayUtil.length(args) == 1) {
-                input = args[0];
-            } else if (ArrayUtil.isEmpty(args)) {
-                input = null;
-            }
-
-            return input;
-        }
-
-        @Override
-        public boolean after(Object target, Method method, Object[] args, Object returnVal) {
+        protected boolean afterInvoke(Object target, Method method, Object[] args, Object returnVal) {
             if (!config.isEnabled()) {
                 return true;
             }
@@ -81,8 +113,7 @@ public class LogTraceProxyFactory {
             return true;
         }
 
-        @Override
-        public boolean afterException(Object target, Method method, Object[] args, Throwable e) {
+        protected boolean afterInvokeException(Object target, Method method, Object[] args, Throwable e) {
             if (!config.isEnabled()) {
                 return true;
             }
@@ -93,6 +124,17 @@ public class LogTraceProxyFactory {
             );
 
             return true;
+        }
+
+        private Object formatArgs(Object[] args) {
+            Object input = args;
+            if (ArrayUtil.length(args) == 1) {
+                input = args[0];
+            } else if (ArrayUtil.isEmpty(args)) {
+                input = null;
+            }
+
+            return input;
         }
 
         private LogMessage newLogMessage(Object target, Method method) {
@@ -106,6 +148,69 @@ public class LogTraceProxyFactory {
             }
 
             return logMessage;
+        }
+    }
+
+    private static class ValueMethodInterceptor extends LogMethodInterceptor implements MethodInterceptor {
+
+        private ValueMethodInterceptor(Config config, Object target) {
+            super(config, target);
+        }
+
+        @Override
+        public Object intercept(Object instance, Object[] parameters, Method method, Callable<?> superMethod) throws Throwable {
+            beforeInvoke(target, method, parameters);
+
+            try {
+                Object result = ReflectUtil.invoke(target, method, parameters);
+                afterInvoke(target, method, parameters, result);
+                return result;
+            } catch (Throwable e) {
+                Throwable real = e;
+
+                if (real instanceof UtilException) {
+                    real = real.getCause();
+                    if (real instanceof InvocationTargetException) {
+                        real = real.getCause();
+                    }
+                }
+
+                afterInvokeException(target, method, parameters, real);
+                throw real;
+            }
+        }
+    }
+
+    public interface LogX {
+
+        void info(String format);
+
+        void error(Throwable t, String format);
+    }
+
+    public static class LogTraceAspect extends LogMethodInterceptor implements Aspect {
+
+
+        private LogTraceAspect(Config config, Object target) {
+            super(config, target);
+        }
+
+        @Override
+        public boolean before(Object target, Method method, Object[] args) {
+            beforeInvoke(target, method, args);
+            return true;
+        }
+
+        @Override
+        public boolean after(Object target, Method method, Object[] args, Object returnVal) {
+            afterInvoke(target, method, args, returnVal);
+            return true;
+        }
+
+        @Override
+        public boolean afterException(Object target, Method method, Object[] args, Throwable e) {
+            afterInvokeException(target, method, args, e);
+            return true;
         }
     }
 

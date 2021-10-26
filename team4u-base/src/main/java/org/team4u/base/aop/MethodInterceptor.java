@@ -8,5 +8,5 @@ public interface MethodInterceptor {
     Object intercept(Object instance,
                      Object[] parameters,
                      Method method,
-                     Callable<?> superMethod) throws Exception;
+                     Callable<?> superMethod) throws Throwable;
 }

@@ -3,7 +3,9 @@ package org.team4u.base.log;
 import cn.hutool.core.lang.Dict;
 import lombok.Data;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+import org.team4u.test.Benchmark;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +13,11 @@ import java.util.List;
 public class LogTraceProxyFactoryTest {
 
     private final FakeLogX logX = new FakeLogX();
+
+    @Before
+    public void setUp() throws Exception {
+        logX.messages.clear();
+    }
 
     @Test
     public void proxy() {
@@ -47,8 +54,7 @@ public class LogTraceProxyFactoryTest {
 
     @Test
     public void error() {
-        A a = LogTraceProxyFactory.proxy(new A(), newConfig());
-
+        A a = LogTraceProxyFactory.proxy(new A(), newConfig().setInputEnabled(false).setOutputEnabled(false));
         try {
             a.error();
             Assert.fail();
@@ -59,6 +65,15 @@ public class LogTraceProxyFactoryTest {
 
         Assert.assertEquals("[A|error|processing, A|error|failed|errorMessage=x]",
                 logX.getMessages().toString());
+    }
+
+
+    @Test
+//    @Ignore
+    public void benchmark() {
+        A a = LogTraceProxyFactory.proxy(new A(), newConfig().setEnabled(false));
+        Benchmark benchmark = new Benchmark();
+        benchmark.start(5, () -> Assert.assertEquals("jay", a.say("jay")));
     }
 
     @Test

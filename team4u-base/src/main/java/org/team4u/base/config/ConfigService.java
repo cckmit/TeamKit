@@ -12,13 +12,16 @@ public interface ConfigService {
 
     /**
      * 获取配置值
+     *
+     * @param key 配置key值
      */
     String get(String key);
 
     /**
      * 获取配置值
      *
-     * @param defaultValue 默认值，不能为null
+     * @param key          配置key
+     * @param defaultValue 默认值，能为null
      */
     @SuppressWarnings("unchecked")
     default <T> T get(String key, T defaultValue) {
@@ -26,7 +29,16 @@ public interface ConfigService {
             return (T) get(key);
         }
 
-        T value = Convert.convert((Class<T>) defaultValue.getClass(), get(key));
-        return ObjectUtil.defaultIfNull(value, defaultValue);
+        return (T) ObjectUtil.defaultIfNull(get(defaultValue.getClass(), key), defaultValue);
+    }
+
+    /**
+     * 获取配置值
+     *
+     * @param key       配置key
+     * @param classType 值类型
+     */
+    default <T> T get(Class<T> classType, String key) {
+        return Convert.convert(classType, get(key));
     }
 }

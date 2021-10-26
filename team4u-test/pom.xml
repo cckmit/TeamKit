@@ -12,11 +12,7 @@
     <packaging>jar</packaging>
 
     <dependencies>
-        <dependency>
-            <groupId>org.team4u</groupId>
-            <artifactId>team4u-base</artifactId>
-            <version>${parent.version}</version>
-        </dependency>
+
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus</artifactId>

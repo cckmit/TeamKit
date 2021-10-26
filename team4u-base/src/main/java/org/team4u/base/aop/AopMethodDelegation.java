@@ -17,7 +17,7 @@ public class AopMethodDelegation {
     public Object delegate(@SuperCall Callable<?> superMethod,
                            @This Object obj,
                            @Origin Method method,
-                           @AllArguments Object[] allArguments) throws Exception {
+                           @AllArguments Object[] allArguments) throws Throwable {
         return interceptor.intercept(obj, allArguments, method, superMethod);
     }
 }
