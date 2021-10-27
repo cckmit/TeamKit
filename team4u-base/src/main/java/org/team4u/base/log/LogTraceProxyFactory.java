@@ -2,13 +2,10 @@ package org.team4u.base.log;
 
 import cn.hutool.aop.aspects.Aspect;
 import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
-import net.bytebuddy.matcher.ElementMatchers;
 import org.team4u.base.aop.MethodInterceptor;
-import org.team4u.base.aop.SimpleAop;
 import org.team4u.base.aop.SpringCglibProxyFactory;
 
 import java.lang.reflect.InvocationTargetException;
@@ -45,109 +42,35 @@ public class LogTraceProxyFactory {
         return new SpringCglibProxyFactory().proxy(target, new LogTraceAspect(config, target));
     }
 
-    /**
-     * 生成可打印日志的代理类，底层使用bytebuddy
-     *
-     * @param target 原始对象
-     * @param <T>    代理类型
-     * @return 代理类
-     */
-    public static <T> T proxy2(T target) {
-        return proxy(target, new Config());
-    }
+//    /**
+//     * 生成可打印日志的代理类，底层使用bytebuddy
+//     *
+//     * @param target 原始对象
+//     * @param <T>    代理类型
+//     * @return 代理类
+//     */
+//    public static <T> T proxy2(T target) {
+//        return proxy(target, new Config());
+//    }
+//
+//    /**
+//     * 生成可打印日志的代理类，底层使用bytebuddy
+//     *
+//     * @param target 原始对象
+//     * @param config 配置
+//     * @param <T>    代理类型
+//     * @return 代理类
+//     */
+//    @SuppressWarnings("unchecked")
+//    public static <T> T proxy2(T target, Config config) {
+//        return (T) SimpleAop.proxyOf(
+//                target.getClass(),
+//                ElementMatchers.any(),
+//                new ValueMethodInterceptor(config, target)
+//        );
+//    }
 
-    /**
-     * 生成可打印日志的代理类，底层使用bytebuddy
-     *
-     * @param target 原始对象
-     * @param config 配置
-     * @param <T>    代理类型
-     * @return 代理类
-     */
-    @SuppressWarnings("unchecked")
-    public static <T> T proxy2(T target, Config config) {
-        return (T) SimpleAop.proxyOf(
-                target.getClass(),
-                ElementMatchers.any(),
-                new ValueMethodInterceptor(config, target)
-        );
-    }
-
-    private static abstract class LogMethodInterceptor {
-
-        protected final Config config;
-        protected final Object target;
-
-        private LogMethodInterceptor(Config config, Object target) {
-            this.config = config;
-            this.target = target;
-        }
-
-        protected void beforeInvoke(Object target, Method method, Object[] args) {
-            if (!config.isEnabled()) {
-                return;
-            }
-
-            LogMessage logMessage = newLogMessage(target, method);
-
-            if (config.isInputEnabled()) {
-                logMessage.append("input", formatArgs(args));
-            }
-
-            config.getLogX().info(logMessage.processing().toString());
-        }
-
-        protected void afterInvoke(Object target, Method method, Object[] args, Object returnVal) {
-            if (!config.isEnabled()) {
-                return;
-            }
-
-            LogMessage logMessage = newLogMessage(target, method);
-
-            if (config.isOutputEnabled()) {
-                logMessage.append("output", returnVal);
-            }
-
-            config.getLogX().info(logMessage.success().toString());
-        }
-
-        protected void afterInvokeException(Object target, Method method, Object[] args, Throwable e) {
-            if (!config.isEnabled()) {
-                return;
-            }
-
-            config.getLogX().error(
-                    e,
-                    newLogMessage(target, method).fail(e.getMessage()).toString()
-            );
-        }
-
-        private Object formatArgs(Object[] args) {
-            Object input = args;
-            if (ArrayUtil.length(args) == 1) {
-                input = args[0];
-            } else if (ArrayUtil.isEmpty(args)) {
-                input = null;
-            }
-
-            return input;
-        }
-
-        private LogMessage newLogMessage(Object target, Method method) {
-            LogMessage logMessage = LogMessages.createWithMasker(
-                    target.getClass().getSimpleName(),
-                    method.getName()
-            );
-
-            if (config.getLogMessageConfig() != null) {
-                logMessage.setConfig(config.getLogMessageConfig());
-            }
-
-            return logMessage;
-        }
-    }
-
-    private static class ValueMethodInterceptor extends LogMethodInterceptor implements MethodInterceptor {
+    private static class ValueMethodInterceptor extends AbstractLogMethodInterceptor implements MethodInterceptor {
 
         private ValueMethodInterceptor(Config config, Object target) {
             super(config, target);
@@ -184,7 +107,7 @@ public class LogTraceProxyFactory {
         void error(Throwable t, String format);
     }
 
-    public static class LogTraceAspect extends LogMethodInterceptor implements Aspect {
+    public static class LogTraceAspect extends AbstractLogMethodInterceptor implements Aspect {
 
 
         private LogTraceAspect(Config config, Object target) {

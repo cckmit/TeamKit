@@ -19,7 +19,11 @@ public class SimpleConfigAppService {
     }
 
     public <T> T to(Type toType, String configType, String configKey) {
-        return simpleConfigConverter.to(toType, configType, configKey);
+        return simpleConfigConverter.to(toType, configType, configKey, true);
+    }
+
+    public <T> T to(Type toType, String configType, String configKey, boolean isCacheResult) {
+        return simpleConfigConverter.to(toType, configType, configKey, isCacheResult);
     }
 
     public String value(String configType, String configKey) {

@@ -15,6 +15,7 @@ import org.team4u.base.aop.SimpleAop;
 import org.team4u.base.log.LogMessage;
 import org.team4u.base.serializer.HutoolJsonCacheSerializer;
 import org.team4u.base.serializer.HutoolJsonSerializer;
+import org.team4u.base.serializer.Serializer;
 import org.team4u.config.domain.SimpleConfig;
 import org.team4u.config.domain.SimpleConfigConverter;
 import org.team4u.config.domain.SimpleConfigRepository;
@@ -25,6 +26,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+/**
+ * 动态配置转换器
+ * <p>
+ * 当配置项动态下发后，配置类能够实时获取最新的配置值
+ *
+ * @author jay.wu
+ */
 public class ProxySimpleConfigConverter implements SimpleConfigConverter {
 
     private final Log log = Log.get();
@@ -45,17 +53,29 @@ public class ProxySimpleConfigConverter implements SimpleConfigConverter {
     }
 
     @Override
-    public <T> T to(Type toType, String configType, String configKey) {
+    public <T> T to(Type toType, String configType, String configKey, boolean isCacheResult) {
         String value = value(configType, configKey);
         if (value == null) {
             return null;
         }
 
+        // 简单类型直接转换
         if (ClassUtil.isSimpleTypeOrArray(TypeUtil.getClass(toType))) {
             return Convert.convert(toType, value);
-        } else {
-            return HutoolJsonCacheSerializer.instance().deserialize(value, toType);
         }
+
+        // 复杂类型通过JSON反序列化
+        return jsonSerializer(isCacheResult).deserialize(value, toType);
+    }
+
+    protected Serializer jsonSerializer(boolean isCacheResult) {
+        // 缓存结果对象，仅value不同时进行反序列化
+        if (isCacheResult) {
+            return HutoolJsonCacheSerializer.instance();
+        }
+
+        // 不缓存结果对象，每次进行反序列化
+        return HutoolJsonSerializer.instance();
     }
 
     @Override
