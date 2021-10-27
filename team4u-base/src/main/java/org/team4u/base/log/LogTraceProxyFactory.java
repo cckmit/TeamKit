@@ -10,6 +10,9 @@ import java.lang.reflect.Method;
 /**
  * 日志跟踪代理，可打印方法的输入、输出信息
  *
+ * <p>
+ * 内部使用Spring Cglib进行aop拦截，当Config禁用日志时，性能比原始对象调用有较大差距，整体性能较低
+ *
  * @author jay.wu
  */
 public class LogTraceProxyFactory {

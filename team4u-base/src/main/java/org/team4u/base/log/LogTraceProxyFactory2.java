@@ -11,6 +11,8 @@ import java.util.concurrent.Callable;
 
 /**
  * 日志跟踪代理，可打印方法的输入、输出信息
+ * <p>
+ * 内部使用bytebuddy进行aop拦截，当Config禁用日志时，性能与原始对象接近
  *
  * @author jay.wu
  */
