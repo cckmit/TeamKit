@@ -71,7 +71,7 @@ public class LogTraceProxyFactoryTest {
     @Test
 //    @Ignore
     public void benchmark() {
-        A a = LogTraceProxyFactory.proxy(new A(), newConfig().setEnabled(false));
+        A a = LogTraceProxyFactory2.proxy(new A(), newConfig().setEnabled(false));
         Benchmark benchmark = new Benchmark();
         benchmark.start(5, () -> Assert.assertEquals("jay", a.say("jay")));
     }
