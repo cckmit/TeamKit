@@ -116,25 +116,35 @@ public class ProxySimpleConfigConverter implements SimpleConfigConverter {
         }
 
         @Override
-        public Object intercept(Object instance, Object[] parameters, Method method, Callable<?> superMethod) {
-            return ReflectUtil.invoke(beanOf(targetType), method, parameters);
-        }
-
-        private boolean isNoChange() {
-            if (proxy == null) {
-                return false;
+        public Object intercept(Object instance, Object[] parameters, Method method, Callable<?> superMethod) throws Exception {
+            if (!isChange()) {
+                return superMethod.call();
             }
 
-            return currentSimpleConfigs.equals(allConfigs());
+            synchronized (this) {
+                if (isChange()) {
+                    BeanUtil.copyProperties(beanOf(targetType), instance);
+                }
+            }
+
+            return superMethod.call();
+        }
+
+        private boolean isChange() {
+            if (proxy == null) {
+                return true;
+            }
+
+            return !currentSimpleConfigs.equals(allConfigs());
         }
 
         private Object beanOf(Class<?> classType) {
-            if (isNoChange()) {
+            if (!isChange()) {
                 return proxy;
             }
 
             synchronized (this) {
-                if (isNoChange()) {
+                if (!isChange()) {
                     return proxy;
                 }
 
