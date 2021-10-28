@@ -1,12 +1,14 @@
 package org.team4u.config.domain;
 
 import cn.hutool.core.util.StrUtil;
+import lombok.Data;
 import org.team4u.config.domain.event.*;
 import org.team4u.ddd.domain.model.AggregateRoot;
 
 import java.util.Date;
 import java.util.Objects;
 
+@Data
 public class SimpleConfig extends AggregateRoot {
 
     private SimpleConfigId configId;
@@ -125,78 +127,6 @@ public class SimpleConfig extends AggregateRoot {
         publishEvent(new ConfigDeletedEvent(getConfigId(), updatedBy));
     }
 
-    public SimpleConfigId getConfigId() {
-        return configId;
-    }
-
-    private void setConfigId(SimpleConfigId configId) {
-        this.configId = configId;
-    }
-
-    public String getConfigValue() {
-        return configValue;
-    }
-
-    private void setConfigValue(String configValue) {
-        this.configValue = configValue;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    private void setDescription(String description) {
-        this.description = description;
-    }
-
-    public int getSequenceNo() {
-        return sequenceNo;
-    }
-
-    private void setSequenceNo(int sequenceNo) {
-        this.sequenceNo = sequenceNo;
-    }
-
-    public Boolean getEnabled() {
-        return enabled;
-    }
-
-    private void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    private void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public String getUpdatedBy() {
-        return updatedBy;
-    }
-
-    private void setUpdatedBy(String updatedBy) {
-        this.updatedBy = updatedBy;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    private void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    private void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -208,5 +138,14 @@ public class SimpleConfig extends AggregateRoot {
     @Override
     public int hashCode() {
         return Objects.hash(configId, configValue, description, sequenceNo, enabled);
+    }
+
+    @Override
+    public String toString() {
+        return configId +
+                "=" + configValue +
+                ", description='" + description + '\'' +
+                ", sequenceNo=" + sequenceNo +
+                ", enabled=" + enabled;
     }
 }

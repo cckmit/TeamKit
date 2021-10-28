@@ -3,10 +3,12 @@ package org.team4u.config.infrastructure.converter;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.TypeReference;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.team4u.config.TestUtil;
 import org.team4u.config.domain.SimpleConfig;
 import org.team4u.config.domain.SimpleConfigRepository;
+import org.team4u.test.Benchmark;
 
 import java.util.List;
 import java.util.Map;
@@ -18,7 +20,8 @@ public class ProxySimpleConfigConverterTest {
 
     @Test
     public void type() {
-        ProxySimpleConfigConverter converter = new ProxySimpleConfigConverter(new MockSimpleConfigRepository());
+        MockSimpleConfigRepository repository = new MockSimpleConfigRepository();
+        ProxySimpleConfigConverter converter = new ProxySimpleConfigConverter(repository);
         TestConfig config = converter.to(
                 TestConfig.class,
                 TestUtil.TEST_ID
@@ -28,6 +31,23 @@ public class ProxySimpleConfigConverterTest {
         Assert.assertArrayEquals(new String[]{"1", "2"}, config.getB());
         Assert.assertEquals(CollUtil.newArrayList(1, 2), config.getC());
         Assert.assertEquals("1", config.getD().get("test"));
+
+        // 测试配置项变动
+        repository.allConfigs().get(0).setConfigValue("2");
+        Assert.assertEquals(2, config.getA());
+    }
+
+    @Test
+    @Ignore
+    public void benchmark() {
+        ProxySimpleConfigConverter converter = new ProxySimpleConfigConverter(new MockSimpleConfigRepository());
+        TestConfig config = converter.to(
+                TestConfig.class,
+                TestUtil.TEST_ID
+        );
+        Benchmark benchmark = new Benchmark();
+        benchmark.setPrintError(true);
+        benchmark.start(5, () -> Assert.assertEquals(1, config.getA()));
     }
 
     @Test
@@ -150,21 +170,23 @@ public class ProxySimpleConfigConverterTest {
 
     private static class MockSimpleConfigRepository implements SimpleConfigRepository {
 
+        private final List<SimpleConfig> list = CollUtil.newArrayList(
+                c("a", "1"),
+                c("b", "1,2"),
+                c("c", "1,2"),
+                c("d", "{\"test\":1}"),
+                c("e", "[\n" +
+                        "                    {\n" +
+                        "                            \"a\": \"1\",\n" +
+                        "                    \"b\": \"2\",\n" +
+                        "                    \"c\": \"3\"\n" +
+                        "  }\n" +
+                        "]")
+        );
+
         @Override
         public List<SimpleConfig> allConfigs() {
-            return CollUtil.newArrayList(
-                    c("a", "1"),
-                    c("b", "1,2"),
-                    c("c", "1,2"),
-                    c("d", "{\"test\":1}"),
-                    c("e", "[\n" +
-                            "                    {\n" +
-                            "                            \"a\": \"1\",\n" +
-                            "                    \"b\": \"2\",\n" +
-                            "                    \"c\": \"3\"\n" +
-                            "  }\n" +
-                            "]")
-            );
+            return list;
         }
     }
 }

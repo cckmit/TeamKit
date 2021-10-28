@@ -23,8 +23,10 @@ import org.team4u.config.domain.SimpleConfigRepository;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.stream.Collectors;
 
 /**
  * 动态配置转换器
@@ -106,59 +108,56 @@ public class ProxySimpleConfigConverter implements SimpleConfigConverter {
         private final String configType;
         private final Class<?> targetType;
 
-        private Object proxy = null;
-        private List<SimpleConfig> currentSimpleConfigs;
+        private List<SimpleConfig> currentSimpleConfigs = Collections.emptyList();
 
         private ValueMethodInterceptor(Class<?> targetType, String configType) {
             this.targetType = targetType;
             this.configType = configType;
-            currentSimpleConfigs = allConfigs();
         }
 
         @Override
         public Object intercept(Object instance, Object[] parameters, Method method, Callable<?> superMethod) throws Exception {
-            if (!isChange()) {
+            // 配置项没有变化，直接返回
+            if (!isConfigChange()) {
                 return superMethod.call();
             }
 
             synchronized (this) {
-                if (isChange()) {
-                    BeanUtil.copyProperties(beanOf(targetType), instance);
+                if (isConfigChange()) {
+                    // 刷新配置项
+                    refreshConfigs();
+                    // 将最新的代理对象字段值赋值到当前对象
+                    BeanUtil.copyProperties(buildProxy(targetType), instance);
                 }
             }
 
             return superMethod.call();
         }
 
-        private boolean isChange() {
-            if (proxy == null) {
-                return true;
-            }
-
+        /**
+         * 判断配置项是否存在变动
+         */
+        private boolean isConfigChange() {
             return !currentSimpleConfigs.equals(allConfigs());
         }
 
-        private Object beanOf(Class<?> classType) {
-            if (!isChange()) {
-                return proxy;
-            }
-
-            synchronized (this) {
-                if (!isChange()) {
-                    return proxy;
-                }
-
-                refreshConfigs();
-                return buildProxy(classType);
-            }
-        }
-
         private void refreshConfigs() {
-            currentSimpleConfigs = allConfigs();
+            currentSimpleConfigs = allConfigs()
+                    .stream()
+                    .map(it -> new SimpleConfig(
+                            it.getConfigId(),
+                            it.getConfigValue(),
+                            it.getDescription(),
+                            it.getSequenceNo(),
+                            it.getEnabled(),
+                            it.getCreatedBy(),
+                            it.getCreateTime()
+                    ))
+                    .collect(Collectors.toList());
         }
 
         private Object buildProxy(Class<?> classType) {
-            proxy = BeanUtil.fillBean(ReflectUtil.newInstanceIfPossible(classType),
+            Object proxy = BeanUtil.fillBean(ReflectUtil.newInstanceIfPossible(classType),
                     new ValueProvider<String>() {
                         @Override
                         public Object value(String key, Type valueType) {
