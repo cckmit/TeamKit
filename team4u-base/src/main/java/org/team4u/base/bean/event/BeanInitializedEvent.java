@@ -9,6 +9,7 @@ import org.team4u.base.message.Message;
  * @author jay.wu
  * @see BeanProviders
  * @see org.team4u.base.spring.SpringInitializedPublisher
+ * @see AbstractBeanInitializedEventSubscriber
  */
 public class BeanInitializedEvent implements Message {
 

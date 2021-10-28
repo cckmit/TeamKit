@@ -21,10 +21,12 @@ public abstract class SpringFilterService<C> extends FilterService<C> implements
      * 根据过滤器类型集合构建责任链
      */
     @PostConstruct
-    public void buildFilterChainByFilterTypes() {
-        buildFilterChainByFilters(filterClasses().stream()
-                .map(it -> (Filter<C>) applicationContext.getBean(it))
-                .collect(Collectors.toList()));
+    public void init() {
+        setFilterChain(
+                FilterChain.create(filterClasses().stream()
+                        .map(it -> (Filter<C>) applicationContext.getBean(it))
+                        .collect(Collectors.toList()))
+        );
     }
 
     @Override

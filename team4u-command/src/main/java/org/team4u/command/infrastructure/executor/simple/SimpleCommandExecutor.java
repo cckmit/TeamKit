@@ -2,7 +2,6 @@ package org.team4u.command.infrastructure.executor.simple;
 
 import org.team4u.base.error.SystemDataNotExistException;
 import org.team4u.base.filter.FilterChain;
-import org.team4u.base.filter.FilterChainFactory;
 import org.team4u.base.registrar.PolicyRegistrar;
 import org.team4u.command.domain.executor.CommandExecutor;
 import org.team4u.command.domain.executor.handler.CommandHandler;
@@ -44,7 +43,7 @@ public class SimpleCommandExecutor
     }
 
     private void initFilterChain(CommandRoutesBuilder builder) {
-        FilterChain<CommandHandler.Context> filterChain = FilterChainFactory.buildFilterChain(builder.configure());
+        FilterChain<CommandHandler.Context> filterChain = FilterChain.create(builder.configure());
         filterChainMap.put(builder.id(), filterChain);
     }
 

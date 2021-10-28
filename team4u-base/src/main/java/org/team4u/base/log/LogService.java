@@ -20,15 +20,21 @@ public class LogService {
         }
 
         if (e instanceof ControlException) {
-            log.info(lm.result(e.getMessage()).toString());
+            if (log.isInfoEnabled()) {
+                log.info(lm.result(e.getMessage()).toString());
+            }
             return;
         }
 
         if (e instanceof BusinessException) {
-            log.warn(lm.fail(e.getMessage()).toString());
+            if (log.isWarnEnabled()) {
+                log.warn(lm.fail(e.getMessage()).toString());
+            }
             return;
         }
 
-        log.error(e, lm.fail(e.getMessage()).toString());
+        if (log.isErrorEnabled()) {
+            log.error(e, lm.fail(e.getMessage()).toString());
+        }
     }
 }

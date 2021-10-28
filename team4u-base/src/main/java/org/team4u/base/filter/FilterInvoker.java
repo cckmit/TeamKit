@@ -6,14 +6,6 @@ package org.team4u.base.filter;
  * @author jay.wu
  */
 public interface FilterInvoker<T> {
-
-    /**
-     * 最后一个执行者
-     */
-    @SuppressWarnings("rawtypes")
-    FilterInvoker EMPTY_INVOKER = context -> {
-    };
-
     /**
      * 执行过滤器
      *
