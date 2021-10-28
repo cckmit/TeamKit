@@ -21,6 +21,8 @@ public class SimpleConfigAppService {
 
     /**
      * 将多个配置项转换为指定的配置类
+     * <p>
+     * 支持动态下发配置后实时生效
      *
      * @param toType     目标配置类型
      * @param configType 配置项类型或配置项前缀
@@ -34,7 +36,7 @@ public class SimpleConfigAppService {
     /**
      * 根据特定的配置项转换为指定的配置类
      * <p>
-     * 默认开启缓存结果
+     * 该方法将缓存相同值的配置项
      *
      * @param toType     目标配置类型
      * @param configType 配置类型或配置前缀
@@ -43,7 +45,7 @@ public class SimpleConfigAppService {
      * @return 目标配置类
      */
     public <T> T to(Type toType, String configType, String configKey) {
-        return simpleConfigConverter.to(toType, configType, configKey, true);
+        return simpleConfigConverter.to(toType, configType, configKey);
     }
 
     /**

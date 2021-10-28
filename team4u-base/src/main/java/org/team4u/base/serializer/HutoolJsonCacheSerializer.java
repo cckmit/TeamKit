@@ -9,11 +9,11 @@ import cn.hutool.cache.CacheUtil;
  */
 public class HutoolJsonCacheSerializer {
 
-    private final static CacheableJsonSerializer instance = new CacheableJsonSerializer(
+    private final static CacheableSerializer instance = new CacheableSerializer(
             HutoolJsonSerializer.instance(), CacheUtil.newLRUCache(1000)
     );
 
-    public static CacheableJsonSerializer instance() {
+    public static CacheableSerializer instance() {
         return instance;
     }
 }

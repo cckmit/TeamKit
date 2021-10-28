@@ -13,9 +13,7 @@ import net.bytebuddy.matcher.ElementMatchers;
 import org.team4u.base.aop.MethodInterceptor;
 import org.team4u.base.aop.SimpleAop;
 import org.team4u.base.log.LogMessage;
-import org.team4u.base.serializer.HutoolJsonCacheSerializer;
-import org.team4u.base.serializer.HutoolJsonSerializer;
-import org.team4u.base.serializer.Serializer;
+import org.team4u.base.serializer.*;
 import org.team4u.config.domain.SimpleConfig;
 import org.team4u.config.domain.SimpleConfigConverter;
 import org.team4u.config.domain.SimpleConfigRepository;
@@ -63,11 +61,21 @@ public class ProxySimpleConfigConverter implements SimpleConfigConverter {
 
         // 简单类型直接转换
         if (ClassUtil.isSimpleTypeOrArray(TypeUtil.getClass(toType))) {
-            return Convert.convert(toType, value);
+            return simpleSerializer(isCacheResult).deserialize(value, toType);
         }
 
         // 复杂类型通过JSON反序列化
         return jsonSerializer(isCacheResult).deserialize(value, toType);
+    }
+
+    protected Serializer simpleSerializer(boolean isCacheResult) {
+        // 缓存结果对象，仅value不同时进行反序列化
+        if (isCacheResult) {
+            return SimpleValueCacheSerializer.instance();
+        }
+
+        // 不缓存结果对象，每次进行反序列化
+        return SimpleValueSerializer.instance();
     }
 
     protected Serializer jsonSerializer(boolean isCacheResult) {

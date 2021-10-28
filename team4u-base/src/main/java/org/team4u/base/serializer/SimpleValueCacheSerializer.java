@@ -3,14 +3,15 @@ package org.team4u.base.serializer;
 import cn.hutool.cache.CacheUtil;
 
 /**
- * 基于fastjson的可缓存序列化器
+ * 简单类型可缓存序列化器
  *
  * @author jay.wu
+ * @see SimpleValueCacheSerializer
  */
-public class FastJsonCacheSerializer {
+public class SimpleValueCacheSerializer {
 
     private final static CacheableSerializer instance = new CacheableSerializer(
-            FastJsonSerializer.instance(), CacheUtil.newLRUCache(1000)
+            SimpleValueSerializer.instance(), CacheUtil.newLRUCache(1000)
     );
 
     public static CacheableSerializer instance() {

@@ -35,5 +35,5 @@ public abstract class AbstractCacheSerializerTest {
         Assert.assertEquals(a, b);
     }
 
-    protected abstract CacheableJsonSerializer serializer();
+    protected abstract CacheableSerializer serializer();
 }

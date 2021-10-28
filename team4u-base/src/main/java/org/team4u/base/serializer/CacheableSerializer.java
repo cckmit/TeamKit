@@ -7,11 +7,11 @@ import org.team4u.base.lang.CacheableFunc1;
 import java.lang.reflect.Type;
 
 /**
- * 简单可缓存的json序列化器
+ * 简单可缓存的序列化器
  * <p>
  * * @author jay.wu
  */
-public class CacheableJsonSerializer implements Serializer {
+public class CacheableSerializer implements Serializer {
 
     private final Serializer serializer;
 
@@ -20,7 +20,7 @@ public class CacheableJsonSerializer implements Serializer {
     private final ObjectSerializer objectSerializer;
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public CacheableJsonSerializer(Serializer serializer, Cache cache) {
+    public CacheableSerializer(Serializer serializer, Cache cache) {
         this.serializer = serializer;
 
         this.classDeserializer = new ClassDeserializer(cache);
