@@ -12,7 +12,7 @@ import org.team4u.base.log.LogMessage;
  */
 public abstract class ConditionalFilter<T> implements Filter<T> {
 
-    private final Log log = Log.get();
+    protected final Log log = Log.get();
 
     @Override
     public void doFilter(T context, FilterInvoker<T> nextFilterInvoker) {
@@ -21,7 +21,9 @@ public abstract class ConditionalFilter<T> implements Filter<T> {
 
         boolean isInvokeNextFilter = doFilter(context);
 
-        log.debug(lm.success().append("isInvokeNextFilter", isInvokeNextFilter).toString());
+        if (log.isDebugEnabled()) {
+            log.debug(lm.success().append("isInvokeNextFilter", isInvokeNextFilter).toString());
+        }
 
         if (isInvokeNextFilter) {
             nextFilterInvoker.invoke(context);

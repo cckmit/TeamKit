@@ -14,7 +14,7 @@ import org.team4u.base.log.LogMessage;
  */
 public abstract class SequentialFilter<T> implements Filter<T> {
 
-    private final Log log = Log.get();
+    protected final Log log = Log.get();
 
     /**
      * 顺序执行下一个过滤器，除非抛出异常
@@ -29,7 +29,9 @@ public abstract class SequentialFilter<T> implements Filter<T> {
 
         doFilter(context);
 
-        log.debug(lm.success().toString());
+        if (log.isDebugEnabled()) {
+            log.debug(lm.success().toString());
+        }
 
         nextFilterInvoker.invoke(context);
     }
