@@ -32,7 +32,7 @@ public class ProxySimpleConfigConverterTest {
         Assert.assertEquals(CollUtil.newArrayList(1, 2), config.getC());
         Assert.assertEquals("1", config.getD().get("test"));
 
-        // 测试配置项变动
+        // 配置项变动
         repository.allConfigs().get(0).setConfigValue("2");
         Assert.assertEquals(2, config.getA());
     }

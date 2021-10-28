@@ -4,6 +4,7 @@ import cn.hutool.core.lang.Dict;
 import lombok.Data;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.team4u.test.Benchmark;
 
@@ -69,7 +70,7 @@ public class LogTraceProxyFactoryTest {
 
 
     @Test
-//    @Ignore
+    @Ignore
     public void benchmark() {
         A a = LogTraceProxyFactory2.proxy(new A(), newConfig().setEnabled(false));
         Benchmark benchmark = new Benchmark();
