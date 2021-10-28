@@ -1,4 +1,4 @@
-package org.team4u.base.log;
+package org.team4u.base.log.aop;
 
 import cn.hutool.core.exceptions.UtilException;
 import net.bytebuddy.matcher.ElementMatchers;
@@ -10,35 +10,18 @@ import java.lang.reflect.Method;
 import java.util.concurrent.Callable;
 
 /**
- * 日志跟踪代理，可打印方法的输入、输出信息
+ * 基于ByteBuddy的日志跟踪代理，可打印方法的输入、输出信息
+ *
  * <p>
- * 内部使用bytebuddy进行aop拦截，当Config禁用日志时，性能与原始对象接近
+ * 当Config禁用日志时，性能与原始对象调用接近
  *
  * @author jay.wu
  */
-public class LogTraceProxyFactory2 extends LogTraceProxyFactory {
+public class ByteBuddyLogAop implements LogAop {
 
-    /**
-     * 生成可打印日志的代理类，底层使用bytebuddy
-     *
-     * @param target 原始对象
-     * @param <T>    代理类型
-     * @return 代理类
-     */
-    public static <T> T proxy(T target) {
-        return proxy(target, new Config());
-    }
-
-    /**
-     * 生成可打印日志的代理类，底层使用bytebuddy
-     *
-     * @param target 原始对象
-     * @param config 配置
-     * @param <T>    代理类型
-     * @return 代理类
-     */
     @SuppressWarnings("unchecked")
-    public static <T> T proxy(T target, Config config) {
+    @Override
+    public <T> T proxy(T target, Config config) {
         return (T) SimpleAop.proxyOf(
                 target.getClass(),
                 ElementMatchers.any(),

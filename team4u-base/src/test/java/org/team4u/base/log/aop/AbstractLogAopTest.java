@@ -1,6 +1,9 @@
-package org.team4u.base.log;
+package org.team4u.base.log.aop;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Dict;
+import cn.hutool.log.dialect.console.ConsoleLog;
+import cn.hutool.log.level.Level;
 import lombok.Data;
 import org.junit.Assert;
 import org.junit.Before;
@@ -11,18 +14,22 @@ import org.team4u.test.Benchmark;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LogTraceProxyFactoryTest {
+public abstract class AbstractLogAopTest {
 
     private final FakeLogX logX = new FakeLogX();
 
+    private final LogAop logAop = newLogAop();
+
+    protected abstract LogAop newLogAop();
+
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         logX.messages.clear();
     }
 
     @Test
     public void proxy() {
-        A a = LogTraceProxyFactory.proxy(new A(), newConfig());
+        A a = logAop.proxy(new A(), newConfig().build());
         Assert.assertEquals("jay", a.say("jay"));
         Assert.assertEquals("[A|say|processing|input=jay, A|say|succeeded|output=jay]",
                 logX.getMessages().toString());
@@ -30,14 +37,14 @@ public class LogTraceProxyFactoryTest {
 
     @Test
     public void disabledLog() {
-        A a = LogTraceProxyFactory.proxy(new A(), newConfig().setEnabled(false));
+        A a = logAop.proxy(new A(), newConfig().enabled(false).build());
         Assert.assertEquals("jay", a.say("jay"));
         Assert.assertTrue(logX.getMessages().isEmpty());
     }
 
     @Test
     public void disabledInput() {
-        A a = LogTraceProxyFactory.proxy(new A(), newConfig().setInputEnabled(false));
+        A a = logAop.proxy(new A(), newConfig().inputEnabled(false).build());
 
         Assert.assertEquals("jay", a.say("jay"));
         Assert.assertEquals("[A|say|processing, A|say|succeeded|output=jay]",
@@ -46,7 +53,7 @@ public class LogTraceProxyFactoryTest {
 
     @Test
     public void disabledOutput() {
-        A a = LogTraceProxyFactory.proxy(new A(), newConfig().setOutputEnabled(false));
+        A a = logAop.proxy(new A(), newConfig().outputEnabled(false).build());
 
         Assert.assertEquals("jay", a.say("jay"));
         Assert.assertEquals("[A|say|processing|input=jay, A|say|succeeded]",
@@ -55,7 +62,7 @@ public class LogTraceProxyFactoryTest {
 
     @Test
     public void error() {
-        A a = LogTraceProxyFactory.proxy(new A(), newConfig().setInputEnabled(false).setOutputEnabled(false));
+        A a = logAop.proxy(new A(), newConfig().inputEnabled(false).outputEnabled(false).build());
         try {
             a.error();
             Assert.fail();
@@ -68,18 +75,40 @@ public class LogTraceProxyFactoryTest {
                 logX.getMessages().toString());
     }
 
+    @Test
+    public void includedMethods() {
+        A a = logAop.proxy(new A(), newConfig().includedMethods(CollUtil.newArrayList("say")).build());
+        Assert.assertEquals("jay", a.say("jay"));
+        a.mask("fjay", "blue");
+        Assert.assertEquals(
+                "[A|say|processing|input=jay, A|say|succeeded|output=jay]",
+                logX.getMessages().toString()
+        );
+    }
+
+    @Test
+    public void excludedMethods() {
+        A a = logAop.proxy(new A(), newConfig().excludedMethods(CollUtil.newArrayList("mask")).build());
+        Assert.assertEquals("jay", a.say("jay"));
+        a.mask("fjay", "blue");
+        Assert.assertEquals(
+                "[A|say|processing|input=jay, A|say|succeeded|output=jay]",
+                logX.getMessages().toString()
+        );
+    }
 
     @Test
     @Ignore
     public void benchmark() {
-        A a = LogTraceProxyFactory2.proxy(new A(), newConfig().setEnabled(false));
+        A a = logAop.proxy(new A(), newConfig().enabled(false).build());
         Benchmark benchmark = new Benchmark();
+        benchmark.setPrintError(true);
         benchmark.start(5, () -> Assert.assertEquals("jay", a.say("jay")));
     }
 
     @Test
     public void mask() {
-        A a = LogTraceProxyFactory.proxy(new A(), newConfig());
+        A a = logAop.proxy(new A(), newConfig().build());
 
         a.mask("123456", "123456");
 
@@ -91,21 +120,20 @@ public class LogTraceProxyFactoryTest {
                 logX.getMessages().toString());
     }
 
-    private LogTraceProxyFactory.Config newConfig() {
-        return new LogTraceProxyFactory.Config().setLogX(logX);
+    private LogAop.Config.ConfigBuilder newConfig() {
+        return LogAop.Config.builder().log(logX);
     }
 
-    public static class FakeLogX implements LogTraceProxyFactory.LogX {
+    public static class FakeLogX extends ConsoleLog {
 
         private final List<String> messages = new ArrayList<>();
 
-        @Override
-        public void info(String format) {
-            messages.add(format);
+        public FakeLogX() {
+            super(FakeLogX.class);
         }
 
         @Override
-        public void error(Throwable t, String format) {
+        public void log(String fqcn, Level level, Throwable t, String format, Object... arguments) {
             messages.add(format);
         }
 

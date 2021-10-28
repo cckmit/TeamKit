@@ -1,21 +1,27 @@
-package org.team4u.base.log;
+package org.team4u.base.log.aop;
 
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.log.Log;
+import org.team4u.base.log.LogMessage;
+import org.team4u.base.log.LogMessages;
 
 import java.lang.reflect.Method;
 
 public abstract class AbstractLogMethodInterceptor {
 
-    protected final Object target;
-    protected final LogTraceProxyFactory.Config config;
+    private final Log log;
 
-    public AbstractLogMethodInterceptor(LogTraceProxyFactory.Config config, Object target) {
+    protected final Object target;
+    protected final LogAop.Config config;
+
+    public AbstractLogMethodInterceptor(LogAop.Config config, Object target) {
         this.config = config;
         this.target = target;
+        this.log = config.getLog();
     }
 
     protected void beforeInvoke(Object target, Method method, Object[] args) {
-        if (!config.isEnabled()) {
+        if (!isMatchMethod(method.getName())) {
             return;
         }
 
@@ -25,11 +31,13 @@ public abstract class AbstractLogMethodInterceptor {
             logMessage.append("input", formatArgs(args));
         }
 
-        config.getLogX().info(logMessage.processing().toString());
+        if (log.isInfoEnabled()) {
+            log.info(logMessage.processing().toString());
+        }
     }
 
     protected void afterInvoke(Object target, Method method, Object[] args, Object returnVal) {
-        if (!config.isEnabled()) {
+        if (!isMatchMethod(method.getName())) {
             return;
         }
 
@@ -39,18 +47,22 @@ public abstract class AbstractLogMethodInterceptor {
             logMessage.append("output", returnVal);
         }
 
-        config.getLogX().info(logMessage.success().toString());
+        if (log.isInfoEnabled()) {
+            log.info(logMessage.success().toString());
+        }
     }
 
     protected void afterInvokeException(Object target, Method method, Object[] args, Throwable e) {
-        if (!config.isEnabled()) {
+        if (!isMatchMethod(method.getName())) {
             return;
         }
 
-        config.getLogX().error(
-                e,
-                newLogMessage(target, method).fail(e.getMessage()).toString()
-        );
+        if (log.isErrorEnabled()) {
+            log.error(
+                    e,
+                    newLogMessage(target, method).fail(e.getMessage()).toString()
+            );
+        }
     }
 
     protected Object formatArgs(Object[] args) {
@@ -75,5 +87,25 @@ public abstract class AbstractLogMethodInterceptor {
         }
 
         return logMessage;
+    }
+
+    private boolean isMatchMethod(String method) {
+        // 开关关闭
+        if (!config.isEnabled()) {
+            return false;
+        }
+
+        // 存在白名单
+        if (!config.getIncludedMethods().isEmpty()) {
+            return config.getIncludedMethods().contains(method);
+        }
+
+        // 存在黑名单
+        if (!config.getExcludedMethods().isEmpty()) {
+            return !config.getExcludedMethods().contains(method);
+        }
+
+        // 默认匹配
+        return true;
     }
 }
