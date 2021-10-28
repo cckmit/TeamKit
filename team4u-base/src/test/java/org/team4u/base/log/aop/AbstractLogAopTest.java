@@ -9,6 +9,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.team4u.base.log.LogMessageConfig;
+import org.team4u.base.log.LogMessages;
+import org.team4u.base.log.MaskLogMessageRender;
 import org.team4u.test.Benchmark;
 
 import java.util.ArrayList;
@@ -121,7 +124,12 @@ public abstract class AbstractLogAopTest {
     }
 
     private LogAop.Config.ConfigBuilder newConfig() {
-        return LogAop.Config.builder().log(logX);
+        return LogAop.Config.builder()
+                .log(logX)
+                .logMessageConfig(
+                        new LogMessageConfig()
+                                .setLogMessageRender(new MaskLogMessageRender(LogMessages.dynamicMasker))
+                                .setMinSpendTimeMillsToDisplay(5000));
     }
 
     public static class FakeLogX extends ConsoleLog {

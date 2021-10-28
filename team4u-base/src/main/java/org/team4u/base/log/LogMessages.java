@@ -11,7 +11,9 @@ import org.team4u.base.masker.dynamic.LocalDynamicMaskerConfigRepository;
  */
 public class LogMessages {
 
-    private static DynamicMasker dynamicMasker = new DynamicMasker(
+    private static final ThreadLocal<LogMessage> MESSAGE_THREAD_LOCAL = new ThreadLocal<>();
+
+    public static DynamicMasker dynamicMasker = new DynamicMasker(
             new FastJsonDynamicMaskerValueSerializer(),
             new LocalDynamicMaskerConfigRepository()
     );
@@ -34,5 +36,17 @@ public class LogMessages {
 
     public static void setDynamicMasker(DynamicMasker dynamicMasker) {
         LogMessages.dynamicMasker = dynamicMasker;
+    }
+
+    public static void threadLogMessage(LogMessage message) {
+        MESSAGE_THREAD_LOCAL.set(message);
+    }
+
+    public static LogMessage threadLogMessage() {
+        return MESSAGE_THREAD_LOCAL.get();
+    }
+
+    public static void removeThreadLogMessage() {
+        MESSAGE_THREAD_LOCAL.remove();
     }
 }

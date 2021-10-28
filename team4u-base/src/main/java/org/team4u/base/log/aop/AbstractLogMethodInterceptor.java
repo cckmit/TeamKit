@@ -14,6 +14,7 @@ public abstract class AbstractLogMethodInterceptor {
     protected final Object target;
     protected final LogAop.Config config;
 
+
     public AbstractLogMethodInterceptor(LogAop.Config config, Object target) {
         this.config = config;
         this.target = target;
@@ -25,15 +26,18 @@ public abstract class AbstractLogMethodInterceptor {
             return;
         }
 
-        LogMessage logMessage = newLogMessage(target, method);
+        if (!log.isInfoEnabled()) {
+            return;
+        }
+
+        LogMessage logMessage = logMessage(target, method);
 
         if (config.isInputEnabled()) {
             logMessage.append("input", formatArgs(args));
         }
 
-        if (log.isInfoEnabled()) {
-            log.info(logMessage.processing().toString());
-        }
+        log.info(logMessage.processing().toString());
+        logMessage.append("input", null);
     }
 
     protected void afterInvoke(Object target, Method method, Object[] args, Object returnVal) {
@@ -41,15 +45,18 @@ public abstract class AbstractLogMethodInterceptor {
             return;
         }
 
-        LogMessage logMessage = newLogMessage(target, method);
+        if (!log.isInfoEnabled()) {
+            return;
+        }
+
+        LogMessage logMessage = logMessage(target, method);
 
         if (config.isOutputEnabled()) {
             logMessage.append("output", returnVal);
         }
 
-        if (log.isInfoEnabled()) {
-            log.info(logMessage.success().toString());
-        }
+        log.info(logMessage.success().toString());
+        LogMessages.removeThreadLogMessage();
     }
 
     protected void afterInvokeException(Object target, Method method, Object[] args, Throwable e) {
@@ -57,12 +64,16 @@ public abstract class AbstractLogMethodInterceptor {
             return;
         }
 
-        if (log.isErrorEnabled()) {
-            log.error(
-                    e,
-                    newLogMessage(target, method).fail(e.getMessage()).toString()
-            );
+        if (!log.isErrorEnabled()) {
+            return;
         }
+
+        log.error(
+                e,
+                logMessage(target, method).fail(e.getMessage()).toString()
+        );
+
+        LogMessages.removeThreadLogMessage();
     }
 
     protected Object formatArgs(Object[] args) {
@@ -76,17 +87,23 @@ public abstract class AbstractLogMethodInterceptor {
         return input;
     }
 
-    protected LogMessage newLogMessage(Object target, Method method) {
-        LogMessage logMessage = LogMessages.createWithMasker(
-                target.getClass().getSimpleName(),
-                method.getName()
-        );
+    protected LogMessage logMessage(Object target, Method method) {
+        LogMessage lm = LogMessages.threadLogMessage();
 
-        if (config.getLogMessageConfig() != null) {
-            logMessage.setConfig(config.getLogMessageConfig());
+        if (lm == null) {
+            lm = LogMessages.createWithMasker(
+                    target.getClass().getSimpleName(),
+                    method.getName()
+            );
+
+            if (config.getLogMessageConfig() != null) {
+                lm.setConfig(config.getLogMessageConfig());
+            }
+
+            LogMessages.threadLogMessage(lm);
         }
 
-        return logMessage;
+        return lm;
     }
 
     private boolean isMatchMethod(String method) {
