@@ -3,6 +3,7 @@ package org.team4u.config.infrastructure.converter;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.lang.TypeReference;
+import cn.hutool.core.thread.ThreadUtil;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -37,6 +38,7 @@ public class ProxySimpleConfigConverterTest {
 
         // 配置项变动
         repository.allConfigs().get(0).setConfigValue("2");
+        ThreadUtil.sleep(1000);
         Assert.assertEquals(2, config.getA());
     }
 

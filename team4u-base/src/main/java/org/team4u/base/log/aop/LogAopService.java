@@ -1,5 +1,9 @@
 package org.team4u.base.log.aop;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ObjectUtil;
+import org.team4u.base.registrar.PolicyRegistrar;
+
 /**
  * 日志aop打印服务、
  * <p>
@@ -7,7 +11,13 @@ package org.team4u.base.log.aop;
  *
  * @author jay.wu
  */
-public class LogAopService {
+public class LogAopService extends PolicyRegistrar<String, LogAop> {
+
+    private static final LogAopService instance = new LogAopService();
+
+    public static LogAopService getInstance() {
+        return instance;
+    }
 
     /**
      * 生成可打印日志的代理类，底层使用Spring和Cglib
@@ -16,7 +26,7 @@ public class LogAopService {
      * @param <T>    代理类型
      * @return 代理类
      */
-    public static <T> T proxy(T target) {
+    public <T> T proxy(T target) {
         return proxy(target, new LogAop.Config());
     }
 
@@ -28,7 +38,15 @@ public class LogAopService {
      * @param <T>    代理类型
      * @return 代理类
      */
-    public static <T> T proxy(T target, LogAop.Config config) {
-        return new ByteBuddyLogAop().proxy(target, config);
+    public <T> T proxy(T target, LogAop.Config config) {
+        LogAop aop = ObjectUtil.defaultIfNull(
+                policyOf(config.getLogAopId()), CollUtil.getFirst(policies())
+        );
+
+        if (aop == null) {
+            return target;
+        }
+
+        return aop.proxy(target, config);
     }
 }

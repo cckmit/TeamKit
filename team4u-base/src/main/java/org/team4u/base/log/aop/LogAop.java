@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.team4u.base.log.LogMessageConfig;
+import org.team4u.base.registrar.StringIdPolicy;
 
 import java.util.Collections;
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.List;
  *
  * @author jay.wu
  */
-public interface LogAop {
+public interface LogAop extends StringIdPolicy {
 
     /**
      * 生成可打印日志的代理类，底层使用Spring和Cglib
@@ -43,6 +44,7 @@ public interface LogAop {
     @AllArgsConstructor
     @NoArgsConstructor
     class Config {
+        private String logAopId;
         /**
          * 不打印输入
          * <p>

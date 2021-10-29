@@ -107,8 +107,8 @@ public abstract class AbstractLogAopTest {
         A a2 = new A();
         Benchmark benchmark = new Benchmark();
         benchmark.setPrintError(true);
-//        benchmark.start(5, () -> Assert.assertEquals("jay", a2.say("jay")));
-        benchmark.start(5, () -> Assert.assertEquals("jay", a.say("jay")));
+        benchmark.start(5, () -> Assert.assertEquals("jay", a2.say("jay")));
+//        benchmark.start(5, () -> Assert.assertEquals("jay", a.say("jay")));
     }
 
     @Test

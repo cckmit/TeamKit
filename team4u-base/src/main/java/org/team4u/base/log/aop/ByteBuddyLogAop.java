@@ -19,6 +19,8 @@ import java.util.concurrent.Callable;
  */
 public class ByteBuddyLogAop implements LogAop {
 
+    public static final String ID = "ByteBuddy";
+
     @SuppressWarnings("unchecked")
     @Override
     public <T> T proxy(T target, Config config) {
@@ -27,6 +29,11 @@ public class ByteBuddyLogAop implements LogAop {
                 ElementMatchers.any(),
                 new ValueMethodInterceptor(config, target)
         );
+    }
+
+    @Override
+    public String id() {
+        return ID;
     }
 
     private static class ValueMethodInterceptor extends AbstractLogMethodInterceptor implements MethodInterceptor {

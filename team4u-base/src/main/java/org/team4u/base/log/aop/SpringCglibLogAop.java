@@ -17,9 +17,18 @@ import java.lang.reflect.Method;
  */
 public class SpringCglibLogAop implements LogAop {
 
+    public static final String ID = "SpringCglib";
+
+    private final SpringCglibProxyFactory proxyFactory = new SpringCglibProxyFactory();
+
     @Override
     public <T> T proxy(T target, Config config) {
-        return new SpringCglibProxyFactory().proxy(target, new LogTraceAspect(config, target));
+        return proxyFactory.proxy(target, new LogTraceAspect(config, target));
+    }
+
+    @Override
+    public String id() {
+        return ID;
     }
 
     public static class LogTraceAspect extends AbstractLogMethodInterceptor implements Aspect {
