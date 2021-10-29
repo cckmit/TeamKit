@@ -104,8 +104,10 @@ public abstract class AbstractLogAopTest {
     @Ignore
     public void benchmark() {
         A a = logAop.proxy(new A(), newConfig().enabled(false).build());
+        A a2 = new A();
         Benchmark benchmark = new Benchmark();
         benchmark.setPrintError(true);
+//        benchmark.start(5, () -> Assert.assertEquals("jay", a2.say("jay")));
         benchmark.start(5, () -> Assert.assertEquals("jay", a.say("jay")));
     }
 
