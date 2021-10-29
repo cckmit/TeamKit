@@ -6,9 +6,12 @@ import cn.hutool.core.lang.func.Func0;
 
 /**
  * 可缓存结果的无参数函数
+ * <p>
+ * 注意，结果为null不会进行缓存，请用其他对象代替null的含义
  *
  * @param <R> 返回值类型
  * @author jay.wu
+ * @see CacheableFunc1
  */
 public abstract class CacheableFunc0<R> implements Func0<R> {
 

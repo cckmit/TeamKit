@@ -10,6 +10,8 @@ import org.team4u.base.log.LogMessage;
 
 /**
  * 可缓存结果的单参数函数
+ * <p>
+ * 注意，结果为null不会进行缓存，请用其他对象代替null的含义
  *
  * @param <P> 入参类型
  * @param <R> 返回值类型
@@ -37,13 +39,15 @@ public abstract class CacheableFunc1<P, R> implements Func1<P, R> {
     public R callWithCache(P parameter) {
         Object cacheKey = cacheKey(parameter);
         // 入参相同，且已有结果，直接返回
-        if (cache.containsKey(cacheKey)) {
-            return cache.get(cacheKey);
+        R result = cache.get(cacheKey);
+        if (result != null) {
+            return result;
         }
 
         synchronized (this) {
-            if (cache.containsKey(cacheKey)) {
-                return cache.get(cacheKey);
+            result = cache.get(cacheKey);
+            if (result != null) {
+                return result;
             }
 
             LogMessage lm = LogMessage.create(this.getClass().getName(), "callWithCache")
@@ -54,7 +58,7 @@ public abstract class CacheableFunc1<P, R> implements Func1<P, R> {
             }
 
             try {
-                R result = callWithRuntimeException(parameter);
+                result = callWithRuntimeException(parameter);
                 cache.put(cacheKey, result);
 
                 log.info(lm.success().append("result", formatResultForLog(result)).toString());

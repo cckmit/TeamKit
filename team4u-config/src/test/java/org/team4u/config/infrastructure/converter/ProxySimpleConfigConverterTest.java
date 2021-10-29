@@ -1,6 +1,7 @@
 package org.team4u.config.infrastructure.converter;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.Dict;
 import cn.hutool.core.lang.TypeReference;
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -8,6 +9,8 @@ import org.junit.Test;
 import org.team4u.config.TestUtil;
 import org.team4u.config.domain.SimpleConfig;
 import org.team4u.config.domain.SimpleConfigRepository;
+import org.team4u.config.infrastructure.persistence.CacheableSimpleConfigRepository;
+import org.team4u.config.infrastructure.persistence.MapSimpleConfigRepository;
 import org.team4u.test.Benchmark;
 
 import java.util.List;
@@ -40,11 +43,19 @@ public class ProxySimpleConfigConverterTest {
     @Test
     @Ignore
     public void benchmark() {
-        ProxySimpleConfigConverter converter = new ProxySimpleConfigConverter(new MockSimpleConfigRepository());
+        SimpleConfigRepository repository1 = new MapSimpleConfigRepository(
+                Dict.create().set(TestUtil.TEST_ID + ".a", "1")
+        );
+        CacheableSimpleConfigRepository repository2 = new CacheableSimpleConfigRepository(
+                new CacheableSimpleConfigRepository.Config().setMaxEffectiveSec(5),
+                repository1
+        );
+        ProxySimpleConfigConverter converter = new ProxySimpleConfigConverter(repository2);
         TestConfig config = converter.to(
                 TestConfig.class,
                 TestUtil.TEST_ID
         );
+
         Benchmark benchmark = new Benchmark();
         benchmark.setPrintError(true);
         benchmark.start(5, () -> Assert.assertEquals(1, config.getA()));

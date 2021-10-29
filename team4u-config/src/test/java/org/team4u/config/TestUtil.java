@@ -11,10 +11,10 @@ public class TestUtil {
 
     public static final String TEST_ID3 = "TEST3";
 
-    public static SimpleConfig c(String key, String vavlue) {
+    public static SimpleConfig c(String key, String value) {
         return new SimpleConfig(
                 new SimpleConfigId(TestUtil.TEST_ID, key),
-                vavlue,
+                value,
                 null,
                 0,
                 true,

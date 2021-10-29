@@ -5,7 +5,6 @@ import org.team4u.config.domain.SimpleConfig;
 import org.team4u.config.domain.SimpleConfigId;
 import org.team4u.config.domain.SimpleConfigRepository;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -33,7 +32,7 @@ public class MapSimpleConfigRepository implements SimpleConfigRepository {
                             0,
                             true,
                             null,
-                            new Date()
+                            null
                     );
                 })
                 .collect(Collectors.toList());
