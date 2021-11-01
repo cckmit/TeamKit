@@ -11,7 +11,8 @@ import cn.hutool.core.lang.func.Func0;
  *
  * @param <R> 返回值类型
  * @author jay.wu
- * @see CacheableFunc1
+ * @see org.team4u.base.lang.lazy.LazySupplier
+ * @deprecated 使用LazySupplier代替
  */
 public abstract class CacheableFunc0<R> implements Func0<R> {
 
@@ -49,7 +50,7 @@ public abstract class CacheableFunc0<R> implements Func0<R> {
     }
 
     /**
-     * 删除缓存*
+     * 删除缓存
      */
     public void removeCache() {
         delegate.removeCache(this.getClass());

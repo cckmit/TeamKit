@@ -16,6 +16,8 @@ import org.team4u.base.log.LogMessage;
  * @param <P> 入参类型
  * @param <R> 返回值类型
  * @author jay.wu
+ * @see org.team4u.base.lang.lazy.LazyFunction
+ * @deprecated 使用LazyFunction代替
  */
 public abstract class CacheableFunc1<P, R> implements Func1<P, R> {
 
@@ -59,6 +61,11 @@ public abstract class CacheableFunc1<P, R> implements Func1<P, R> {
 
             try {
                 result = callWithRuntimeException(parameter);
+
+                if (result == null) {
+                    throw new IllegalStateException("Cache value can not be null!");
+                }
+
                 cache.put(cacheKey, result);
 
                 log.info(lm.success().append("result", formatResultForLog(result)).toString());
