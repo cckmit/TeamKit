@@ -13,11 +13,9 @@ import java.util.List;
  */
 public class FilterChain<C> {
 
-    private final Invoker invoker;
     private final List<? extends Filter<C>> filters;
 
     public FilterChain(List<? extends Filter<C>> filters) {
-        this.invoker = new Invoker();
         this.filters = Collections.unmodifiableList(filters);
     }
 
@@ -68,7 +66,7 @@ public class FilterChain<C> {
      * @param context 上下文
      */
     public void doFilter(C context) {
-        invoker.invoke(context);
+        new Invoker().invoke(context);
     }
 
     private class Invoker implements FilterInvoker<C> {

@@ -18,8 +18,11 @@ public abstract class AbstractFilterServiceTest {
 
     @Test
     public void doFilter() {
-        Dict c = filterService().doFilter(Dict.create());
+        FilterService<Dict> service = filterService();
+        Dict c = service.doFilter(Dict.create());
+        Assert.assertEquals(TestUtil.TEST1 + TestUtil.TEST2, c.get(TestUtil.TEST));
 
+        c = service.doFilter(Dict.create());
         Assert.assertEquals(TestUtil.TEST1 + TestUtil.TEST2, c.get(TestUtil.TEST));
     }
 
