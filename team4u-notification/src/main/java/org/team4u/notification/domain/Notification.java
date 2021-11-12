@@ -1,12 +1,16 @@
 package org.team4u.notification.domain;
 
 import cn.hutool.core.lang.Dict;
+import lombok.Data;
+import lombok.experimental.SuperBuilder;
 
 /**
  * 消息体
  *
  * @author jay.wu
  */
+@Data
+@SuperBuilder
 public class Notification {
 
     /**
@@ -29,24 +33,4 @@ public class Notification {
      * 扩展信息
      */
     protected Dict extend;
-
-    public String getId() {
-        return id;
-    }
-
-    public String getTemplate() {
-        return template;
-    }
-
-    public String getTemplateId() {
-        return templateId;
-    }
-
-    public Dict getTemplateVars() {
-        return templateVars;
-    }
-
-    public Dict getExtend() {
-        return extend;
-    }
 }
