@@ -45,7 +45,7 @@ public class TelegramAppNotificationSender implements AppNotificationSender {
         try {
             SendMessage request = new SendMessage(
                     config.getChatId(),
-                    String.format("<b>%is</b>\n%s", notification.getTitle(), notification.getTemplate())
+                    String.format("<b>%s</b>\n%s", notification.getTitle(), notification.getTemplate())
             ).parseMode(ParseMode.HTML)
                     .disableWebPagePreview(true)
                     .disableNotification(false);
