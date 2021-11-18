@@ -60,6 +60,8 @@ public class Maskers {
         ID_CARD_NO(new SimpleMasker(6, -5, new PercentageMasker(0.66))),
         // 对值的66%部分（2/3）掩码
         PERCENT66(new PercentageMasker(0.66)),
+        // 对值的66%部分（2/3）掩码，并且最多仅显示10个字符
+        PERCENT66_LIMIT9(new PercentageMasker(0.66, 10)),
         // 电子邮箱（保留前2）
         EMAIL(new EmailMasker()),
         // 不进行掩码
