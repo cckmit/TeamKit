@@ -52,13 +52,19 @@ public abstract class LongTimeThread extends Thread implements Closeable {
     @Override
     public void run() {
         while (!closed) {
+            if (isSleepBeforeRun()) {
+                ThreadUtil.safeSleep(runIntervalMillis());
+            }
+
             try {
                 onRun();
             } catch (Exception e) {
                 log.error(e, e.getMessage());
             }
 
-            ThreadUtil.safeSleep(runIntervalMillis());
+            if (!isSleepBeforeRun()) {
+                ThreadUtil.safeSleep(runIntervalMillis());
+            }
         }
     }
 
@@ -100,5 +106,12 @@ public abstract class LongTimeThread extends Thread implements Closeable {
      * 关闭处理方法
      */
     protected void onClose() {
+    }
+
+    /**
+     * 是否在运行之前休眠
+     */
+    protected boolean isSleepBeforeRun() {
+        return false;
     }
 }

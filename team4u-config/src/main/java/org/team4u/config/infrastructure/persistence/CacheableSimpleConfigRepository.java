@@ -1,64 +1,48 @@
 package org.team4u.config.infrastructure.persistence;
 
-import org.team4u.base.lang.LongTimeThread;
+import cn.hutool.core.util.ObjectUtil;
+import lombok.Getter;
+import org.team4u.base.lang.lazy.AutoRefreshSupplier;
 import org.team4u.config.domain.SimpleConfig;
 import org.team4u.config.domain.SimpleConfigComparator;
 import org.team4u.config.domain.SimpleConfigRepository;
 
+import java.util.Collections;
 import java.util.List;
 
-public class CacheableSimpleConfigRepository extends LongTimeThread implements SimpleConfigRepository {
+public class CacheableSimpleConfigRepository implements SimpleConfigRepository {
+
+    @Getter
+    private final Config config;
 
     private final SimpleConfigComparator simpleConfigComparator;
     private final SimpleConfigRepository delegateConfigRepository;
 
-    private final Config config;
-    private List<SimpleConfig> allConfigs;
-    private long lastUpdateTimeMillis;
+    private final AutoRefreshSupplier<List<SimpleConfig>> refreshSupplier;
+
 
     public CacheableSimpleConfigRepository(Config config, SimpleConfigRepository delegateConfigRepository) {
         this.config = config;
         this.delegateConfigRepository = delegateConfigRepository;
         this.simpleConfigComparator = new SimpleConfigComparator();
 
-        refresh();
-
-        start();
+        refreshSupplier = AutoRefreshSupplier.of(config.getMaxEffectiveSec(), this::loadAndCompare);
     }
 
     @Override
     public List<SimpleConfig> allConfigs() {
-        return allConfigs;
+        return refreshSupplier.get();
     }
 
-    private void refreshAndCompare() {
-        List<SimpleConfig> oldConfigs = allConfigs;
+    private List<SimpleConfig> loadAndCompare() {
+        List<SimpleConfig> newConfigs = delegateConfigRepository.allConfigs();
 
-        refresh();
+        simpleConfigComparator.compare(
+                ObjectUtil.defaultIfNull(refreshSupplier.value(), Collections.emptyList()),
+                newConfigs
+        );
 
-        simpleConfigComparator.compare(oldConfigs, allConfigs);
-    }
-
-    private void refresh() {
-        allConfigs = delegateConfigRepository.allConfigs();
-        lastUpdateTimeMillis = System.currentTimeMillis();
-    }
-
-    private boolean isExpired() {
-        return System.currentTimeMillis() - lastUpdateTimeMillis > config.getMaxEffectiveSec() * 1000L;
-    }
-
-    @Override
-    protected void onRun() {
-        // 异步刷新，不阻塞业务逻辑
-        if (isExpired()) {
-            refreshAndCompare();
-        }
-    }
-
-    @Override
-    protected Number runIntervalMillis() {
-        return config.getMaxEffectiveSec();
+        return newConfigs;
     }
 
     public static class Config {
