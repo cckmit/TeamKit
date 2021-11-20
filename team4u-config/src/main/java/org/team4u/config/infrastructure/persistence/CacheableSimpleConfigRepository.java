@@ -36,11 +36,9 @@ public class CacheableSimpleConfigRepository implements SimpleConfigRepository {
 
     private List<SimpleConfig> loadAndCompare() {
         List<SimpleConfig> newConfigs = delegateConfigRepository.allConfigs();
+        List<SimpleConfig> oldConfigs = ObjectUtil.defaultIfNull(refreshSupplier.value(), Collections.emptyList());
 
-        simpleConfigComparator.compare(
-                ObjectUtil.defaultIfNull(refreshSupplier.value(), Collections.emptyList()),
-                newConfigs
-        );
+        simpleConfigComparator.compare(oldConfigs, newConfigs);
 
         return newConfigs;
     }
