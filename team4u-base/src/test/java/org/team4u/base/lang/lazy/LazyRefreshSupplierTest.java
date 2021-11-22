@@ -6,12 +6,12 @@ import org.junit.Test;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class AutoRefreshSupplierTest {
+public class LazyRefreshSupplierTest {
 
     @Test
     public void get() {
         AtomicInteger i = new AtomicInteger();
-        AutoRefreshSupplier<Integer> x = AutoRefreshSupplier.of(50L, i::incrementAndGet);
+        LazyRefreshSupplier<Integer> x = LazyRefreshSupplier.of(50L, i::incrementAndGet);
         Assert.assertEquals(1, x.get().intValue());
         Assert.assertEquals(1, x.get().intValue());
 

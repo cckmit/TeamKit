@@ -5,22 +5,22 @@ import org.team4u.base.lang.LongTimeThread;
 import java.util.function.Supplier;
 
 /**
- * 自动刷新的提供者
+ * 懒加载刷新提供者
  *
  * @author jay.wu
  */
-public class AutoRefreshSupplier<T> extends LongTimeThread implements Supplier<T> {
+public class LazyRefreshSupplier<T> extends LongTimeThread implements Supplier<T> {
 
     private T value;
 
     private final long refreshIntervalMillis;
     private final Supplier<? extends T> supplier;
 
-    public static <T> AutoRefreshSupplier<T> of(long refreshIntervalMillis, Supplier<? extends T> supplier) {
-        return new AutoRefreshSupplier<>(refreshIntervalMillis, supplier);
+    public static <T> LazyRefreshSupplier<T> of(long refreshIntervalMillis, Supplier<? extends T> supplier) {
+        return new LazyRefreshSupplier<>(refreshIntervalMillis, supplier);
     }
 
-    public AutoRefreshSupplier(long refreshIntervalMillis, Supplier<? extends T> supplier) {
+    public LazyRefreshSupplier(long refreshIntervalMillis, Supplier<? extends T> supplier) {
         this.refreshIntervalMillis = refreshIntervalMillis;
         this.supplier = supplier;
     }
@@ -50,7 +50,7 @@ public class AutoRefreshSupplier<T> extends LongTimeThread implements Supplier<T
         T newValue = supplier.get();
 
         if (newValue == null) {
-            throw new IllegalStateException("AutoRefreshSupplier value can not be null!");
+            throw new IllegalStateException("Lazy value can not be null!");
         }
 
         value = newValue;

@@ -2,7 +2,7 @@ package org.team4u.config.infrastructure.persistence;
 
 import cn.hutool.core.util.ObjectUtil;
 import lombok.Getter;
-import org.team4u.base.lang.lazy.AutoRefreshSupplier;
+import org.team4u.base.lang.lazy.LazyRefreshSupplier;
 import org.team4u.config.domain.SimpleConfig;
 import org.team4u.config.domain.SimpleConfigComparator;
 import org.team4u.config.domain.SimpleConfigRepository;
@@ -18,7 +18,7 @@ public class CacheableSimpleConfigRepository implements SimpleConfigRepository {
     private final SimpleConfigComparator simpleConfigComparator;
     private final SimpleConfigRepository delegateConfigRepository;
 
-    private final AutoRefreshSupplier<List<SimpleConfig>> refreshSupplier;
+    private final LazyRefreshSupplier<List<SimpleConfig>> refreshSupplier;
 
 
     public CacheableSimpleConfigRepository(Config config, SimpleConfigRepository delegateConfigRepository) {
@@ -26,7 +26,7 @@ public class CacheableSimpleConfigRepository implements SimpleConfigRepository {
         this.delegateConfigRepository = delegateConfigRepository;
         this.simpleConfigComparator = new SimpleConfigComparator();
 
-        refreshSupplier = AutoRefreshSupplier.of(config.getMaxEffectiveSec(), this::loadAndCompare);
+        refreshSupplier = LazyRefreshSupplier.of(config.getMaxEffectiveSec(), this::loadAndCompare);
     }
 
     @Override
