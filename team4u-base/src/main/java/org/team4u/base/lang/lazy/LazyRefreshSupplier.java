@@ -1,6 +1,10 @@
 package org.team4u.base.lang.lazy;
 
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.util.ObjectUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.team4u.base.lang.LongTimeThread;
+import org.team4u.base.log.LogMessage;
 
 import java.util.function.Supplier;
 
@@ -9,6 +13,7 @@ import java.util.function.Supplier;
  *
  * @author jay.wu
  */
+@Slf4j
 public class LazyRefreshSupplier<T> extends LongTimeThread implements Supplier<T> {
 
     private T value;
@@ -47,13 +52,47 @@ public class LazyRefreshSupplier<T> extends LongTimeThread implements Supplier<T
 
     @Override
     protected void onRun() {
+        LogMessage lm = LogMessage.create(this.getClass().getSimpleName(), "onRefresh");
+
+        T oldValue = value;
         T newValue = supplier.get();
 
         if (newValue == null) {
-            throw new IllegalStateException("Lazy value can not be null!");
+            IllegalStateException e = new IllegalStateException("Lazy value can not be null!");
+            log.error(lm.fail(e.getMessage()).toString());
+            throw e;
         }
 
         value = newValue;
+
+        if (log.isInfoEnabled()) {
+            if (!ObjectUtil.equal(oldValue, newValue)) {
+                log.info(lm.success().append("value", formatResultForLog(newValue)).toString());
+            }
+        }
+
+        afterRefresh(oldValue, newValue);
+    }
+
+    /**
+     * 刷新后回调
+     *
+     * @param oldValue 旧值
+     * @param newValue 新值
+     */
+    protected void afterRefresh(T oldValue, T newValue) {
+    }
+
+    protected String formatResultForLog(T result) {
+        if (result == null) {
+            return null;
+        }
+
+        if (log.isDebugEnabled()) {
+            return Convert.toStr(result);
+        }
+
+        return result.getClass().getSimpleName();
     }
 
     @Override
