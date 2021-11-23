@@ -22,9 +22,8 @@ public class LazyRefreshSupplier<T> extends LongTimeThread implements Supplier<T
 
     private T value;
 
-    private final Supplier<T> supplier;
-
     private final Config config;
+    private final Supplier<T> supplier;
 
     public static <T> LazyRefreshSupplier<T> of(Supplier<T> supplier) {
         return new LazyRefreshSupplier<>(new Config(), supplier);

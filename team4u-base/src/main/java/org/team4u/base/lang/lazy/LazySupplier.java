@@ -24,10 +24,9 @@ public class LazySupplier<T> implements Supplier<T> {
 
     private final Log log = Log.get();
 
-    private final Config config;
-
     private T value;
 
+    private final Config config;
     private final Supplier<? extends T> supplier;
 
     public LazySupplier(Config config, Supplier<T> supplier) {

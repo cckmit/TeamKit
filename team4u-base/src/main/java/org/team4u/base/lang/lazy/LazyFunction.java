@@ -50,6 +50,7 @@ public class LazyFunction<T, R> implements Function<T, R> {
     /**
      * 创建懒加载函数
      *
+     * @param config    配置
      * @param valueFunc 值函数
      * @param <T>       入参类型
      * @param <R>       返回类型
