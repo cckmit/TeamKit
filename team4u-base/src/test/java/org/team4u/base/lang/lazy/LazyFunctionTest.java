@@ -1,9 +1,8 @@
-package org.team4u.base.lang;
+package org.team4u.base.lang.lazy;
 
 import cn.hutool.cache.CacheUtil;
 import org.junit.Assert;
 import org.junit.Test;
-import org.team4u.base.lang.lazy.LazyFunction;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -14,7 +13,7 @@ public class LazyFunctionTest {
         AtomicInteger i = new AtomicInteger();
 
         LazyFunction<Integer, Integer> f = LazyFunction.of(
-                CacheUtil.newLRUCache(1),
+                LazyFunction.Config.builder().cache(CacheUtil.newLRUCache(1)).build(),
                 integer -> i.getAndIncrement()
         );
 

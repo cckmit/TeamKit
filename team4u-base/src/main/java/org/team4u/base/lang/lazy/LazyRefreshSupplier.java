@@ -1,8 +1,11 @@
 package org.team4u.base.lang.lazy;
 
-import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ObjectUtil;
-import lombok.extern.slf4j.Slf4j;
+import cn.hutool.log.Log;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.team4u.base.lang.LongTimeThread;
 import org.team4u.base.log.LogMessage;
 
@@ -13,20 +16,26 @@ import java.util.function.Supplier;
  *
  * @author jay.wu
  */
-@Slf4j
 public class LazyRefreshSupplier<T> extends LongTimeThread implements Supplier<T> {
+
+    private static final Log log = Log.get();
 
     private T value;
 
-    private final long refreshIntervalMillis;
-    private final Supplier<? extends T> supplier;
+    private final Supplier<T> supplier;
 
-    public static <T> LazyRefreshSupplier<T> of(long refreshIntervalMillis, Supplier<? extends T> supplier) {
-        return new LazyRefreshSupplier<>(refreshIntervalMillis, supplier);
+    private final Config config;
+
+    public static <T> LazyRefreshSupplier<T> of(Supplier<T> supplier) {
+        return new LazyRefreshSupplier<>(new Config(), supplier);
     }
 
-    public LazyRefreshSupplier(long refreshIntervalMillis, Supplier<? extends T> supplier) {
-        this.refreshIntervalMillis = refreshIntervalMillis;
+    public static <T> LazyRefreshSupplier<T> of(LazyRefreshSupplier.Config config, Supplier<T> supplier) {
+        return new LazyRefreshSupplier<>(config, supplier);
+    }
+
+    public LazyRefreshSupplier(Config config, Supplier<T> supplier) {
+        this.config = config;
         this.supplier = supplier;
     }
 
@@ -54,7 +63,6 @@ public class LazyRefreshSupplier<T> extends LongTimeThread implements Supplier<T
     protected void onRun() {
         LogMessage lm = LogMessage.create(this.getClass().getSimpleName(), "onRefresh");
 
-        T oldValue = value;
         T newValue = supplier.get();
 
         if (newValue == null) {
@@ -63,45 +71,71 @@ public class LazyRefreshSupplier<T> extends LongTimeThread implements Supplier<T
             throw e;
         }
 
+        T oldValue = value;
         value = newValue;
 
+        // 仅打印变化值
         if (log.isInfoEnabled()) {
             if (!ObjectUtil.equal(oldValue, newValue)) {
-                log.info(lm.success().append("value", formatResultForLog(newValue)).toString());
+                log.info(lm.success()
+                        .append("value", config.getValueFormatter().format(log, newValue))
+                        .toString());
             }
         }
 
-        afterRefresh(oldValue, newValue);
-    }
-
-    /**
-     * 刷新后回调
-     *
-     * @param oldValue 旧值
-     * @param newValue 新值
-     */
-    protected void afterRefresh(T oldValue, T newValue) {
-    }
-
-    protected String formatResultForLog(T result) {
-        if (result == null) {
-            return null;
+        if (config.getRefreshListener() != null) {
+            //noinspection unchecked
+            config.getRefreshListener().afterRefresh(oldValue, newValue);
         }
-
-        if (log.isDebugEnabled()) {
-            return Convert.toStr(result);
-        }
-
-        return result.getClass().getSimpleName();
     }
 
     @Override
     protected Number runIntervalMillis() {
-        return refreshIntervalMillis;
+        return config.getRefreshIntervalMillis();
     }
 
     @Override
     protected boolean isSleepBeforeRun() {
         return true;
+    }
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class Config {
+
+        /**
+         * 刷新间隔（毫秒）
+         */
+        @Builder.Default
+        long refreshIntervalMillis = 5000;
+
+        /**
+         * 返回值日志格式化器
+         */
+        @Builder.Default
+        LazyValueFormatter valueFormatter = new LazyValueFormatter();
+
+        /**
+         * 刷新监听器
+         */
+        @SuppressWarnings("rawtypes")
+        RefreshListener refreshListener;
+    }
+
+    /**
+     * 刷新监听器
+     *
+     * @param <T> 值类似
+     */
+    interface RefreshListener<T> {
+        /**
+         * 刷新后回调
+         *
+         * @param oldValue 旧值
+         * @param newValue 新值
+         */
+        void afterRefresh(T oldValue, T newValue);
     }
 }

@@ -1,8 +1,7 @@
-package org.team4u.base.lang;
+package org.team4u.base.lang.lazy;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.team4u.base.lang.lazy.LazySupplier;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

@@ -1,8 +1,11 @@
 package org.team4u.base.lang.lazy;
 
 
-import cn.hutool.core.convert.Convert;
 import cn.hutool.log.Log;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.team4u.base.log.LogMessage;
 
 import java.util.function.Function;
@@ -21,11 +24,14 @@ public class LazySupplier<T> implements Supplier<T> {
 
     private final Log log = Log.get();
 
+    private final Config config;
+
     private T value;
 
     private final Supplier<? extends T> supplier;
 
-    private LazySupplier(Supplier<? extends T> supplier) {
+    public LazySupplier(Config config, Supplier<T> supplier) {
+        this.config = config;
         this.supplier = supplier;
     }
 
@@ -36,8 +42,20 @@ public class LazySupplier<T> implements Supplier<T> {
      * @param <T>      值类型
      * @return 懒加载提供者
      */
-    public static <T> LazySupplier<T> of(Supplier<? extends T> supplier) {
-        return new LazySupplier<>(supplier);
+    public static <T> LazySupplier<T> of(Supplier<T> supplier) {
+        return new LazySupplier<>(new Config(), supplier);
+    }
+
+    /**
+     * 创建懒加载提供者
+     *
+     * @param supplier 值提供者
+     * @param config   配置
+     * @param <T>      值类型
+     * @return 懒加载提供者
+     */
+    public static <T> LazySupplier<T> of(Config config, Supplier<T> supplier) {
+        return new LazySupplier<>(config, supplier);
     }
 
     public T get() {
@@ -59,24 +77,14 @@ public class LazySupplier<T> implements Supplier<T> {
                 value = newValue;
 
                 if (log.isInfoEnabled()) {
-                    log.info(lm.success().append("v", formatResultForLog(value)).toString());
+                    log.info(lm.success()
+                            .append("v", config.getValueFormatter().format(log, value))
+                            .toString());
                 }
             }
         }
 
         return value;
-    }
-
-    protected String formatResultForLog(T result) {
-        if (result == null) {
-            return null;
-        }
-
-        if (log.isDebugEnabled()) {
-            return Convert.toStr(result);
-        }
-
-        return result.getClass().getSimpleName();
     }
 
     public <S> LazySupplier<S> map(Function<? super T, ? extends S> function) {
@@ -92,5 +100,17 @@ public class LazySupplier<T> implements Supplier<T> {
      */
     public void reset() {
         value = null;
+    }
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class Config {
+        /**
+         * 返回值日志格式化器
+         */
+        @Builder.Default
+        LazyValueFormatter valueFormatter = new LazyValueFormatter();
     }
 }

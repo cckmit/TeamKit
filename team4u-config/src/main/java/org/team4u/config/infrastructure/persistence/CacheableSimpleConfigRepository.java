@@ -26,7 +26,12 @@ public class CacheableSimpleConfigRepository implements SimpleConfigRepository {
         this.delegateConfigRepository = delegateConfigRepository;
         this.simpleConfigComparator = new SimpleConfigComparator();
 
-        refreshSupplier = LazyRefreshSupplier.of(config.getMaxEffectiveSec(), this::loadAndCompare);
+        refreshSupplier = LazyRefreshSupplier.of(
+                LazyRefreshSupplier.Config.builder()
+                        .refreshIntervalMillis(config.getMaxEffectiveSec() * 1000L)
+                        .build(),
+                this::loadAndCompare
+        );
     }
 
     @Override
