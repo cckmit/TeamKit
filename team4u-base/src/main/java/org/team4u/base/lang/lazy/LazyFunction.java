@@ -77,11 +77,11 @@ public class LazyFunction<T, R> implements Function<T, R> {
             }
 
             LogMessage lm = LogMessage.create(this.getClass().getName(), "apply")
-                    .append("t", config.getParameterFormatter().format(log, t))
+                    .append("parameter", config.getParameterFormatter().format(log, t))
                     .append("valueFunc", valueFunc.getClass().getName());
 
             if (!ObjectUtil.equals(cacheKey, t)) {
-                lm.append("k", cacheKey);
+                lm.append("parameter", cacheKey);
             }
 
             result = valueFunc.apply(t);
