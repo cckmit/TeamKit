@@ -130,11 +130,12 @@ public class LazyFunction<T, R> implements Function<T, R> {
         @Builder.Default
         @SuppressWarnings("rawtypes")
         Cache cache = CacheUtil.newLRUCache(1000);
-
+        /**
+         * 缓存key函数
+         */
         @Builder.Default
         @SuppressWarnings("rawtypes")
         Function keyFunc = t -> t;
-
         /**
          * 请求值日志格式化器
          */
