@@ -108,19 +108,19 @@ public class LazyRefreshSupplier<T> extends LongTimeThread implements Supplier<T
          * 刷新间隔（毫秒）
          */
         @Builder.Default
-        long refreshIntervalMillis = 5000;
+        private long refreshIntervalMillis = 5000;
 
         /**
          * 返回值日志格式化器
          */
         @Builder.Default
-        LazyValueFormatter valueFormatter = new LazyValueFormatter();
+        private LazyValueFormatter valueFormatter = new LazyValueFormatter();
 
         /**
          * 刷新监听器
          */
         @SuppressWarnings("rawtypes")
-        RefreshListener refreshListener;
+        private RefreshListener refreshListener;
     }
 
     /**

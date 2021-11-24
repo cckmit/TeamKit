@@ -129,22 +129,22 @@ public class LazyFunction<T, R> implements Function<T, R> {
          */
         @Builder.Default
         @SuppressWarnings("rawtypes")
-        Cache cache = CacheUtil.newLRUCache(1000);
+        private Cache cache = CacheUtil.newLRUCache(1000);
         /**
          * 缓存key函数
          */
         @Builder.Default
         @SuppressWarnings("rawtypes")
-        Function keyFunc = t -> t;
+        private Function keyFunc = t -> t;
         /**
          * 请求值日志格式化器
          */
         @Builder.Default
-        LazyValueFormatter parameterFormatter = new LazyValueFormatter();
+        private LazyValueFormatter parameterFormatter = new LazyValueFormatter();
         /**
          * 返回值日志格式化器
          */
         @Builder.Default
-        LazyValueFormatter resultFormatter = new LazyValueFormatter();
+        private LazyValueFormatter resultFormatter = new LazyValueFormatter();
     }
 }
