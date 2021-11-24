@@ -29,6 +29,11 @@ public abstract class AbstractJsonConfigRepository<T> {
 
     public T configOfId(String configId) {
         String configString = configService.get(configId);
+
+        if (StrUtil.isBlank(configString)) {
+            return null;
+        }
+
         T config = deserialize(configString, configClass());
 
         if (config == null) {
