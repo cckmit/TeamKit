@@ -7,6 +7,8 @@ import org.team4u.base.serializer.Serializer;
 import org.team4u.command.domain.config.CommandConfig;
 import org.team4u.command.domain.config.CommandConfigRepository;
 
+import java.util.Set;
+
 /**
  * 基于json的命令配置
  *
@@ -23,6 +25,11 @@ public class JsonCommandConfigRepository
     @Override
     public void save(CommandConfig config) {
         throw new UnsupportedOperationException("save");
+    }
+
+    @Override
+    public Set<String> allConfigIdList() {
+        return getConfigService().allConfigs().keySet();
     }
 
     @Override

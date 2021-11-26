@@ -7,6 +7,8 @@ import org.team4u.base.serializer.CacheableSerializer;
 import org.team4u.base.serializer.HutoolJsonSerializer;
 import org.team4u.base.serializer.Serializer;
 
+import java.util.Set;
+
 /**
  * 基于json的抽象配置资源库
  *
@@ -47,6 +49,10 @@ public abstract class AbstractJsonConfigRepository<T> {
         return config;
     }
 
+    public Set<String> allConfigIdList() {
+        return configService.allConfigs().keySet();
+    }
+
     private void setConfigId(IdentifiedConfig config, String id) {
         if (StrUtil.isBlank(config.getConfigId())) {
             config.setConfigId(id);
@@ -63,5 +69,9 @@ public abstract class AbstractJsonConfigRepository<T> {
 
     protected Serializer serializer() {
         return HutoolJsonSerializer.instance();
+    }
+
+    public ConfigService getConfigService() {
+        return configService;
     }
 }
