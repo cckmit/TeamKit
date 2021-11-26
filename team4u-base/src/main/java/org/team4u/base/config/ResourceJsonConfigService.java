@@ -4,6 +4,8 @@ import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.Log;
 
+import java.util.Map;
+
 /**
  * 本地Json文件配置服务
  *
@@ -35,6 +37,11 @@ public class ResourceJsonConfigService implements ConfigService {
             log.warn(e.getMessage());
             return null;
         }
+    }
+
+    @Override
+    public Map<String, Object> allConfigs() {
+        throw new UnsupportedOperationException("allConfigs not supported");
     }
 
     protected String getPath(String key) {

@@ -3,6 +3,8 @@ package org.team4u.base.config;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ObjectUtil;
 
+import java.util.Map;
+
 /**
  * 配置服务
  *
@@ -41,4 +43,11 @@ public interface ConfigService {
     default <T> T get(Class<T> classType, String key) {
         return Convert.convert(classType, get(key));
     }
+
+    /**
+     * 获取所有配置项
+     *
+     * @return 配置项集合
+     */
+    Map<String, Object> allConfigs();
 }

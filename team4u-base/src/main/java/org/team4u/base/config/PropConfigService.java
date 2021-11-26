@@ -2,6 +2,7 @@ package org.team4u.base.config;
 
 import cn.hutool.core.util.StrUtil;
 
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -28,6 +29,17 @@ public class PropConfigService implements ConfigService {
     @Override
     public String get(String key) {
         return getProperties().getProperty(prefix + key);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public Map<String, Object> allConfigs() {
+        return toConfigs();
+    }
+
+    @SuppressWarnings("rawtypes")
+    private Map toConfigs() {
+        return getProperties();
     }
 
     public Properties getProperties() {

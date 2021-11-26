@@ -98,7 +98,8 @@ public class ProxySimpleConfigConverter implements SimpleConfigConverter {
         return config.getConfigValue();
     }
 
-    private List<SimpleConfig> allConfigs() {
+    @Override
+    public List<SimpleConfig> allConfigs() {
         return simpleConfigRepository.allConfigs();
     }
 

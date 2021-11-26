@@ -60,6 +60,11 @@ public abstract class AbstractFileSqlConfigService implements ConfigService {
         return (T) Convert.convert(defaultValue.getClass(), value);
     }
 
+    @Override
+    public Map<String, Object> allConfigs() {
+        throw new UnsupportedOperationException("allConfigs not supported");
+    }
+
     public void put(String key, String value) {
         sqlList.put(key, value);
     }

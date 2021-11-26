@@ -1,10 +1,12 @@
 package org.team4u.config.application;
 
+import org.team4u.config.domain.SimpleConfig;
 import org.team4u.config.domain.SimpleConfigConverter;
 import org.team4u.config.domain.SimpleConfigRepository;
 import org.team4u.config.infrastructure.converter.ProxySimpleConfigConverter;
 
 import java.lang.reflect.Type;
+import java.util.List;
 
 /**
  * 配置应用服务
@@ -73,5 +75,14 @@ public class SimpleConfigAppService {
      */
     public String value(String configType, String configKey) {
         return simpleConfigConverter.value(configType, configKey);
+    }
+
+    /**
+     * 获取所有配置项
+     *
+     * @return 配置项集合
+     */
+    public List<SimpleConfig> allConfigs(){
+        return simpleConfigConverter.allConfigs();
     }
 }

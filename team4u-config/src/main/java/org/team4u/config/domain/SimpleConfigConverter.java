@@ -1,6 +1,7 @@
 package org.team4u.config.domain;
 
 import java.lang.reflect.Type;
+import java.util.List;
 
 /**
  * 配置转换器
@@ -56,4 +57,11 @@ public interface SimpleConfigConverter {
      * @return 配置值
      */
     String value(String configType, String configKey);
+
+    /**
+     * 获取所有配置项
+     *
+     * @return 配置项集合
+     */
+    List<SimpleConfig> allConfigs();
 }
