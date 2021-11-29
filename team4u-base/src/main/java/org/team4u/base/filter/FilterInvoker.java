@@ -7,6 +7,13 @@ package org.team4u.base.filter;
  */
 public interface FilterInvoker<T> {
     /**
+     * 空执行器
+     */
+    @SuppressWarnings("rawtypes")
+    FilterInvoker EMPTY_INVOKER = context -> {
+    };
+
+    /**
      * 执行过滤器
      *
      * @param context 过滤上下文

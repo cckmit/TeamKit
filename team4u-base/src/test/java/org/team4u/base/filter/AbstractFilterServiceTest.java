@@ -12,7 +12,7 @@ public abstract class AbstractFilterServiceTest {
 
     protected abstract FilterService<Dict> filterService();
 
-    protected List<? extends Filter<Dict>> filters = CollUtil.newArrayList(
+    protected static List<? extends Filter<Dict>> filters = CollUtil.newArrayList(
             new A(), new C(), new B(), new D(), new E()
     );
 

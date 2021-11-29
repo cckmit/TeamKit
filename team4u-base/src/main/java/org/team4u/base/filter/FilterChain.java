@@ -2,7 +2,6 @@ package org.team4u.base.filter;
 
 import cn.hutool.core.collection.CollUtil;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -14,9 +13,52 @@ import java.util.List;
 public class FilterChain<C> {
 
     private final List<? extends Filter<C>> filters;
+    /**
+     * 第一个过滤器执行者
+     */
+    private FilterInvoker<C> header;
 
+    @SuppressWarnings("unchecked")
     public FilterChain(List<? extends Filter<C>> filters) {
-        this.filters = Collections.unmodifiableList(filters);
+        this.filters = filters;
+
+        FilterInvoker<C> last = FilterInvoker.EMPTY_INVOKER;
+
+        if (CollUtil.isNotEmpty(filters)) {
+            for (int i = filters.size() - 1; i >= 0; i--) {
+                FilterInvoker<C> next = last;
+                Filter<C> filter = filters.get(i);
+                last = context -> filter.doFilter(context, next);
+            }
+        }
+
+        setHeader(last);
+    }
+
+    /**
+     * 执行过滤
+     *
+     * @param context 过滤上下文
+     */
+    public void doFilter(C context) {
+        if (header == null) {
+            return;
+        }
+
+        header.invoke(context);
+    }
+
+    protected void setHeader(FilterInvoker<C> header) {
+        this.header = header;
+    }
+
+    /**
+     * 获取所有过滤器
+     *
+     * @return 过滤器集合
+     */
+    public List<? extends Filter<C>> filters() {
+        return filters;
     }
 
     /**
@@ -39,51 +81,5 @@ public class FilterChain<C> {
      */
     public static <C> FilterChain<C> create(List<? extends Filter<C>> filters) {
         return new FilterChain<>(filters);
-    }
-
-    /**
-     * 获取指定位置的过滤器
-     *
-     * @param index 索引位置
-     * @return 过滤器。若无法找到，则返回null
-     */
-    public Filter<C> filter(int index) {
-        return CollUtil.get(filters(), index);
-    }
-
-    /**
-     * 获取所有过滤器
-     *
-     * @return 过滤器集合
-     */
-    public List<? extends Filter<C>> filters() {
-        return filters;
-    }
-
-    /**
-     * 执行过滤
-     *
-     * @param context 上下文
-     */
-    public void doFilter(C context) {
-        new Invoker().invoke(context);
-    }
-
-    private class Invoker implements FilterInvoker<C> {
-        /**
-         * 当前过滤器索引
-         */
-        private int index = 0;
-
-        @Override
-        public void invoke(C context) {
-            Filter<C> filter = filter(index);
-            if (filter == null) {
-                return;
-            }
-
-            index++;
-            filter.doFilter(context, this);
-        }
     }
 }
