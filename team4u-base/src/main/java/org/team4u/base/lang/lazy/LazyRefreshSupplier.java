@@ -128,7 +128,7 @@ public class LazyRefreshSupplier<T> extends LongTimeThread implements Supplier<T
      *
      * @param <T> 值类似
      */
-    interface RefreshListener<T> {
+    public interface RefreshListener<T> {
         /**
          * 刷新后回调
          *
