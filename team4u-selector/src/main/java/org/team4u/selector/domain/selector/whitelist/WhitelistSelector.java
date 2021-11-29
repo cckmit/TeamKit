@@ -25,7 +25,7 @@ public class WhitelistSelector implements Selector {
     /**
      * 选择
      *
-     * @return 若命中则返回常量MATCH，否则为常量NONE
+     * @return 若命中则返回常量MATCH，否则为当前key
      */
     @Override
     public String select(SelectorBinding binding) {
@@ -36,7 +36,7 @@ public class WhitelistSelector implements Selector {
             return NONE;
         }
 
-        return MATCH;
+        return value.getKey();
     }
 
     private Boolean matchKeyOrAny(String key, Object userId) {
