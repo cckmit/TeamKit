@@ -47,7 +47,7 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
 
     public int clear() {
         return lazyQueueCounter.removeIf(queueCounter -> {
-            if (System.currentTimeMillis() - queueCounter.closedTime > config.getClearExpriedSec()) {
+            if (queueCounter.isExpired()) {
                 return queueCounter.getContext();
             }
 
@@ -63,7 +63,6 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
     private class QueueCounter extends LongTimeThread {
         private final Number EMPTY_NUMBER = -1;
 
-        @Getter
         private long closedTime = 0;
 
         @Getter
@@ -74,7 +73,9 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
         private QueueCounter(Context context) {
             this.context = context;
 
-            initQueue();
+            if (!initQueue()) {
+                return;
+            }
 
             start();
         }
@@ -92,18 +93,20 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
             }
         }
 
-        private void initQueue() {
+        private boolean initQueue() {
             refreshBufferCounter(context);
-            offer(bufferCounter);
+            return offer(bufferCounter);
         }
 
         @Override
         protected void onRun() {
-            if (bufferCounter == null || bufferCounter.isEmpty() || bufferCounter.shouldRefresh()) {
+            if (bufferCounter.isEmpty() || bufferCounter.shouldRefresh()) {
                 refreshBufferCounter(context);
             }
 
-            offer(bufferCounter);
+            if (!offer(bufferCounter)) {
+                close();
+            }
         }
 
         /**
@@ -124,10 +127,9 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
             bufferCounter = new BufferCounter(seq);
         }
 
-        private void offer(BufferCounter counter) {
+        private boolean offer(BufferCounter counter) {
             if (bufferCounter.overMaxValue()) {
-                close();
-                return;
+                return false;
             }
 
             do {
@@ -136,16 +138,16 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
                 try {
                     if (seq == null) {
                         cache.put(EMPTY_NUMBER);
-                        close();
-                        return;
+                        return false;
                     }
 
                     cache.put(seq);
                 } catch (InterruptedException e) {
-                    close();
-                    return;
+                    return false;
                 }
             } while (!counter.isEmpty());
+
+            return true;
         }
 
         @Override
@@ -156,6 +158,10 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
         @Override
         protected void onClose() {
             closedTime = System.currentTimeMillis();
+        }
+
+        public boolean isExpired() {
+            return System.currentTimeMillis() - closedTime > config.getClearExpiredSec();
         }
     }
 
@@ -273,6 +279,6 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
          */
         private String providerId = "DB";
 
-        private int clearExpriedSec = 60;
+        private int clearExpiredSec = 60;
     }
 }
