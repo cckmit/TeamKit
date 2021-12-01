@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 过滤器服务
+ * 简单过滤器服务
  *
  * @author jay.wu
  */
