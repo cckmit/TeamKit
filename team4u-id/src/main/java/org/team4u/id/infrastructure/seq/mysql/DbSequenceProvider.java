@@ -30,28 +30,26 @@ public class DbSequenceProvider implements StepSequenceProvider {
 
     @Override
     public Number provide(Context context) {
-        Sequence sequence = find(context.getSequenceConfig().getTypeId(), context.getGroupKey());
+        Sequence sequence = sequenceOf(context.getSequenceConfig().getTypeId(), context.getGroupKey());
 
         // 序列不存在，进行插入
         if (sequence == null) {
-            Number value = valueByCreate(context);
+            Number value = sequenceValueByCreate(context);
             if (value != null) {
                 return value;
             }
 
             // 已存在记录，尝试更新
-            sequence = find(context.getSequenceConfig().getTypeId(), context.getGroupKey());
+            sequence = sequenceOf(context.getSequenceConfig().getTypeId(), context.getGroupKey());
         }
 
-        return valueByUpdate(sequence, context);
+        return sequenceValueByUpdate(sequence, context);
     }
 
-    private Number valueByUpdate(Sequence sequence, Context context) {
+    private Number sequenceValueByUpdate(Sequence sequence, Context context) {
         // 超过最大值，且不循环使用，直接返回
-        if (isOverMaxValue(sequence)) {
-            if (!config().isRecycleAfterMaxValue()) {
-                return sequence.getCurrentValue();
-            }
+        if (!canUpdateIfOverMaxValue(sequence)) {
+            return sequence.getCurrentValue();
         }
 
         // 序列存在，进行更新
@@ -65,8 +63,16 @@ public class DbSequenceProvider implements StepSequenceProvider {
         return updateWithRetry(sequence, context);
     }
 
+    private boolean canUpdateIfOverMaxValue(Sequence sequence) {
+        if (isNotOverMaxValue(sequence)) {
+            return true;
+        }
+
+        return config().isRecycleAfterMaxValue();
+    }
+
     private void resetIfOverMaxValue(Sequence sequence) {
-        if (!isOverMaxValue(sequence)) {
+        if (isNotOverMaxValue(sequence)) {
             return;
         }
 
@@ -91,11 +97,11 @@ public class DbSequenceProvider implements StepSequenceProvider {
         return sequence.getCurrentValue();
     }
 
-    private boolean isOverMaxValue(Sequence sequence) {
-        return sequence.getCurrentValue() > config.getMaxValue();
+    private boolean isNotOverMaxValue(Sequence sequence) {
+        return sequence.getCurrentValue() <= config.getMaxValue();
     }
 
-    private Number valueByCreate(Context context) {
+    private Number sequenceValueByCreate(Context context) {
         Sequence sequence = new Sequence(context.getSequenceConfig().getTypeId(), context.getGroupKey());
         sequence.setCurrentValue(config.getStart());
         sequence.setCreateTime(new Date());
@@ -114,7 +120,7 @@ public class DbSequenceProvider implements StepSequenceProvider {
     /**
      * 查找序列
      */
-    private Sequence find(String typeId, String groupKey) {
+    private Sequence sequenceOf(String typeId, String groupKey) {
         return sequenceMapper.selectOne(new LambdaQueryWrapper<Sequence>()
                 .eq(Sequence::getTypeId, typeId)
                 .eq(Sequence::getGroupKey, groupKey)
