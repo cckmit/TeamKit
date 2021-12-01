@@ -19,7 +19,7 @@ public class DbSequenceProviderTest extends SpringDbTest {
     private SequenceMapper mapper;
 
     @Test
-    public void provide() {
+    public void notRecycle() {
         StepSequenceProvider.Config config = new StepSequenceProvider.Config();
         config.setMaxValue(2L);
         DbSequenceProvider provider = new DbSequenceProvider(config, mapper);
@@ -27,6 +27,18 @@ public class DbSequenceProviderTest extends SpringDbTest {
         Assert.assertEquals(1L, provider.provide(context()));
         Assert.assertEquals(2L, provider.provide(context()));
         Assert.assertNull(provider.provide(context()));
+    }
+
+    @Test
+    public void recycle() {
+        StepSequenceProvider.Config config = new StepSequenceProvider.Config();
+        config.setMaxValue(2L);
+        config.setRecycleAfterMaxValue(true);
+        DbSequenceProvider provider = new DbSequenceProvider(config, mapper);
+
+        Assert.assertEquals(1L, provider.provide(context()));
+        Assert.assertEquals(2L, provider.provide(context()));
+        Assert.assertEquals(1L, provider.provide(context()));
     }
 
     private SequenceProvider.Context context() {

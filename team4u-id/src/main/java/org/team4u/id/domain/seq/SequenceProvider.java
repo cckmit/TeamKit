@@ -21,6 +21,11 @@ public interface SequenceProvider {
         private final SequenceConfig2 sequenceConfig;
         private final String groupKey;
         private final Map<String, Object> ext;
+
+        @Override
+        public String toString() {
+            return sequenceConfig.getTypeId() + ":" + groupKey;
+        }
     }
 
     interface Factory extends StringIdPolicy {

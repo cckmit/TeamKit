@@ -3,10 +3,12 @@ package org.team4u.id.infrastructure.seq.sp.mysql;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.json.JSONObject;
+import cn.hutool.log.Log;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
+import org.team4u.base.log.LogMessage;
 import org.team4u.id.domain.seq.AbstractSequenceProviderFactory;
 import org.team4u.id.domain.seq.SequenceProvider;
 import org.team4u.id.infrastructure.seq.sp.StepSequenceProvider;
@@ -19,6 +21,8 @@ import java.util.Date;
  * @author jay.wu
  */
 public class DbSequenceProvider implements StepSequenceProvider {
+
+    private final Log log = Log.get();
 
     private final Config config;
     private final SequenceMapper sequenceMapper;
@@ -47,8 +51,12 @@ public class DbSequenceProvider implements StepSequenceProvider {
     }
 
     private Number sequenceValueByUpdate(Sequence sequence, Context context) {
+        LogMessage lm = LogMessage.create(this.getClass().getSimpleName(), "sequenceValueByUpdate")
+                .append("context", context);
+
         // 超过最大值，且不循环使用，直接返回
         if (!canUpdateIfOverMaxValue(sequence)) {
+            log.info(lm.fail().append("canUpdateIfOverMaxValue", false).toString());
             return null;
         }
 
@@ -98,6 +106,8 @@ public class DbSequenceProvider implements StepSequenceProvider {
     }
 
     private Number sequenceValueByCreate(Context context) {
+        LogMessage lm = LogMessage.create(this.getClass().getSimpleName(), "sequenceValueByCreate")
+                .append("context", context);
         Sequence sequence = new Sequence(context.getSequenceConfig().getTypeId(), context.getGroupKey());
         sequence.setCurrentValue(config.getStart());
         sequence.setCreateTime(new Date());
@@ -106,9 +116,11 @@ public class DbSequenceProvider implements StepSequenceProvider {
 
         try {
             sequenceMapper.insert(sequence);
+            log.info(lm.success().append("currentValue", sequence.getCurrentValue()).toString());
             return sequence.getCurrentValue();
         } catch (DuplicateKeyException e) {
             // 已存在记录，尝试更新
+            log.info(lm.fail("tryUpdate").toString());
             return null;
         }
     }
