@@ -1,29 +1,39 @@
 package org.team4u.id.infrastructure.seq.sp;
 
-import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.json.JSONObject;
+import cn.hutool.log.Log;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
 import org.team4u.base.bean.provider.BeanProviders;
 import org.team4u.base.error.NestedException;
+import org.team4u.base.lang.LongTimeThread;
 import org.team4u.base.lang.lazy.LazyFunction;
+import org.team4u.base.log.LogMessage;
 import org.team4u.id.domain.seq.AbstractSequenceProviderFactory;
 import org.team4u.id.domain.seq.SequenceProvider;
 import org.team4u.id.domain.seq.SequenceProviderFactoryHolder;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.FutureTask;
+import java.util.Objects;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 public class CacheStepSequenceProvider implements StepSequenceProvider {
 
+    private final Log log = Log.get();
     private final ProviderConfig config;
     @Getter
     private final StepSequenceProvider sequenceProvider;
 
-    private final ExecutorService taskExecutor = ThreadUtil.newExecutor(5);
-    private final LazyFunction<String, DoubleBufferCounter> lazyCounter = LazyFunction.of(s -> new DoubleBufferCounter());
+    private final LazyFunction<Context, QueueCounter> lazyQueueCounter = LazyFunction.of(
+            LazyFunction.Config.builder().keyFunc(it -> {
+                Context c = (Context) it;
+                return c.id();
+            }).build(),
+            QueueCounter::new
+    );
 
     public CacheStepSequenceProvider(ProviderConfig config, StepSequenceProvider sequenceProvider) {
         this.config = config;
@@ -32,12 +42,17 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
 
     @Override
     public Number provide(Context context) {
-        // 缓冲计数器key
-        String bufferCounterKey = context.getSequenceConfig().getTypeId() + ":" + context.getGroupKey();
-        // 加载有效的缓冲计数器
-        BufferCounter bufferCounter = lazyCounter.apply(bufferCounterKey).loadAvailableCounter(context);
-        // 获取当前计数并递增
-        return bufferCounter.next();
+        return lazyQueueCounter.apply(context).next();
+    }
+
+    public int clear() {
+        return lazyQueueCounter.removeIf(queueCounter -> {
+            if (System.currentTimeMillis() - queueCounter.closedTime > config.getClearExpriedSec()) {
+                return queueCounter.getContext();
+            }
+
+            return null;
+        });
     }
 
     @Override
@@ -45,97 +60,105 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
         return config;
     }
 
-    /**
-     * 双缓冲计数器
-     */
-    private class DoubleBufferCounter {
-        /**
-         * 当前使用缓冲器的索引
-         */
-        private int currentIndex = 0;
-        /**
-         * 刷新缓冲器的异步任务
-         */
-        private FutureTask<BufferCounter> refreshBufferCounterTask;
-        /**
-         * 内部缓冲计数器数组
-         */
-        private final BufferCounter[] bufferCounters = new BufferCounter[2];
+    private class QueueCounter extends LongTimeThread {
+        private final Number EMPTY_NUMBER = -1;
 
-        /**
-         * 获取当前正在使用的缓冲计数器
-         */
-        private BufferCounter getCurrentCounter() {
-            return bufferCounters[currentIndex];
+        @Getter
+        private long closedTime = 0;
+
+        @Getter
+        private final Context context;
+        private BufferCounter bufferCounter;
+        private final BlockingQueue<Number> cache = new LinkedBlockingQueue<>(config.getStep());
+
+        private QueueCounter(Context context) {
+            this.context = context;
+
+            initQueue();
+
+            start();
         }
 
-        /**
-         * 加载有效的缓冲计数器，若已用完，将刷新后返回
-         */
-        public synchronized BufferCounter loadAvailableCounter(Context context) {
-            BufferCounter counter = getCurrentCounter();
-
-            if (counter != null) {
-                // 已超过最大值
-                if (counter.overMaxValue()) {
-                    return counter;
-                }
-
-                // 缓冲计数器未用完
-                if (!counter.isEmpty()) {
-                    // 可用缓冲计数小于70%，且无可用刷新缓冲计数器
-                    if (counter.availableSeqPercent() < config.getMinAvailableSeqPercent() && refreshBufferCounterTask == null) {
-                        asyncRefreshBufferCounter(context);
-                    }
-
-                    return counter;
-                }
-            }
-
-            // 缓冲计数器已用完且无可用刷新缓冲计数器任务
-            if (refreshBufferCounterTask == null) {
-                asyncRefreshBufferCounter(context);
-            }
-
+        public Number next() {
             try {
-                // 等待结果
-                counter = refreshBufferCounterTask.get();
-                // 更新当前索引位置
-                currentIndex = nextIndex();
-                bufferCounters[currentIndex] = counter;
-            } catch (RuntimeException e) {
-                throw e;
-            } catch (Exception e) {
-                throw new NestedException(e);
-            } finally {
-                // 清空刷新缓冲计数器任务
-                refreshBufferCounterTask = null;
-            }
+                Number result = cache.poll(50, TimeUnit.MILLISECONDS);
+                if (Objects.equals(result, EMPTY_NUMBER)) {
+                    return null;
+                }
 
-            return counter;
+                return result;
+            } catch (InterruptedException e) {
+                throw new NestedException(e);
+            }
         }
 
-        /**
-         * 异步刷新缓冲计数器
-         */
-        private void asyncRefreshBufferCounter(Context context) {
-            refreshBufferCounterTask = new FutureTask<>(() -> refreshBufferCounter(context));
-            taskExecutor.execute(refreshBufferCounterTask);
+        @Override
+        protected void onRun() {
+            if (bufferCounter != null && bufferCounter.overMaxValue()) {
+                return;
+            }
+
+            if (bufferCounter == null || bufferCounter.isEmpty() || bufferCounter.shouldRefresh()) {
+                refreshBufferCounter(context);
+            }
+
+            offer(bufferCounter);
+        }
+
+        private void initQueue() {
+            refreshBufferCounter(context);
+            offer(bufferCounter);
         }
 
         /**
          * 刷新缓冲计数器
          */
-        private BufferCounter refreshBufferCounter(Context context) {
+        private void refreshBufferCounter(Context context) {
+            LogMessage lm = LogMessage.create(this.getClass().getSimpleName(), "refreshBufferCounter");
+
             Number seq = sequenceProvider.provide(context);
-            return new BufferCounter(seq);
+
+            if (log.isDebugEnabled()) {
+                log.debug(lm.success()
+                        .append("context", context)
+                        .append("seq", seq)
+                        .toString());
+            }
+
+            bufferCounter = new BufferCounter(seq);
         }
 
-        /**
-         * 下一个索引
-         */
-        private int nextIndex() {
-            return (currentIndex + 1) % bufferCounters.length;
+        private void offer(BufferCounter counter) {
+            if (bufferCounter.overMaxValue()) {
+                return;
+            }
+
+            do {
+                Number seq = counter.next();
+
+                try {
+                    if (seq == null) {
+                        cache.put(EMPTY_NUMBER);
+                        close();
+                        return;
+                    }
+
+                    cache.put(seq);
+                } catch (InterruptedException e) {
+                    close();
+                    return;
+                }
+            } while (!counter.isEmpty());
+        }
+
+        @Override
+        protected Number runIntervalMillis() {
+            return 0;
+        }
+
+        @Override
+        protected void onClose() {
+            closedTime = System.currentTimeMillis();
         }
     }
 
@@ -208,6 +231,10 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
         public int availableSeqPercent() {
             return 100 - (int) (currentSeq * 100 / maxSeqForBuffer);
         }
+
+        public boolean shouldRefresh() {
+            return availableSeqPercent() < config.getMinAvailableSeqPercent();
+        }
     }
 
     @Component
@@ -248,5 +275,7 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
          * 真正的序号提供者标识
          */
         private String providerId = "DB";
+
+        private int clearExpriedSec = 60;
     }
 }

@@ -2,7 +2,7 @@ package org.team4u.id.infrastructure.seq;
 
 import org.team4u.base.config.AbstractJsonConfigRepository;
 import org.team4u.base.config.ConfigService;
-import org.team4u.id.domain.seq.SequenceConfig2;
+import org.team4u.id.domain.seq.SequenceConfig;
 import org.team4u.id.domain.seq.SequenceConfigRepository;
 
 /**
@@ -10,7 +10,7 @@ import org.team4u.id.domain.seq.SequenceConfigRepository;
  *
  * @author jay.wu
  */
-public class JsonSequenceConfigRepository extends AbstractJsonConfigRepository<SequenceConfig2>
+public class JsonSequenceConfigRepository extends AbstractJsonConfigRepository<SequenceConfig>
         implements SequenceConfigRepository {
 
     public JsonSequenceConfigRepository(ConfigService configService) {

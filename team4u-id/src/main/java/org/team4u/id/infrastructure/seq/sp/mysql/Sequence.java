@@ -24,11 +24,11 @@ public class Sequence {
     /**
      * 类型标识
      */
-    private final String typeId;
+    private String typeId;
     /**
      * 分组标识
      */
-    private final String groupKey;
+    private String groupKey;
     /**
      * 当前序号值
      */
@@ -40,10 +40,10 @@ public class Sequence {
     /**
      * 更新时间
      */
-    public Date updateTime;
+    private Date updateTime;
     /**
      * 版本号
      */
     @Version
-    public Long versionNumber;
+    private Long versionNumber;
 }

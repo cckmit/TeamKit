@@ -14,7 +14,7 @@ import java.util.Date;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class SequenceConfig2 extends IdentifiedConfig {
+public class SequenceConfig extends IdentifiedConfig {
     /**
      * 永不过期的固定日期
      */

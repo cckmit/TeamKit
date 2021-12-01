@@ -107,6 +107,20 @@ public class LazyFunction<T, R> implements Function<T, R> {
         config.getCache().clear();
     }
 
+    @SuppressWarnings("unchecked")
+    public int removeIf(Function<R, T> predicate) {
+        int count = 0;
+        for (Object value : config.getCache()) {
+            T key = predicate.apply((R) value);
+            if (key != null) {
+                config.getCache().remove(key);
+                count++;
+            }
+        }
+
+        return count;
+    }
+
     public <R2> LazyFunction<T, R2> map(Function<R, R2> function) {
         return LazyFunction.of(config, t -> function.apply(apply(t)));
     }

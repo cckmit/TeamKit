@@ -1,7 +1,7 @@
 package org.team4u.id.application;
 
 import cn.hutool.core.lang.generator.Generator;
-import org.team4u.id.domain.seq.SequenceConfig2;
+import org.team4u.id.domain.seq.SequenceConfig;
 import org.team4u.id.domain.seq.SequenceConfigRepository;
 import org.team4u.id.domain.seq.SequenceProvider;
 import org.team4u.id.domain.seq.SequenceProviderFactoryHolder;
@@ -40,7 +40,7 @@ public class SequenceGenerator implements Generator<Number> {
      * @return 序号值
      */
     public Number next(String configId, Map<String, Object> context) {
-        SequenceConfig2 config = sequenceConfigRepository.configOfId(configId);
+        SequenceConfig config = sequenceConfigRepository.configOfId(configId);
         String groupKey = groupKeyProviderFactoryHolder.provide(
                 new SequenceGroupKeyProvider.Context(config, context)
         );

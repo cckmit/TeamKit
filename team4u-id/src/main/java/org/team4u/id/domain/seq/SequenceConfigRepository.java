@@ -7,5 +7,5 @@ package org.team4u.id.domain.seq;
  */
 public interface SequenceConfigRepository {
 
-    SequenceConfig2 configOfId(String id);
+    SequenceConfig configOfId(String id);
 }

@@ -18,13 +18,17 @@ public interface SequenceProvider {
 
     @Data
     class Context {
-        private final SequenceConfig2 sequenceConfig;
+        private final SequenceConfig sequenceConfig;
         private final String groupKey;
         private final Map<String, Object> ext;
 
+        public String id() {
+            return sequenceConfig.getTypeId() + ":" + groupKey;
+        }
+
         @Override
         public String toString() {
-            return sequenceConfig.getTypeId() + ":" + groupKey;
+            return id();
         }
     }
 

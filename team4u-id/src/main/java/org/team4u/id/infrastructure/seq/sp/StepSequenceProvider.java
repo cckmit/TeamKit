@@ -16,7 +16,7 @@ public interface StepSequenceProvider extends SequenceProvider {
         /**
          * 步进
          */
-        private Long step = 1L;
+        private Integer step = 1;
         /**
          * 最大值
          */

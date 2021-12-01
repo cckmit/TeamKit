@@ -68,7 +68,9 @@ public class DbSequenceProvider implements StepSequenceProvider {
         resetIfOverMaxValue(sequence);
 
         // 乐观锁尝试更新，失败将继续尝试直到成功
-        return updateWithRetry(sequence, context);
+        Number result = updateWithRetry(sequence, context);
+        log.info(lm.success().append("currentValue", result).toString());
+        return result;
     }
 
     private boolean canUpdateIfOverMaxValue(Sequence sequence) {
@@ -108,7 +110,9 @@ public class DbSequenceProvider implements StepSequenceProvider {
     private Number sequenceValueByCreate(Context context) {
         LogMessage lm = LogMessage.create(this.getClass().getSimpleName(), "sequenceValueByCreate")
                 .append("context", context);
-        Sequence sequence = new Sequence(context.getSequenceConfig().getTypeId(), context.getGroupKey());
+        Sequence sequence = new Sequence();
+        sequence.setTypeId(context.getSequenceConfig().getTypeId());
+        sequence.setGroupKey(context.getGroupKey());
         sequence.setCurrentValue(config.getStart());
         sequence.setCreateTime(new Date());
         sequence.setUpdateTime(new Date());

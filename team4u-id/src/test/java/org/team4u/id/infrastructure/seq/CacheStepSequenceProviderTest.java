@@ -3,7 +3,7 @@ package org.team4u.id.infrastructure.seq;
 import cn.hutool.core.thread.ThreadUtil;
 import org.junit.Assert;
 import org.junit.Test;
-import org.team4u.id.domain.seq.SequenceConfig2;
+import org.team4u.id.domain.seq.SequenceConfig;
 import org.team4u.id.domain.seq.SequenceProvider;
 import org.team4u.id.infrastructure.seq.sp.CacheStepSequenceProvider;
 import org.team4u.id.infrastructure.seq.sp.StepSequenceProvider;
@@ -21,27 +21,12 @@ public class CacheStepSequenceProviderTest {
 
         Assert.assertEquals(1L, sequenceProvider.counter.get());
 
-        // 1+2=3,即一次有3个号可用
-        // 缓存内
         Assert.assertEquals(1, p.provide(context).intValue());
-        Assert.assertEquals(3L, sequenceProvider.counter.get());
-        // 缓存内
         Assert.assertEquals(2, p.provide(context).intValue());
-        Assert.assertEquals(3L, sequenceProvider.counter.get());
-
-        // 缓存内可用号低于50%，异步刷新
-        ThreadUtil.sleep(500);
-        Assert.assertEquals(5L, sequenceProvider.counter.get());
-
-        // 缓存内
         Assert.assertEquals(3, p.provide(context).intValue());
-        Assert.assertEquals(5L, sequenceProvider.counter.get());
-        // 缓存内
         Assert.assertEquals(4, p.provide(context).intValue());
-        Assert.assertEquals(5L, sequenceProvider.counter.get());
-        // 缓存已用完
         Assert.assertEquals(5, p.provide(context).intValue());
-        Assert.assertEquals(7L, sequenceProvider.counter.get());
+        Assert.assertTrue(sequenceProvider.counter.get() >= 7);
     }
 
     @Test
@@ -90,9 +75,22 @@ public class CacheStepSequenceProviderTest {
         Assert.assertEquals(1L, p.provide(context));
     }
 
+    @Test
+    public void clear() {
+        CacheStepSequenceProvider p = provider(1, 2, 50);
+
+        // 不循环使用
+        Assert.assertEquals(1L, p.provide(context()));
+        Assert.assertEquals(2L, p.provide(context()));
+        Assert.assertNull(p.provide(context()));
+
+        ThreadUtil.sleep(1000);
+        Assert.assertEquals(1, p.clear());
+    }
+
     private CacheStepSequenceProvider provider(int step, int maxValue, int percent) {
         CacheStepSequenceProvider.ProviderConfig config = new CacheStepSequenceProvider.ProviderConfig();
-        config.setStep((long) step);
+        config.setStep(step);
         config.setMaxValue((long) maxValue);
         config.setMinAvailableSeqPercent(percent);
 
@@ -101,7 +99,7 @@ public class CacheStepSequenceProviderTest {
     }
 
     private SequenceProvider.Context context() {
-        SequenceConfig2 sequenceConfig = new SequenceConfig2();
+        SequenceConfig sequenceConfig = new SequenceConfig();
         sequenceConfig.setTypeId("TEST");
         return new SequenceProvider.Context(
                 sequenceConfig,

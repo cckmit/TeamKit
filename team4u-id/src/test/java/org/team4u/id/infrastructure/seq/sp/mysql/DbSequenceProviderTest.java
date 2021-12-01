@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.ContextConfiguration;
-import org.team4u.id.domain.seq.SequenceConfig2;
+import org.team4u.id.domain.seq.SequenceConfig;
 import org.team4u.id.domain.seq.SequenceProvider;
 import org.team4u.id.infrastructure.seq.sp.StepSequenceProvider;
 import org.team4u.test.spring.DbTestBeanConfig;
@@ -42,7 +42,7 @@ public class DbSequenceProviderTest extends SpringDbTest {
     }
 
     private SequenceProvider.Context context() {
-        SequenceConfig2 sequenceConfig = new SequenceConfig2();
+        SequenceConfig sequenceConfig = new SequenceConfig();
         sequenceConfig.setTypeId("TEST");
         return new SequenceProvider.Context(
                 sequenceConfig,
