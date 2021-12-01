@@ -92,21 +92,17 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
             }
         }
 
+        private void initQueue() {
+            refreshBufferCounter(context);
+            offer(bufferCounter);
+        }
+
         @Override
         protected void onRun() {
-            if (bufferCounter != null && bufferCounter.overMaxValue()) {
-                return;
-            }
-
             if (bufferCounter == null || bufferCounter.isEmpty() || bufferCounter.shouldRefresh()) {
                 refreshBufferCounter(context);
             }
 
-            offer(bufferCounter);
-        }
-
-        private void initQueue() {
-            refreshBufferCounter(context);
             offer(bufferCounter);
         }
 
