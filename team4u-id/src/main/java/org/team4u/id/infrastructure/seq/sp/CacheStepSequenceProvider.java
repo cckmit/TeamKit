@@ -1,10 +1,11 @@
-package org.team4u.id.infrastructure.seq;
+package org.team4u.id.infrastructure.seq.sp;
 
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.json.JSONObject;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import org.springframework.stereotype.Component;
 import org.team4u.base.bean.provider.BeanProviders;
 import org.team4u.base.error.NestedException;
 import org.team4u.base.lang.lazy.LazyFunction;
@@ -209,6 +210,7 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
         }
     }
 
+    @Component
     public static class Factory extends AbstractSequenceProviderFactory {
 
         @Override

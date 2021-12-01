@@ -1,4 +1,4 @@
-package org.team4u.id.infrastructure.seq;
+package org.team4u.id.infrastructure.seq.sp;
 
 import lombok.Data;
 import org.team4u.id.domain.seq.SequenceProvider;
@@ -16,7 +16,7 @@ public interface StepSequenceProvider extends SequenceProvider {
         /**
          * 步进
          */
-        private Long step;
+        private Long step = 1L;
         /**
          * 最大值
          */

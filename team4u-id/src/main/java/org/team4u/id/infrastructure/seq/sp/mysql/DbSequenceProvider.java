@@ -1,4 +1,4 @@
-package org.team4u.id.infrastructure.seq.mysql;
+package org.team4u.id.infrastructure.seq.sp.mysql;
 
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.RandomUtil;
@@ -9,7 +9,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
 import org.team4u.id.domain.seq.AbstractSequenceProviderFactory;
 import org.team4u.id.domain.seq.SequenceProvider;
-import org.team4u.id.infrastructure.seq.StepSequenceProvider;
+import org.team4u.id.infrastructure.seq.sp.StepSequenceProvider;
 
 import java.util.Date;
 
@@ -49,7 +49,7 @@ public class DbSequenceProvider implements StepSequenceProvider {
     private Number sequenceValueByUpdate(Sequence sequence, Context context) {
         // 超过最大值，且不循环使用，直接返回
         if (!canUpdateIfOverMaxValue(sequence)) {
-            return sequence.getCurrentValue();
+            return null;
         }
 
         // 序列存在，进行更新
@@ -64,7 +64,7 @@ public class DbSequenceProvider implements StepSequenceProvider {
     }
 
     private boolean canUpdateIfOverMaxValue(Sequence sequence) {
-        if (isNotOverMaxValue(sequence)) {
+        if (sequence.getCurrentValue() < config.getMaxValue()) {
             return true;
         }
 
@@ -72,7 +72,7 @@ public class DbSequenceProvider implements StepSequenceProvider {
     }
 
     private void resetIfOverMaxValue(Sequence sequence) {
-        if (isNotOverMaxValue(sequence)) {
+        if (sequence.getCurrentValue() <= config.getMaxValue()) {
             return;
         }
 
@@ -95,10 +95,6 @@ public class DbSequenceProvider implements StepSequenceProvider {
         }
 
         return sequence.getCurrentValue();
-    }
-
-    private boolean isNotOverMaxValue(Sequence sequence) {
-        return sequence.getCurrentValue() <= config.getMaxValue();
     }
 
     private Number sequenceValueByCreate(Context context) {

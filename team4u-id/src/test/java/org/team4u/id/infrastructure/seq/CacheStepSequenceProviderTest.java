@@ -5,6 +5,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.team4u.id.domain.seq.SequenceConfig2;
 import org.team4u.id.domain.seq.SequenceProvider;
+import org.team4u.id.infrastructure.seq.sp.CacheStepSequenceProvider;
+import org.team4u.id.infrastructure.seq.sp.StepSequenceProvider;
 
 import java.util.concurrent.atomic.AtomicLong;
 
