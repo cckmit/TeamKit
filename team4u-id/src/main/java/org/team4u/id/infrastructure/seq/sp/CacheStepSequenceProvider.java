@@ -81,7 +81,7 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
 
         public Number next() {
             try {
-                Number result = cache.poll(50, TimeUnit.MILLISECONDS);
+                Number result = cache.poll(20, TimeUnit.MILLISECONDS);
                 if (Objects.equals(result, EMPTY_NUMBER)) {
                     return null;
                 }
@@ -130,6 +130,7 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
 
         private void offer(BufferCounter counter) {
             if (bufferCounter.overMaxValue()) {
+                close();
                 return;
             }
 
