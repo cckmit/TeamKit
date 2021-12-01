@@ -9,7 +9,7 @@ import org.team4u.base.message.MessagePublisher;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class BeanFilterServiceTest extends AbstractFilterServiceTest {
+public class BeanSimpleFilterServiceTest extends AbstractSimpleFilterServiceTest {
 
     private final BeanFilterService<Dict> service = new TestFilterService();
 
@@ -28,7 +28,7 @@ public class BeanFilterServiceTest extends AbstractFilterServiceTest {
         return service;
     }
 
-    private class TestFilterService extends BeanFilterService<Dict> {
+    private static class TestFilterService extends BeanFilterService<Dict> {
         @SuppressWarnings("unchecked")
         @Override
         protected List<Class<? extends Filter<Dict>>> filterClasses() {

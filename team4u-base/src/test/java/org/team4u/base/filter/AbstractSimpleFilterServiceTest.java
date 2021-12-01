@@ -8,7 +8,7 @@ import org.team4u.base.TestUtil;
 
 import java.util.List;
 
-public abstract class AbstractFilterServiceTest {
+public abstract class AbstractSimpleFilterServiceTest {
 
     protected abstract FilterService<Dict> filterService();
 

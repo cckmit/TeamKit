@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
  *
  * @author jay.wu
  */
-public abstract class SpringFilterService<C> extends FilterService<C>
+public abstract class SpringFilterService<C> extends SimpleFilterService<C>
         implements ApplicationContextAware, InitializingBean {
 
     private ApplicationContext applicationContext;

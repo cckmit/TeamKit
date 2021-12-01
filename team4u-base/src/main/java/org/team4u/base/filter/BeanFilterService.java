@@ -2,7 +2,7 @@ package org.team4u.base.filter;
 
 import org.team4u.base.bean.event.ApplicationInitializedEvent;
 import org.team4u.base.bean.provider.BeanProviders;
-import org.team4u.base.message.MessageSubscriber;
+import org.team4u.base.message.AbstractMessageSubscriber;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,18 +14,27 @@ import java.util.stream.Collectors;
  * @see BeanProviders
  * @see ApplicationInitializedEvent
  */
-public abstract class BeanFilterService<C> extends FilterService<C> implements MessageSubscriber<ApplicationInitializedEvent> {
+public abstract class BeanFilterService<C> extends AbstractMessageSubscriber<ApplicationInitializedEvent>
+        implements FilterService<C> {
+
+    private SimpleFilterService<C> simpleFilterService;
 
     /**
-     * 根据过滤器类型集合构建责任链
+     * 开始处理
+     *
+     * @param context 上下文
+     * @return context 上下文
      */
     @Override
-    public void onMessage(ApplicationInitializedEvent event) {
-        setFilterChain(
-                FilterChain.create(filterClasses().stream()
-                        .map(it -> (Filter<C>) BeanProviders.getInstance().getBean(it))
-                        .collect(Collectors.toList()))
-        );
+    public C doFilter(C context) {
+        return simpleFilterService.doFilter(context);
+    }
+
+    @Override
+    protected void internalOnMessage(ApplicationInitializedEvent message) throws Throwable {
+        simpleFilterService = new SimpleFilterService<>(filterClasses().stream()
+                .map(it -> (Filter<C>) BeanProviders.getInstance().getBean(it))
+                .collect(Collectors.toList()));
     }
 
     /**
@@ -34,4 +43,9 @@ public abstract class BeanFilterService<C> extends FilterService<C> implements M
      * @return 返回过滤器类型集合
      */
     protected abstract List<Class<? extends Filter<C>>> filterClasses();
+
+    @Override
+    public Class<ApplicationInitializedEvent> messageType() {
+        return ApplicationInitializedEvent.class;
+    }
 }

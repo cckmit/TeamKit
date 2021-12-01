@@ -16,15 +16,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = SpringFilterServiceTest.TestBeanConfig.class)
+@ContextConfiguration(classes = SpringSimpleFilterServiceTest.TestBeanConfig.class)
 @ActiveProfiles(value = "test")
-public class SpringFilterServiceTest extends AbstractFilterServiceTest {
+public class SpringSimpleFilterServiceTest extends AbstractSimpleFilterServiceTest {
 
     @Autowired
     private TestFilterService testFilterService;
 
     @Override
-    protected FilterService<Dict> filterService() {
+    protected SimpleFilterService<Dict> filterService() {
         return testFilterService;
     }
 
