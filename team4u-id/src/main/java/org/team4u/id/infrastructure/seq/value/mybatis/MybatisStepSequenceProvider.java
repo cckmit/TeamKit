@@ -1,33 +1,32 @@
-package org.team4u.id.infrastructure.seq.sp.mysql;
+package org.team4u.id.infrastructure.seq.value.mybatis;
 
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.RandomUtil;
-import cn.hutool.json.JSONObject;
 import cn.hutool.log.Log;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
 import org.team4u.base.log.LogMessage;
-import org.team4u.id.domain.seq.AbstractSequenceProviderFactory;
-import org.team4u.id.domain.seq.SequenceProvider;
-import org.team4u.id.infrastructure.seq.sp.StepSequenceProvider;
+import org.team4u.id.domain.seq.value.AbstractSequenceProviderFactory;
+import org.team4u.id.domain.seq.value.SequenceProvider;
+import org.team4u.id.domain.seq.value.StepSequenceProvider;
 
 import java.util.Date;
 
 /**
- * 缓存号段序号值提供者
+ * 基于mybatis的序号值提供者
  *
  * @author jay.wu
  */
-public class DbSequenceProvider implements StepSequenceProvider {
+public class MybatisStepSequenceProvider implements StepSequenceProvider {
 
     private final Log log = Log.get();
 
     private final Config config;
     private final SequenceMapper sequenceMapper;
 
-    public DbSequenceProvider(Config config, SequenceMapper sequenceMapper) {
+    public MybatisStepSequenceProvider(Config config, SequenceMapper sequenceMapper) {
         this.config = config;
         this.sequenceMapper = sequenceMapper;
     }
@@ -78,7 +77,7 @@ public class DbSequenceProvider implements StepSequenceProvider {
             return true;
         }
 
-        return config().isRecycleAfterMaxValue();
+        return config.isRecycleAfterMaxValue();
     }
 
     private void resetIfOverMaxValue(Sequence sequence) {
@@ -87,7 +86,7 @@ public class DbSequenceProvider implements StepSequenceProvider {
         }
 
         // 循环使用
-        if (config().isRecycleAfterMaxValue()) {
+        if (config.isRecycleAfterMaxValue()) {
             sequence.setCurrentValue(config.getStart());
         } else {
             sequence.setCurrentValue(config.getMaxValue());
@@ -145,7 +144,7 @@ public class DbSequenceProvider implements StepSequenceProvider {
     }
 
     @Component
-    public static class Factory extends AbstractSequenceProviderFactory {
+    public static class Factory extends AbstractSequenceProviderFactory<Config> {
 
         private final SequenceMapper sequenceMapper;
 
@@ -156,12 +155,12 @@ public class DbSequenceProvider implements StepSequenceProvider {
 
         @Override
         public String id() {
-            return "DB";
+            return "MS";
         }
 
         @Override
-        protected SequenceProvider internalCreate(JSONObject config) {
-            return new DbSequenceProvider(config.toBean(Config.class), sequenceMapper);
+        protected SequenceProvider createWithConfig(Config config) {
+            return new MybatisStepSequenceProvider(config, sequenceMapper);
         }
     }
 }

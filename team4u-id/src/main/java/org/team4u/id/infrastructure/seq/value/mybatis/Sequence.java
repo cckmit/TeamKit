@@ -1,4 +1,4 @@
-package org.team4u.id.infrastructure.seq.sp.mysql;
+package org.team4u.id.infrastructure.seq.value.mybatis;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;

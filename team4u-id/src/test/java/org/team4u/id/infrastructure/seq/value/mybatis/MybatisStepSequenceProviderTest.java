@@ -1,4 +1,4 @@
-package org.team4u.id.infrastructure.seq.sp.mysql;
+package org.team4u.id.infrastructure.seq.value.mybatis;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -6,14 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.ContextConfiguration;
 import org.team4u.id.domain.seq.SequenceConfig;
-import org.team4u.id.domain.seq.SequenceProvider;
-import org.team4u.id.infrastructure.seq.sp.StepSequenceProvider;
+import org.team4u.id.domain.seq.value.SequenceProvider;
+import org.team4u.id.domain.seq.value.StepSequenceProvider;
 import org.team4u.test.spring.DbTestBeanConfig;
 import org.team4u.test.spring.SpringDbTest;
 
 @ComponentScan("org.team4u.id.infrastructure.seq")
 @ContextConfiguration(classes = DbTestBeanConfig.class)
-public class DbSequenceProviderTest extends SpringDbTest {
+public class MybatisStepSequenceProviderTest extends SpringDbTest {
 
     @Autowired
     private SequenceMapper mapper;
@@ -22,7 +22,7 @@ public class DbSequenceProviderTest extends SpringDbTest {
     public void notRecycle() {
         StepSequenceProvider.Config config = new StepSequenceProvider.Config();
         config.setMaxValue(2L);
-        DbSequenceProvider provider = new DbSequenceProvider(config, mapper);
+        MybatisStepSequenceProvider provider = new MybatisStepSequenceProvider(config, mapper);
 
         Assert.assertEquals(1L, provider.provide(context()));
         Assert.assertEquals(2L, provider.provide(context()));
@@ -34,7 +34,7 @@ public class DbSequenceProviderTest extends SpringDbTest {
         StepSequenceProvider.Config config = new StepSequenceProvider.Config();
         config.setMaxValue(2L);
         config.setRecycleAfterMaxValue(true);
-        DbSequenceProvider provider = new DbSequenceProvider(config, mapper);
+        MybatisStepSequenceProvider provider = new MybatisStepSequenceProvider(config, mapper);
 
         Assert.assertEquals(1L, provider.provide(context()));
         Assert.assertEquals(2L, provider.provide(context()));

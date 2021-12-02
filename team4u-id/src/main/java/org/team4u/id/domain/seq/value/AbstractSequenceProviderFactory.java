@@ -1,20 +1,20 @@
-package org.team4u.id.domain.seq.group;
+package org.team4u.id.domain.seq.value;
 
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.json.JSONUtil;
 import org.team4u.base.lang.lazy.LazyFunction;
 
 /**
- * 抽象分组提供者工厂
+ * 抽象序号提供者工厂
  *
  * @author jay.wu
  */
-public abstract class AbstractGroupKeyProviderFactory<C> implements SequenceGroupKeyProvider.Factory<C> {
+public abstract class AbstractSequenceProviderFactory<C> implements SequenceProvider.Factory<C> {
 
-    private final LazyFunction<String, SequenceGroupKeyProvider> lazyProvider = LazyFunction.of(this::createWithString);
+    private final LazyFunction<String, SequenceProvider> lazyProvider = LazyFunction.of(this::createWithString);
 
     @Override
-    public SequenceGroupKeyProvider create(String config) {
+    public SequenceProvider create(String config) {
         return lazyProvider.apply(config);
     }
 
@@ -24,7 +24,7 @@ public abstract class AbstractGroupKeyProviderFactory<C> implements SequenceGrou
         return (Class<C>) ClassUtil.getTypeArgument(this.getClass());
     }
 
-    private SequenceGroupKeyProvider createWithString(String configString) {
+    private SequenceProvider createWithString(String configString) {
         C config = JSONUtil.toBean(configString, configType());
         return createWithConfig(config);
     }
@@ -35,5 +35,5 @@ public abstract class AbstractGroupKeyProviderFactory<C> implements SequenceGrou
      * @param config 配置对象
      * @return 提供者
      */
-    protected abstract SequenceGroupKeyProvider createWithConfig(C config);
+    protected abstract SequenceProvider createWithConfig(C config);
 }

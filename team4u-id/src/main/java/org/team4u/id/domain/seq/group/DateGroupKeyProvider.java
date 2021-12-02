@@ -45,7 +45,7 @@ public class DateGroupKeyProvider implements SequenceGroupKeyProvider {
         }
 
         @Override
-        protected SequenceGroupKeyProvider internalCreate(Config config) {
+        protected SequenceGroupKeyProvider createWithConfig(Config config) {
             return new DateGroupKeyProvider(config);
         }
     }

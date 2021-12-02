@@ -1,6 +1,6 @@
-package org.team4u.id.infrastructure.seq.sp;
+package org.team4u.id.domain.seq.value;
 
-import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import cn.hutool.log.Log;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -11,9 +11,6 @@ import org.team4u.base.error.NestedException;
 import org.team4u.base.lang.LongTimeThread;
 import org.team4u.base.lang.lazy.LazyFunction;
 import org.team4u.base.log.LogMessage;
-import org.team4u.id.domain.seq.AbstractSequenceProviderFactory;
-import org.team4u.id.domain.seq.SequenceProvider;
-import org.team4u.id.domain.seq.SequenceProviderFactoryHolder;
 
 import java.util.Objects;
 import java.util.concurrent.BlockingQueue;
@@ -328,23 +325,28 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
     }
 
     @Component
-    public static class Factory extends AbstractSequenceProviderFactory {
+    public static class Factory extends AbstractSequenceProviderFactory<CacheConfig> {
+
+        private final SequenceProviderFactoryHolder holder = BeanProviders.getInstance().getBean(
+                SequenceProviderFactoryHolder.class
+        );
 
         @Override
         public String id() {
-            return "CACHE";
+            return "CS";
         }
 
         @Override
-        protected SequenceProvider internalCreate(JSONObject jsonConfig) {
-            CacheConfig config = jsonConfig.toBean(CacheConfig.class);
-            SequenceProviderFactoryHolder holder = BeanProviders.getInstance().getBean(
-                    SequenceProviderFactoryHolder.class
-            );
-            return new CacheStepSequenceProvider(
-                    config,
-                    (StepSequenceProvider) holder.availablePolicyOf(config.getProviderId()).create(jsonConfig)
-            );
+        protected SequenceProvider createWithConfig(CacheConfig config) {
+            return new CacheStepSequenceProvider(config, delegateProvider(config));
+        }
+
+        @SuppressWarnings("unchecked")
+        private StepSequenceProvider delegateProvider(CacheConfig config) {
+            SequenceProvider.Factory<CacheConfig> factory =
+                    (SequenceProvider.Factory<CacheConfig>) holder.availablePolicyOf(config.getStepFactoryId());
+
+            return (StepSequenceProvider) factory.create(JSONUtil.toJsonStr(config));
         }
     }
 
@@ -362,9 +364,11 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
          */
         private int minAvailableSeqPercent = 60;
         /**
-         * 真正的序号提供者标识
+         * 真正的步进序号工厂提供者标识
+         *
+         * @see StepSequenceProvider.Factory
          */
-        private String providerId = "DB";
+        private String stepFactoryId = "DB";
         /**
          * 获取序号最大超时时间（毫秒）
          */

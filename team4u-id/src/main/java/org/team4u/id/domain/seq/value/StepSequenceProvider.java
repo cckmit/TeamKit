@@ -1,7 +1,6 @@
-package org.team4u.id.infrastructure.seq.sp;
+package org.team4u.id.domain.seq.value;
 
 import lombok.Data;
-import org.team4u.id.domain.seq.SequenceProvider;
 
 public interface StepSequenceProvider extends SequenceProvider {
 
