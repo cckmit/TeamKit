@@ -4,9 +4,8 @@ import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.log.Log;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.stereotype.Component;
+import org.team4u.base.bean.provider.BeanProviders;
 import org.team4u.base.log.LogMessage;
 import org.team4u.id.domain.seq.value.AbstractSequenceProviderFactory;
 import org.team4u.id.domain.seq.value.SequenceProvider;
@@ -143,15 +142,7 @@ public class MybatisStepSequenceProvider implements StepSequenceProvider {
         return config;
     }
 
-    @Component
     public static class Factory extends AbstractSequenceProviderFactory<Config> {
-
-        private final SequenceMapper sequenceMapper;
-
-        @Autowired
-        public Factory(SequenceMapper sequenceMapper) {
-            this.sequenceMapper = sequenceMapper;
-        }
 
         @Override
         public String id() {
@@ -160,7 +151,10 @@ public class MybatisStepSequenceProvider implements StepSequenceProvider {
 
         @Override
         protected SequenceProvider createWithConfig(Config config) {
-            return new MybatisStepSequenceProvider(config, sequenceMapper);
+            return new MybatisStepSequenceProvider(
+                    config,
+                    BeanProviders.getInstance().getBean(SequenceMapper.class)
+            );
         }
     }
 }
