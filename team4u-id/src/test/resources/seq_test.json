@@ -2,6 +2,7 @@
   "typeId": "TEST",
   "sequenceConfigId": "CS",
   "sequenceConfig": {
-    "stepFactoryId": "MS"
+    "stepFactoryId": "MS",
+    "maxValue": 2
   }
 }

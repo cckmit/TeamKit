@@ -11,6 +11,9 @@ public class SequenceGeneratorTest {
     public void next() {
         SequenceGenerator g = new SequenceGenerator(new JsonSequenceConfigRepository(new LocalJsonConfigService()));
         Assert.assertEquals(1, g.next("seq_test").intValue());
+        Assert.assertEquals(2, g.next("seq_test").intValue());
+        Assert.assertNull(g.next("seq_test"));
+
         Assert.assertEquals(1, g.next("seq_test_with_group").intValue());
     }
 }
