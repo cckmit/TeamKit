@@ -74,7 +74,7 @@ public class InMemoryStepSequenceProvider implements StepSequenceProvider {
 
         @Override
         public String id() {
-            return "MEMORY";
+            return "MS";
         }
 
         @Override

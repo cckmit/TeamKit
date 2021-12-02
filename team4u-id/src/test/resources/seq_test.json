@@ -2,6 +2,6 @@
   "typeId": "TEST",
   "sequenceConfigId": "CS",
   "sequenceConfig": {
-    "stepFactoryId": "MEMORY"
+    "stepFactoryId": "MS"
   }
 }
