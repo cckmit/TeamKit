@@ -1,5 +1,5 @@
 {
   "id": "TEST",
   "step": 2,
-  "stepFactoryId": "MEMORY"
+  "stepFactoryId": "MS"
 }

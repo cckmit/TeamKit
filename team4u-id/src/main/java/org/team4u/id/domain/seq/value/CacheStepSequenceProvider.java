@@ -75,6 +75,8 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
         private final Number EMPTY_NUMBER = -1;
 
         private long closedTime = 0;
+        // 是否不存在可用序号
+        private boolean isNextEmpty = false;
 
         @Getter
         private final Context context;
@@ -95,10 +97,18 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
          * 从队列取出下一个序号
          */
         public Number next() {
+            // 判断是否还存在可用序号，若无，直接跳过，跳过等待时间
+            if (isNextEmpty) {
+                return null;
+            }
+
             try {
                 // 增加等待时间，避免消费速度过多，导致生产数据不足的情况
                 Number result = cache.poll(config.getMaxNextTimeoutMillis(), TimeUnit.MILLISECONDS);
+
+                // 无序号可用
                 if (Objects.equals(result, EMPTY_NUMBER)) {
+                    isNextEmpty = true;
                     return null;
                 }
 
@@ -374,7 +384,7 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
         /**
          * 计数器关闭后多长时间失效（毫秒）
          */
-        private int expiredWhenCloseMillis = 60 * 1000;
+        private int expiredWhenCloseMillis = (int) TimeUnit.HOURS.toMillis(24);
         /**
          * 清理失效缓存间隔（毫秒）
          */
