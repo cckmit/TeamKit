@@ -366,7 +366,7 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
          *
          * @see StepSequenceProvider.Factory
          */
-        private String stepFactoryId = "DB";
+        private String stepFactoryId = "MBS";
         /**
          * 获取序号最大超时时间（毫秒）
          */

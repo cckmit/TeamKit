@@ -155,7 +155,7 @@ public class MybatisStepSequenceProvider implements StepSequenceProvider {
 
         @Override
         public String id() {
-            return "MS";
+            return "MBS";
         }
 
         @Override
