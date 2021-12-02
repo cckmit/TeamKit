@@ -1,4 +1,7 @@
 {
   "typeId": "TEST",
-  "sequenceConfigId": "MEMORY"
+  "sequenceConfigId": "CS",
+  "sequenceConfig": {
+    "stepFactoryId": "MEMORY"
+  }
 }

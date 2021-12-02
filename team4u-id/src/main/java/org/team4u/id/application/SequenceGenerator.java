@@ -2,6 +2,7 @@ package org.team4u.id.application;
 
 import cn.hutool.core.lang.generator.Generator;
 import lombok.Getter;
+import org.team4u.base.bean.provider.BeanProviders;
 import org.team4u.id.domain.seq.SequenceConfig;
 import org.team4u.id.domain.seq.SequenceConfigRepository;
 import org.team4u.id.domain.seq.group.SequenceGroupKeyFactoryHolder;
@@ -33,6 +34,9 @@ public class SequenceGenerator implements Generator<Number> {
 
         this.valueFactoryHolder = new SequenceProviderFactoryHolder();
         this.groupFactoryHolder = new SequenceGroupKeyFactoryHolder();
+
+        BeanProviders.getInstance().registerBean(valueFactoryHolder);
+        BeanProviders.getInstance().registerBean(groupFactoryHolder);
     }
 
     /**

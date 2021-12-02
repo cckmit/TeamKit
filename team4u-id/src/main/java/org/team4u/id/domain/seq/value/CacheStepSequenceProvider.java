@@ -5,7 +5,6 @@ import cn.hutool.log.Log;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import org.springframework.stereotype.Component;
 import org.team4u.base.bean.provider.BeanProviders;
 import org.team4u.base.error.NestedException;
 import org.team4u.base.lang.LongTimeThread;
@@ -324,12 +323,7 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
         }
     }
 
-    @Component
     public static class Factory extends AbstractSequenceProviderFactory<CacheConfig> {
-
-        private final SequenceProviderFactoryHolder holder = BeanProviders.getInstance().getBean(
-                SequenceProviderFactoryHolder.class
-        );
 
         @Override
         public String id() {
@@ -343,10 +337,14 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
 
         @SuppressWarnings("unchecked")
         private StepSequenceProvider delegateProvider(CacheConfig config) {
-            SequenceProvider.Factory<CacheConfig> factory =
-                    (SequenceProvider.Factory<CacheConfig>) holder.availablePolicyOf(config.getStepFactoryId());
+            SequenceProvider.Factory<CacheConfig> factory = (SequenceProvider.Factory<CacheConfig>) holder()
+                    .availablePolicyOf(config.getStepFactoryId());
 
             return (StepSequenceProvider) factory.create(JSONUtil.toJsonStr(config));
+        }
+
+        private SequenceProviderFactoryHolder holder() {
+            return BeanProviders.getInstance().getBean(SequenceProviderFactoryHolder.class);
         }
     }
 
