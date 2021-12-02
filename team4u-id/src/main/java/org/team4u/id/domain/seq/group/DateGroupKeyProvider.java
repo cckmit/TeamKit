@@ -1,8 +1,8 @@
 package org.team4u.id.domain.seq.group;
 
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.json.JSONObject;
 import lombok.Data;
+import lombok.Getter;
 
 import java.util.Date;
 
@@ -11,17 +11,13 @@ import java.util.Date;
  *
  * @author jay.wu
  */
-public class DateGroupKeyProvider extends AbstractGroupKeyProviderFactory implements SequenceGroupKeyProvider {
+public class DateGroupKeyProvider implements SequenceGroupKeyProvider {
 
+    @Getter
     private final Config config;
 
     public DateGroupKeyProvider(Config config) {
         this.config = config;
-    }
-
-    @Override
-    public String id() {
-        return "DATE";
     }
 
     @Override
@@ -33,16 +29,24 @@ public class DateGroupKeyProvider extends AbstractGroupKeyProviderFactory implem
         return new Date();
     }
 
-    @Override
-    protected SequenceGroupKeyProvider internalCreate(JSONObject config) {
-        return new DateGroupKeyProvider(config.toBean(Config.class));
-    }
-
     @Data
     public static class Config {
         /**
          * 时间格式
          */
         private String format = "yyyyMMdd";
+    }
+
+    public static class Factory extends AbstractGroupKeyProviderFactory<Config> {
+
+        @Override
+        public String id() {
+            return "DATE";
+        }
+
+        @Override
+        protected SequenceGroupKeyProvider internalCreate(Config config) {
+            return new DateGroupKeyProvider(config);
+        }
     }
 }

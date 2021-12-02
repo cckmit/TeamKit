@@ -26,7 +26,7 @@ public class CacheStepSequenceProviderTest {
         Assert.assertEquals(3, p.provide(context).intValue());
         Assert.assertEquals(4, p.provide(context).intValue());
         Assert.assertEquals(5, p.provide(context).intValue());
-        Assert.assertTrue(sequenceProvider.counter.get() >= 7);
+        Assert.assertEquals(9L, sequenceProvider.counter.get());
     }
 
     @Test
@@ -76,20 +76,22 @@ public class CacheStepSequenceProviderTest {
     }
 
     @Test
-    public void clear() {
+    public void clearExpiredCache() {
         CacheStepSequenceProvider p = provider(1, 2, 50);
+        p.config().setExpiredWhenCloseMillis(1);
 
-        // 不循环使用
         Assert.assertEquals(1L, p.provide(context()));
         Assert.assertEquals(2L, p.provide(context()));
         Assert.assertNull(p.provide(context()));
 
-        ThreadUtil.sleep(1000);
-        Assert.assertEquals(1, p.clear());
+        ThreadUtil.sleep(10);
+
+        Assert.assertEquals(1, p.clearExpiredCache());
+        Assert.assertEquals(0, p.clearExpiredCache());
     }
 
     private CacheStepSequenceProvider provider(int step, int maxValue, int percent) {
-        CacheStepSequenceProvider.ProviderConfig config = new CacheStepSequenceProvider.ProviderConfig();
+        CacheStepSequenceProvider.CacheConfig config = new CacheStepSequenceProvider.CacheConfig();
         config.setStep(step);
         config.setMaxValue((long) maxValue);
         config.setMinAvailableSeqPercent(percent);

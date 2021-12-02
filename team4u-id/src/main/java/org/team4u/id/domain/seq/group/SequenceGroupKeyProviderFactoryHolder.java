@@ -9,7 +9,7 @@ import org.team4u.base.registrar.PolicyRegistrar;
  *
  * @author jay.wu
  */
-public class SequenceGroupKeyProviderFactoryHolder extends PolicyRegistrar<String, SequenceGroupKeyProvider.Factory> {
+public class SequenceGroupKeyProviderFactoryHolder extends PolicyRegistrar<String, SequenceGroupKeyProvider.Factory<?>> {
 
     public SequenceGroupKeyProviderFactoryHolder() {
         registerPoliciesByBeanProvidersAndEvent();

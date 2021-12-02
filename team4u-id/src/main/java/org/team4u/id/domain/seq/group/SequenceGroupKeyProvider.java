@@ -23,12 +23,18 @@ public interface SequenceGroupKeyProvider {
         private final Map<String, Object> ext;
     }
 
-    interface Factory extends StringIdPolicy {
+    interface Factory<C> extends StringIdPolicy {
 
         default SequenceGroupKeyProvider create(String config) {
             return create(JSONUtil.parseObj(config));
         }
 
-        SequenceGroupKeyProvider create(JSONObject config);
+        default SequenceGroupKeyProvider create(JSONObject config) {
+            return create(config.toBean(configType()));
+        }
+
+        SequenceGroupKeyProvider create(C config);
+
+        Class<C> configType();
     }
 }

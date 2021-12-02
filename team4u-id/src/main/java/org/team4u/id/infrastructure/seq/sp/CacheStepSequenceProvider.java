@@ -20,24 +20,30 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * 基于缓存的趋势增长序列服务
+ *
+ * @author jay.wu
+ */
 public class CacheStepSequenceProvider implements StepSequenceProvider {
 
     private final Log log = Log.get();
-    private final ProviderConfig config;
+
+    private final CacheConfig config;
     @Getter
     private final StepSequenceProvider sequenceProvider;
 
-    private final LazyFunction<Context, QueueCounter> lazyQueueCounter = LazyFunction.of(
-            LazyFunction.Config.builder().keyFunc(it -> {
-                Context c = (Context) it;
-                return c.id();
-            }).build(),
-            QueueCounter::new
+    private final LazyFunction<Context, QueueSequenceProvider> lazyQueueCounter = LazyFunction.of(
+            LazyFunction.Config.builder().keyFunc(it -> ((Context) it).id()).build(),
+            QueueSequenceProvider::new
     );
 
-    public CacheStepSequenceProvider(ProviderConfig config, StepSequenceProvider sequenceProvider) {
+    public CacheStepSequenceProvider(CacheConfig config, StepSequenceProvider sequenceProvider) {
         this.config = config;
         this.sequenceProvider = sequenceProvider;
+
+        // 启动定时清理器
+        new ClearWorker().start();
     }
 
     @Override
@@ -45,10 +51,16 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
         return lazyQueueCounter.apply(context).next();
     }
 
-    public int clear() {
-        return lazyQueueCounter.removeIf(queueCounter -> {
-            if (queueCounter.isExpired()) {
-                return queueCounter.getContext();
+    /**
+     * 清理过期缓存
+     *
+     * @return 已清理数量
+     */
+    public int clearExpiredCache() {
+        return lazyQueueCounter.removeIf(it -> {
+            // 已过期，返回需要清理的key
+            if (it.isExpired()) {
+                return it.getContext();
             }
 
             return null;
@@ -56,11 +68,14 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
     }
 
     @Override
-    public Config config() {
+    public CacheConfig config() {
         return config;
     }
 
-    private class QueueCounter extends LongTimeThread {
+    /**
+     * 队列计数器
+     */
+    private class QueueSequenceProvider extends LongTimeThread {
         private final Number EMPTY_NUMBER = -1;
 
         private long closedTime = 0;
@@ -70,7 +85,7 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
         private BufferCounter bufferCounter;
         private final BlockingQueue<Number> cache = new LinkedBlockingQueue<>(config.getStep());
 
-        private QueueCounter(Context context) {
+        private QueueSequenceProvider(Context context) {
             this.context = context;
 
             if (!initQueue()) {
@@ -80,9 +95,13 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
             start();
         }
 
+        /**
+         * 从队列取出下一个序号
+         */
         public Number next() {
             try {
-                Number result = cache.poll(20, TimeUnit.MILLISECONDS);
+                // 增加等待时间，避免消费速度过多，导致生产数据不足的情况
+                Number result = cache.poll(config.getMaxNextTimeoutMillis(), TimeUnit.MILLISECONDS);
                 if (Objects.equals(result, EMPTY_NUMBER)) {
                     return null;
                 }
@@ -100,7 +119,8 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
 
         @Override
         protected void onRun() {
-            if (bufferCounter.isEmpty() || bufferCounter.shouldRefresh()) {
+            // 无可用序号或者低可用序号，刷新
+            if (bufferCounter.isEmpty() || bufferCounter.isLowAvailableSeq()) {
                 refreshBufferCounter(context);
             }
 
@@ -117,16 +137,24 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
 
             Number seq = sequenceProvider.provide(context);
 
-            if (log.isDebugEnabled()) {
-                log.debug(lm.success()
-                        .append("context", context)
-                        .append("seq", seq)
-                        .toString());
+            if (bufferCounter == null) {
+                bufferCounter = new BufferCounter(seq);
+            } else {
+                bufferCounter.updateMaxSeqForBuffer(seq);
             }
 
-            bufferCounter = new BufferCounter(seq);
+            if (log.isInfoEnabled()) {
+                log.info(lm.success()
+                        .append("context", context)
+                        .append("remoteSeq", seq)
+                        .append("bufferCounter", bufferCounter)
+                        .toString());
+            }
         }
 
+        /**
+         * 将序号放入队列
+         */
         private boolean offer(BufferCounter counter) {
             if (bufferCounter.overMaxValue()) {
                 return false;
@@ -161,7 +189,18 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
         }
 
         public boolean isExpired() {
-            return System.currentTimeMillis() - closedTime > config.getClearExpiredSec();
+            // 未关闭线程，返回未过期
+            if (closedTime == 0) {
+                return false;
+            }
+
+            // 已关闭线程，判断是否超出存活时间
+            return System.currentTimeMillis() - closedTime > config.getExpiredWhenCloseMillis();
+        }
+
+        @Override
+        public String toString() {
+            return this.getClass().getSimpleName();
         }
     }
 
@@ -178,13 +217,27 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
          */
         private Long maxSeqForBuffer;
 
-        private BufferCounter(Number currentSeq) {
-            if (currentSeq != null) {
-                this.currentSeq = currentSeq.longValue();
-                this.maxSeqForBuffer = this.currentSeq + sequenceProvider.config().getStep();
-                if (maxSeqForBuffer > config.getMaxValue()) {
-                    maxSeqForBuffer = config.getMaxValue();
-                }
+        private BufferCounter(Number seq) {
+            if (seq == null) {
+                return;
+            }
+
+            this.currentSeq = seq.longValue();
+            updateMaxSeqForBuffer(seq);
+        }
+
+        public void updateMaxSeqForBuffer(Number seq) {
+            if (seq == null) {
+                return;
+            }
+
+            if (currentSeq == null) {
+                this.currentSeq = seq.longValue();
+            }
+
+            this.maxSeqForBuffer = seq.longValue() + sequenceProvider.config().getStep();
+            if (maxSeqForBuffer > config.getMaxValue()) {
+                maxSeqForBuffer = config.getMaxValue();
             }
         }
 
@@ -203,10 +256,11 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
          * 是否超过最大值
          */
         public boolean overMaxValue() {
-            if (maxSeqForBuffer == null) {
+            if (currentSeq == null) {
                 return true;
             }
-            return currentSeq > config.getMaxValue();
+
+            return currentSeq > maxSeqForBuffer;
         }
 
         public Long next() {
@@ -223,8 +277,8 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
         }
 
         private void handleIfOverMaxValue() {
-            if (currentSeq > config.getMaxValue()) {
-                currentSeq = config.getMaxValue();
+            if (currentSeq > maxSeqForBuffer) {
+                currentSeq = null;
             }
         }
 
@@ -235,8 +289,41 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
             return 100 - (int) (currentSeq * 100 / maxSeqForBuffer);
         }
 
-        public boolean shouldRefresh() {
+        /**
+         * 缓冲池可用序号是否较低
+         */
+        public boolean isLowAvailableSeq() {
             return availableSeqPercent() < config.getMinAvailableSeqPercent();
+        }
+
+        @Override
+        public String toString() {
+            return currentSeq + "/" + maxSeqForBuffer;
+        }
+    }
+
+    /**
+     * 过期缓存清理器
+     */
+    private class ClearWorker extends LongTimeThread {
+
+        @Override
+        protected void onRun() {
+            LogMessage lm = LogMessage.create(this.getClass().getSimpleName(), "clearExpiredCache");
+
+            try {
+                int count = clearExpiredCache();
+                lm.append("count", count);
+            } catch (Exception e) {
+                log.info(lm.fail(e.getMessage()).toString());
+            }
+
+            log.info(lm.success().toString());
+        }
+
+        @Override
+        protected Number runIntervalMillis() {
+            return config.getClearExpiredRunIntervalMillis();
         }
     }
 
@@ -250,7 +337,7 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
 
         @Override
         protected SequenceProvider internalCreate(JSONObject jsonConfig) {
-            ProviderConfig config = jsonConfig.toBean(ProviderConfig.class);
+            CacheConfig config = jsonConfig.toBean(CacheConfig.class);
             SequenceProviderFactoryHolder holder = BeanProviders.getInstance().getBean(
                     SequenceProviderFactoryHolder.class
             );
@@ -263,7 +350,7 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
 
     @EqualsAndHashCode(callSuper = true)
     @Data
-    public static class ProviderConfig extends Config {
+    public static class CacheConfig extends Config {
         /**
          * 缓存步进
          */
@@ -278,7 +365,17 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
          * 真正的序号提供者标识
          */
         private String providerId = "DB";
-
-        private int clearExpiredSec = 60;
+        /**
+         * 获取序号最大超时时间（毫秒）
+         */
+        private int maxNextTimeoutMillis = 20;
+        /**
+         * 计数器关闭后多长时间失效（毫秒）
+         */
+        private int expiredWhenCloseMillis = 60 * 1000;
+        /**
+         * 清理失效缓存间隔（毫秒）
+         */
+        private int clearExpiredRunIntervalMillis = 60 * 1000;
     }
 }

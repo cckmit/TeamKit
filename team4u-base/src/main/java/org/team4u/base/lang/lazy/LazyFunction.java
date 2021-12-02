@@ -77,8 +77,7 @@ public class LazyFunction<T, R> implements Function<T, R> {
             }
 
             LogMessage lm = LogMessage.create(this.getClass().getName(), "apply")
-                    .append("parameter", config.getParameterFormatter().format(log, t))
-                    .append("valueFunc", valueFunc.getClass().getName());
+                    .append("parameter", config.getParameterFormatter().format(log, t));
 
             if (!ObjectUtil.equals(cacheKey, t)) {
                 lm.append("parameter", cacheKey);
@@ -111,11 +110,13 @@ public class LazyFunction<T, R> implements Function<T, R> {
     public int removeIf(Function<R, T> predicate) {
         int count = 0;
         for (Object value : config.getCache()) {
-            T key = predicate.apply((R) value);
-            if (key != null) {
-                config.getCache().remove(key);
-                count++;
+            Object key = predicate.apply((R) value);
+            if (key == null) {
+                continue;
             }
+
+            config.getCache().remove(config.keyFunc.apply(key));
+            count++;
         }
 
         return count;

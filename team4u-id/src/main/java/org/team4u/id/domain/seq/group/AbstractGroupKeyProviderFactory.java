@@ -1,16 +1,22 @@
 package org.team4u.id.domain.seq.group;
 
-import cn.hutool.json.JSONObject;
+import cn.hutool.core.util.ClassUtil;
 import org.team4u.base.lang.lazy.LazyFunction;
 
-public abstract class AbstractGroupKeyProviderFactory implements SequenceGroupKeyProvider.Factory {
+public abstract class AbstractGroupKeyProviderFactory<C> implements SequenceGroupKeyProvider.Factory<C> {
 
-    private final LazyFunction<JSONObject, SequenceGroupKeyProvider> lazyProvider = LazyFunction.of(this::internalCreate);
+    private final LazyFunction<C, SequenceGroupKeyProvider> lazyProvider = LazyFunction.of(this::internalCreate);
 
     @Override
-    public SequenceGroupKeyProvider create(JSONObject jsonConfig) {
-        return lazyProvider.apply(jsonConfig);
+    public SequenceGroupKeyProvider create(C config) {
+        return lazyProvider.apply(config);
     }
 
-    protected abstract SequenceGroupKeyProvider internalCreate(JSONObject config);
+    @SuppressWarnings("unchecked")
+    @Override
+    public Class<C> configType() {
+        return (Class<C>) ClassUtil.getTypeArgument(this.getClass());
+    }
+
+    protected abstract SequenceGroupKeyProvider internalCreate(C config);
 }
