@@ -72,11 +72,16 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
      * 队列计数器
      */
     private class QueueSequenceProvider extends LongTimeThread {
+        /**
+         * 无可用序列时返回此值
+         * <p>
+         * 因为队列无法设置null，使用其他值代替该含义
+         */
         private final Number EMPTY_NUMBER = -1;
 
         private long closedTime = 0;
-        // 是否不存在可用序号
-        private boolean isNextEmpty = false;
+        // 是否为最后序号
+        private boolean isNoAvailableSeq = false;
 
         @Getter
         private final Context context;
@@ -86,7 +91,10 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
         private QueueSequenceProvider(Context context) {
             this.context = context;
 
+            // 初始化序号失败
             if (!initQueue()) {
+                setNoAvailableSeq();
+                close();
                 return;
             }
 
@@ -97,18 +105,18 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
          * 从队列取出下一个序号
          */
         public Number next() {
-            // 判断是否还存在可用序号，若无，直接跳过，跳过等待时间
-            if (isNextEmpty) {
+            // 已无可用序号，直接跳过，避免无效等待时间
+            if (isNoAvailableSeq) {
                 return null;
             }
 
             try {
-                // 增加等待时间，避免消费速度过多，导致生产数据不足的情况
+                // 增加等待时间，避免消费速度过快，生产不足的情况
                 Number result = cache.poll(config.getMaxNextTimeoutMillis(), TimeUnit.MILLISECONDS);
 
-                // 无序号可用
+                // 无序号可用，直接返回null
                 if (Objects.equals(result, EMPTY_NUMBER)) {
-                    isNextEmpty = true;
+                    setNoAvailableSeq();
                     return null;
                 }
 
@@ -121,6 +129,10 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
         private boolean initQueue() {
             refreshBufferCounter(context);
             return offer(bufferCounter);
+        }
+
+        private void setNoAvailableSeq() {
+            isNoAvailableSeq = true;
         }
 
         @Override
@@ -160,6 +172,8 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
 
         /**
          * 将序号放入队列
+         *
+         * @return 是否成功提供新序号
          */
         private boolean offer(BufferCounter counter) {
             if (bufferCounter.overMaxValue()) {
@@ -196,7 +210,7 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
 
         public boolean isExpired() {
             // 未关闭线程，返回未过期
-            if (closedTime == 0) {
+            if (!isClosed()) {
                 return false;
             }
 
