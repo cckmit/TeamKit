@@ -16,7 +16,7 @@ public class CacheStepSequenceProviderTest {
     @Test
     public void provide() {
         CacheStepSequenceProvider p = provider(2, 100, 50);
-        InMemoryStepSequenceProvider sequenceProvider = (InMemoryStepSequenceProvider) p.getSequenceProvider();
+        InMemoryStepSequenceProvider sequenceProvider = (InMemoryStepSequenceProvider) p.getDelegateProvider();
 
         SequenceProvider.Context context = context();
 
