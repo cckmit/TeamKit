@@ -2,6 +2,11 @@ package org.team4u.id.domain.seq.value;
 
 import lombok.Data;
 
+/**
+ * 趋势增长序号提供者
+ *
+ * @author jay.wu
+ */
 public interface StepSequenceProvider extends SequenceProvider {
 
     Config config();

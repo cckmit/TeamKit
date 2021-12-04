@@ -12,11 +12,11 @@ import java.util.concurrent.atomic.AtomicLong;
 public class InMemoryStepSequenceProvider implements StepSequenceProvider {
 
     private final Config config;
-    private final LazyFunction<String, AtomicLong> lazyCounter;
+    private final LazyFunction<String, AtomicLong> lazyCounters;
 
     public InMemoryStepSequenceProvider(Config config) {
         this.config = config;
-        lazyCounter = LazyFunction.of(it -> new AtomicLong(config.getStart()));
+        lazyCounters = LazyFunction.of(it -> new AtomicLong(config.getStart()));
     }
 
     @Override
@@ -34,14 +34,15 @@ public class InMemoryStepSequenceProvider implements StepSequenceProvider {
         return counter.getAndAdd(config.getStep());
     }
 
+    @SuppressWarnings("SynchronizationOnLocalVariableOrMethodParameter")
     private boolean resetIfOverMaxValue(AtomicLong counter) {
         if (counter.get() <= config.getMaxValue()) {
             return false;
         }
 
-        synchronized (this) {
-            if (counter.get() > config().getMaxValue()) {
-                counter.set(config().getStart());
+        synchronized (counter) {
+            if (counter.get() > config.getMaxValue()) {
+                counter.set(config.getStart());
                 return true;
             }
         }
@@ -50,15 +51,15 @@ public class InMemoryStepSequenceProvider implements StepSequenceProvider {
     }
 
     private boolean canUpdateIfOverMaxValue(AtomicLong counter) {
-        if (counter.get() < config().getMaxValue()) {
+        if (counter.get() < config.getMaxValue()) {
             return true;
         }
 
-        return config().isRecycleAfterMaxValue();
+        return config.isRecycleAfterMaxValue();
     }
 
     private AtomicLong counterOf(Context context) {
-        return lazyCounter.apply(context.getGroupKey());
+        return lazyCounters.apply(context.getGroupKey());
     }
 
     public long currentSeq(Context context) {

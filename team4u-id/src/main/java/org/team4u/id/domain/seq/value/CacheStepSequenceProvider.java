@@ -38,7 +38,7 @@ public class CacheStepSequenceProvider implements SequenceProvider {
     /**
      * QueueSequenceProvider缓存池
      */
-    private final LazyFunction<Context, QueueSequenceProvider> lazyQueueCounters = LazyFunction.of(
+    private final LazyFunction<Context, QueueSequenceProvider> lazyCounters = LazyFunction.of(
             LazyFunction.Config.builder().keyFunc(it -> ((Context) it).id()).build(),
             QueueSequenceProvider::new
     );
@@ -61,7 +61,7 @@ public class CacheStepSequenceProvider implements SequenceProvider {
     public Number provide(Context context) {
         // 根据不同上下文，获取专属的QueueSequenceProvider
         // 同一个上下文只会创建一次
-        return lazyQueueCounters.apply(context).next();
+        return lazyCounters.apply(context).next();
     }
 
     /**
@@ -70,7 +70,7 @@ public class CacheStepSequenceProvider implements SequenceProvider {
      * @return 已清理数量
      */
     public int clearExpiredCache() {
-        return lazyQueueCounters.removeIf(it -> {
+        return lazyCounters.removeIf(it -> {
             // 已过期，返回需要清理的key
             if (it.isExpired()) {
                 return it.getContext();
