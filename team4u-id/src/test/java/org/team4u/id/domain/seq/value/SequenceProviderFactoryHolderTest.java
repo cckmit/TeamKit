@@ -26,7 +26,7 @@ public class SequenceProviderFactoryHolderTest {
 
     private Number next(String config) {
         SequenceConfig c = new SequenceConfig();
-        c.setSequenceConfigId("MEMORY");
+        c.setSequenceFactoryId("MS");
         c.setSequenceConfig(config);
         return holder.provide(new SequenceProvider.Context(c, "TEST", null));
     }

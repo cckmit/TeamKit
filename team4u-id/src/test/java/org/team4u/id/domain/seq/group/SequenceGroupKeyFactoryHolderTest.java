@@ -29,7 +29,7 @@ public class SequenceGroupKeyFactoryHolderTest {
 
     private String next(String config) {
         SequenceConfig c = new SequenceConfig();
-        c.setGroupKeyConfigId("DATE");
+        c.setGroupFactoryId("DATE");
         c.setGroupKeyConfig(config);
         return holder.provide(new SequenceGroupKeyProvider.Context(c, null));
     }

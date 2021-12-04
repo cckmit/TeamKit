@@ -1,5 +1,5 @@
 {
   "typeId": "TEST",
-  "groupKeyConfigId": "DATE",
-  "sequenceConfigId": "MS"
+  "groupKeyFactoryId": "DATE",
+  "sequenceFactoryId": "MS"
 }

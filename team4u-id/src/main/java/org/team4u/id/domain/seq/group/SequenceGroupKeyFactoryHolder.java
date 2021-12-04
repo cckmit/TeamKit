@@ -20,7 +20,7 @@ public class SequenceGroupKeyFactoryHolder extends PolicyRegistrar<String, Seque
      * @return 分组标识
      */
     public String provide(SequenceGroupKeyProvider.Context context) {
-        SequenceGroupKeyProvider.Factory<?> factory = policyOf(context.getSequenceConfig().getGroupKeyConfigId());
+        SequenceGroupKeyProvider.Factory<?> factory = policyOf(context.getSequenceConfig().getGroupFactoryId());
 
         if (factory == null) {
             return "";

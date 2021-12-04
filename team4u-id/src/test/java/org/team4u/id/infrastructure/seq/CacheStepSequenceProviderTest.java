@@ -56,7 +56,7 @@ public class CacheStepSequenceProviderTest {
     @Test
     public void maxValueWithRecycle() {
         CacheStepSequenceProvider p = provider(1, 2, 50);
-        p.config().setRecycleAfterMaxValue(true);
+        p.config().getDelegateConfig().setRecycleAfterMaxValue(true);
         SequenceProvider.Context context = context();
 
         Assert.assertEquals(1L, p.provide(context));
@@ -67,7 +67,7 @@ public class CacheStepSequenceProviderTest {
     @Test
     public void maxValueWithRecycle2() {
         CacheStepSequenceProvider p = provider(2, 3, 50);
-        p.config().setRecycleAfterMaxValue(true);
+        p.config().getDelegateConfig().setRecycleAfterMaxValue(true);
         SequenceProvider.Context context = context();
 
         Assert.assertEquals(1L, p.provide(context));
@@ -98,17 +98,17 @@ public class CacheStepSequenceProviderTest {
         CacheStepSequenceProvider p = (CacheStepSequenceProvider) new CacheStepSequenceProvider.Factory()
                 .create(FileUtil.readUtf8String("cache_step_config.json"));
 
-        Assert.assertEquals(2, p.config().getStep().intValue());
+        Assert.assertEquals(2, p.config().getDelegateConfig().getStep().intValue());
         Assert.assertEquals(1, p.provide(context()).intValue());
     }
 
     private CacheStepSequenceProvider provider(int step, int maxValue, int percent) {
         CacheStepSequenceProvider.CacheConfig config = new CacheStepSequenceProvider.CacheConfig();
-        config.setStep(step);
-        config.setMaxValue((long) maxValue);
+        config.getDelegateConfig().setStep(step);
+        config.getDelegateConfig().setMaxValue((long) maxValue);
         config.setMinAvailableSeqPercent(percent);
 
-        InMemoryStepSequenceProvider sequenceProvider = new InMemoryStepSequenceProvider(config);
+        InMemoryStepSequenceProvider sequenceProvider = new InMemoryStepSequenceProvider(config.getDelegateConfig());
         return new CacheStepSequenceProvider(config, sequenceProvider);
     }
 

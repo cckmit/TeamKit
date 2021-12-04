@@ -1,5 +1,6 @@
 {
-  "id": "TEST",
-  "step": 2,
-  "stepFactoryId": "MS"
+  "delegateConfigValue": {
+    "step": 2
+  },
+  "delegateId": "MS"
 }

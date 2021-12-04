@@ -1,8 +1,10 @@
 {
   "typeId": "TEST",
-  "sequenceConfigId": "CS",
+  "sequenceFactoryId": "CS",
   "sequenceConfig": {
-    "stepFactoryId": "MS",
-    "maxValue": 2
+    "delegateId": "MS",
+    "delegateConfigValue": {
+      "maxValue": 2
+    }
   }
 }

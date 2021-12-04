@@ -1,9 +1,7 @@
 package org.team4u.id.domain.seq.value;
 
-import cn.hutool.json.JSONUtil;
 import cn.hutool.log.Log;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.team4u.base.bean.provider.BeanProviders;
 import org.team4u.base.error.NestedException;
@@ -27,7 +25,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author jay.wu
  */
-public class CacheStepSequenceProvider implements StepSequenceProvider {
+public class CacheStepSequenceProvider implements SequenceProvider {
 
     private final Log log = Log.get();
 
@@ -82,7 +80,6 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
         });
     }
 
-    @Override
     public CacheConfig config() {
         return config;
     }
@@ -118,7 +115,7 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
          * <p>
          * 队列大小为代理序号提供者步长，即号段长度
          */
-        private final BlockingQueue<Number> cache = new LinkedBlockingQueue<>(config.getStep());
+        private final BlockingQueue<Number> cache = new LinkedBlockingQueue<>(config.getDelegateConfig().getStep());
 
         private QueueSequenceProvider(Context context) {
             this.context = context;
@@ -297,8 +294,8 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
             }
 
             this.maxSeqForBuffer = seq.longValue() + delegateProvider.config().getStep();
-            if (maxSeqForBuffer > config.getMaxValue()) {
-                maxSeqForBuffer = config.getMaxValue();
+            if (maxSeqForBuffer > config.getDelegateConfig().getMaxValue()) {
+                maxSeqForBuffer = config.getDelegateConfig().getMaxValue();
             }
         }
 
@@ -403,12 +400,14 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
             return new CacheStepSequenceProvider(config, delegateProvider(config));
         }
 
-        @SuppressWarnings("unchecked")
         private StepSequenceProvider delegateProvider(CacheConfig config) {
-            SequenceProvider.Factory<CacheConfig> factory = (SequenceProvider.Factory<CacheConfig>) holder()
-                    .availablePolicyOf(config.getStepFactoryId());
+            StepSequenceProvider delegateProvider = holder().create(
+                    config.getDelegateId(),
+                    config.getDelegateConfigValue()
+            );
 
-            return (StepSequenceProvider) factory.create(JSONUtil.toJsonStr(config));
+            config.setDelegateConfig(delegateProvider.config());
+            return delegateProvider;
         }
 
         private SequenceProviderFactoryHolder holder() {
@@ -416,9 +415,8 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
         }
     }
 
-    @EqualsAndHashCode(callSuper = true)
     @Data
-    public static class CacheConfig extends Config {
+    public static class CacheConfig {
         /**
          * 缓存步进
          */
@@ -430,11 +428,19 @@ public class CacheStepSequenceProvider implements StepSequenceProvider {
          */
         private int minAvailableSeqPercent = 60;
         /**
-         * 真正的步进序号工厂提供者标识
+         * 代理序号工厂提供者标识
          *
          * @see StepSequenceProvider.Factory
          */
-        private String stepFactoryId = "MBS";
+        private String delegateId = "MBS";
+        /**
+         * 代理序号工厂配置字符串
+         */
+        private String delegateConfigValue;
+        /**
+         * 代理序号配置对象
+         */
+        private StepSequenceProvider.Config delegateConfig = new StepSequenceProvider.Config();
         /**
          * 获取序号最大超时时间（毫秒）
          */

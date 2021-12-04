@@ -19,7 +19,7 @@ public class SequenceConfig extends IdentifiedConfig {
     /**
      * 分组配置标识
      */
-    private String groupKeyConfigId;
+    private String groupFactoryId;
     /**
      * 分组配置
      */
@@ -27,7 +27,7 @@ public class SequenceConfig extends IdentifiedConfig {
     /**
      * 序号配置标识
      */
-    private String sequenceConfigId;
+    private String sequenceFactoryId;
     /**
      * 序号配置
      */

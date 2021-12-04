@@ -20,8 +20,21 @@ public class SequenceProviderFactoryHolder extends PolicyRegistrar<String, Seque
      * @return 序号
      */
     public Number provide(SequenceProvider.Context context) {
-        return availablePolicyOf(context.getSequenceConfig().getSequenceConfigId())
-                .create(context.getSequenceConfig().getSequenceConfig())
-                .provide(context);
+        return create(
+                context.getSequenceConfig().getSequenceFactoryId(),
+                context.getSequenceConfig().getSequenceConfig()
+        ).provide(context);
+    }
+
+    /**
+     * 创建序号提供者
+     *
+     * @param factoryId 工厂标识
+     * @param config    工厂配置
+     * @return 提供者
+     */
+    @SuppressWarnings("unchecked")
+    public <T extends SequenceProvider> T create(String factoryId, String config) {
+        return (T) availablePolicyOf(factoryId).create(config);
     }
 }
