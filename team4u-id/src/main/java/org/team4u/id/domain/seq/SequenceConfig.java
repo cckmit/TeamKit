@@ -23,7 +23,7 @@ public class SequenceConfig extends IdentifiedConfig {
     /**
      * 分组配置
      */
-    private String groupKeyConfig;
+    private String groupConfig;
     /**
      * 序号配置标识
      */

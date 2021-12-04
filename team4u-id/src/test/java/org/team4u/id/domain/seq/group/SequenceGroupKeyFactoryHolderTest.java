@@ -29,8 +29,8 @@ public class SequenceGroupKeyFactoryHolderTest {
 
     private String next(String config) {
         SequenceConfig c = new SequenceConfig();
-        c.setGroupFactoryId("DATE");
-        c.setGroupKeyConfig(config);
+        c.setGroupFactoryId("DT");
+        c.setGroupConfig(config);
         return holder.provide(new SequenceGroupKeyProvider.Context(c, null));
     }
 }

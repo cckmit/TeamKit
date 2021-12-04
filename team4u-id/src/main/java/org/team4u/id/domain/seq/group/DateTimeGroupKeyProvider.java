@@ -7,16 +7,16 @@ import lombok.Getter;
 import java.util.Date;
 
 /**
- * 基于日期的分组提供者
+ * 基于日期时间的分组提供者
  *
  * @author jay.wu
  */
-public class DateGroupKeyProvider implements SequenceGroupKeyProvider {
+public class DateTimeGroupKeyProvider implements SequenceGroupKeyProvider {
 
     @Getter
     private final Config config;
 
-    public DateGroupKeyProvider(Config config) {
+    public DateTimeGroupKeyProvider(Config config) {
         this.config = config;
     }
 
@@ -41,12 +41,12 @@ public class DateGroupKeyProvider implements SequenceGroupKeyProvider {
 
         @Override
         public String id() {
-            return "DATE";
+            return "DT";
         }
 
         @Override
         protected SequenceGroupKeyProvider createWithConfig(Config config) {
-            return new DateGroupKeyProvider(config);
+            return new DateTimeGroupKeyProvider(config);
         }
     }
 }

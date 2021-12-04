@@ -29,7 +29,7 @@ public class CacheStepSequenceProvider implements SequenceProvider {
 
     private final Log log = Log.get();
 
-    private final CacheConfig config;
+    private final Config config;
     /**
      * 代理序号提供者，负责提供真正的序号
      */
@@ -47,7 +47,7 @@ public class CacheStepSequenceProvider implements SequenceProvider {
      * @param config           配置
      * @param delegateProvider 代理序号提供者，负责提供真正的序号
      */
-    public CacheStepSequenceProvider(CacheConfig config, StepSequenceProvider delegateProvider) {
+    public CacheStepSequenceProvider(Config config, StepSequenceProvider delegateProvider) {
         this.config = config;
         this.delegateProvider = delegateProvider;
 
@@ -80,7 +80,7 @@ public class CacheStepSequenceProvider implements SequenceProvider {
         });
     }
 
-    public CacheConfig config() {
+    public Config config() {
         return config;
     }
 
@@ -115,7 +115,7 @@ public class CacheStepSequenceProvider implements SequenceProvider {
          * <p>
          * 队列大小为代理序号提供者步长，即号段长度
          */
-        private final BlockingQueue<Number> cache = new LinkedBlockingQueue<>(config.getDelegateConfig().getStep());
+        private final BlockingQueue<Number> cache = new LinkedBlockingQueue<>(delegateProvider.config().getStep());
 
         private QueueSequenceProvider(Context context) {
             this.context = context;
@@ -141,7 +141,7 @@ public class CacheStepSequenceProvider implements SequenceProvider {
 
             try {
                 // 增加等待时间，避免消费速度过快，生产不足的情况
-                Number result = cache.poll(config.getMaxNextTimeoutMillis(), TimeUnit.MILLISECONDS);
+                Number result = cache.poll(config.getNextTimeoutMillis(), TimeUnit.MILLISECONDS);
 
                 // 无序号可用，直接返回null
                 if (Objects.equals(result, EMPTY_NUMBER)) {
@@ -275,7 +275,7 @@ public class CacheStepSequenceProvider implements SequenceProvider {
          */
         private Long maxSeqForBuffer;
 
-        private BufferCounter(Number seq) {
+        public BufferCounter(Number seq) {
             if (seq == null) {
                 return;
             }
@@ -294,8 +294,8 @@ public class CacheStepSequenceProvider implements SequenceProvider {
             }
 
             this.maxSeqForBuffer = seq.longValue() + delegateProvider.config().getStep();
-            if (maxSeqForBuffer > config.getDelegateConfig().getMaxValue()) {
-                maxSeqForBuffer = config.getDelegateConfig().getMaxValue();
+            if (maxSeqForBuffer > delegateProvider.config().getMaxValue()) {
+                maxSeqForBuffer = delegateProvider.config().getMaxValue();
             }
         }
 
@@ -388,7 +388,7 @@ public class CacheStepSequenceProvider implements SequenceProvider {
         }
     }
 
-    public static class Factory extends AbstractSequenceProviderFactory<CacheConfig> {
+    public static class Factory extends AbstractSequenceProviderFactory<Config> {
 
         @Override
         public String id() {
@@ -396,18 +396,16 @@ public class CacheStepSequenceProvider implements SequenceProvider {
         }
 
         @Override
-        protected SequenceProvider createWithConfig(CacheConfig config) {
-            return new CacheStepSequenceProvider(config, delegateProvider(config));
+        protected SequenceProvider createWithConfig(Config config) {
+            StepSequenceProvider delegateProvider = delegateProvider(config);
+            return new CacheStepSequenceProvider(config, delegateProvider);
         }
 
-        private StepSequenceProvider delegateProvider(CacheConfig config) {
-            StepSequenceProvider delegateProvider = holder().create(
+        private StepSequenceProvider delegateProvider(Config config) {
+            return holder().create(
                     config.getDelegateId(),
-                    config.getDelegateConfigValue()
+                    config.getDelegateConfig()
             );
-
-            config.setDelegateConfig(delegateProvider.config());
-            return delegateProvider;
         }
 
         private SequenceProviderFactoryHolder holder() {
@@ -416,7 +414,7 @@ public class CacheStepSequenceProvider implements SequenceProvider {
     }
 
     @Data
-    public static class CacheConfig {
+    public static class Config {
         /**
          * 缓存步进
          */
@@ -428,23 +426,19 @@ public class CacheStepSequenceProvider implements SequenceProvider {
          */
         private int minAvailableSeqPercent = 60;
         /**
-         * 代理序号工厂提供者标识
+         * 代理序号提供者工厂标识
          *
          * @see StepSequenceProvider.Factory
          */
         private String delegateId = "MBS";
         /**
-         * 代理序号工厂配置字符串
+         * 代理序号提供者配置
          */
-        private String delegateConfigValue;
+        private String delegateConfig;
         /**
-         * 代理序号配置对象
+         * 获取序号超时时间（毫秒）
          */
-        private StepSequenceProvider.Config delegateConfig = new StepSequenceProvider.Config();
-        /**
-         * 获取序号最大超时时间（毫秒）
-         */
-        private int maxNextTimeoutMillis = 20;
+        private int nextTimeoutMillis = 20;
         /**
          * 计数器关闭后多长时间失效（毫秒）,0则表示永不失效
          */

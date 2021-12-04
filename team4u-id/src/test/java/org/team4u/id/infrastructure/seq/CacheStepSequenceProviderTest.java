@@ -6,10 +6,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.team4u.base.bean.provider.BeanProviders;
 import org.team4u.id.domain.seq.SequenceConfig;
-import org.team4u.id.domain.seq.value.CacheStepSequenceProvider;
-import org.team4u.id.domain.seq.value.InMemoryStepSequenceProvider;
-import org.team4u.id.domain.seq.value.SequenceProvider;
-import org.team4u.id.domain.seq.value.SequenceProviderFactoryHolder;
+import org.team4u.id.domain.seq.value.*;
 
 public class CacheStepSequenceProviderTest {
 
@@ -56,7 +53,7 @@ public class CacheStepSequenceProviderTest {
     @Test
     public void maxValueWithRecycle() {
         CacheStepSequenceProvider p = provider(1, 2, 50);
-        p.config().getDelegateConfig().setRecycleAfterMaxValue(true);
+        p.getDelegateProvider().config().setRecycleAfterMaxValue(true);
         SequenceProvider.Context context = context();
 
         Assert.assertEquals(1L, p.provide(context));
@@ -67,7 +64,7 @@ public class CacheStepSequenceProviderTest {
     @Test
     public void maxValueWithRecycle2() {
         CacheStepSequenceProvider p = provider(2, 3, 50);
-        p.config().getDelegateConfig().setRecycleAfterMaxValue(true);
+        p.getDelegateProvider().config().setRecycleAfterMaxValue(true);
         SequenceProvider.Context context = context();
 
         Assert.assertEquals(1L, p.provide(context));
@@ -98,17 +95,19 @@ public class CacheStepSequenceProviderTest {
         CacheStepSequenceProvider p = (CacheStepSequenceProvider) new CacheStepSequenceProvider.Factory()
                 .create(FileUtil.readUtf8String("cache_step_config.json"));
 
-        Assert.assertEquals(2, p.config().getDelegateConfig().getStep().intValue());
+        Assert.assertEquals(2, p.getDelegateProvider().config().getStep().intValue());
         Assert.assertEquals(1, p.provide(context()).intValue());
     }
 
     private CacheStepSequenceProvider provider(int step, int maxValue, int percent) {
-        CacheStepSequenceProvider.CacheConfig config = new CacheStepSequenceProvider.CacheConfig();
-        config.getDelegateConfig().setStep(step);
-        config.getDelegateConfig().setMaxValue((long) maxValue);
+        CacheStepSequenceProvider.Config config = new CacheStepSequenceProvider.Config();
         config.setMinAvailableSeqPercent(percent);
 
-        InMemoryStepSequenceProvider sequenceProvider = new InMemoryStepSequenceProvider(config.getDelegateConfig());
+        StepSequenceProvider.Config delegateConfig = new StepSequenceProvider.Config();
+        delegateConfig.setStep(step);
+        delegateConfig.setMaxValue((long) maxValue);
+        InMemoryStepSequenceProvider sequenceProvider = new InMemoryStepSequenceProvider(delegateConfig);
+
         return new CacheStepSequenceProvider(config, sequenceProvider);
     }
 

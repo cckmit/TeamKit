@@ -17,16 +17,35 @@ public class SequenceGroupKeyFactoryHolder extends PolicyRegistrar<String, Seque
      * 生成分组标识
      *
      * @param context 上下文
-     * @return 分组标识
+     * @return 分组标识，当无法找到工厂时，将返回空字符串
      */
     public String provide(SequenceGroupKeyProvider.Context context) {
-        SequenceGroupKeyProvider.Factory<?> factory = policyOf(context.getSequenceConfig().getGroupFactoryId());
+        SequenceGroupKeyProvider provider = crete(
+                context.getSequenceConfig().getGroupFactoryId(),
+                context.getSequenceConfig().getGroupConfig()
+        );
 
-        if (factory == null) {
+        if (provider == null) {
             return "";
         }
 
-        return factory.create(context.getSequenceConfig().getGroupKeyConfig())
-                .provide(context);
+        return provider.provide(context);
+    }
+
+    /**
+     * 创建分组提供者
+     *
+     * @param factoryId 工厂标识
+     * @param config    工厂配置
+     * @return 分组提供者
+     */
+    public SequenceGroupKeyProvider crete(String factoryId, String config) {
+        SequenceGroupKeyProvider.Factory<?> factory = policyOf(factoryId);
+
+        if (factory == null) {
+            return null;
+        }
+
+        return factory.create(config);
     }
 }

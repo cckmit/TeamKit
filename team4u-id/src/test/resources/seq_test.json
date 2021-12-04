@@ -3,7 +3,7 @@
   "sequenceFactoryId": "CS",
   "sequenceConfig": {
     "delegateId": "MS",
-    "delegateConfigValue": {
+    "delegateConfig": {
       "maxValue": 2
     }
   }

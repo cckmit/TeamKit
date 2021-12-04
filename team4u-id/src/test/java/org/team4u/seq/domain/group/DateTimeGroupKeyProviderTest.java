@@ -4,15 +4,15 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import org.junit.Assert;
 import org.junit.Test;
-import org.team4u.id.domain.seq.group.DateGroupKeyProvider;
+import org.team4u.id.domain.seq.group.DateTimeGroupKeyProvider;
 
 import java.util.Date;
 
-public class DateGroupKeyProviderTest {
+public class DateTimeGroupKeyProviderTest {
 
     @Test
     public void provide() {
-        DateGroupKeyProvider provider = new DateGroupKeyProvider(new DateGroupKeyProvider.Config()) {
+        DateTimeGroupKeyProvider provider = new DateTimeGroupKeyProvider(new DateTimeGroupKeyProvider.Config()) {
             @Override
             protected Date now() {
                 return DateUtil.parseDate("2021-12-01");
@@ -24,8 +24,8 @@ public class DateGroupKeyProviderTest {
 
     @Test
     public void create() {
-        DateGroupKeyProvider.Factory factory = new DateGroupKeyProvider.Factory();
-        DateGroupKeyProvider p = (DateGroupKeyProvider) factory.create(
+        DateTimeGroupKeyProvider.Factory factory = new DateTimeGroupKeyProvider.Factory();
+        DateTimeGroupKeyProvider p = (DateTimeGroupKeyProvider) factory.create(
                 FileUtil.readUtf8String("date_group_key_config.json")
         );
 
