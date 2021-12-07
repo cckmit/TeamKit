@@ -20,7 +20,9 @@ import java.util.Map;
  * @author jay.wu
  */
 public class SequenceGenerator implements Generator<Number> {
-
+    /**
+     * 全局序号配置标识
+     */
     public static final String GLOBAL_CONFIG_ID = "seq.global";
 
     @Getter
@@ -68,7 +70,7 @@ public class SequenceGenerator implements Generator<Number> {
      * 生成下一个标识
      *
      * @param configId             配置标识
-     * @param nullIfConfigNotExist 当配置不存在时是否返回null，true返回null，false则抛出SequenceConfigLoadException
+     * @param nullIfConfigNotExist 当配置不存在时序号值是否返回null，true返回null，false则抛出SequenceConfigLoadException
      * @return 序号值，若无可用序号时返回null
      * @throws SequenceConfigLoadException 当配置加载出错时抛出此异常
      */
@@ -81,7 +83,7 @@ public class SequenceGenerator implements Generator<Number> {
      *
      * @param configId             配置标识
      * @param context              上下文
-     * @param nullIfConfigNotExist 当配置不存在时是否返回null，true返回null，false则抛出SequenceConfigLoadException
+     * @param nullIfConfigNotExist 当配置不存在时序号值是否返回null，true返回null，false则抛出SequenceConfigLoadException
      * @return 序号值，若无可用序号时返回null
      * @throws SequenceConfigLoadException 当配置加载出错时抛出此异常
      */
