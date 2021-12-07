@@ -1,10 +1,9 @@
-package org.team4u.seq.domain.group;
+package org.team4u.id.domain.seq.group;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import org.junit.Assert;
 import org.junit.Test;
-import org.team4u.id.domain.seq.group.DateTimeGroupKeyProvider;
 
 import java.util.Date;
 

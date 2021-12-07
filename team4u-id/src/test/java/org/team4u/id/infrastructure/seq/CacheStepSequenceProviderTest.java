@@ -17,14 +17,14 @@ public class CacheStepSequenceProviderTest {
 
         SequenceProvider.Context context = context();
 
-        Assert.assertEquals(1L, sequenceProvider.currentSeq(context));
+        Assert.assertEquals(1L, sequenceProvider.currentSequence(context));
 
         Assert.assertEquals(1, p.provide(context).intValue());
         Assert.assertEquals(2, p.provide(context).intValue());
         Assert.assertEquals(3, p.provide(context).intValue());
         Assert.assertEquals(4, p.provide(context).intValue());
         Assert.assertEquals(5, p.provide(context).intValue());
-        Assert.assertTrue(sequenceProvider.currentSeq(context) >= 7);
+        Assert.assertTrue(sequenceProvider.currentSequence(context).intValue() >= 7);
     }
 
     @Test

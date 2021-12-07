@@ -48,11 +48,26 @@ public class MybatisStepSequenceProvider implements StepSequenceProvider {
         return sequenceValueByUpdate(sequence, context);
     }
 
+    /**
+     * 当前序号值
+     *
+     * @param context 上下文
+     */
+    public Number currentSequence(Context context) {
+        Sequence sequence = sequenceOf(context.getSequenceConfig().getTypeId(), context.getGroupKey());
+
+        if (sequence == null) {
+            return null;
+        }
+
+        return sequence.getCurrentValue();
+    }
+
     private Number sequenceValueByUpdate(Sequence sequence, Context context) {
         LogMessage lm = LogMessage.create(this.getClass().getSimpleName(), "sequenceValueByUpdate")
                 .append("context", context);
 
-        // 超过最大值，且不循环使用，直接返回
+        // 若当前值超过最大值，且不循环使用，直接返回
         if (!canUpdateIfOverMaxValue(sequence)) {
             log.info(lm.fail().append("canUpdateIfOverMaxValue", false).toString());
             return null;
