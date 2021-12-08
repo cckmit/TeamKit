@@ -36,9 +36,9 @@ public class ByteBuddyLogAop implements LogAop {
         return ID;
     }
 
-    private static class ValueMethodInterceptor extends AbstractLogMethodInterceptor implements MethodInterceptor {
+    public static class ValueMethodInterceptor extends AbstractLogMethodInterceptor implements MethodInterceptor {
 
-        private ValueMethodInterceptor(Config config, Object target) {
+        public ValueMethodInterceptor(Config config, Object target) {
             super(config, target);
         }
 
