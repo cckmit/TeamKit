@@ -32,6 +32,8 @@ public interface StepSequenceProvider extends SequenceProvider {
 
         /**
          * 计算循环后正确的序号值
+         * <p>
+         * 当当前值＞最大值后，使用计算方式实现重置初始值的效果，以避免并发竞争，提高性能
          *
          * @param value 当前值，可能超出最大值
          * @return 正确的序号值
