@@ -1,12 +1,39 @@
 package org.team4u.id.domain.seq.value;
 
+import cn.hutool.core.thread.ThreadUtil;
 import org.junit.Assert;
 import org.junit.Test;
 import org.team4u.id.domain.seq.SequenceConfig;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Future;
+
 public abstract class AbstractStepSequenceProviderTest {
 
     protected abstract StepSequenceProvider provider(StepSequenceProvider.Config config);
+
+    @Test
+    public void concurrent() {
+        StepSequenceProvider.Config config = new StepSequenceProvider.Config();
+        StepSequenceProvider provider = provider(config);
+
+        List<Future<?>> result = new ArrayList<>();
+
+        for (int i = 0; i < 100; i++) {
+            result.add(ThreadUtil.execAsync(() ->  provider.provide(context())));
+        }
+
+        result.forEach(it -> {
+            try {
+                it.get();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+        Assert.assertEquals(101, provider.provide(context()).intValue());
+    }
 
     @Test
     public void notRecycle() {

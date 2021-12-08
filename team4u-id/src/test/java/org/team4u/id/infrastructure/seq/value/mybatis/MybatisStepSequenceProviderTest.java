@@ -26,6 +26,11 @@ public class MybatisStepSequenceProviderTest extends SpringDbTest {
     }
 
     @Test
+    public void concurrent() {
+        x.concurrent();
+    }
+
+    @Test
     public void notRecycle() {
         x.notRecycle();
     }

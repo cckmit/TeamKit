@@ -112,8 +112,14 @@ public class MybatisStepSequenceProvider implements StepSequenceProvider {
 
         // 若更新失败，重新尝试
         if (result == 0) {
+            long sleepMills = RandomUtil.randomLong(1, 100);
+            log.info(LogMessage.create(this.getClass().getSimpleName(), "updateWithRetry")
+                    .append("context", context)
+                    .append("sleepMills", sleepMills)
+                    .fail("Retrying")
+                    .toString());
             // 防止同时请求，增加随即延时
-            ThreadUtil.sleep(RandomUtil.randomLong(1, 100));
+            ThreadUtil.sleep(sleepMills);
             return provide(context);
         }
 
