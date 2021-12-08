@@ -1,2 +1,2 @@
-org.team4u.base.log.aop.ByteBuddyLogAop
 org.team4u.base.log.aop.SpringCglibLogAop
+org.team4u.base.log.aop.ByteBuddyLogAop
