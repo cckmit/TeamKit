@@ -1,8 +1,6 @@
 package org.team4u.id.domain.seq.value;
 
-import cn.hutool.log.Log;
 import org.team4u.base.lang.lazy.LazyFunction;
-import org.team4u.base.log.LogMessage;
 
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -11,67 +9,28 @@ import java.util.concurrent.atomic.AtomicLong;
  *
  * @author jay.wu
  */
-public class InMemoryStepSequenceProvider implements StepSequenceProvider {
-
-    private final Log log = Log.get();
+public class InMemoryStepSequenceProvider extends AutoIncrementStepSequenceProvider {
 
     private final Config config;
     private final LazyFunction<String, AtomicLong> lazyCounters;
 
     public InMemoryStepSequenceProvider(Config config) {
         this.config = config;
-        lazyCounters = LazyFunction.of(it -> new AtomicLong(config.getStart()));
-    }
-
-    @Override
-    public Number provide(Context context) {
-        LogMessage lm = LogMessage.create(this.getClass().getSimpleName(), "provide")
-                .append("context", context);
-
-        AtomicLong counter = counterOf(context);
-
-        if (!canUpdateIfOverMaxValue(counter)) {
-            log.info(lm.fail().append("canUpdateIfOverMaxValue", false).toString());
-            return null;
-        }
-
-        Long newValue = resetIfOverMaxValue(counter.getAndAdd(config.getStep()));
-        log.info(lm.append("currentValue", newValue).success().toString());
-        return newValue;
-    }
-
-    private boolean canUpdateIfOverMaxValue(AtomicLong counter) {
-        if (counter.get() <= config.getMaxValue()) {
-            return true;
-        }
-
-        return config.isRecycleAfterMaxValue();
-    }
-
-    private Long resetIfOverMaxValue(Long value) {
-        if (value <= config.getMaxValue()) {
-            return value;
-        }
-
-        // 循环使用
-        if (config.isRecycleAfterMaxValue()) {
-            return config.valueWithRecycle(value).longValue();
-        }
-
-        return config.getMaxValue();
+        lazyCounters = LazyFunction.of(it -> new AtomicLong(0));
     }
 
     private AtomicLong counterOf(Context context) {
         return lazyCounters.apply(context.getGroupKey());
     }
 
-    /**
-     * 当前序号值
-     *
-     * @param context 上下文
-     */
+    @Override
     public Number currentSequence(Context context) {
         return counterOf(context).get();
+    }
+
+    @Override
+    protected Number addAndGet(Context context) {
+        return counterOf(context).addAndGet(config.getStep());
     }
 
     @Override
