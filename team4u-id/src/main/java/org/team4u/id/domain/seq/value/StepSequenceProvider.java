@@ -1,7 +1,6 @@
 package org.team4u.id.domain.seq.value;
 
 import lombok.Data;
-import org.team4u.base.lang.lazy.LazySupplier;
 
 /**
  * 趋势增长序号提供者
@@ -30,12 +29,6 @@ public interface StepSequenceProvider extends SequenceProvider {
          * 达到最大值后，是否从初始值重新循环
          */
         private boolean isRecycleAfterMaxValue;
-        /**
-         * 循环因子
-         */
-        private final transient LazySupplier<Integer> recycleFactor = LazySupplier.of(
-                () -> getMaxValue() % getStep() > 0 ? 1 : 0
-        );
 
         /**
          * 计算循环后正确的序号值
@@ -44,14 +37,26 @@ public interface StepSequenceProvider extends SequenceProvider {
          * @return 正确的序号值
          */
         public Number valueWithRecycle(Number value) {
-            return getStart() + (value.longValue() % maxSizeOfSequence()) * getStep() - 1;
+            // 获取当前值在等差数量中的正确位置
+            long position = positionOfValue(value.longValue()) % sizeOfValues();
+            // 根据位置计算正确的序号值
+            return getStart() + position * getStep();
         }
 
         /**
-         * 最大可用序号数量
+         * 值在等差数列中的位置
+         *
+         * @return value 等差数列中的位置，从0开始
          */
-        public long maxSizeOfSequence() {
-            return getMaxValue() / getStep() + getRecycleFactor().get();
+        private long positionOfValue(long value) {
+            return (value - getStart()) / getStep();
+        }
+
+        /**
+         * 获取可用序号数量
+         */
+        private long sizeOfValues() {
+            return positionOfValue(getMaxValue()) + 1;
         }
     }
 }

@@ -61,6 +61,21 @@ public abstract class AbstractStepSequenceProviderTest {
         Assert.assertEquals(4L, provider.provide(context()));
     }
 
+    @Test
+    public void recycle4() {
+        StepSequenceProvider.Config config = new StepSequenceProvider.Config();
+        config.setStart(2L);
+        config.setStep(2);
+        config.setMaxValue(4L);
+        config.setRecycleAfterMaxValue(true);
+        StepSequenceProvider provider = provider(config);
+
+        Assert.assertEquals(2L, provider.provide(context()));
+        Assert.assertEquals(4L, provider.provide(context()));
+        Assert.assertEquals(2L, provider.provide(context()));
+        Assert.assertEquals(4L, provider.provide(context()));
+    }
+
     protected SequenceProvider.Context context() {
         SequenceConfig sequenceConfig = new SequenceConfig();
         sequenceConfig.setTypeId("TEST");

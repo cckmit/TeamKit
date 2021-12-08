@@ -74,6 +74,20 @@ public class CacheStepSequenceProviderTest {
     }
 
     @Test
+    public void maxValueWithRecycle3() {
+        CacheStepSequenceProvider p = provider(2, 3, 50);
+        p.getDelegateProvider().config().setStart(2L);
+        p.getDelegateProvider().config().setRecycleAfterMaxValue(true);
+        SequenceProvider.Context context = context();
+
+        Assert.assertEquals(2L, p.provide(context));
+        Assert.assertEquals(3L, p.provide(context));
+        Assert.assertEquals(2L, p.provide(context));
+        Assert.assertEquals(3L, p.provide(context));
+    }
+
+
+    @Test
     public void clearExpiredCache() {
         CacheStepSequenceProvider p = provider(1, 2, 50);
         p.config().setExpiredWhenCloseMillis(1);
