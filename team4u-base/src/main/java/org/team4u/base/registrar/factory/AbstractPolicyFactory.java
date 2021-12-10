@@ -1,7 +1,6 @@
 package org.team4u.base.registrar.factory;
 
 import cn.hutool.core.util.ClassUtil;
-import org.team4u.base.lang.lazy.LazyFunction;
 
 /**
  * 抽象策略工厂
@@ -16,15 +15,9 @@ import org.team4u.base.lang.lazy.LazyFunction;
  */
 public abstract class AbstractPolicyFactory<CO, CI, P> implements PolicyFactory<CI, P> {
 
-    private final LazyFunction<CI, P> lazyFactory = createLazyFactory();
-
     @Override
     public P create(CI config) {
-        if (withCache()) {
-            return lazyFactory.apply(config);
-        }
-
-        return convertAndCreate(config);
+        return createWithConfig(toConfig(config));
     }
 
     /**
@@ -50,24 +43,4 @@ public abstract class AbstractPolicyFactory<CO, CI, P> implements PolicyFactory<
      * @return 策略
      */
     protected abstract P createWithConfig(CO config);
-
-    /**
-     * 是否启用缓存
-     *
-     * @return 默认启用缓存
-     */
-    protected boolean withCache() {
-        return true;
-    }
-
-    /**
-     * 创建懒加载的工厂
-     */
-    protected LazyFunction<CI, P> createLazyFactory() {
-        return LazyFunction.of(this::convertAndCreate);
-    }
-
-    private P convertAndCreate(CI value) {
-        return createWithConfig(toConfig(value));
-    }
 }

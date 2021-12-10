@@ -1,6 +1,6 @@
 package org.team4u.id.domain.seq.value;
 
-import org.team4u.base.registrar.factory.AbstractJsonPolicyFactory;
+import org.team4u.base.registrar.factory.AbstractCacheJsonPolicyFactory;
 
 /**
  * 抽象序号提供者工厂
@@ -8,6 +8,6 @@ import org.team4u.base.registrar.factory.AbstractJsonPolicyFactory;
  * @author jay.wu
  */
 public abstract class AbstractSequenceProviderFactory<C>
-        extends AbstractJsonPolicyFactory<C, SequenceProvider>
+        extends AbstractCacheJsonPolicyFactory<C, SequenceProvider>
         implements SequenceProvider.Factory<C> {
 }
