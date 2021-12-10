@@ -28,6 +28,6 @@ public class DateTimeGroupKeyProviderTest {
                 FileUtil.readUtf8String("date_group_key_config.json")
         );
 
-        Assert.assertEquals("YYYY", p.getConfig().getFormat());
+        Assert.assertEquals("yyyy", p.getConfig().getFormat());
     }
 }

@@ -17,8 +17,6 @@ public class CacheStepSequenceProviderTest {
 
         SequenceProvider.Context context = context();
 
-        Assert.assertEquals(1L, sequenceProvider.currentSequence(context));
-
         Assert.assertEquals(1, p.provide(context).intValue());
         Assert.assertEquals(2, p.provide(context).intValue());
         Assert.assertEquals(3, p.provide(context).intValue());

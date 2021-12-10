@@ -2,6 +2,7 @@ package org.team4u.id.domain.seq.group;
 
 import lombok.Data;
 import org.team4u.base.registrar.StringIdPolicy;
+import org.team4u.base.registrar.factory.StringConfigPolicyFactory;
 import org.team4u.id.domain.seq.SequenceConfig;
 
 import java.util.Map;
@@ -37,18 +38,6 @@ public interface SequenceGroupKeyProvider {
      *
      * @param <C> 配置类型
      */
-    interface Factory<C> extends StringIdPolicy {
-        /**
-         * 根据配置创建提供者
-         *
-         * @param config 配置对象
-         * @return 序号提供者
-         */
-        SequenceGroupKeyProvider create(String config);
-
-        /**
-         * 获取配置类型
-         */
-        Class<C> configType();
+    interface Factory<C> extends StringConfigPolicyFactory<SequenceGroupKeyProvider>, StringIdPolicy {
     }
 }
