@@ -35,9 +35,7 @@ public interface SequenceGroupKeyProvider {
 
     /**
      * 序号分组key提供者工厂
-     *
-     * @param <C> 配置类型
      */
-    interface Factory<C> extends StringConfigPolicyFactory<SequenceGroupKeyProvider>, StringIdPolicy {
+    interface Factory extends StringConfigPolicyFactory<SequenceGroupKeyProvider>, StringIdPolicy {
     }
 }

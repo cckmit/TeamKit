@@ -9,5 +9,5 @@ import org.team4u.base.registrar.factory.AbstractCacheJsonPolicyFactory;
  */
 public abstract class AbstractGroupKeyProviderFactory<C>
         extends AbstractCacheJsonPolicyFactory<C, SequenceGroupKeyProvider>
-        implements SequenceGroupKeyProvider.Factory<C> {
+        implements SequenceGroupKeyProvider.Factory {
 }

@@ -7,7 +7,7 @@ import org.team4u.base.registrar.PolicyRegistrar;
  *
  * @author jay.wu
  */
-public class SequenceGroupKeyFactoryHolder extends PolicyRegistrar<String, SequenceGroupKeyProvider.Factory<?>> {
+public class SequenceGroupKeyFactoryHolder extends PolicyRegistrar<String, SequenceGroupKeyProvider.Factory> {
 
     public SequenceGroupKeyFactoryHolder() {
         registerPoliciesByBeanProvidersAndEvent();
@@ -40,7 +40,7 @@ public class SequenceGroupKeyFactoryHolder extends PolicyRegistrar<String, Seque
      * @return 分组提供者
      */
     public SequenceGroupKeyProvider crete(String factoryId, String config) {
-        SequenceGroupKeyProvider.Factory<?> factory = policyOf(factoryId);
+        SequenceGroupKeyProvider.Factory factory = policyOf(factoryId);
 
         if (factory == null) {
             return null;

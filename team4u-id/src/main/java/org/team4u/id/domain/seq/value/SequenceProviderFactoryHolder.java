@@ -7,7 +7,7 @@ import org.team4u.base.registrar.PolicyRegistrar;
  *
  * @author jay.wu
  */
-public class SequenceProviderFactoryHolder extends PolicyRegistrar<String, SequenceProvider.Factory<?>> {
+public class SequenceProviderFactoryHolder extends PolicyRegistrar<String, SequenceProvider.Factory> {
 
     public SequenceProviderFactoryHolder() {
         registerPoliciesByBeanProvidersAndEvent();

@@ -48,9 +48,7 @@ public interface SequenceProvider {
 
     /**
      * 序号值提供者工厂
-     *
-     * @param <C> 配置类型
      */
-    interface Factory<C> extends StringConfigPolicyFactory<SequenceProvider>, StringIdPolicy {
+    interface Factory extends StringConfigPolicyFactory<SequenceProvider>, StringIdPolicy {
     }
 }
