@@ -1,10 +1,9 @@
 package org.team4u.selector.domain.selector.expression;
 
-import cn.hutool.cache.Cache;
-import cn.hutool.cache.CacheUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import org.team4u.base.bean.provider.BeanProviders;
 import org.team4u.selector.domain.selector.AbstractSelectorFactoryFactory;
 import org.team4u.selector.domain.selector.Selector;
 import org.team4u.template.TemplateEngine;
@@ -17,20 +16,10 @@ import java.util.stream.Collectors;
  *
  * @author jay.wu
  */
-public class ExpressionSelectorFactory extends AbstractSelectorFactoryFactory {
+public class ExpressionSelectorFactory extends AbstractSelectorFactoryFactory<Map<String, String>> {
 
-    private final TemplateEngine templateEngine;
-
-    public ExpressionSelectorFactory(TemplateEngine templateEngine) {
-        this(CacheUtil.newLRUCache(1000), templateEngine);
-    }
-
-    public ExpressionSelectorFactory(Cache<String, Selector> cache, TemplateEngine templateEngine) {
-        super(cache);
-        this.templateEngine = templateEngine;
-    }
-
-    public static Map<String, String> toConfig(String jsonConfig) {
+    @Override
+    public Map<String, String> toConfig(String jsonConfig) {
         return JSONUtil.parseArray(jsonConfig)
                 .stream()
                 .flatMap(it -> ((JSONObject) it).entrySet().stream())
@@ -38,12 +27,13 @@ public class ExpressionSelectorFactory extends AbstractSelectorFactoryFactory {
     }
 
     @Override
-    public Selector call(String jsonConfig) {
-        return new ExpressionSelector(templateEngine, toConfig(jsonConfig));
+    public String id() {
+        return "expression";
     }
 
     @Override
-    public String id() {
-        return "expression";
+    protected Selector createWithConfig(Map<String, String> config) {
+        TemplateEngine templateEngine = BeanProviders.getInstance().getBean(TemplateEngine.class);
+        return new ExpressionSelector(templateEngine, config);
     }
 }

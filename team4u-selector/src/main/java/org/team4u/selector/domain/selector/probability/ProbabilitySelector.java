@@ -19,15 +19,15 @@ import java.util.Map;
  */
 public class ProbabilitySelector implements Selector {
 
-    private final Map<String, Double> valueProbabilities;
+    private final Map<String, Double> config;
 
     /**
-     * @param valueProbabilities 值/百分比概率映射集合
+     * @param config 值/百分比概率映射集合
      *                           1001 -> 90，表示90%的概率命中1001
      *                           * -> 10，表示默认命中概率为10%
      */
-    public ProbabilitySelector(Map<String, Double> valueProbabilities) {
-        this.valueProbabilities = valueProbabilities;
+    public ProbabilitySelector(Map<String, Double> config) {
+        this.config = config;
     }
 
     /**
@@ -50,7 +50,7 @@ public class ProbabilitySelector implements Selector {
     }
 
     private Double probabilityOfValue(Object value) {
-        Double defaultProbability = ObjectUtil.defaultIfNull(valueProbabilities.get(ANY), 0.0);
+        Double defaultProbability = ObjectUtil.defaultIfNull(config.get(ANY), 0.0);
 
         if (value == null) {
             return defaultProbability;
@@ -58,7 +58,7 @@ public class ProbabilitySelector implements Selector {
 
         String stringValue = Convert.toStr(value);
 
-        Double probability = valueProbabilities.get(stringValue);
+        Double probability = config.get(stringValue);
         return ObjectUtil.defaultIfNull(probability, defaultProbability);
     }
 

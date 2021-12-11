@@ -13,15 +13,15 @@ import java.util.Map;
  */
 public class MapSelector implements Selector {
 
-    private final Map<String, String> rules;
+    private final Map<String, String> config;
 
-    public MapSelector(Map<String, String> rules) {
-        this.rules = rules;
+    public MapSelector(Map<String, String> config) {
+        this.config = config;
     }
 
     @Override
     public String select(SelectorBinding binding) {
         String key = ((SingleValueBinding) binding).value();
-        return rules.getOrDefault(key, NONE);
+        return config.getOrDefault(key, NONE);
     }
 }

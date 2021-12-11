@@ -1,18 +1,8 @@
 package org.team4u.selector.domain.selector;
 
-import cn.hutool.cache.Cache;
-import org.team4u.base.lang.CacheableFunc1;
+import org.team4u.base.registrar.factory.AbstractCacheJsonPolicyFactory;
 
-public abstract class AbstractSelectorFactoryFactory
-        extends CacheableFunc1<String, Selector>
+public abstract class AbstractSelectorFactoryFactory<C>
+        extends AbstractCacheJsonPolicyFactory<C, Selector>
         implements SelectorFactory {
-
-    public AbstractSelectorFactoryFactory(Cache<String, Selector> cache) {
-        super(cache);
-    }
-
-    @Override
-    public Selector create(String jsonConfig) {
-        return callWithCache(jsonConfig);
-    }
 }

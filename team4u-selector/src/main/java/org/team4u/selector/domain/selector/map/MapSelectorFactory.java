@@ -1,7 +1,5 @@
 package org.team4u.selector.domain.selector.map;
 
-import cn.hutool.cache.Cache;
-import cn.hutool.cache.CacheUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
@@ -16,22 +14,10 @@ import java.util.Map;
  *
  * @author jay.wu
  */
-public class MapSelectorFactory extends AbstractSelectorFactoryFactory {
-
-    public MapSelectorFactory() {
-        this(CacheUtil.newLRUCache(1000));
-    }
-
-    public MapSelectorFactory(Cache<String, Selector> cache) {
-        super(cache);
-    }
+public class MapSelectorFactory extends AbstractSelectorFactoryFactory<Map<String, String>> {
 
     @Override
-    public Selector call(String jsonConfig) {
-        return new MapSelector(toConfig(jsonConfig));
-    }
-
-    public static Map<String, String> toConfig(String jsonConfig) {
+    public Map<String, String> toConfig(String jsonConfig) {
         JSONObject config = JSONUtil.parseObj(jsonConfig);
         Map<String, String> rules = new HashMap<>(config.size());
 
@@ -40,6 +26,11 @@ public class MapSelectorFactory extends AbstractSelectorFactoryFactory {
         }
 
         return rules;
+    }
+
+    @Override
+    protected Selector createWithConfig(Map<String, String> config) {
+        return new MapSelector(config);
     }
 
     @Override

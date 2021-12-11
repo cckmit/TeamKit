@@ -3,3 +3,4 @@ org.team4u.selector.domain.selector.probability.ProbabilitySelectorFactory
 org.team4u.selector.domain.selector.whitelist.WhitelistSelectorFactory
 org.team4u.selector.domain.selector.map.DynamicMapSelectorFactory
 org.team4u.selector.domain.selector.map.MapSelectorFactory
+org.team4u.selector.domain.selector.expression.ExpressionSelectorFactory

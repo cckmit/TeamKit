@@ -1,8 +1,7 @@
 package org.team4u.base.serializer;
 
-import cn.hutool.cache.Cache;
 import cn.hutool.core.lang.Pair;
-import org.team4u.base.lang.CacheableFunc1;
+import org.team4u.base.lang.lazy.LazyFunction;
 
 import java.lang.reflect.Type;
 
@@ -13,71 +12,43 @@ import java.lang.reflect.Type;
  */
 public class CacheableSerializer implements Serializer {
 
-    private final Serializer serializer;
+    private final LazyFunction<Pair<Class<?>, String>, Object> classDeserializer;
+    private final LazyFunction<Pair<Type, String>, Object> typeDeserializer;
+    private final LazyFunction<Object, String> objectSerializer;
 
-    private final ClassDeserializer classDeserializer;
-    private final TypeDeserializer typeDeserializer;
-    private final ObjectSerializer objectSerializer;
+    public CacheableSerializer(Serializer serializer) {
+        String name = getClass().getSimpleName();
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    public CacheableSerializer(Serializer serializer, Cache cache) {
-        this.serializer = serializer;
+        this.classDeserializer = LazyFunction.of(
+                LazyFunction.Config.builder().name(name + "|classDeserializer").build(),
+                parameter -> serializer.deserialize(parameter.getValue(), parameter.getKey())
+        );
 
-        this.classDeserializer = new ClassDeserializer(cache);
-        this.typeDeserializer = new TypeDeserializer(cache);
-        this.objectSerializer = new ObjectSerializer(cache);
+        this.typeDeserializer = LazyFunction.of(
+                LazyFunction.Config.builder().name(name + "|typeDeserializer").build(),
+                parameter -> serializer.deserialize(parameter.getValue(), parameter.getKey())
+        );
+
+        this.objectSerializer = LazyFunction.of(
+                LazyFunction.Config.builder().name(name + "|objectSerializer").build(),
+                serializer::serialize
+        );
     }
 
     @Override
     public String serialize(Object value) {
-        return objectSerializer.callWithCacheAndRuntimeException(value);
+        return objectSerializer.apply(value);
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public <T> T deserialize(String serialization, Class<T> type) {
-        return (T) classDeserializer.callWithCacheAndRuntimeException(new Pair<>(type, serialization));
+        return (T) classDeserializer.apply(new Pair<>(type, serialization));
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public <T> T deserialize(String serialization, Type type) {
-        return (T) typeDeserializer.callWithCacheAndRuntimeException(new Pair<>(type, serialization));
-    }
-
-    private class ObjectSerializer extends CacheableFunc1<Object, String> {
-
-        public ObjectSerializer(Cache<Object, String> cache) {
-            super(cache);
-        }
-
-        @Override
-        public String call(Object parameter) throws Exception {
-            return serializer.serialize(parameter);
-        }
-    }
-
-    private class ClassDeserializer extends CacheableFunc1<Pair<Class<?>, String>, Object> {
-
-        public ClassDeserializer(Cache<Pair<Class<?>, String>, Object> cache) {
-            super(cache);
-        }
-
-        @Override
-        public Object call(Pair<Class<?>, String> parameter) throws Exception {
-            return serializer.deserialize(parameter.getValue(), parameter.getKey());
-        }
-    }
-
-    private class TypeDeserializer extends CacheableFunc1<Pair<Type, String>, Object> {
-
-        public TypeDeserializer(Cache<Pair<Type, String>, Object> cache) {
-            super(cache);
-        }
-
-        @Override
-        public Object call(Pair<Type, String> parameter) throws Exception {
-            return serializer.deserialize(parameter.getValue(), parameter.getKey());
-        }
+        return (T) typeDeserializer.apply(new Pair<>(type, serialization));
     }
 }

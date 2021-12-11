@@ -1,7 +1,5 @@
 package org.team4u.selector.domain.selector.weight;
 
-import cn.hutool.cache.Cache;
-import cn.hutool.cache.CacheUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
@@ -17,18 +15,10 @@ import java.util.Map;
  *
  * @author jay.wu
  */
-public class WeightSelectorFactory extends AbstractSelectorFactoryFactory {
-
-    public WeightSelectorFactory() {
-        this(CacheUtil.newLRUCache(1000));
-    }
-
-    public WeightSelectorFactory(Cache<String, Selector> cache) {
-        super(cache);
-    }
+public class WeightSelectorFactory extends AbstractSelectorFactoryFactory<Map<String, Double>> {
 
     @Override
-    public Selector call(String jsonConfig) {
+    public Map<String, Double> toConfig(String jsonConfig) {
         JSONArray config = JSONUtil.parseArray(jsonConfig);
         Map<String, Double> weightObjs = new HashMap<>();
 
@@ -39,11 +29,16 @@ public class WeightSelectorFactory extends AbstractSelectorFactoryFactory {
             }
         }
 
-        return new WeightSelector(weightObjs);
+        return weightObjs;
     }
 
     @Override
     public String id() {
         return "weight";
+    }
+
+    @Override
+    protected Selector createWithConfig(Map<String, Double> config) {
+        return new WeightSelector(config);
     }
 }

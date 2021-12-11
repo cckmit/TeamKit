@@ -11,7 +11,6 @@ import org.team4u.selector.domain.selector.SelectorValueService;
 import org.team4u.selector.domain.selector.binding.ListBinding;
 import org.team4u.selector.domain.selector.binding.SimpleMapBinding;
 import org.team4u.selector.domain.selector.binding.SingleValueBinding;
-import org.team4u.selector.domain.selector.expression.ExpressionSelectorFactory;
 import org.team4u.selector.domain.selector.map.DynamicMapSelector;
 import org.team4u.selector.domain.selector.probability.ProbabilitySelector;
 import org.team4u.selector.infrastructure.persistence.JsonSelectorConfigRepository;
@@ -166,11 +165,7 @@ public class SelectorAppServiceTest {
 
     @Test
     public void expressionSelect() {
-        BeanProviders.getInstance().registerBean(
-                new ExpressionSelectorFactory(
-                        new BeetlTemplateEngine(new TemplateFunctionService())
-                )
-        );
+        BeanProviders.getInstance().registerBean(new BeetlTemplateEngine(new TemplateFunctionService()));
 
         SimpleMapBinding binding = new SimpleMapBinding();
         binding.set("a", 1);

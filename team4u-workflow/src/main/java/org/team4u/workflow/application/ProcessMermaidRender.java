@@ -98,7 +98,7 @@ public class ProcessMermaidRender {
     protected void toElement(MermaidFlow flow, DynamicChoiceNode node) {
         switch (node.getRule().getType()) {
             case "expression": {
-                Map<String, String> config = ExpressionSelectorFactory.toConfig(node.getRule().getBody());
+                Map<String, String> config = new ExpressionSelectorFactory().toConfig(node.getRule().getBody());
                 for (Map.Entry<String, String> entry : config.entrySet()) {
                     flow.getElements().add(newSimpleLink(
                             node.getNodeId(),

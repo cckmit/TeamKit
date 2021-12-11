@@ -1,9 +1,9 @@
 package org.team4u.workflow;
 
 import cn.hutool.core.collection.CollUtil;
+import org.team4u.base.bean.provider.BeanProviders;
 import org.team4u.base.config.LocalJsonConfigService;
 import org.team4u.selector.application.SelectorAppService;
-import org.team4u.selector.domain.selector.expression.ExpressionSelectorFactory;
 import org.team4u.template.TemplateFunctionService;
 import org.team4u.template.infrastructure.BeetlTemplateEngine;
 import org.team4u.workflow.domain.definition.ProcessDefinition;
@@ -101,10 +101,8 @@ public class TestUtil {
     }
 
     public static SelectorAppService selectorAppService() {
-        return new SelectorAppService().registerSelectorFactory(
-                new ExpressionSelectorFactory(
-                        new BeetlTemplateEngine(new TemplateFunctionService())
-                )
-        );
+        BeanProviders.getInstance().registerBean(new BeetlTemplateEngine(new TemplateFunctionService()));
+
+        return new SelectorAppService();
     }
 }

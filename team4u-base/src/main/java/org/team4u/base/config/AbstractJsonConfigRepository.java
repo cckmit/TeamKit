@@ -1,6 +1,5 @@
 package org.team4u.base.config;
 
-import cn.hutool.cache.CacheUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.StrUtil;
 import org.team4u.base.serializer.CacheableSerializer;
@@ -19,7 +18,7 @@ public abstract class AbstractJsonConfigRepository<T> {
     private final ConfigService configService;
 
     private final CacheableSerializer cacheableJsonSerializer = new CacheableSerializer(
-            serializer(), CacheUtil.newLRUCache(1000)
+            serializer()
     );
 
     @SuppressWarnings("unchecked")

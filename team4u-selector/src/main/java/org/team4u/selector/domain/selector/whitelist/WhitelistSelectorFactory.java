@@ -1,8 +1,5 @@
 package org.team4u.selector.domain.selector.whitelist;
 
-import cn.hutool.cache.Cache;
-import cn.hutool.cache.CacheUtil;
-import cn.hutool.json.JSONUtil;
 import org.team4u.selector.domain.selector.AbstractSelectorFactoryFactory;
 import org.team4u.selector.domain.selector.Selector;
 
@@ -11,15 +8,7 @@ import org.team4u.selector.domain.selector.Selector;
  *
  * @author jay.wu
  */
-public class WhitelistSelectorFactory extends AbstractSelectorFactoryFactory {
-
-    public WhitelistSelectorFactory(Cache<String, Selector> cache) {
-        super(cache);
-    }
-
-    public WhitelistSelectorFactory() {
-        this(CacheUtil.newLRUCache(1000));
-    }
+public class WhitelistSelectorFactory extends AbstractSelectorFactoryFactory<WhitelistSelector.Config> {
 
     @Override
     public String id() {
@@ -27,7 +16,7 @@ public class WhitelistSelectorFactory extends AbstractSelectorFactoryFactory {
     }
 
     @Override
-    public Selector call(String jsonConfig) {
-        return new WhitelistSelector(JSONUtil.toBean(jsonConfig, WhitelistSelector.Config.class));
+    protected Selector createWithConfig(WhitelistSelector.Config config) {
+        return new WhitelistSelector(config);
     }
 }

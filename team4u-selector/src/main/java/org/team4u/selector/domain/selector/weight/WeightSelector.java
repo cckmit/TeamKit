@@ -20,18 +20,18 @@ import java.util.stream.Collectors;
  */
 public class WeightSelector implements Selector {
 
-    private final Map<String, Double> valueWeights;
+    private final Map<String, Double> config;
 
     /**
-     * @param valueWeights 结果/权重映射集合
+     * @param config 结果/权重映射集合
      */
-    public WeightSelector(Map<String, Double> valueWeights) {
-        this.valueWeights = valueWeights;
+    public WeightSelector(Map<String, Double> config) {
+        this.config = config;
     }
 
     @Override
     public String select(SelectorBinding binding) {
-        if (MapUtil.isEmpty(valueWeights)) {
+        if (MapUtil.isEmpty(config)) {
             return NONE;
         }
 
@@ -46,7 +46,7 @@ public class WeightSelector implements Selector {
 
         List<WeightRandom.WeightObj<String>> weightObjs = values(binding)
                 .stream()
-                .map(it -> new WeightRandom.WeightObj<>(it, this.valueWeights.get(it)))
+                .map(it -> new WeightRandom.WeightObj<>(it, this.config.get(it)))
                 .collect(Collectors.toList());
 
         return ObjectUtil.defaultIfNull(RandomUtil.weightRandom(weightObjs).next(), NONE);

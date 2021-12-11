@@ -9,7 +9,6 @@ import org.team4u.base.bean.event.AbstractBeanInitializedEventSubscriber;
 import org.team4u.base.bean.event.BeanInitializedEvent;
 import org.team4u.base.error.SystemDataNotExistException;
 import org.team4u.base.message.MessagePublisher;
-import org.team4u.base.registrar.PolicyRegistrar;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -24,7 +23,7 @@ import java.util.stream.Collectors;
  * @param <C> 策略上下文
  * @param <P> 策略类型
  * @author jay.wu
- * @see PolicyRegistrar
+ * @see org.team4u.base.registrar.PolicyRegistrar
  * @deprecated 已废弃，使用PolicyRegistrar代替
  */
 public abstract class SimplePolicyService<C, P extends SimplePolicy<C>> {
