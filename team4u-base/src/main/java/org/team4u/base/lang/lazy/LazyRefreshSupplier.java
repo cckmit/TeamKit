@@ -1,5 +1,6 @@
 package org.team4u.base.lang.lazy;
 
+import cn.hutool.core.lang.caller.CallerUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.log.Log;
 import lombok.AllArgsConstructor;
@@ -36,6 +37,11 @@ public class LazyRefreshSupplier<T> extends LongTimeThread implements Supplier<T
     public LazyRefreshSupplier(Config config, Supplier<T> supplier) {
         this.config = config;
         this.supplier = supplier;
+
+        config.setName(ObjectUtil.defaultIfNull(
+                config.getName(),
+                CallerUtil.getCallerCaller().getSimpleName()
+        ));
     }
 
     @Override
@@ -60,7 +66,7 @@ public class LazyRefreshSupplier<T> extends LongTimeThread implements Supplier<T
 
     @Override
     protected void onRun() {
-        LogMessage lm = LogMessage.create(this.getClass().getSimpleName(), "onRefresh");
+        LogMessage lm = LogMessage.create(config.getName(), "onRefresh");
 
         T newValue = supplier.get();
 
@@ -103,19 +109,20 @@ public class LazyRefreshSupplier<T> extends LongTimeThread implements Supplier<T
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Config {
-
+        /**
+         * 名称
+         */
+        private String name;
         /**
          * 刷新间隔（毫秒）
          */
         @Builder.Default
         private long refreshIntervalMillis = 5000;
-
         /**
          * 返回值日志格式化器
          */
         @Builder.Default
         private LazyValueFormatter valueFormatter = new LazyValueFormatter();
-
         /**
          * 刷新监听器
          */

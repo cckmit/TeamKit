@@ -3,6 +3,7 @@ package org.team4u.base.lang.lazy;
 
 import cn.hutool.cache.Cache;
 import cn.hutool.cache.CacheUtil;
+import cn.hutool.core.lang.caller.CallerUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.log.Log;
 import lombok.AllArgsConstructor;
@@ -33,6 +34,11 @@ public class LazyFunction<T, R> implements Function<T, R> {
     public LazyFunction(Config config, Function<T, R> valueFunc) {
         this.config = config;
         this.valueFunc = valueFunc;
+
+        config.setName(ObjectUtil.defaultIfNull(
+                config.getName(),
+                CallerUtil.getCallerCaller().getSimpleName()
+        ));
     }
 
     /**
@@ -76,7 +82,7 @@ public class LazyFunction<T, R> implements Function<T, R> {
                 return result;
             }
 
-            LogMessage lm = LogMessage.create(this.getClass().getName(), "apply")
+            LogMessage lm = LogMessage.create(config.getName(), "create")
                     .append("parameter", config.getParameterFormatter().format(log, t));
 
             if (!ObjectUtil.equals(cacheKey, t)) {
@@ -139,6 +145,10 @@ public class LazyFunction<T, R> implements Function<T, R> {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Config {
+        /**
+         * 名称
+         */
+        private String name;
         /**
          * 缓存的执行结果
          */

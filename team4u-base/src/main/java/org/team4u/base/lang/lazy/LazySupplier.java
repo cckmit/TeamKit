@@ -1,6 +1,8 @@
 package org.team4u.base.lang.lazy;
 
 
+import cn.hutool.core.lang.caller.CallerUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.log.Log;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,6 +34,11 @@ public class LazySupplier<T> implements Supplier<T> {
     public LazySupplier(Config config, Supplier<T> supplier) {
         this.config = config;
         this.supplier = supplier;
+
+        config.setName(ObjectUtil.defaultIfNull(
+                config.getName(),
+                CallerUtil.getCallerCaller().getSimpleName()
+        ));
     }
 
     /**
@@ -64,8 +71,7 @@ public class LazySupplier<T> implements Supplier<T> {
 
         synchronized (this) {
             if (value == null) {
-                LogMessage lm = LogMessage.create(this.getClass().getName(), "get")
-                        .append("supplier", supplier.getClass().getName());
+                LogMessage lm = LogMessage.create(config.getName(), "create");
 
                 T newValue = supplier.get();
                 if (newValue == null) {
@@ -106,6 +112,10 @@ public class LazySupplier<T> implements Supplier<T> {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Config {
+        /**
+         * 名称
+         */
+        private String name;
         /**
          * 返回值日志格式化器
          */

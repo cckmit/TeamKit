@@ -16,7 +16,10 @@ public class InMemoryStepSequenceProvider extends AutoIncrementStepSequenceProvi
 
     public InMemoryStepSequenceProvider(Config config) {
         this.config = config;
-        lazyCounters = LazyFunction.of(it -> new AtomicLong(0));
+        lazyCounters = LazyFunction.of(
+                LazyFunction.Config.builder().name(getClass().getSimpleName() + "|lazyCounters").build(),
+                it -> new AtomicLong(0)
+        );
     }
 
     private AtomicLong counterOf(Context context) {

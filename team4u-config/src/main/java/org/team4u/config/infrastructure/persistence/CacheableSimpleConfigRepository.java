@@ -18,7 +18,7 @@ public class CacheableSimpleConfigRepository implements SimpleConfigRepository {
     private final SimpleConfigComparator simpleConfigComparator;
     private final SimpleConfigRepository delegateConfigRepository;
 
-    private final LazyRefreshSupplier<List<SimpleConfig>> refreshSupplier;
+    private final LazyRefreshSupplier<List<SimpleConfig>> configSupplier;
 
 
     public CacheableSimpleConfigRepository(Config config, SimpleConfigRepository delegateConfigRepository) {
@@ -26,8 +26,9 @@ public class CacheableSimpleConfigRepository implements SimpleConfigRepository {
         this.delegateConfigRepository = delegateConfigRepository;
         this.simpleConfigComparator = new SimpleConfigComparator();
 
-        refreshSupplier = LazyRefreshSupplier.of(
+        configSupplier = LazyRefreshSupplier.of(
                 LazyRefreshSupplier.Config.builder()
+                        .name(getClass().getSimpleName() + "|configSupplier")
                         .refreshIntervalMillis(config.getMaxEffectiveSec() * 1000L)
                         .build(),
                 this::loadAndCompare
@@ -36,12 +37,12 @@ public class CacheableSimpleConfigRepository implements SimpleConfigRepository {
 
     @Override
     public List<SimpleConfig> allConfigs() {
-        return refreshSupplier.get();
+        return configSupplier.get();
     }
 
     private List<SimpleConfig> loadAndCompare() {
         List<SimpleConfig> newConfigs = delegateConfigRepository.allConfigs();
-        List<SimpleConfig> oldConfigs = ObjectUtil.defaultIfNull(refreshSupplier.value(), Collections.emptyList());
+        List<SimpleConfig> oldConfigs = ObjectUtil.defaultIfNull(configSupplier.value(), Collections.emptyList());
 
         simpleConfigComparator.compare(oldConfigs, newConfigs);
 

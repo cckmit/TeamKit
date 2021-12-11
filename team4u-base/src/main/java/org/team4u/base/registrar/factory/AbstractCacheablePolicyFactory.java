@@ -14,7 +14,11 @@ import org.team4u.base.lang.lazy.LazyFunction;
  */
 public abstract class AbstractCacheablePolicyFactory<CO, CI, P> extends AbstractPolicyFactory<CO, CI, P> {
 
-    private final LazyFunction<CI, P> lazyFactory = createLazyFactory();
+    private final LazyFunction<CI, P> lazyFactory;
+
+    public AbstractCacheablePolicyFactory() {
+        this.lazyFactory = createLazyFactory();
+    }
 
     @Override
     public P create(CI config) {
@@ -25,6 +29,9 @@ public abstract class AbstractCacheablePolicyFactory<CO, CI, P> extends Abstract
      * 创建懒加载工厂
      */
     protected LazyFunction<CI, P> createLazyFactory() {
-        return LazyFunction.of(super::create);
+        return LazyFunction.of(
+                LazyFunction.Config.builder().name(getClass().getName() + "|lazyFactory").build(),
+                super::create
+        );
     }
 }
