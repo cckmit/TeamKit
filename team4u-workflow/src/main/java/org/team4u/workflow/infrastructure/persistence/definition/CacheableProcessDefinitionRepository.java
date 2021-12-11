@@ -25,7 +25,7 @@ public class CacheableProcessDefinitionRepository implements ProcessDefinitionRe
                         .name(getClass().getSimpleName() + "|lazyDefinition")
                         .cache(CacheUtil.newTimedCache(timeoutMillis))
                         .build(),
-                this::domainOf
+                delegate::domainOf
         );
     }
 
