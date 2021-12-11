@@ -1,6 +1,6 @@
 package org.team4u.id.domain.seq.group;
 
-import org.team4u.base.registrar.factory.AbstractCacheableJsonPolicyFactory;
+import org.team4u.base.registrar.factory.AbstractJsonCacheablePolicyFactory;
 
 /**
  * 抽象分组提供者工厂
@@ -8,6 +8,6 @@ import org.team4u.base.registrar.factory.AbstractCacheableJsonPolicyFactory;
  * @author jay.wu
  */
 public abstract class AbstractGroupKeyProviderFactory<C>
-        extends AbstractCacheableJsonPolicyFactory<C, SequenceGroupKeyProvider>
+        extends AbstractJsonCacheablePolicyFactory<C, SequenceGroupKeyProvider>
         implements SequenceGroupKeyProvider.Factory {
 }
