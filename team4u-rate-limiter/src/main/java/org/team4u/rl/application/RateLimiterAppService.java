@@ -1,8 +1,8 @@
 package org.team4u.rl.application;
 
-import cn.hutool.cache.CacheUtil;
 import cn.hutool.log.Log;
-import org.team4u.base.lang.CacheableFunc1;
+import org.team4u.base.lang.lazy.LazyFunction;
+import org.team4u.base.lang.lazy.LazyValueFormatter;
 import org.team4u.base.log.LogMessage;
 import org.team4u.rl.domain.RateLimitConfigRepository;
 import org.team4u.rl.domain.RateLimiter;
@@ -131,15 +131,26 @@ public class RateLimiterAppService {
         return lm.append("type", type).append("key", key);
     }
 
-    private class RateLimiters extends CacheableFunc1<RateLimiterConfig, RateLimiter> {
+    private static class RateLimiters {
+
+        private final LazyFunction<RateLimiterConfig, RateLimiter> lazyLimiter = LazyFunction.of(
+                LazyFunction.Config.builder()
+                        .name(getClass().getSimpleName() + "|lazyLimiter")
+                        .parameterFormatter(new LazyValueFormatter() {
+                            @Override
+                            public String format(Log log, Object value) {
+                                return ((RateLimiterConfig) value).getConfigId();
+                            }
+                        })
+                        .build(),
+                this::createLimiter
+        );
 
         private final RateLimiterFactory rateLimiterFactory;
         private final RateLimitConfigRepository rateLimitConfigRepository;
 
         public RateLimiters(RateLimiterFactory rateLimiterFactory,
                             RateLimitConfigRepository rateLimitConfigRepository) {
-            super(CacheUtil.newLRUCache(1000));
-
             this.rateLimiterFactory = rateLimiterFactory;
             this.rateLimitConfigRepository = rateLimitConfigRepository;
         }
@@ -151,19 +162,11 @@ public class RateLimiterAppService {
                 return null;
             }
 
-            return callWithCache(config);
+            return lazyLimiter.apply(config);
         }
 
-        @Override
-        public RateLimiter call(RateLimiterConfig config) {
-            RateLimiter limiter = rateLimiterFactory.create(config);
-
-            log.info(LogMessage.create(this.getClass().getSimpleName(), "createRateLimiter")
-                    .success()
-                    .append("limiter", config.getConfigId())
-                    .toString());
-
-            return limiter;
+        public RateLimiter createLimiter(RateLimiterConfig config) {
+            return rateLimiterFactory.create(config);
         }
     }
 }

@@ -113,10 +113,10 @@ public class LazyFunction<T, R> implements Function<T, R> {
     }
 
     @SuppressWarnings("unchecked")
-    public int removeIf(Function<R, T> predicate) {
+    public int removeIf(Function<R, T> keyFunc) {
         int count = 0;
         for (Object value : config.getCache()) {
-            Object key = predicate.apply((R) value);
+            Object key = keyFunc.apply((R) value);
             if (key == null) {
                 continue;
             }
