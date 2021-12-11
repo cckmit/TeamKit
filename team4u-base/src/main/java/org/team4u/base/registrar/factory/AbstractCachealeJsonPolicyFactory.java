@@ -9,7 +9,7 @@ import cn.hutool.json.JSONUtil;
  * @param <P> 策略类型
  * @author jay.wu
  */
-public abstract class AbstractCacheJsonPolicyFactory<C, P> extends AbstractCacheablePolicyFactory<C, String, P> {
+public abstract class AbstractCachealeJsonPolicyFactory<C, P> extends AbstractCacheablePolicyFactory<C, String, P> {
 
     @Override
     protected C toConfig(String configValue) {
