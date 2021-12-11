@@ -112,8 +112,13 @@ public class LazyFunction<T, R> implements Function<T, R> {
         config.getCache().clear();
     }
 
+    /**
+     * 删除缓存
+     *
+     * @param keyFunc 返回需要删除的key，若key = null则不删除
+     */
     @SuppressWarnings("unchecked")
-    public int removeIf(Function<R, T> keyFunc) {
+    public int remove(Function<R, T> keyFunc) {
         int count = 0;
         for (Object value : config.getCache()) {
             Object key = keyFunc.apply((R) value);

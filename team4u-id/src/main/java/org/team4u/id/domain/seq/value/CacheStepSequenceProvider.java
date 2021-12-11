@@ -70,7 +70,7 @@ public class CacheStepSequenceProvider implements SequenceProvider {
      * @return 已清理数量
      */
     public int clearExpiredCache() {
-        return lazyCounters.removeIf(it -> {
+        return lazyCounters.remove(it -> {
             // 已过期，返回需要清理的key
             if (it.isExpired()) {
                 return it.getContext();
