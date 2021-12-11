@@ -29,13 +29,7 @@ public abstract class AbstractJsonCacheableConfigRepository<T> {
     }
 
     public T configOfId(String configId) {
-        String configString = configService.get(configId);
-
-        if (StrUtil.isBlank(configString)) {
-            return null;
-        }
-
-        T config = deserialize(configString, configClass());
+        T config = deserialize(configService.get(configId), configClass());
 
         if (config == null) {
             return null;

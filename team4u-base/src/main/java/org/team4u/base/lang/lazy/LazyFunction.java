@@ -91,7 +91,7 @@ public class LazyFunction<T, R> implements Function<T, R> {
 
             result = valueFunc.apply(t);
             if (result == null) {
-                IllegalStateException e = new IllegalStateException("Lazy value can not be null!");
+                IllegalStateException e = new NullValueException("Lazy value can not be null!");
                 log.error(lm.fail(e.getMessage()).toString());
                 throw e;
             }

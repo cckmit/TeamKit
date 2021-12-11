@@ -1,7 +1,10 @@
 package org.team4u.base.serializer;
 
 import cn.hutool.core.lang.Pair;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import org.team4u.base.lang.lazy.LazyFunction;
+import org.team4u.base.lang.lazy.NullValueException;
 
 import java.lang.reflect.Type;
 
@@ -37,18 +40,42 @@ public class CacheableSerializer implements Serializer {
 
     @Override
     public String serialize(Object value) {
-        return objectSerializer.apply(value);
+        if (ObjectUtil.isNull(value)) {
+            return null;
+        }
+
+        try {
+            return objectSerializer.apply(value);
+        } catch (NullValueException e) {
+            return null;
+        }
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public <T> T deserialize(String serialization, Class<T> type) {
-        return (T) classDeserializer.apply(new Pair<>(type, serialization));
+        if (StrUtil.isEmpty(serialization)) {
+            return null;
+        }
+
+        try {
+            return (T) classDeserializer.apply(new Pair<>(type, serialization));
+        } catch (NullValueException e) {
+            return null;
+        }
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public <T> T deserialize(String serialization, Type type) {
-        return (T) typeDeserializer.apply(new Pair<>(type, serialization));
+        if (StrUtil.isEmpty(serialization)) {
+            return null;
+        }
+
+        try {
+            return (T) typeDeserializer.apply(new Pair<>(type, serialization));
+        } catch (NullValueException e) {
+            return null;
+        }
     }
 }

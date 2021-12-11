@@ -75,7 +75,7 @@ public class LazySupplier<T> implements Supplier<T> {
 
                 T newValue = supplier.get();
                 if (newValue == null) {
-                    IllegalStateException e = new IllegalStateException("Lazy value can not be null!");
+                    IllegalStateException e = new NullValueException("Lazy value can not be null!");
                     log.error(lm.fail(e.getMessage()).toString());
                     throw e;
                 }
