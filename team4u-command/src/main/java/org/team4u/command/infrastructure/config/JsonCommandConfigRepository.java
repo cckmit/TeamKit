@@ -1,6 +1,6 @@
 package org.team4u.command.infrastructure.config;
 
-import org.team4u.base.config.AbstractJsonConfigRepository;
+import org.team4u.base.config.AbstractJsonCacheableConfigRepository;
 import org.team4u.base.config.ConfigService;
 import org.team4u.base.serializer.FastJsonCacheSerializer;
 import org.team4u.base.serializer.Serializer;
@@ -15,7 +15,7 @@ import java.util.Set;
  * @author jay.wu
  */
 public class JsonCommandConfigRepository
-        extends AbstractJsonConfigRepository<CommandConfig>
+        extends AbstractJsonCacheableConfigRepository<CommandConfig>
         implements CommandConfigRepository {
 
     public JsonCommandConfigRepository(ConfigService configService) {

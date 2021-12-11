@@ -1,6 +1,6 @@
 package org.team4u.rl.infrastructure.persistence;
 
-import org.team4u.base.config.AbstractJsonConfigRepository;
+import org.team4u.base.config.AbstractJsonCacheableConfigRepository;
 import org.team4u.base.config.ConfigService;
 import org.team4u.rl.domain.RateLimitConfigRepository;
 import org.team4u.rl.domain.RateLimiterConfig;
@@ -11,7 +11,7 @@ import org.team4u.rl.domain.RateLimiterConfig;
  * @author jay.wu
  */
 public class JsonRateLimitConfigRepository
-        extends AbstractJsonConfigRepository<RateLimiterConfig>
+        extends AbstractJsonCacheableConfigRepository<RateLimiterConfig>
         implements RateLimitConfigRepository {
 
     public JsonRateLimitConfigRepository(ConfigService configService) {

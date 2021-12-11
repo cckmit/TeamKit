@@ -1,6 +1,6 @@
 package org.team4u.selector.infrastructure.persistence;
 
-import org.team4u.base.config.AbstractJsonConfigRepository;
+import org.team4u.base.config.AbstractJsonCacheableConfigRepository;
 import org.team4u.base.config.ConfigService;
 import org.team4u.selector.domain.selector.SelectorConfig;
 import org.team4u.selector.domain.selector.SelectorConfigRepository;
@@ -11,7 +11,7 @@ import org.team4u.selector.domain.selector.SelectorConfigRepository;
  * @author jay.wu
  */
 public class JsonSelectorConfigRepository
-        extends AbstractJsonConfigRepository<SelectorConfig>
+        extends AbstractJsonCacheableConfigRepository<SelectorConfig>
         implements SelectorConfigRepository {
 
     public JsonSelectorConfigRepository(ConfigService configService) {

@@ -1,6 +1,6 @@
 package org.team4u.workflow.infrastructure.persistence.emulator;
 
-import org.team4u.base.config.AbstractJsonConfigRepository;
+import org.team4u.base.config.AbstractJsonCacheableConfigRepository;
 import org.team4u.base.config.ConfigService;
 import org.team4u.workflow.domain.emulator.ProcessEmulatorScript;
 import org.team4u.workflow.domain.emulator.ProcessEmulatorScriptRepository;
@@ -11,7 +11,7 @@ import org.team4u.workflow.domain.emulator.ProcessEmulatorScriptRepository;
  * @author jay.wu
  */
 public class JsonProcessEmulatorScriptRepository
-        extends AbstractJsonConfigRepository<ProcessEmulatorScript>
+        extends AbstractJsonCacheableConfigRepository<ProcessEmulatorScript>
         implements ProcessEmulatorScriptRepository {
 
     public JsonProcessEmulatorScriptRepository(ConfigService configService) {

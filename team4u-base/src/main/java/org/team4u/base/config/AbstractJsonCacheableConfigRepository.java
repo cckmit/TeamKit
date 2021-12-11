@@ -9,11 +9,11 @@ import org.team4u.base.serializer.Serializer;
 import java.util.Set;
 
 /**
- * 基于json的抽象配置资源库
+ * 基于json的抽象缓存配置资源库
  *
  * @author jay.wu
  */
-public abstract class AbstractJsonConfigRepository<T> {
+public abstract class AbstractJsonCacheableConfigRepository<T> {
 
     private final ConfigService configService;
 
@@ -24,7 +24,7 @@ public abstract class AbstractJsonConfigRepository<T> {
     @SuppressWarnings("unchecked")
     private final Class<T> configClass = (Class<T>) ClassUtil.getTypeArgument(this.getClass());
 
-    public AbstractJsonConfigRepository(ConfigService configService) {
+    public AbstractJsonCacheableConfigRepository(ConfigService configService) {
         this.configService = configService;
     }
 
