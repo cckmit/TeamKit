@@ -25,6 +25,34 @@ public class LazyFunctionTest {
     }
 
     @Test
+    public void notAllowNullValue() {
+        LazyFunction<Integer, Integer> f = LazyFunction.of(t -> null);
+
+        try {
+            f.apply(1);
+            Assert.fail();
+        } catch (NullValueException e) {
+            // pass
+        }
+    }
+
+    @Test
+    public void allowNullValue() {
+        AtomicInteger i = new AtomicInteger(0);
+        LazyFunction<Integer, Integer> f = LazyFunction.of(
+                LazyFunction.Config.builder()
+                        .isAllowReturnNullValue(true)
+                        .build(),
+                t -> {
+                    i.incrementAndGet();
+                    return null;
+                });
+
+        Assert.assertNull(f.apply(1));
+        Assert.assertNull(f.apply(1));
+        Assert.assertEquals(2, i.get());
+    }
+    @Test
     public void map() {
         AtomicInteger i = new AtomicInteger(1);
         LazyFunction<Integer, String> f = LazyFunction.<Integer, Integer>of(it -> it + i.getAndIncrement())

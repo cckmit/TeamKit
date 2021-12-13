@@ -35,10 +35,7 @@ public class LazyFunction<T, R> implements Function<T, R> {
         this.config = config;
         this.valueFunc = valueFunc;
 
-        config.setName(ObjectUtil.defaultIfNull(
-                config.getName(),
-                CallerUtil.getCallerCaller().getSimpleName()
-        ));
+        config.setName(ObjectUtil.defaultIfNull(config.getName(), CallerUtil.getCallerCaller().getSimpleName()));
     }
 
     /**
@@ -66,43 +63,77 @@ public class LazyFunction<T, R> implements Function<T, R> {
         return new LazyFunction<>(config, valueFunc);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public R apply(T t) {
-        Object cacheKey = config.getKeyFunc().apply(t);
+    public R apply(T key) {
+        Object cacheKey = cacheKey(key);
 
-        R result = (R) config.getCache().get(cacheKey);
+        R result = valueOfCache(cacheKey);
         if (result != null) {
             return result;
         }
 
         synchronized (this) {
-            result = (R) config.getCache().get(cacheKey);
+            result = valueOfCache(cacheKey);
             if (result != null) {
                 return result;
             }
 
-            LogMessage lm = LogMessage.create(config.getName(), "create")
-                    .append("parameter", config.getParameterFormatter().format(log, t));
+            return applyNewValue(cacheKey, key);
+        }
+    }
 
-            if (!ObjectUtil.equals(cacheKey, t)) {
-                lm.append("parameter", cacheKey);
-            }
+    @SuppressWarnings("unchecked")
+    private Object cacheKey(T key) {
+        return config.getKeyFunc().apply(key);
+    }
 
-            result = valueFunc.apply(t);
-            if (result == null) {
-                IllegalStateException e = new NullValueException("Lazy value can not be null!");
-                log.error(lm.fail(e.getMessage()).toString());
-                throw e;
-            }
-            config.getCache().put(cacheKey, result);
+    private R applyNewValue(Object cacheKey, T inputKey) {
+        LogMessage lm = LogMessage.create(config.getName(), "create")
+                .append("parameter", config.getParameterFormatter().format(log, inputKey));
 
-            if (log.isInfoEnabled()) {
-                log.info(lm.success().append("value", config.getResultFormatter().format(log, result)).toString());
-            }
+        if (!ObjectUtil.equals(cacheKey, inputKey)) {
+            lm.append("parameter", cacheKey);
+        }
+
+        R result = valueFunc.apply(inputKey);
+
+        checkValue(lm, result);
+
+        saveValue(cacheKey, result);
+
+        if (log.isInfoEnabled()) {
+            log.info(lm.success().append("value", config.getResultFormatter().format(log, result)).toString());
         }
 
         return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    private R valueOfCache(Object cacheKey) {
+        return (R) config.getCache().get(cacheKey);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void saveValue(Object cacheKey, R result) {
+        if (result == null) {
+            return;
+        }
+
+        config.getCache().put(cacheKey, result);
+    }
+
+    private void checkValue(LogMessage lm, R result) {
+        if (result != null) {
+            return;
+        }
+
+        if (config.isAllowReturnNullValue()) {
+            return;
+        }
+
+        IllegalStateException e = new NullValueException("Lazy value can not be null!");
+        log.error(lm.fail(e.getMessage()).toString());
+        throw e;
     }
 
     /**
@@ -154,6 +185,13 @@ public class LazyFunction<T, R> implements Function<T, R> {
          * 名称
          */
         private String name;
+        /**
+         * 是否允许返回null值
+         * <p>
+         * 若允许null值，则无法区分是否真正存在缓存，可能导致每次都会调用valueFunc进行计算
+         */
+        @Builder.Default
+        private boolean isAllowReturnNullValue = false;
         /**
          * 缓存的执行结果
          */
