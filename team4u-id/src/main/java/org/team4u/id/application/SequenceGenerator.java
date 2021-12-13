@@ -91,6 +91,10 @@ public class SequenceGenerator implements Generator<Number> {
                        boolean nullIfConfigNotExist,
                        Map<String, Object> context) throws SequenceConfigLoadException {
         SequenceConfig config = configOf(configId, nullIfConfigNotExist);
+        if (config == null) {
+            return null;
+        }
+
         String groupKey = groupFactoryHolder.provide(
                 new SequenceGroupKeyProvider.Context(config, context)
         );
