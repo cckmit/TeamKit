@@ -92,8 +92,6 @@ public class RedisStepSequenceProvider extends AutoIncrementStepSequenceProvider
     public static class Config extends StepSequenceProvider.Config {
         /**
          * redis template bean标识
-         * <p>
-         * 需要满足RedisTemplate<String, ?>
          */
         private String redisTemplateBeanId;
         /**

@@ -72,7 +72,7 @@ public class LazyFunction<T, R> implements Function<T, R> {
             return result;
         }
 
-        synchronized (this) {
+        synchronized (lockOfKey(cacheKey)) {
             result = valueOfCache(cacheKey);
             if (result != null) {
                 return result;
@@ -80,6 +80,14 @@ public class LazyFunction<T, R> implements Function<T, R> {
 
             return applyNewValue(cacheKey, key);
         }
+    }
+
+    private Object lockOfKey(Object cacheKey) {
+        if (cacheKey instanceof String) {
+            return cacheKey.toString().intern();
+        }
+
+        return this;
     }
 
     @SuppressWarnings("unchecked")

@@ -21,17 +21,17 @@ public class SimpleKeyValueService<V> {
     /**
      * 有效期（毫秒），0为永不过期
      */
-    private int ttlMillis;
+    private final int ttlMillis;
     /**
      * 类型
      */
-    private String type;
+    private final String type;
     /**
      * 值类型
      */
-    private Class<V> valueClass;
+    private final Class<V> valueClass;
 
-    private KeyValueService keyValueService;
+    private final KeyValueService keyValueService;
 
     public SimpleKeyValueService(String type,
                                  Class<V> valueClass,
