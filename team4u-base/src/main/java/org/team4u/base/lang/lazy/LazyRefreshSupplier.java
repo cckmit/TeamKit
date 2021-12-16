@@ -64,6 +64,7 @@ public class LazyRefreshSupplier<T> extends LongTimeThread implements Supplier<T
         return value;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected void onRun() {
         LogMessage lm = LogMessage.create(config.getName(), "onRefresh");
@@ -121,6 +122,7 @@ public class LazyRefreshSupplier<T> extends LongTimeThread implements Supplier<T
         /**
          * 返回值日志格式化器
          */
+        @SuppressWarnings("rawtypes")
         @Builder.Default
         private LazyValueFormatter valueFormatter = new DefaultLazyValueFormatter();
         /**

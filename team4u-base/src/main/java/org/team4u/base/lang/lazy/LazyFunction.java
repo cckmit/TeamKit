@@ -99,13 +99,10 @@ public class LazyFunction<T, R> implements Function<T, R> {
         return config.getKeyFunc().apply(key);
     }
 
+    @SuppressWarnings("unchecked")
     private R applyNewValue(Object cacheKey, T inputKey) {
         LogMessage lm = LogMessage.create(config.getName(), "create")
                 .append("parameter", config.getParameterFormatter().format(log, inputKey));
-
-        if (!ObjectUtil.equals(cacheKey, inputKey)) {
-            lm.append("parameter", cacheKey);
-        }
 
         R result = valueFunc.apply(inputKey);
 
@@ -114,7 +111,9 @@ public class LazyFunction<T, R> implements Function<T, R> {
         saveValue(cacheKey, result);
 
         if (config.isEnabledLog() && log.isInfoEnabled()) {
-            log.info(lm.success().append("value", config.getResultFormatter().format(log, result)).toString());
+            log.info(lm.success()
+                    .append("value", config.getResultFormatter().format(log, result))
+                    .toString());
         }
 
         return result;
@@ -225,11 +224,13 @@ public class LazyFunction<T, R> implements Function<T, R> {
         /**
          * 请求值日志格式化器
          */
+        @SuppressWarnings("rawtypes")
         @Builder.Default
         private LazyValueFormatter parameterFormatter = new DefaultLazyValueFormatter();
         /**
          * 返回值日志格式化器
          */
+        @SuppressWarnings("rawtypes")
         @Builder.Default
         private LazyValueFormatter resultFormatter = new DefaultLazyValueFormatter();
     }

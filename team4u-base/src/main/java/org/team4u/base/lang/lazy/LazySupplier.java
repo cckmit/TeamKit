@@ -82,6 +82,7 @@ public class LazySupplier<T> implements Supplier<T> {
                 value = newValue;
 
                 if (log.isInfoEnabled()) {
+                    //noinspection unchecked
                     log.info(lm.success()
                             .append("v", config.getValueFormatter().format(log, value))
                             .toString());
@@ -119,6 +120,7 @@ public class LazySupplier<T> implements Supplier<T> {
         /**
          * 返回值日志格式化器
          */
+        @SuppressWarnings("rawtypes")
         @Builder.Default
         private LazyValueFormatter valueFormatter = new DefaultLazyValueFormatter();
     }

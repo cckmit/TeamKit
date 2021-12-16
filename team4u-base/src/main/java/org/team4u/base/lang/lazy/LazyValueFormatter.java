@@ -7,14 +7,14 @@ import cn.hutool.log.Log;
  *
  * @author jay.wu
  */
-public interface LazyValueFormatter {
+public interface LazyValueFormatter<V> {
 
     /**
      * 格式化
      *
-     * @param log   日志
+     * @param log   日志对象，主要用于判断当前日志级别
      * @param value 值
      * @return 供日志打印的值
      */
-    String format(Log log, Object value);
+    String format(Log log, V value);
 }
