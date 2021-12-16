@@ -122,7 +122,7 @@ public class LazyRefreshSupplier<T> extends LongTimeThread implements Supplier<T
          * 返回值日志格式化器
          */
         @Builder.Default
-        private LazyValueFormatter valueFormatter = new LazyValueFormatter();
+        private LazyValueFormatter valueFormatter = new DefaultLazyValueFormatter();
         /**
          * 刷新监听器
          */

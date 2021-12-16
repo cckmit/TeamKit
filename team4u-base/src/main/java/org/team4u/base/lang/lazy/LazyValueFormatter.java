@@ -1,6 +1,5 @@
 package org.team4u.base.lang.lazy;
 
-import cn.hutool.core.convert.Convert;
 import cn.hutool.log.Log;
 
 /**
@@ -8,7 +7,7 @@ import cn.hutool.log.Log;
  *
  * @author jay.wu
  */
-public class LazyValueFormatter {
+public interface LazyValueFormatter {
 
     /**
      * 格式化
@@ -17,15 +16,5 @@ public class LazyValueFormatter {
      * @param value 值
      * @return 供日志打印的值
      */
-    public String format(Log log, Object value) {
-        if (value == null) {
-            return null;
-        }
-
-        if (log.isDebugEnabled()) {
-            return Convert.toStr(value);
-        }
-
-        return value.getClass().getSimpleName();
-    }
+    String format(Log log, Object value);
 }

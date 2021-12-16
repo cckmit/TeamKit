@@ -226,11 +226,11 @@ public class LazyFunction<T, R> implements Function<T, R> {
          * 请求值日志格式化器
          */
         @Builder.Default
-        private LazyValueFormatter parameterFormatter = new LazyValueFormatter();
+        private LazyValueFormatter parameterFormatter = new DefaultLazyValueFormatter();
         /**
          * 返回值日志格式化器
          */
         @Builder.Default
-        private LazyValueFormatter resultFormatter = new LazyValueFormatter();
+        private LazyValueFormatter resultFormatter = new DefaultLazyValueFormatter();
     }
 }

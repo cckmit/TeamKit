@@ -120,6 +120,6 @@ public class LazySupplier<T> implements Supplier<T> {
          * 返回值日志格式化器
          */
         @Builder.Default
-        private LazyValueFormatter valueFormatter = new LazyValueFormatter();
+        private LazyValueFormatter valueFormatter = new DefaultLazyValueFormatter();
     }
 }
