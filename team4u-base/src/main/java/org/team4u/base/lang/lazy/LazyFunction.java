@@ -83,8 +83,12 @@ public class LazyFunction<T, R> implements Function<T, R> {
     }
 
     private Object lockOfKey(Object cacheKey) {
+        if (cacheKey == null) {
+            return this;
+        }
+
         if (cacheKey instanceof String) {
-            return cacheKey.toString().intern();
+            return ((String) cacheKey).intern();
         }
 
         return this;
@@ -109,7 +113,7 @@ public class LazyFunction<T, R> implements Function<T, R> {
 
         saveValue(cacheKey, result);
 
-        if (log.isInfoEnabled()) {
+        if (config.isEnabledLog() && log.isInfoEnabled()) {
             log.info(lm.success().append("value", config.getResultFormatter().format(log, result)).toString());
         }
 
@@ -212,6 +216,12 @@ public class LazyFunction<T, R> implements Function<T, R> {
         @Builder.Default
         @SuppressWarnings("rawtypes")
         private Function keyFunc = t -> t;
+        /**
+         * 是否开启日志
+         * 默认为开启，仅打印info级别
+         */
+        @Builder.Default
+        private boolean isEnabledLog = true;
         /**
          * 请求值日志格式化器
          */

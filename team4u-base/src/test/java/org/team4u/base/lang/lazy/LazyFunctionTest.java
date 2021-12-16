@@ -1,12 +1,51 @@
 package org.team4u.base.lang.lazy;
 
 import cn.hutool.cache.CacheUtil;
+import cn.hutool.core.thread.ThreadUtil;
 import org.junit.Assert;
 import org.junit.Test;
+import org.team4u.base.TestUtil;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class LazyFunctionTest {
+
+    @Test
+    public void concurrent() {
+        checkConcurrent(new Date());
+        checkConcurrent(this.getClass());
+        checkConcurrent(TestUtil.TEST);
+    }
+
+    private void checkConcurrent(Object key) {
+        AtomicInteger counter = new AtomicInteger();
+
+        LazyFunction<Object, Integer> f = LazyFunction.of(
+                LazyFunction.Config.builder().cache(CacheUtil.newLRUCache(1)).build(),
+                integer -> counter.incrementAndGet()
+        );
+
+        List<Future<?>> futures = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            futures.add(ThreadUtil.execAsync(() -> {
+                f.apply(key);
+            }));
+        }
+
+        futures.forEach(it -> {
+            try {
+                it.get();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+        Assert.assertEquals(1, f.apply(key).intValue());
+    }
 
     @Test
     public void apply() {
@@ -52,6 +91,7 @@ public class LazyFunctionTest {
         Assert.assertNull(f.apply(1));
         Assert.assertEquals(2, i.get());
     }
+
     @Test
     public void map() {
         AtomicInteger i = new AtomicInteger(1);
