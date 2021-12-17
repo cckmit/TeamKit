@@ -1,17 +1,24 @@
-package org.team4u.id.infrastructure.seq.value.mybatis;
+package org.team4u.id.infrastructure.seq.value.jdbc;
 
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.db.Db;
+import cn.hutool.db.Entity;
+import cn.hutool.db.handler.BeanHandler;
+import cn.hutool.db.sql.Query;
 import cn.hutool.log.Log;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import org.springframework.dao.DuplicateKeyException;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.team4u.base.bean.provider.BeanProviders;
+import org.team4u.base.error.NestedException;
 import org.team4u.base.log.LogMessage;
 import org.team4u.id.domain.seq.value.AbstractSequenceProviderFactory;
 import org.team4u.id.domain.seq.value.SequenceProvider;
 import org.team4u.id.domain.seq.value.StepSequenceProvider;
-import org.team4u.id.infrastructure.seq.value.jdbc.Sequence;
 
+import javax.sql.DataSource;
+import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Date;
 
 /**
@@ -19,34 +26,38 @@ import java.util.Date;
  *
  * @author jay.wu
  */
-public class MybatisStepSequenceProvider implements StepSequenceProvider {
+public class JdbcStepSequenceProvider implements StepSequenceProvider {
 
     private final Log log = Log.get();
 
     private final Config config;
-    private final SequenceMapper sequenceMapper;
+    private final Db db;
 
-    public MybatisStepSequenceProvider(Config config, SequenceMapper sequenceMapper) {
+    public JdbcStepSequenceProvider(Config config, DataSource dataSource) {
         this.config = config;
-        this.sequenceMapper = sequenceMapper;
+        this.db = Db.use(dataSource);
     }
 
     @Override
     public Number provide(Context context) {
-        Sequence sequence = sequenceOf(context.getSequenceConfig().getTypeId(), context.getGroupKey());
+        try {
+            Sequence sequence = sequenceOf(context.getSequenceConfig().getTypeId(), context.getGroupKey());
 
-        // 序列不存在，进行插入
-        if (sequence == null) {
-            Number value = sequenceValueByCreate(context);
-            if (value != null) {
-                return value;
+            // 序列不存在，进行插入
+            if (sequence == null) {
+                Number value = sequenceValueByCreate(context);
+                if (value != null) {
+                    return value;
+                }
+
+                // 已存在记录，尝试更新
+                sequence = sequenceOf(context.getSequenceConfig().getTypeId(), context.getGroupKey());
             }
 
-            // 已存在记录，尝试更新
-            sequence = sequenceOf(context.getSequenceConfig().getTypeId(), context.getGroupKey());
+            return sequenceValueByUpdate(sequence, context);
+        } catch (Exception e) {
+            throw new NestedException(e);
         }
-
-        return sequenceValueByUpdate(sequence, context);
     }
 
     /**
@@ -54,7 +65,7 @@ public class MybatisStepSequenceProvider implements StepSequenceProvider {
      *
      * @param context 上下文
      */
-    public Number currentSequence(Context context) {
+    public Number currentSequence(Context context) throws SQLException {
         Sequence sequence = sequenceOf(context.getSequenceConfig().getTypeId(), context.getGroupKey());
 
         if (sequence == null) {
@@ -64,7 +75,7 @@ public class MybatisStepSequenceProvider implements StepSequenceProvider {
         return sequence.getCurrentValue();
     }
 
-    private Number sequenceValueByUpdate(Sequence sequence, Context context) {
+    private Number sequenceValueByUpdate(Sequence sequence, Context context) throws SQLException {
         LogMessage lm = LogMessage.create(this.getClass().getSimpleName(), "sequenceValueByUpdate")
                 .append("context", context);
 
@@ -108,8 +119,15 @@ public class MybatisStepSequenceProvider implements StepSequenceProvider {
         }
     }
 
-    private Number updateWithRetry(Sequence sequence, Context context) {
-        int result = sequenceMapper.updateById(sequence);
+    private Number updateWithRetry(Sequence sequence, Context context) throws SQLException {
+        long version = sequence.getVersionNumber();
+        sequence.setVersionNumber(version + 1);
+        int result = db.update(
+                Entity.create().parseBean(sequence, true, true),
+                Entity.create()
+                        .set("id", sequence.getId())
+                        .set("version_number", version)
+        );
 
         // 若更新失败，重新尝试
         if (result == 0) {
@@ -127,7 +145,7 @@ public class MybatisStepSequenceProvider implements StepSequenceProvider {
         return sequence.getCurrentValue();
     }
 
-    private Number sequenceValueByCreate(Context context) {
+    private Number sequenceValueByCreate(Context context) throws SQLException {
         LogMessage lm = LogMessage.create(this.getClass().getSimpleName(), "sequenceValueByCreate")
                 .append("context", context);
         Sequence sequence = new Sequence();
@@ -139,10 +157,10 @@ public class MybatisStepSequenceProvider implements StepSequenceProvider {
         sequence.setVersionNumber(0L);
 
         try {
-            sequenceMapper.insert(sequence);
+            db.insert(Entity.create().parseBean(sequence, true, true));
             log.info(lm.success().append("currentValue", sequence.getCurrentValue()).toString());
             return sequence.getCurrentValue();
-        } catch (DuplicateKeyException e) {
+        } catch (SQLIntegrityConstraintViolationException e) {
             // 已存在记录，尝试更新
             log.info(lm.fail("tryUpdate").toString());
             return null;
@@ -152,10 +170,14 @@ public class MybatisStepSequenceProvider implements StepSequenceProvider {
     /**
      * 查找序列
      */
-    private Sequence sequenceOf(String typeId, String groupKey) {
-        return sequenceMapper.selectOne(new LambdaQueryWrapper<Sequence>()
-                .eq(Sequence::getTypeId, typeId)
-                .eq(Sequence::getGroupKey, groupKey)
+    private Sequence sequenceOf(String typeId, String groupKey) throws SQLException {
+        return db.find(
+                Query.of(
+                        Entity.create("sequence")
+                                .set("type_id", typeId)
+                                .set("group_key", groupKey)
+                ),
+                new BeanHandler<>(Sequence.class)
         );
     }
 
@@ -164,18 +186,27 @@ public class MybatisStepSequenceProvider implements StepSequenceProvider {
         return config;
     }
 
+    @EqualsAndHashCode(callSuper = true)
+    @Data
+    public static class Config extends StepSequenceProvider.Config {
+        /**
+         * 数据源 bean标识
+         */
+        private String dataSourceBeanId;
+    }
+
     public static class Factory extends AbstractSequenceProviderFactory<Config> {
 
         @Override
         public String id() {
-            return "MBS";
+            return "JS";
         }
 
         @Override
         protected SequenceProvider createWithConfig(Config config) {
-            return new MybatisStepSequenceProvider(
+            return new JdbcStepSequenceProvider(
                     config,
-                    BeanProviders.getInstance().getBean(SequenceMapper.class)
+                    BeanProviders.getInstance().getBean(config.getDataSourceBeanId())
             );
         }
     }
