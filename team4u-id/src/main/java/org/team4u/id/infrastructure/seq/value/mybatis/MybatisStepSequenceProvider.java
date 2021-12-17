@@ -5,7 +5,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.team4u.base.bean.provider.BeanProviders;
 import org.team4u.id.domain.seq.value.AbstractSequenceProviderFactory;
 import org.team4u.id.domain.seq.value.SequenceProvider;
-import org.team4u.id.infrastructure.seq.value.SqlStepSequenceProvider;
+import org.team4u.id.infrastructure.seq.value.RdbmsStepSequenceProvider;
 import org.team4u.id.infrastructure.seq.value.jdbc.Sequence;
 
 /**
@@ -13,7 +13,7 @@ import org.team4u.id.infrastructure.seq.value.jdbc.Sequence;
  *
  * @author jay.wu
  */
-public class MybatisStepSequenceProvider extends SqlStepSequenceProvider {
+public class MybatisStepSequenceProvider extends RdbmsStepSequenceProvider {
 
     private final SequenceMapper sequenceMapper;
 
@@ -21,7 +21,6 @@ public class MybatisStepSequenceProvider extends SqlStepSequenceProvider {
         super(config);
         this.sequenceMapper = sequenceMapper;
     }
-
 
     @Override
     protected int updateSequence(Sequence sequence) {

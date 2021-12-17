@@ -12,17 +12,17 @@ import java.sql.SQLException;
 import java.util.Date;
 
 /**
- * 基于mybatis的序号值提供者
+ * 基于关系型数据库的序号值提供者
  *
  * @author jay.wu
  */
-public abstract class SqlStepSequenceProvider implements StepSequenceProvider {
+public abstract class RdbmsStepSequenceProvider implements StepSequenceProvider {
 
     protected final Log log = Log.get();
 
     private final Config config;
 
-    public SqlStepSequenceProvider(Config config) {
+    public RdbmsStepSequenceProvider(Config config) {
         this.config = config;
     }
 

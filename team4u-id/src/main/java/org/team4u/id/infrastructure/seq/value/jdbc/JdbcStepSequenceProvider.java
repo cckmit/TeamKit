@@ -11,18 +11,18 @@ import org.team4u.base.error.NestedException;
 import org.team4u.id.domain.seq.value.AbstractSequenceProviderFactory;
 import org.team4u.id.domain.seq.value.SequenceProvider;
 import org.team4u.id.domain.seq.value.StepSequenceProvider;
-import org.team4u.id.infrastructure.seq.value.SqlStepSequenceProvider;
+import org.team4u.id.infrastructure.seq.value.RdbmsStepSequenceProvider;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 
 /**
- * 基于mybatis的序号值提供者
+ * 基于JDBC的序号值提供者
  *
  * @author jay.wu
  */
-public class JdbcStepSequenceProvider extends SqlStepSequenceProvider {
+public class JdbcStepSequenceProvider extends RdbmsStepSequenceProvider {
 
     private final Db db;
 
