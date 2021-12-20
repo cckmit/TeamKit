@@ -106,13 +106,13 @@ public class JdbcStepSequenceProvider extends RdbmsStepSequenceProvider {
         }
 
         private DataSource dataSource(Config config) {
-            // 未指定数据源标识，尝试按类型查找
-            if (StrUtil.isBlank(config.getDataSourceBeanId())) {
-                return BeanProviders.getInstance().getBean(DataSource.class);
+            // 按照指定数据源标识查找
+            if (StrUtil.isNotBlank(config.getDataSourceBeanId())) {
+                return BeanProviders.getInstance().getBean(config.getDataSourceBeanId());
             }
 
-            // 按照指定数据源标识查找
-            return BeanProviders.getInstance().getBean(config.getDataSourceBeanId());
+            // 未指定数据源标识，尝试按类型查找
+            return BeanProviders.getInstance().getBean(DataSource.class);
         }
     }
 }
