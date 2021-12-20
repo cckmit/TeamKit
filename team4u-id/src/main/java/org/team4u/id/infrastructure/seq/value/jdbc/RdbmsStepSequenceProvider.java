@@ -1,4 +1,4 @@
-package org.team4u.id.infrastructure.seq.value;
+package org.team4u.id.infrastructure.seq.value.jdbc;
 
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.RandomUtil;
@@ -6,7 +6,6 @@ import cn.hutool.log.Log;
 import org.team4u.base.error.NestedException;
 import org.team4u.base.log.LogMessage;
 import org.team4u.id.domain.seq.value.StepSequenceProvider;
-import org.team4u.id.infrastructure.seq.value.jdbc.Sequence;
 
 import java.sql.SQLException;
 import java.util.Date;

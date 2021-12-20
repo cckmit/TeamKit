@@ -12,7 +12,6 @@ import org.team4u.base.error.NestedException;
 import org.team4u.id.domain.seq.value.AbstractSequenceProviderFactory;
 import org.team4u.id.domain.seq.value.SequenceProvider;
 import org.team4u.id.domain.seq.value.StepSequenceProvider;
-import org.team4u.id.infrastructure.seq.value.RdbmsStepSequenceProvider;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
