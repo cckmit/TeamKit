@@ -20,12 +20,6 @@ public abstract class RdbmsStepSequenceProvider implements StepSequenceProvider 
 
     protected final Log log = Log.get();
 
-    private final Config config;
-
-    public RdbmsStepSequenceProvider(Config config) {
-        this.config = config;
-    }
-
     @Override
     public Number provide(Context context) {
         try {
@@ -75,7 +69,7 @@ public abstract class RdbmsStepSequenceProvider implements StepSequenceProvider 
 
         // 序列存在，进行更新
         sequence.setUpdateTime(new Date());
-        sequence.setCurrentValue(sequence.getCurrentValue() + config.getStep());
+        sequence.setCurrentValue(sequence.getCurrentValue() + config().getStep());
 
         // 如果超过最大值，将重置序列
         resetIfOverMaxValue(sequence);
@@ -87,23 +81,23 @@ public abstract class RdbmsStepSequenceProvider implements StepSequenceProvider 
     }
 
     private boolean canUpdateIfOverMaxValue(Sequence sequence) {
-        if (sequence.getCurrentValue() < config.getMaxValue()) {
+        if (sequence.getCurrentValue() < config().getMaxValue()) {
             return true;
         }
 
-        return config.isRecycleAfterMaxValue();
+        return config().isRecycleAfterMaxValue();
     }
 
     private void resetIfOverMaxValue(Sequence sequence) {
-        if (sequence.getCurrentValue() <= config.getMaxValue()) {
+        if (sequence.getCurrentValue() <= config().getMaxValue()) {
             return;
         }
 
         // 循环使用
-        if (config.isRecycleAfterMaxValue()) {
-            sequence.setCurrentValue(config.getStart());
+        if (config().isRecycleAfterMaxValue()) {
+            sequence.setCurrentValue(config().getStart());
         } else {
-            sequence.setCurrentValue(config.getMaxValue());
+            sequence.setCurrentValue(config().getMaxValue());
         }
     }
 
@@ -132,7 +126,7 @@ public abstract class RdbmsStepSequenceProvider implements StepSequenceProvider 
         Sequence sequence = new Sequence();
         sequence.setTypeId(context.getSequenceConfig().getTypeId());
         sequence.setGroupKey(context.getGroupKey());
-        sequence.setCurrentValue(config.getStart());
+        sequence.setCurrentValue(config().getStart());
         sequence.setCreateTime(new Date());
         sequence.setUpdateTime(new Date());
         sequence.setVersionNumber(0L);
@@ -147,17 +141,24 @@ public abstract class RdbmsStepSequenceProvider implements StepSequenceProvider 
         return value;
     }
 
+    /**
+     * 更新序号
+     *
+     * @param sequence 序号对象
+     * @return 成功更新数量
+     */
     protected abstract int updateSequence(Sequence sequence);
 
+    /**
+     * 插入序号
+     *
+     * @param sequence 序号对象
+     * @return 当前序号
+     */
     protected abstract Long insertSequence(Sequence sequence);
 
     /**
      * 查找序列
      */
     protected abstract Sequence sequenceOf(String typeId, String groupKey);
-
-    @Override
-    public Config config() {
-        return config;
-    }
 }

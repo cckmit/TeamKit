@@ -1,5 +1,6 @@
 package org.team4u.id.infrastructure.seq.value.jdbc;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.Db;
 import cn.hutool.db.Entity;
 import cn.hutool.db.handler.BeanHandler;
@@ -18,7 +19,7 @@ import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 
 /**
- * 基于JDBC的序号值提供者
+ * 基于JDBC的序号提供者
  *
  * @author jay.wu
  */
@@ -26,8 +27,10 @@ public class JdbcStepSequenceProvider extends RdbmsStepSequenceProvider {
 
     private final Db db;
 
+    private final Config config;
+
     public JdbcStepSequenceProvider(Config config, DataSource dataSource) {
-        super(config);
+        this.config = config;
         this.db = Db.use(dataSource);
     }
 
@@ -77,6 +80,11 @@ public class JdbcStepSequenceProvider extends RdbmsStepSequenceProvider {
         }
     }
 
+    @Override
+    public Config config() {
+        return config;
+    }
+
     @EqualsAndHashCode(callSuper = true)
     @Data
     public static class Config extends StepSequenceProvider.Config {
@@ -95,10 +103,17 @@ public class JdbcStepSequenceProvider extends RdbmsStepSequenceProvider {
 
         @Override
         protected SequenceProvider createWithConfig(Config config) {
-            return new JdbcStepSequenceProvider(
-                    config,
-                    BeanProviders.getInstance().getBean(config.getDataSourceBeanId())
-            );
+            return new JdbcStepSequenceProvider(config, dataSource(config));
+        }
+
+        private DataSource dataSource(Config config) {
+            // 未指定数据源标识，尝试按类型查找
+            if (StrUtil.isBlank(config.getDataSourceBeanId())) {
+                return BeanProviders.getInstance().getBean(DataSource.class);
+            }
+
+            // 按照指定数据源标识查找
+            return BeanProviders.getInstance().getBean(config.getDataSourceBeanId());
         }
     }
 }

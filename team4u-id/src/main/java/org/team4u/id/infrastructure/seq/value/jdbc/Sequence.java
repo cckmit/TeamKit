@@ -1,9 +1,5 @@
 package org.team4u.id.infrastructure.seq.value.jdbc;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.annotation.Version;
 import lombok.Data;
 
 import java.util.Date;
@@ -14,12 +10,10 @@ import java.util.Date;
  * @author jay.wu
  */
 @Data
-@TableName
 public class Sequence {
     /**
      * 自增长标识
      */
-    @TableId(type = IdType.AUTO)
     private Long id;
     /**
      * 类型标识
@@ -44,6 +38,5 @@ public class Sequence {
     /**
      * 版本号
      */
-    @Version
     private Long versionNumber;
 }
