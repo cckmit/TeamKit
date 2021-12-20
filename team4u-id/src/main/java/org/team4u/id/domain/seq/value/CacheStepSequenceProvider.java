@@ -430,7 +430,7 @@ public class CacheStepSequenceProvider implements SequenceProvider {
          *
          * @see StepSequenceProvider.Factory
          */
-        private String delegateId = "MBS";
+        private String delegateId;
         /**
          * 代理序号提供者配置
          */
