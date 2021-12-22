@@ -1,4 +1,4 @@
 org.team4u.id.domain.seq.value.CacheStepSequenceProvider$Factory
 org.team4u.id.domain.seq.value.InMemoryStepSequenceProvider$Factory
 org.team4u.id.infrastructure.seq.value.redis.RedisStepSequenceProvider$Factory
-org.team4u.id.infrastructure.seq.value.mybatis.MybatisStepSequenceProvider$Factory
+org.team4u.id.infrastructure.seq.value.jdbc.JdbcStepSequenceProvider$Factory

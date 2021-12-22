@@ -1,17 +1,16 @@
 package org.team4u.id.infrastructure.seq.value.jdbc;
 
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.Db;
 import cn.hutool.db.Entity;
 import cn.hutool.db.handler.BeanHandler;
 import cn.hutool.db.sql.Query;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.team4u.base.bean.provider.BeanProviders;
 import org.team4u.base.error.NestedException;
 import org.team4u.id.domain.seq.value.AbstractSequenceProviderFactory;
 import org.team4u.id.domain.seq.value.SequenceProvider;
 import org.team4u.id.domain.seq.value.StepSequenceProvider;
+import org.team4u.id.infrastructure.util.BeanProviderUtil;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
@@ -102,17 +101,10 @@ public class JdbcStepSequenceProvider extends RdbmsStepSequenceProvider {
 
         @Override
         protected SequenceProvider createWithConfig(Config config) {
-            return new JdbcStepSequenceProvider(config, dataSource(config));
-        }
-
-        private DataSource dataSource(Config config) {
-            // 按照指定数据源标识查找
-            if (StrUtil.isNotBlank(config.getDataSourceBeanId())) {
-                return BeanProviders.getInstance().getBean(config.getDataSourceBeanId());
-            }
-
-            // 未指定数据源标识，尝试按类型查找
-            return BeanProviders.getInstance().getBean(DataSource.class);
+            return new JdbcStepSequenceProvider(
+                    config,
+                    BeanProviderUtil.getBean(DataSource.class, config.getDataSourceBeanId())
+            );
         }
     }
 }
