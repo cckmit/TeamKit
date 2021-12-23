@@ -63,12 +63,12 @@ public class JdbcStepSequenceProvider extends RdbmsStepSequenceProvider {
     }
 
     @Override
-    protected Sequence sequenceOf(String typeId, String groupKey) {
+    protected Sequence sequenceOf(String configId, String groupKey) {
         try {
             return db.find(
                     Query.of(
                             Entity.create("sequence")
-                                    .set("type_id", typeId)
+                                    .set("config_id", configId)
                                     .set("group_key", groupKey)
                     ),
                     new BeanHandler<>(Sequence.class)

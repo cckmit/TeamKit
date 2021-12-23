@@ -18,7 +18,7 @@ public class Sequence {
     /**
      * 类型标识
      */
-    private String typeId;
+    private String configId;
     /**
      * 分组标识
      */

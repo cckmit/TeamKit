@@ -117,7 +117,7 @@ public abstract class RdbmsStepSequenceProvider implements StepSequenceProvider 
         LogMessage lm = LogMessage.create(this.getClass().getSimpleName(), "sequenceValueByCreate")
                 .append("context", context);
         Sequence sequence = new Sequence();
-        sequence.setTypeId(context.getSequenceConfig().getConfigId());
+        sequence.setConfigId(context.getSequenceConfig().getConfigId());
         sequence.setGroupKey(context.getGroupKey());
         sequence.setCurrentValue(config().getStart());
         sequence.setCreateTime(new Date());
@@ -153,5 +153,5 @@ public abstract class RdbmsStepSequenceProvider implements StepSequenceProvider 
     /**
      * 查找序列
      */
-    protected abstract Sequence sequenceOf(String typeId, String groupKey);
+    protected abstract Sequence sequenceOf(String configId, String groupKey);
 }

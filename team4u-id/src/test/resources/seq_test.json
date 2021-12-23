@@ -1,5 +1,5 @@
 {
-  "typeId": "TEST",
+  "configId": "TEST",
   "sequenceFactoryId": "CS",
   "sequenceConfig": {
     "delegateId": "MS",
