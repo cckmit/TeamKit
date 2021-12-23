@@ -13,10 +13,6 @@ import org.team4u.base.config.IdentifiedConfig;
 @Data
 public class SequenceConfig extends IdentifiedConfig {
     /**
-     * 类型标识
-     */
-    private String typeId;
-    /**
      * 分组配置标识
      */
     private String groupFactoryId;

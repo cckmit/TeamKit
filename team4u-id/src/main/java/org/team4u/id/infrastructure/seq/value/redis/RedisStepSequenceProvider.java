@@ -46,7 +46,7 @@ public class RedisStepSequenceProvider extends AutoIncrementStepSequenceProvider
      */
     protected String sequenceIdOf(Context context) {
         return config.getRedisKeyPrefix() + ":" +
-                context.getSequenceConfig().getTypeId() + ":" +
+                context.getSequenceConfig().getConfigId() + ":" +
                 context.getGroupKey();
     }
 
@@ -59,7 +59,7 @@ public class RedisStepSequenceProvider extends AutoIncrementStepSequenceProvider
      * 标准化redis template，防止序列化器与预期不符
      */
     private RedisTemplate<String, String> standardizedRedisTemplate(RedisTemplate<?, ?> redisTemplate) {
-        // 需要确保key和value为string序列化模式，否则反序列化时可能异常
+        // 需要确保key和value为string序列化模式，否则反序列化时将异常
         if (redisTemplate.getKeySerializer() instanceof StringRedisSerializer &&
                 redisTemplate.getValueSerializer() instanceof StringRedisSerializer) {
             //noinspection unchecked

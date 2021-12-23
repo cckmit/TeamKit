@@ -37,7 +37,7 @@ public interface SequenceProvider {
         private final Map<String, Object> ext;
 
         public String id() {
-            return sequenceConfig.getTypeId() + ":" + groupKey;
+            return sequenceConfig.getConfigId() + ":" + groupKey;
         }
 
         @Override

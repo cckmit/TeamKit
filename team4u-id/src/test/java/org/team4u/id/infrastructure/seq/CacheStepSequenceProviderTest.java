@@ -125,7 +125,7 @@ public class CacheStepSequenceProviderTest {
 
     private SequenceProvider.Context context() {
         SequenceConfig sequenceConfig = new SequenceConfig();
-        sequenceConfig.setTypeId("TEST");
+        sequenceConfig.setConfigId("TEST");
         return new SequenceProvider.Context(
                 sequenceConfig,
                 "TEST",

@@ -3,11 +3,9 @@ package org.team4u.id.infrastructure.seq.value.jdbc;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.log.Log;
-import org.team4u.base.error.NestedException;
 import org.team4u.base.log.LogMessage;
 import org.team4u.id.domain.seq.value.StepSequenceProvider;
 
-import java.sql.SQLException;
 import java.util.Date;
 
 /**
@@ -21,24 +19,20 @@ public abstract class RdbmsStepSequenceProvider implements StepSequenceProvider 
 
     @Override
     public Number provide(Context context) {
-        try {
-            Sequence sequence = sequenceOf(context.getSequenceConfig().getTypeId(), context.getGroupKey());
+        Sequence sequence = sequenceOf(context.getSequenceConfig().getConfigId(), context.getGroupKey());
 
-            // 序列不存在，进行插入
-            if (sequence == null) {
-                Number value = sequenceValueByCreate(context);
-                if (value != null) {
-                    return value;
-                }
-
-                // 已存在记录，尝试更新
-                sequence = sequenceOf(context.getSequenceConfig().getTypeId(), context.getGroupKey());
+        // 序列不存在，进行插入
+        if (sequence == null) {
+            Number value = sequenceValueByCreate(context);
+            if (value != null) {
+                return value;
             }
 
-            return sequenceValueByUpdate(sequence, context);
-        } catch (Exception e) {
-            throw new NestedException(e);
+            // 已存在记录，尝试更新
+            sequence = sequenceOf(context.getSequenceConfig().getConfigId(), context.getGroupKey());
         }
+
+        return sequenceValueByUpdate(sequence, context);
     }
 
     /**
@@ -46,8 +40,8 @@ public abstract class RdbmsStepSequenceProvider implements StepSequenceProvider 
      *
      * @param context 上下文
      */
-    public Number currentSequence(Context context) throws SQLException {
-        Sequence sequence = sequenceOf(context.getSequenceConfig().getTypeId(), context.getGroupKey());
+    public Number currentSequence(Context context) {
+        Sequence sequence = sequenceOf(context.getSequenceConfig().getConfigId(), context.getGroupKey());
 
         if (sequence == null) {
             return null;
@@ -56,7 +50,7 @@ public abstract class RdbmsStepSequenceProvider implements StepSequenceProvider 
         return sequence.getCurrentValue();
     }
 
-    private Number sequenceValueByUpdate(Sequence sequence, Context context) throws SQLException {
+    private Number sequenceValueByUpdate(Sequence sequence, Context context) {
         LogMessage lm = LogMessage.create(this.getClass().getSimpleName(), "sequenceValueByUpdate")
                 .append("context", context);
 
@@ -100,7 +94,7 @@ public abstract class RdbmsStepSequenceProvider implements StepSequenceProvider 
         }
     }
 
-    private Number updateWithRetry(Sequence sequence, Context context) throws SQLException {
+    private Number updateWithRetry(Sequence sequence, Context context) {
         int result = updateSequence(sequence);
 
         // 若更新失败，重新尝试
@@ -119,11 +113,11 @@ public abstract class RdbmsStepSequenceProvider implements StepSequenceProvider 
         return sequence.getCurrentValue();
     }
 
-    private Number sequenceValueByCreate(Context context) throws SQLException {
+    private Number sequenceValueByCreate(Context context) {
         LogMessage lm = LogMessage.create(this.getClass().getSimpleName(), "sequenceValueByCreate")
                 .append("context", context);
         Sequence sequence = new Sequence();
-        sequence.setTypeId(context.getSequenceConfig().getTypeId());
+        sequence.setTypeId(context.getSequenceConfig().getConfigId());
         sequence.setGroupKey(context.getGroupKey());
         sequence.setCurrentValue(config().getStart());
         sequence.setCreateTime(new Date());
