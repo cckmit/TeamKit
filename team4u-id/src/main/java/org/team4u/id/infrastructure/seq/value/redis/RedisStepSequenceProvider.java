@@ -6,11 +6,11 @@ import lombok.EqualsAndHashCode;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.team4u.base.bean.provider.BeanProviders;
 import org.team4u.id.domain.seq.value.AbstractSequenceProviderFactory;
 import org.team4u.id.domain.seq.value.AutoIncrementStepSequenceProvider;
 import org.team4u.id.domain.seq.value.SequenceProvider;
 import org.team4u.id.domain.seq.value.StepSequenceProvider;
-import org.team4u.id.infrastructure.util.BeanProviderUtil;
 
 import java.util.Objects;
 
@@ -82,7 +82,7 @@ public class RedisStepSequenceProvider extends AutoIncrementStepSequenceProvider
         protected SequenceProvider createWithConfig(Config config) {
             return new RedisStepSequenceProvider(
                     config,
-                    BeanProviderUtil.getBean(RedisTemplate.class, config.getRedisTemplateBeanId())
+                    BeanProviders.getBean(RedisTemplate.class, config.getRedisTemplateBeanId())
             );
         }
     }

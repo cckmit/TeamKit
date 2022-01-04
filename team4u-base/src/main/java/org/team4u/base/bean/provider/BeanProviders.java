@@ -2,6 +2,7 @@ package org.team4u.base.bean.provider;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Singleton;
+import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.team4u.base.bean.event.BeanInitializedEvent;
 import org.team4u.base.log.LogMessage;
@@ -35,6 +36,27 @@ public class BeanProviders extends PolicyRegistrar<String, BeanProvider> {
 
     public BeanProviders(List<BeanProvider> objects) {
         super(objects);
+    }
+
+    /**
+     * 获取bean对象
+     * <p>
+     * 先尝试按指定bean标识获取，若不指定，则尝试按照类型获取
+     *
+     * @param beanType bean类型
+     * @param beanId   bean标识
+     * @param <T>      bean类型
+     * @return bean对象
+     * @throws NoSuchBeanDefinitionException 无法找到bean时抛出此异常
+     */
+    public static <T> T getBean(Class<T> beanType, String beanId) throws NoSuchBeanDefinitionException {
+        // 按照指定bean标识查找
+        if (StrUtil.isNotBlank(beanId)) {
+            return BeanProviders.getInstance().getBean(beanId);
+        }
+
+        // 未指定bean标识，尝试按类型查找
+        return BeanProviders.getInstance().getBean(beanType);
     }
 
     /**

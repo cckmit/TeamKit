@@ -6,11 +6,11 @@ import cn.hutool.db.handler.BeanHandler;
 import cn.hutool.db.sql.Query;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.team4u.base.bean.provider.BeanProviders;
 import org.team4u.base.error.NestedException;
 import org.team4u.id.domain.seq.value.AbstractSequenceProviderFactory;
 import org.team4u.id.domain.seq.value.SequenceProvider;
 import org.team4u.id.domain.seq.value.StepSequenceProvider;
-import org.team4u.id.infrastructure.util.BeanProviderUtil;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
@@ -103,7 +103,7 @@ public class JdbcStepSequenceProvider extends RdbmsStepSequenceProvider {
         protected SequenceProvider createWithConfig(Config config) {
             return new JdbcStepSequenceProvider(
                     config,
-                    BeanProviderUtil.getBean(DataSource.class, config.getDataSourceBeanId())
+                    BeanProviders.getBean(DataSource.class, config.getDataSourceBeanId())
             );
         }
     }
