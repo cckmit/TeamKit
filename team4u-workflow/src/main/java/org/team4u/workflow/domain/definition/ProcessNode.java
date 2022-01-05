@@ -9,7 +9,7 @@ import java.util.Objects;
  *
  * @author jay.wu
  */
-public abstract class ProcessNode extends ValueObject {
+public abstract class ProcessNode implements ValueObject {
     /**
      * 节点标识
      */

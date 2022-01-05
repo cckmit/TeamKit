@@ -9,7 +9,7 @@ import java.util.Map;
  *
  * @author jay.wu
  */
-public class ProcessEmulatorScriptStep extends ValueObject {
+public class ProcessEmulatorScriptStep implements ValueObject {
     /**
      * 当前操作人标识
      */

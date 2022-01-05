@@ -10,7 +10,7 @@ import org.team4u.workflow.domain.definition.exception.ProcessDefinitionIdIllega
  *
  * @author jay.wu
  */
-public class ProcessDefinitionId extends ValueObject {
+public class ProcessDefinitionId implements ValueObject {
     /**
      * 标识
      */

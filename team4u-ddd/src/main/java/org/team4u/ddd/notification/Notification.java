@@ -6,7 +6,7 @@ import org.team4u.ddd.domain.model.ValueObject;
 
 import java.util.Date;
 
-public class Notification extends ValueObject {
+public class Notification implements ValueObject {
 
     private DomainEvent event;
     private long notificationId;

@@ -9,7 +9,7 @@ import java.util.Objects;
  *
  * @author jay.wu
  */
-public class ProcessAction extends ValueObject {
+public class ProcessAction implements ValueObject {
     /**
      * 动作标识
      */
