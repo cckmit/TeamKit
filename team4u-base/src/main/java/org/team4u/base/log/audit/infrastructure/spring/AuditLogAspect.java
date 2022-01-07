@@ -34,6 +34,11 @@ public class AuditLogAspect {
 
         AuditLogContext.AuditLogContextBuilder builder = builderOf(method, joinPoint.getArgs());
 
+        // 不满足条件，直接执行方法
+        if (!auditLogAppService.canTrace(builder.build())) {
+            return joinPoint.proceed();
+        }
+
         try {
             Object returnValue = joinPoint.proceed();
             builder.returnValue(returnValue);
@@ -60,6 +65,7 @@ public class AuditLogAspect {
                 .moduleId(trace.module())
                 .actionId(trace.action())
                 .occurredOn(new Date())
+                .conditionId(trace.conditionId())
                 .description(trace.description());
     }
 }

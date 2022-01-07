@@ -1,5 +1,7 @@
 package org.team4u.base.log.audit.domain.annotion;
 
+import org.team4u.base.log.audit.domain.condition.TrueCondition;
+
 import java.lang.annotation.*;
 
 /**
@@ -31,4 +33,9 @@ public @interface TraceAuditLog {
      * 描述
      */
     String description() default "";
+
+    /**
+     * 激活条件标识
+     */
+    String conditionId() default TrueCondition.ID;
 }

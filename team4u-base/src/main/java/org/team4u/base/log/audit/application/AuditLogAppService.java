@@ -4,6 +4,7 @@ import cn.hutool.core.convert.Convert;
 import lombok.Builder;
 import lombok.Getter;
 import org.team4u.base.log.audit.domain.*;
+import org.team4u.base.log.audit.domain.condition.ConditionHandlerHolder;
 import org.team4u.base.log.audit.domain.provider.*;
 import org.team4u.base.message.MessagePublisher;
 
@@ -17,9 +18,11 @@ import java.util.Map;
 public class AuditLogAppService {
 
     private final Providers providers;
+    private final ConditionHandlerHolder conditionHandlerHolder;
 
     public AuditLogAppService(Providers providers) {
         this.providers = providers;
+        this.conditionHandlerHolder = new ConditionHandlerHolder();
     }
 
     /**
@@ -44,6 +47,16 @@ public class AuditLogAppService {
         MessagePublisher.instance().publish(new AuditLogCreatedEvent(auditLog));
 
         return auditLog;
+    }
+
+    /**
+     * 判断是否需要跟踪
+     *
+     * @param context 上下文
+     * @return true：需要跟踪，false：不需要跟踪
+     */
+    public boolean canTrace(AuditLogContext context) {
+        return conditionHandlerHolder.test(context);
     }
 
     private String descriptionOf(AuditLogContext context) {

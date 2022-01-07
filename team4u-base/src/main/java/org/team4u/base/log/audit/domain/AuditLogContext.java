@@ -29,6 +29,7 @@ public class AuditLogContext {
     private Date occurredOn;
     private String actionId;
     private String description;
+    private String conditionId;
 
     /**
      * 设置扩展信息
