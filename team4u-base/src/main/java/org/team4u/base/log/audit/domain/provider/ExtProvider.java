@@ -9,7 +9,7 @@ import java.util.Map;
  *
  * @author jay.wu
  */
-public interface ExtProvider {
+public interface ExtProvider extends LogPropProvider {
 
     /**
      * 获取扩展信息
@@ -18,4 +18,9 @@ public interface ExtProvider {
      * @return 扩展信息
      */
     Map<String, Object> extOf(AuditLogContext context);
+
+    @Override
+    default Class<? extends LogPropProvider> id() {
+        return ExtProvider.class;
+    }
 }

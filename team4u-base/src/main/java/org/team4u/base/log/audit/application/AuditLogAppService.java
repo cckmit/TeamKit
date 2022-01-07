@@ -1,11 +1,9 @@
 package org.team4u.base.log.audit.application;
 
 import cn.hutool.core.convert.Convert;
-import lombok.Builder;
-import lombok.Getter;
 import org.team4u.base.log.audit.domain.*;
 import org.team4u.base.log.audit.domain.condition.ConditionHandlerHolder;
-import org.team4u.base.log.audit.domain.provider.*;
+import org.team4u.base.log.audit.domain.provider.LogPropProviders;
 import org.team4u.base.message.MessagePublisher;
 
 import java.util.Map;
@@ -17,13 +15,8 @@ import java.util.Map;
  */
 public class AuditLogAppService {
 
-    private final Providers providers;
-    private final ConditionHandlerHolder conditionHandlerHolder;
-
-    public AuditLogAppService(Providers providers) {
-        this.providers = providers;
-        this.conditionHandlerHolder = new ConditionHandlerHolder();
-    }
+    private final LogPropProviders providers = new LogPropProviders();
+    private final ConditionHandlerHolder conditionHandlerHolder = new ConditionHandlerHolder();
 
     /**
      * 创建审计日志
@@ -121,21 +114,5 @@ public class AuditLogAppService {
         }
 
         return providers.getExtProvider().extOf(context);
-    }
-
-    /**
-     * 日志信息提供者服务
-     */
-    @Getter
-    @Builder
-    public static class Providers {
-        private IpProvider ipProvider;
-        private ExtProvider extProvider;
-        private ModuleProvider moduleProvider;
-        private ActionProvider actionProvider;
-        private ResultProvider resultProvider;
-        private OperatorProvider operatorProvider;
-        private ReferenceIdProvider referenceIdProvider;
-        private DescriptionProvider descriptionProvider;
     }
 }

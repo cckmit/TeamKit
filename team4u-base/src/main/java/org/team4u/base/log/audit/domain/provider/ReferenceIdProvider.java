@@ -7,7 +7,7 @@ import org.team4u.base.log.audit.domain.AuditLogContext;
  *
  * @author jay.wu
  */
-public interface ReferenceIdProvider {
+public interface ReferenceIdProvider extends LogPropProvider {
 
     /**
      * 获取关联标识
@@ -16,4 +16,9 @@ public interface ReferenceIdProvider {
      * @return 关联标识
      */
     String referenceIdOf(AuditLogContext context);
+
+    @Override
+    default Class<? extends LogPropProvider> id() {
+        return ReferenceIdProvider.class;
+    }
 }

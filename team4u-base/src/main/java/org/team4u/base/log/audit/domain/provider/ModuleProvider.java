@@ -8,7 +8,7 @@ import org.team4u.base.log.audit.domain.LogModule;
  *
  * @author jay.wu
  */
-public interface ModuleProvider {
+public interface ModuleProvider extends LogPropProvider {
 
     /**
      * 获取模块
@@ -17,4 +17,9 @@ public interface ModuleProvider {
      * @return 模块对象
      */
     LogModule moduleOf(AuditLogContext context);
+
+    @Override
+    default Class<? extends LogPropProvider> id() {
+        return ModuleProvider.class;
+    }
 }

@@ -8,7 +8,7 @@ import org.team4u.base.log.audit.domain.LogAction;
  *
  * @author jay.wu
  */
-public interface ActionProvider {
+public interface ActionProvider extends LogPropProvider {
 
     /**
      * 获取动作
@@ -17,4 +17,9 @@ public interface ActionProvider {
      * @return 动作对象
      */
     LogAction actionOf(AuditLogContext context);
+
+    @Override
+    default Class<? extends LogPropProvider> id() {
+        return ActionProvider.class;
+    }
 }

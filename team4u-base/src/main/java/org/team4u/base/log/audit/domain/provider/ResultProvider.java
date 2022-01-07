@@ -7,7 +7,7 @@ import org.team4u.base.log.audit.domain.AuditLogContext;
  *
  * @author jay.wu
  */
-public interface ResultProvider {
+public interface ResultProvider extends LogPropProvider {
 
     /**
      * 获取结果
@@ -16,4 +16,9 @@ public interface ResultProvider {
      * @return 结果
      */
     String resultOf(AuditLogContext context);
+
+    @Override
+    default Class<? extends LogPropProvider> id() {
+        return ResultProvider.class;
+    }
 }

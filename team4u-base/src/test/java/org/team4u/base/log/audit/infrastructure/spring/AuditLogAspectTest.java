@@ -123,16 +123,9 @@ public class AuditLogAspectTest {
     public static class MockBeanConfig {
 
         @Bean
-        public AuditLogAppService auditLogAppService(AuditLogCreatedEventSubscriber subscriber,
-                                                     OperatorProvider operatorProvider,
-                                                     ReferenceIdProvider referenceIdProvider) {
+        public AuditLogAppService auditLogAppService(AuditLogCreatedEventSubscriber subscriber) {
             MessagePublisher.instance().subscribe(subscriber);
-
-            return new AuditLogAppService(
-                    AuditLogAppService.Providers.builder()
-                            .operatorProvider(operatorProvider)
-                            .referenceIdProvider(referenceIdProvider)
-                            .build());
+            return new AuditLogAppService();
         }
 
         @Bean

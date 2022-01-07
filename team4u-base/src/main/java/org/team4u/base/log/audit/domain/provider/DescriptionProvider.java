@@ -7,7 +7,7 @@ import org.team4u.base.log.audit.domain.AuditLogContext;
  *
  * @author jay.wu
  */
-public interface DescriptionProvider {
+public interface DescriptionProvider extends LogPropProvider {
 
     /**
      * 获取描述
@@ -16,4 +16,9 @@ public interface DescriptionProvider {
      * @return 描述
      */
     String descriptionOf(AuditLogContext context);
+
+    @Override
+    default Class<? extends LogPropProvider> id() {
+        return DescriptionProvider.class;
+    }
 }

@@ -7,7 +7,7 @@ import org.team4u.base.log.audit.domain.AuditLogContext;
  *
  * @author jay.wu
  */
-public interface IpProvider {
+public interface IpProvider extends LogPropProvider {
 
     /**
      * 获取IP
@@ -16,4 +16,9 @@ public interface IpProvider {
      * @return IP
      */
     String ipOf(AuditLogContext context);
+
+    @Override
+    default Class<? extends LogPropProvider> id() {
+        return IpProvider.class;
+    }
 }
