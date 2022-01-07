@@ -31,6 +31,7 @@ public class AuditLogAppService {
                 .action(actionOf(context))
                 .module(moduleOf(context))
                 .result(resultOf(context))
+                .systemId(systemIdOf(context))
                 .operator(operatorOf(context))
                 .referenceId(referenceIdOf(context))
                 .description(descriptionOf(context))
@@ -50,6 +51,14 @@ public class AuditLogAppService {
      */
     public boolean canTrace(AuditLogContext context) {
         return conditionHandlerHolder.test(context);
+    }
+
+    private String systemIdOf(AuditLogContext context) {
+        if (providers.getSystemIdProvider() == null) {
+            return null;
+        }
+
+        return providers.getSystemIdProvider().systemIdOf(context);
     }
 
     private String descriptionOf(AuditLogContext context) {

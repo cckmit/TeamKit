@@ -16,6 +16,7 @@ import java.util.Map;
 public class AuditLog {
 
     private String referenceId;
+    private String systemId;
     private LogModule module;
     private Operator operator;
     private Date occurredOn;

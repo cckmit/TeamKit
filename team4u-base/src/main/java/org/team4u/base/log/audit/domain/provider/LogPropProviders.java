@@ -49,4 +49,8 @@ public class LogPropProviders extends PolicyRegistrar<Class<? extends LogPropPro
     public DescriptionProvider getDescriptionProvider() {
         return getBean(DescriptionProvider.class);
     }
+
+    public SystemIdProvider getSystemIdProvider() {
+        return getBean(SystemIdProvider.class);
+    }
 }
