@@ -21,7 +21,6 @@ import org.team4u.base.log.audit.domain.condition.ConditionHandler;
 import org.team4u.base.log.audit.domain.provider.OperatorProvider;
 import org.team4u.base.log.audit.domain.provider.ReferenceIdProvider;
 import org.team4u.base.message.AbstractMessageSubscriber;
-import org.team4u.base.message.MessagePublisher;
 import org.team4u.base.spring.SpringInitializedPublisher;
 import org.team4u.test.spring.BaseTestBeanConfig;
 
@@ -123,14 +122,8 @@ public class AuditLogAspectTest {
     public static class MockBeanConfig {
 
         @Bean
-        public AuditLogAppService auditLogAppService(AuditLogCreatedEventSubscriber subscriber) {
-            MessagePublisher.instance().subscribe(subscriber);
-            return new AuditLogAppService();
-        }
-
-        @Bean
-        public AuditLogAspect auditTraceAspect(AuditLogAppService auditLogAppService) {
-            return new AuditLogAspect(auditLogAppService);
+        public AuditLogAspect auditTraceAspect() {
+            return new AuditLogAspect(new AuditLogAppService());
         }
     }
 }
