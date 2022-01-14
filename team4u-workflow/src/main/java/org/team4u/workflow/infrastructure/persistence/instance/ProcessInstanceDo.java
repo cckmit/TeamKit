@@ -1,9 +1,7 @@
 package org.team4u.workflow.infrastructure.persistence.instance;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.annotation.Version;
+import com.baomidou.mybatisplus.annotation.*;
+import org.team4u.workflow.infrastructure.persistence.instance.ext.MybatisDetailTypeHandler;
 
 import java.util.Date;
 
@@ -31,6 +29,7 @@ public class ProcessInstanceDo {
     /**
      * 流程实例明细
      */
+    @TableField(typeHandler = MybatisDetailTypeHandler.class)
     private String processInstanceDetail;
     /**
      * 流程流程定义标识

@@ -10,7 +10,7 @@ import org.team4u.base.message.AbstractMessageSubscriber;
 public abstract class AbstractBeanInitializedEventSubscriber extends AbstractMessageSubscriber<BeanInitializedEvent> {
 
     @Override
-    protected boolean supports(Object message) {
+    public boolean supports(Object message) {
         if (!super.supports(message)) {
             return false;
         }
