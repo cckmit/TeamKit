@@ -1,7 +1,5 @@
 package org.team4u.ddd.message;
 
-import cn.hutool.core.lang.func.VoidFunc1;
-
 import java.io.Closeable;
 
 /**
@@ -21,5 +19,5 @@ public interface MessageQueue<M> extends Closeable {
      *
      * @param handler 处理器
      */
-    void messageHandler(VoidFunc1<M> handler);
+    void messageHandler(MessageHandler<M> handler);
 }

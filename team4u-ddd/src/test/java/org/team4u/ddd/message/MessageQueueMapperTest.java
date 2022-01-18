@@ -1,6 +1,5 @@
 package org.team4u.ddd.message;
 
-import cn.hutool.core.lang.func.VoidFunc1;
 import com.alibaba.fastjson.JSON;
 import org.junit.Assert;
 import org.junit.Test;
@@ -18,7 +17,7 @@ public class MessageQueueMapperTest {
         mapper.start();
 
         String name = "fjay";
-        q.handler.callWithRuntimeException(JSON.toJSONString(new A().setName(name)));
+        q.handler.onMessage(JSON.toJSONString(new A().setName(name)));
 
         Assert.assertEquals(name, c.getA().getName());
     }
@@ -52,7 +51,7 @@ public class MessageQueueMapperTest {
 
     public static class Queue implements MessageQueue<String> {
 
-        private VoidFunc1<String> handler;
+        private MessageHandler<String> handler;
 
         @Override
         public void start() {
@@ -60,7 +59,7 @@ public class MessageQueueMapperTest {
         }
 
         @Override
-        public void messageHandler(VoidFunc1<String> handler) {
+        public void messageHandler(MessageHandler<String> handler) {
             this.handler = handler;
         }
 

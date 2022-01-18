@@ -1,7 +1,6 @@
 package org.team4u.ddd.message;
 
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.lang.func.VoidFunc1;
 
 import java.io.Closeable;
 
@@ -14,13 +13,15 @@ public class MessageQueueMapper implements Closeable {
 
     @SuppressWarnings("rawtypes")
     private final MessageQueue messageQueue;
-    private final MessageHandler messageHandler;
+    private final SimpleMessageHandler messageHandler;
 
     public MessageQueueMapper(MessageConsumer<?> messageConsumer,
                               MessageQueue<?> messageQueue,
                               MessageConverter messageConverter) {
         this.messageQueue = messageQueue;
-        this.messageHandler = new MessageHandler(messageConsumer, messageConverter);
+        this.messageHandler = new SimpleMessageHandler(messageConsumer, messageConverter);
+
+        start();
     }
 
     @SuppressWarnings("unchecked")
@@ -34,20 +35,20 @@ public class MessageQueueMapper implements Closeable {
         IoUtil.close(messageQueue);
     }
 
-    private static class MessageHandler implements VoidFunc1<Object> {
+    public static class SimpleMessageHandler implements MessageHandler<Object> {
 
         @SuppressWarnings("rawtypes")
         private final MessageConsumer messageConsumer;
         private final MessageConverter messageConverter;
 
-        private MessageHandler(MessageConsumer<?> messageConsumer, MessageConverter messageConverter) {
+        private SimpleMessageHandler(MessageConsumer<?> messageConsumer, MessageConverter messageConverter) {
             this.messageConsumer = messageConsumer;
             this.messageConverter = messageConverter;
         }
 
         @SuppressWarnings("unchecked")
         @Override
-        public void call(Object message) {
+        public void onMessage(Object message) {
             Object target = messageConverter.convert(message, messageConsumer.messageType());
             messageConsumer.onMessage(target);
         }
