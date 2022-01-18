@@ -1,6 +1,5 @@
 package org.team4u.base.message;
 
-import cn.hutool.core.util.ClassUtil;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 import org.team4u.base.error.NestedException;
@@ -18,9 +17,6 @@ import java.util.concurrent.ExecutorService;
 public abstract class AbstractMessageSubscriber<M> implements MessageSubscriber<M> {
 
     protected final Log log = LogFactory.get(this.getClass());
-
-    @SuppressWarnings("unchecked")
-    private final Class<M> messageType = (Class<M>) ClassUtil.getTypeArgument(this.getClass());
 
     /**
      * 线程池
@@ -82,20 +78,4 @@ public abstract class AbstractMessageSubscriber<M> implements MessageSubscriber<
      * @throws Throwable 异常
      */
     protected abstract void internalOnMessage(M message) throws Throwable;
-
-    /**
-     * 判断是否监听指定的事件类型
-     */
-    protected boolean supports(Object message) {
-        return messageType().isAssignableFrom(message.getClass());
-    }
-
-    /**
-     * 消息类型
-     *
-     * @return 消息类型
-     */
-    public Class<M> messageType() {
-        return messageType;
-    }
 }

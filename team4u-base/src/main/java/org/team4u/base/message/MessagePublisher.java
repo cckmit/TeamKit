@@ -57,7 +57,9 @@ public class MessagePublisher {
     @SuppressWarnings({"unchecked", "rawtypes"})
     public void publish(Object message) {
         for (MessageSubscriber subscriber : subscribers) {
-            subscriber.onMessage(message);
+            if (subscriber.supports(message)) {
+                subscriber.onMessage(message);
+            }
         }
     }
 

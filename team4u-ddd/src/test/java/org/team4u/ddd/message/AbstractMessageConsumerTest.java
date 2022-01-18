@@ -37,7 +37,7 @@ public class AbstractMessageConsumerTest {
         }
 
         @Override
-        protected boolean supports(Object event) {
+        public boolean supports(Object event) {
             return event instanceof FakeEvent1;
         }
     }
