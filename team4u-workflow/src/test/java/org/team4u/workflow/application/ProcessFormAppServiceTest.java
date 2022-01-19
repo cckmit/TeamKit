@@ -31,6 +31,7 @@ import org.team4u.workflow.infrastructure.persistence.instance.InMemoryProcessIn
 
 import javax.annotation.PostConstruct;
 import java.util.List;
+import java.util.Set;
 
 import static org.team4u.workflow.TestUtil.*;
 
@@ -161,10 +162,20 @@ public class ProcessFormAppServiceTest extends SpringDbTest {
                 .setCurrentNode(definition.processNodeOf("created"))
                 .setProcessDefinitionId(ProcessDefinitionId.of("simple"));
 
+        Set<String> permissions = processFormAppService.operatorPermissionsOf(
+                null,
+                instance,
+                definition,
+                null,
+                operator
+        );
+
         List<ProcessAction> actions = processFormAppService.availableActionsOf(
                 null,
                 instance,
-                definition, operator
+                permissions,
+                definition,
+                operator
         );
         Assert.assertEquals(expectedActions, actions.toString());
     }

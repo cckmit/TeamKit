@@ -83,9 +83,18 @@ public class ProcessFormAppService {
             throw new NoPermissionException("您没有权限查看请表单");
         }
 
+        formModel.setPermissions(operatorPermissionsOf(
+                formModel.getFormIndex(),
+                formModel.getInstance(),
+                definition,
+                null,
+                operatorId
+        ));
+
         formModel.setActions(availableActionsOf(
                 formModel.getFormIndex(),
                 formModel.getInstance(),
+                formModel.getPermissions(),
                 definition,
                 operatorId
         ));
@@ -159,6 +168,7 @@ public class ProcessFormAppService {
      */
     public List<ProcessAction> availableActionsOf(FormIndex form,
                                                   ProcessInstance instance,
+                                                  Set<String> permissions,
                                                   ProcessDefinition definition,
                                                   String operatorId) {
         if (!(instance.getCurrentNode() instanceof StaticNode)) {
@@ -172,8 +182,6 @@ public class ProcessFormAppService {
         if (!(nextNode instanceof ActionChoiceNode)) {
             return Collections.emptyList();
         }
-
-        Set<String> permissions = operatorPermissionsOf(form, instance, definition, null, operatorId);
 
         return ((ActionChoiceNode) nextNode).getActionNodes()
                 .stream()
@@ -243,11 +251,11 @@ public class ProcessFormAppService {
         return permissions.contains(ProcessFormAction.Permission.VIEW.name());
     }
 
-    private Set<String> operatorPermissionsOf(FormIndex form,
-                                              ProcessInstance instance,
-                                              ProcessDefinition definition,
-                                              ProcessAction action,
-                                              String operatorId) {
+    public Set<String> operatorPermissionsOf(FormIndex form,
+                                             ProcessInstance instance,
+                                             ProcessDefinition definition,
+                                             ProcessAction action,
+                                             String operatorId) {
         return formPermissionService.operatorPermissionsOf(
                 new FormPermissionService.Context(
                         form,
