@@ -1,6 +1,7 @@
 package org.team4u.exporter.infrastructure.exporter;
 
 import cn.hutool.core.collection.CollectionUtil;
+import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.BaseFont;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,6 +12,7 @@ import org.team4u.exporter.domain.Exporter;
 import org.team4u.template.TemplateEngines;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
@@ -33,18 +35,18 @@ public class SimplePdfExporter implements Exporter<SimplePdfExporter.Context> {
     @Override
     public void export(Context context) throws Exception {
         ITextRenderer renderer = new ITextRenderer();
-
-        String html = renderHtml(context);
-        renderer.setDocumentFromString(html);
-
-        for (String font : context.getFonts()) {
-            renderer.getFontResolver().addFont(font, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
-        }
-
+        renderer.setDocumentFromString(renderHtml(context));
+        initFont(renderer, context);
         renderer.layout();
         renderer.createPDF(context.getOutputStream());
 
         context.getOutputStream().flush();
+    }
+
+    private void initFont(ITextRenderer renderer, Context context) throws DocumentException, IOException {
+        for (String font : context.getFonts()) {
+            renderer.getFontResolver().addFont(font, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+        }
     }
 
     private String renderHtml(Context context) {
