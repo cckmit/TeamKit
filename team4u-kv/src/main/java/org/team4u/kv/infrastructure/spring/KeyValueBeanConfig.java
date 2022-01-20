@@ -1,7 +1,6 @@
 package org.team4u.kv.infrastructure.spring;
 
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.handler.TableNameHandler;
 import com.baomidou.mybatisplus.extension.plugins.inner.DynamicTableNameInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.InnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
@@ -17,9 +16,7 @@ import org.team4u.kv.infrastructure.repository.db.DbKeyValueRepository;
 import org.team4u.kv.infrastructure.repository.db.TableIdHandler;
 import org.team4u.kv.infrastructure.resource.SimpleStoreResourceService;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 键值spring bean配置类
@@ -69,13 +66,9 @@ public class KeyValueBeanConfig {
     }
 
     @Bean
-    public DynamicTableNameInnerInterceptor dynamicTableNameInnerInterceptor(List<TableIdHandler> tableIdHandlers) {
+    public DynamicTableNameInnerInterceptor dynamicTableNameInnerInterceptor(TableIdHandler tableIdHandler) {
         DynamicTableNameInnerInterceptor dynamicTableNameInnerInterceptor = new DynamicTableNameInnerInterceptor();
-        Map<String, TableNameHandler> map = new HashMap<>(tableIdHandlers.size());
-        for (TableIdHandler tableIdHandler : tableIdHandlers) {
-            map.put(tableIdHandler.tableName(), tableIdHandler);
-        }
-        dynamicTableNameInnerInterceptor.setTableNameHandlerMap(map);
+        dynamicTableNameInnerInterceptor.setTableNameHandler(tableIdHandler);
         return dynamicTableNameInnerInterceptor;
     }
 

@@ -57,7 +57,7 @@ public interface KeyValueRepository {
     /**
      * 统计kv数量
      */
-    int count(String type);
+    long count(String type);
 
     /**
      * 检查是否包含指定标识数据

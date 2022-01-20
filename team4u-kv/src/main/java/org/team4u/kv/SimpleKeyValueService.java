@@ -132,7 +132,7 @@ public class SimpleKeyValueService<V> {
     /**
      * 获取键值数量
      */
-    public int size() {
+    public long size() {
         return keyValueService.size(type());
     }
 

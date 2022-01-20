@@ -201,13 +201,13 @@ public class DbKeyValueRepository implements KeyValueRepository {
     }
 
     @Override
-    public int count(String type) {
+    public long count(String type) {
         return withResources(() -> dbKeyValueMapper.selectCount(
                 new LambdaQueryWrapper<KeyValueEntity>()
                         .eq(KeyValueEntity::getType, type)
                         .and(this::notExpirationWrapper)))
                 .stream()
-                .reduce(0, Integer::sum);
+                .reduce(0L, Long::sum);
     }
 
     @Override

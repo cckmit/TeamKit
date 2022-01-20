@@ -1,6 +1,5 @@
 package org.team4u.kv;
 
-import com.baomidou.mybatisplus.extension.plugins.handler.TableNameHandler;
 import com.baomidou.mybatisplus.extension.plugins.inner.DynamicTableNameInnerInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -13,23 +12,15 @@ import org.team4u.kv.infrastructure.resource.SimpleStoreResourceService;
 import org.team4u.kv.resource.StoreResourceService;
 import org.team4u.test.spring.DbTestBeanConfig;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 @Configuration
 @Import(DbTestBeanConfig.class)
 @ComponentScan("org.team4u.kv.infrastructure.repository.db")
 public class BeanConfig {
 
     @Bean
-    public DynamicTableNameInnerInterceptor dynamicTableNameInnerInterceptor(List<TableIdHandler> tableIdHandlers) {
+    public DynamicTableNameInnerInterceptor dynamicTableNameInnerInterceptor(TableIdHandler tableIdHandler) {
         DynamicTableNameInnerInterceptor dynamicTableNameInnerInterceptor = new DynamicTableNameInnerInterceptor();
-        Map<String, TableNameHandler> map = new HashMap<>();
-        for (TableIdHandler tableIdHandler : tableIdHandlers) {
-            map.put(tableIdHandler.tableName(), tableIdHandler);
-        }
-        dynamicTableNameInnerInterceptor.setTableNameHandlerMap(map);
+        dynamicTableNameInnerInterceptor.setTableNameHandler(tableIdHandler);
         return dynamicTableNameInnerInterceptor;
     }
 

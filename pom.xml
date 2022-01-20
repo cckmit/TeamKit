@@ -26,8 +26,8 @@
     </modules>
 
     <properties>
-        <mybatis-plus.version>3.4.3.1</mybatis-plus.version>
-        <hutool.version>5.7.17</hutool.version>
+        <mybatis-plus.version>3.5.0</mybatis-plus.version>
+        <hutool.version>5.7.19</hutool.version>
         <spring-data-jpa.version>2.5.3</spring-data-jpa.version>
         <spring.version>5.3.9</spring.version>
         <beetl.version>3.4.0.RELEASE</beetl.version>

@@ -106,7 +106,7 @@ public class InMemoryKeyValueRepository implements KeyValueRepository {
     }
 
     @Override
-    public int count(String type) {
+    public long count(String type) {
         return byType(type).size();
     }
 

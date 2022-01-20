@@ -238,7 +238,7 @@ public class KeyValueService {
     /**
      * 获取键值数量
      */
-    public int size(String type) {
+    public long size(String type) {
         return keyValueRepository().count(type);
     }
 
