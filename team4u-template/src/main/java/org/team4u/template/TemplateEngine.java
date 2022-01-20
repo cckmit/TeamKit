@@ -1,5 +1,7 @@
 package org.team4u.template;
 
+import org.team4u.base.registrar.StringIdPolicy;
+
 import java.util.Map;
 
 /**
@@ -9,7 +11,7 @@ import java.util.Map;
  *
  * @author jay.wu
  */
-public interface TemplateEngine {
+public interface TemplateEngine extends StringIdPolicy {
 
     /**
      * 渲染模板

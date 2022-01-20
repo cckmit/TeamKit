@@ -29,11 +29,11 @@ public class JsTemplateEngine implements TemplateEngine {
     private final Cache<String, CompiledScript> scripts = CacheUtil.newLRUCache(1000);
     private final TemplateFunctionService templateFunctionService;
 
-    public JsTemplateEngine(TemplateFunctionService templateFunctionService) {
-        if (templateFunctionService == null) {
-            templateFunctionService = new TemplateFunctionService(null);
-        }
+    public JsTemplateEngine() {
+        this(new TemplateFunctionService());
+    }
 
+    public JsTemplateEngine(TemplateFunctionService templateFunctionService) {
         this.templateFunctionService = templateFunctionService;
     }
 
@@ -118,5 +118,10 @@ public class JsTemplateEngine implements TemplateEngine {
         } catch (ScriptException e) {
             throw new ScriptRuntimeException(e);
         }
+    }
+
+    @Override
+    public String id() {
+        return "JS";
     }
 }

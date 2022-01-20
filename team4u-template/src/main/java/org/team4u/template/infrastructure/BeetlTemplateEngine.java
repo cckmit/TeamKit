@@ -26,11 +26,11 @@ public class BeetlTemplateEngine implements TemplateEngine {
     private final TemplateFunctionService templateFunctionService;
     private GroupTemplate groupTemplate;
 
-    public BeetlTemplateEngine(TemplateFunctionService templateFunctionService) {
-        if (templateFunctionService == null) {
-            templateFunctionService = new TemplateFunctionService(null);
-        }
+    public BeetlTemplateEngine() {
+        this(new TemplateFunctionService());
+    }
 
+    public BeetlTemplateEngine(TemplateFunctionService templateFunctionService) {
         this.templateFunctionService = templateFunctionService;
         initGroupTemplate();
     }
@@ -76,5 +76,10 @@ public class BeetlTemplateEngine implements TemplateEngine {
                 );
             }
         }
+    }
+
+    @Override
+    public String id() {
+        return "BEETL";
     }
 }

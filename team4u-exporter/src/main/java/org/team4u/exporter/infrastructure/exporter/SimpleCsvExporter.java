@@ -7,6 +7,7 @@ import cn.hutool.core.text.csv.CsvUtil;
 import cn.hutool.core.text.csv.CsvWriteConfig;
 import cn.hutool.core.text.csv.CsvWriter;
 import cn.hutool.core.util.ReflectUtil;
+import org.team4u.base.lang.lazy.LazySupplier;
 import org.team4u.exporter.domain.Exporter;
 import org.team4u.exporter.domain.Title;
 
@@ -22,10 +23,10 @@ import java.util.stream.Collectors;
  */
 public class SimpleCsvExporter implements Exporter<SimpleCsvExporter.Context> {
 
-    private static final SimpleCsvExporter INSTANCE = new SimpleCsvExporter();
+    private static final LazySupplier<SimpleCsvExporter> instance = LazySupplier.of(SimpleCsvExporter::new);
 
     public static SimpleCsvExporter getInstance() {
-        return INSTANCE;
+        return instance.get();
     }
 
     @Override

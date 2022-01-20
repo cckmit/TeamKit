@@ -3,6 +3,7 @@ package org.team4u.exporter.infrastructure.exporter;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
+import org.team4u.base.lang.lazy.LazySupplier;
 import org.team4u.exporter.domain.Exporter;
 import org.team4u.exporter.domain.Title;
 
@@ -13,10 +14,10 @@ import org.team4u.exporter.domain.Title;
  */
 public class SimpleExcelExporter implements Exporter<RowContext> {
 
-    private static final SimpleExcelExporter INSTANCE = new SimpleExcelExporter();
+    private static final LazySupplier<SimpleExcelExporter> instance = LazySupplier.of(SimpleExcelExporter::new);
 
     public static SimpleExcelExporter getInstance() {
-        return INSTANCE;
+        return instance.get();
     }
 
     @Override

@@ -22,11 +22,11 @@ public class JetbrickTemplateEngine implements TemplateEngine {
     private final JetEngine engine = JetEngine.create();
     private final TemplateFunctionService templateFunctionService;
 
-    public JetbrickTemplateEngine(TemplateFunctionService templateFunctionService) {
-        if (templateFunctionService == null) {
-            templateFunctionService = new TemplateFunctionService(null);
-        }
+    public JetbrickTemplateEngine() {
+        this(new TemplateFunctionService());
+    }
 
+    public JetbrickTemplateEngine(TemplateFunctionService templateFunctionService) {
         this.templateFunctionService = templateFunctionService;
         registerFunctions();
     }
@@ -54,5 +54,10 @@ public class JetbrickTemplateEngine implements TemplateEngine {
         for (TemplateFunction idObject : templateFunctionService.policies()) {
             resolver.registerFunctions(idObject.getClass());
         }
+    }
+
+    @Override
+    public String id() {
+        return "JETBRICK";
     }
 }
