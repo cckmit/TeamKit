@@ -23,7 +23,7 @@ public class ProcessDefinitionRepositoryTestUtil {
         );
 
         Assert.assertEquals(
-                "[created, createdActionNode, dynamic, pending, pendingActionNode, rejected, completed]",
+                "[init, created, createdActionNode, dynamic, pending, pendingActionNode, rejected, completed]",
                 definition.getNodes().toString()
         );
     }
