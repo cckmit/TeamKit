@@ -4,11 +4,11 @@ import java.util.Date;
 
 public class AbstractDomainEvent implements DomainEvent {
 
-    private String domainId;
+    private final String domainId;
 
-    private Date occurredOn;
+    private final Date occurredOn;
 
-    private int version;
+    private final int version;
 
     public AbstractDomainEvent(String domainId) {
         this(domainId, new Date());
