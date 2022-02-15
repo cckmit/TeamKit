@@ -1,9 +1,11 @@
 package org.team4u.command.domain.executor.handler.log;
 
 
+import org.team4u.command.domain.executor.ContextNames;
 import org.team4u.command.domain.executor.handler.CommandHandler;
 
 import java.util.Date;
+import java.util.Optional;
 
 /**
  * 命令日志处理器
@@ -20,7 +22,8 @@ public class CommandLogHandler implements CommandHandler {
 
     @Override
     public void handle(Context context) {
-        CommandLog commandLog = commandLogRepository.logOf(context.getCommandLogId());
+        CommandLog commandLog = Optional.ofNullable((CommandLog) context.extraAttribute(ContextNames.COMMAND_LOG))
+                .orElseGet(() -> commandLogRepository.logOf(context.getCommandLogId()));
 
         if (commandLog == null) {
             commandLog = newCommandLog(context)
@@ -34,7 +37,9 @@ public class CommandLogHandler implements CommandHandler {
         commandLog.setDurationMillisecond(
                 commandLog.getUpdateTime().getTime() - commandLog.getCreateTime().getTime()
         );
+
         commandLogRepository.save(commandLog);
+        context.setExtraAttribute(ContextNames.COMMAND_LOG, commandLog);
     }
 
     protected CommandLog newCommandLog(Context context) {

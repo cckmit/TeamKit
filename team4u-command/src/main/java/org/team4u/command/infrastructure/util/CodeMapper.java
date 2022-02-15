@@ -1,6 +1,7 @@
 package org.team4u.command.infrastructure.util;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 
 import java.util.List;
@@ -14,11 +15,13 @@ import java.util.Objects;
 public class CodeMapper {
 
     public String map(List<CodeMapping> codeMappings, String code, String subCode) {
+        code = ObjectUtil.defaultIfNull(code, "");
+        subCode = ObjectUtil.defaultIfNull(subCode, "");
         return CollUtil.newArrayList(
-                findSubCodeMapping(codeMappings, code, subCode),
-                findCodeMapping(codeMappings, code),
-                findDefaultCodeMapping(codeMappings)
-        ).stream()
+                        findSubCodeMapping(codeMappings, code, subCode),
+                        findCodeMapping(codeMappings, code),
+                        findDefaultCodeMapping(codeMappings)
+                ).stream()
                 .filter(Objects::nonNull)
                 .findFirst()
                 .orElse(new CodeMapping())
