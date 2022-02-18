@@ -3,6 +3,7 @@ package org.team4u.command.infrastructure.util;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import lombok.Data;
 
 import java.util.List;
 import java.util.Objects;
@@ -14,9 +15,11 @@ import java.util.Objects;
  */
 public class CodeMapper {
 
+    public static final String NULL = "-";
+
     public String map(List<CodeMapping> codeMappings, String code, String subCode) {
-        code = ObjectUtil.defaultIfNull(code, "");
-        subCode = ObjectUtil.defaultIfNull(subCode, "");
+        code = ObjectUtil.defaultIfNull(code, NULL);
+        subCode = ObjectUtil.defaultIfNull(subCode, NULL);
         return CollUtil.newArrayList(
                         findSubCodeMapping(codeMappings, code, subCode),
                         findCodeMapping(codeMappings, code),
@@ -73,6 +76,7 @@ public class CodeMapper {
                 .orElse(null);
     }
 
+    @Data
     public static class CodeMapping {
         private String originalCode;
         private String originalSubCode;
@@ -84,30 +88,6 @@ public class CodeMapper {
         public CodeMapping(String originalCode, String originalSubCode, String standardCode) {
             this.originalCode = originalCode;
             this.originalSubCode = originalSubCode;
-            this.standardCode = standardCode;
-        }
-
-        public String getOriginalCode() {
-            return originalCode;
-        }
-
-        public void setOriginalCode(String originalCode) {
-            this.originalCode = originalCode;
-        }
-
-        public String getOriginalSubCode() {
-            return originalSubCode;
-        }
-
-        public void setOriginalSubCode(String originalSubCode) {
-            this.originalSubCode = originalSubCode;
-        }
-
-        public String getStandardCode() {
-            return standardCode;
-        }
-
-        public void setStandardCode(String standardCode) {
             this.standardCode = standardCode;
         }
     }
