@@ -68,6 +68,7 @@ public class CodeMapper {
     private CodeMapping findDefaultCodeMapping(List<CodeMapping> codeMappings) {
         return codeMappings.stream()
                 .filter(it -> StrUtil.isEmpty(it.getOriginalCode()))
+                .filter(it -> StrUtil.isEmpty(it.getOriginalSubCode()))
                 .findFirst()
                 .orElse(null);
     }
