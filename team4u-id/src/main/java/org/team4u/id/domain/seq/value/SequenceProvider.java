@@ -21,6 +21,13 @@ public interface SequenceProvider {
      */
     Number provide(Context context);
 
+    /**
+     * 是否序号值已耗尽
+     *
+     * @return true：已无可用序号，false：存在可用序号
+     */
+    boolean isEmpty(Context context);
+
     @Data
     class Context {
         /**

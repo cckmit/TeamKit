@@ -43,6 +43,65 @@ public class SequenceGenerator implements Generator<Number> {
     }
 
     /**
+     * 是否序号值已耗尽
+     *
+     * @param configId             配置标识
+     * @param context              上下文
+     * @param nullIfConfigNotExist 当配置不存在时序号值是否返回null，true返回null，false则抛出SequenceConfigLoadException
+     * @return true：已无可用序号，false：存在可用序号
+     */
+    public boolean isEmpty(String configId,
+                           boolean nullIfConfigNotExist,
+                           Map<String, Object> context) {
+        SequenceConfig config = configOf(configId, nullIfConfigNotExist);
+        if (config == null) {
+            return true;
+        }
+
+        String groupKey = groupFactoryHolder.provide(
+                new SequenceGroupKeyProvider.Context(config, context)
+        );
+        return valueFactoryHolder.isEmpty(
+                new SequenceProvider.Context(config, groupKey, context)
+        );
+    }
+
+    /**
+     * 是否序号值已耗尽
+     *
+     * @param configId             配置标识
+     * @param nullIfConfigNotExist 当配置不存在时序号值是否返回null，true返回null，false则抛出SequenceConfigLoadException
+     * @return true：已无可用序号，false：存在可用序号
+     * @throws SequenceConfigLoadException 当配置加载出错时抛出此异常
+     */
+    public boolean isEmpty(String configId, boolean nullIfConfigNotExist) throws SequenceConfigLoadException {
+        return isEmpty(configId, nullIfConfigNotExist, Collections.emptyMap());
+    }
+
+    /**
+     * 是否序号值已耗尽
+     *
+     * @param configId 配置标识
+     * @return true：已无可用序号，false：存在可用序号
+     * @throws SequenceConfigLoadException 当配置加载出错时抛出此异常
+     */
+    public boolean isEmpty(String configId) throws SequenceConfigLoadException {
+        return isEmpty(configId, false);
+    }
+
+    /**
+     * 是否序号值已耗尽
+     * <p>
+     * 使用默认配置 GLOBAL_CONFIG_ID
+     *
+     * @return true：已无可用序号，false：存在可用序号
+     * @throws SequenceConfigLoadException 当配置加载出错时抛出此异常
+     */
+    public boolean isEmpty() throws SequenceConfigLoadException {
+        return isEmpty(GLOBAL_CONFIG_ID);
+    }
+
+    /**
      * 生成下一个标识
      * <p>
      * 使用默认配置 GLOBAL_CONFIG_ID

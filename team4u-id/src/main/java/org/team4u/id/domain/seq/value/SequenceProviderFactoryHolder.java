@@ -27,6 +27,18 @@ public class SequenceProviderFactoryHolder extends PolicyRegistrar<String, Seque
     }
 
     /**
+     * 是否序号值已耗尽
+     *
+     * @return true：已无可用序号，false：存在可用序号
+     */
+    public boolean isEmpty(SequenceProvider.Context context) {
+        return create(
+                context.getSequenceConfig().getSequenceFactoryId(),
+                context.getSequenceConfig().getSequenceConfig()
+        ).isEmpty(context);
+    }
+
+    /**
      * 创建序号提供者
      *
      * @param factoryId 工厂标识

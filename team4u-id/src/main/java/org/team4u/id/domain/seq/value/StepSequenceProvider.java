@@ -11,6 +11,24 @@ public interface StepSequenceProvider extends SequenceProvider {
 
     Config config();
 
+    /**
+     * 当前序号值
+     *
+     * @param context 上下文
+     */
+    Number currentSequence(Context context);
+
+    @Override
+    default boolean isEmpty(Context context) {
+        // 循环使用，永不为空
+        if (config().isRecycleAfterMaxValue()) {
+            return false;
+        }
+
+        // 判断是否已达到或者超过最大值
+        return currentSequence(context).longValue() >= config().getMaxValue();
+    }
+
     @Data
     class Config {
         /**

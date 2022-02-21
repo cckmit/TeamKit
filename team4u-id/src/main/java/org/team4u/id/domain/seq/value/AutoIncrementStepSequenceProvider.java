@@ -30,13 +30,6 @@ public abstract class AutoIncrementStepSequenceProvider implements StepSequenceP
     }
 
     /**
-     * 当前序号值
-     *
-     * @param context 上下文
-     */
-    protected abstract Number currentSequence(Context context);
-
-    /**
      * 获取递增后的值
      * <p>
      * 注意，递增前的初始值固定为0

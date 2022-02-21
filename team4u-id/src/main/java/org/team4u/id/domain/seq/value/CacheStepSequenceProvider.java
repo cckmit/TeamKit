@@ -64,6 +64,11 @@ public class CacheStepSequenceProvider implements SequenceProvider {
         return lazyCounters.apply(context).next();
     }
 
+    @Override
+    public boolean isEmpty(Context context) {
+        return lazyCounters.apply(context).isEmpty();
+    }
+
     /**
      * 清理过期缓存
      *
@@ -105,7 +110,8 @@ public class CacheStepSequenceProvider implements SequenceProvider {
         /**
          * 是否无可用序号
          */
-        private boolean isNoAvailableSequence = false;
+        @Getter
+        private boolean empty = false;
 
         @Getter
         private final Context context;
@@ -122,7 +128,7 @@ public class CacheStepSequenceProvider implements SequenceProvider {
 
             // 初始化序号失败
             if (!initQueue()) {
-                setNoAvailableSequence();
+                setEmpty();
                 close();
                 return;
             }
@@ -135,7 +141,7 @@ public class CacheStepSequenceProvider implements SequenceProvider {
          */
         public Number next() {
             // 已无可用序号，直接跳过，避免无效等待时间
-            if (isNoAvailableSequence) {
+            if (empty) {
                 return null;
             }
 
@@ -145,7 +151,7 @@ public class CacheStepSequenceProvider implements SequenceProvider {
 
                 // 无序号可用，直接返回null
                 if (Objects.equals(result, EMPTY_NUMBER)) {
-                    setNoAvailableSequence();
+                    setEmpty();
                     return null;
                 }
 
@@ -160,8 +166,8 @@ public class CacheStepSequenceProvider implements SequenceProvider {
             return offerBufferSequence();
         }
 
-        private void setNoAvailableSequence() {
-            isNoAvailableSequence = true;
+        private void setEmpty() {
+            empty = true;
         }
 
         @Override
@@ -210,6 +216,11 @@ public class CacheStepSequenceProvider implements SequenceProvider {
          */
         private boolean offerBufferSequence() {
             if (bufferCounter.overMaxValue()) {
+                try {
+                    offerEmptyNumber();
+                } catch (InterruptedException e) {
+                    // Ignore error
+                }
                 return false;
             }
 
@@ -217,9 +228,8 @@ public class CacheStepSequenceProvider implements SequenceProvider {
                 Number seq = bufferCounter.next();
 
                 try {
-                    // offer无法设置null值，当无可用序号时，设置特殊值代替
                     if (seq == null) {
-                        cache.put(EMPTY_NUMBER);
+                        offerEmptyNumber();
                         return false;
                     }
 
@@ -231,6 +241,13 @@ public class CacheStepSequenceProvider implements SequenceProvider {
             } while (!bufferCounter.isEmpty());
 
             return true;
+        }
+
+        /**
+         * offer无法设置null值，当无可用序号时，设置特殊值代替
+         */
+        private void offerEmptyNumber() throws InterruptedException {
+            cache.put(EMPTY_NUMBER);
         }
 
         @Override
