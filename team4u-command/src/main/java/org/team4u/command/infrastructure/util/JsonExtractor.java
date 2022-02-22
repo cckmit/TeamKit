@@ -5,6 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import org.team4u.base.data.extract.DataTargetTemplateExtracter;
 import org.team4u.base.data.extract.FastJsonDataTargetTemplateSerializer;
+import org.team4u.base.lang.lazy.LazySupplier;
 
 import java.util.Map;
 
@@ -14,6 +15,12 @@ import java.util.Map;
  * @author jay.wu
  */
 public class JsonExtractor {
+
+    private static final LazySupplier<JsonExtractor> instance = LazySupplier.of(JsonExtractor::new);
+
+    public static JsonExtractor getInstance() {
+        return instance.get();
+    }
 
     @SuppressWarnings("unchecked")
     public <T> T extract(ExtractConfig config, Object source) {
@@ -33,7 +40,7 @@ public class JsonExtractor {
         return ClassUtil.loadClass(targetType);
     }
 
-    private Object extractableSource(Object source) {
+    protected Object extractableSource(Object source) {
         if (source instanceof String) {
             return JSON.parseObject((String) source);
         }
@@ -50,33 +57,4 @@ public class JsonExtractor {
                 );
     }
 
-    public static class ExtractConfig {
-
-        /**
-         * 提取模板
-         */
-        private String template;
-        /**
-         * 目标类型
-         */
-        private String targetType;
-
-        public String getTemplate() {
-            return template;
-        }
-
-        public ExtractConfig setTemplate(String template) {
-            this.template = template;
-            return this;
-        }
-
-        public String getTargetType() {
-            return targetType;
-        }
-
-        public ExtractConfig setTargetType(String targetType) {
-            this.targetType = targetType;
-            return this;
-        }
-    }
 }

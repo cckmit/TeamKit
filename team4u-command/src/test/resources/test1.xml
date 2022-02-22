@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ROWS>
+    <ROW no="1">
+        <OUTPUT>
+            <ITEM>
+                <result_fs>40</result_fs>
+            </ITEM>
+        </OUTPUT>
+        <OUTPUT2>
+            <ITEM>
+                <errormesage>1</errormesage>
+            </ITEM>
+            <ITEM>
+                <errormesagecol>2</errormesagecol>
+            </ITEM>
+        </OUTPUT2>
+    </ROW>
+</ROWS>

@@ -1,6 +1,6 @@
 package org.team4u.command.domain.executor.handler.requester.http;
 
-import org.team4u.command.infrastructure.util.JsonExtractor;
+import org.team4u.command.domain.executor.handler.requester.JsonExtractorHandler;
 
 /**
  * 基于HTTP和JSON的命令处理器
@@ -17,12 +17,6 @@ public abstract class HttpJsonCommandRequester extends HttpCommandRequester {
 
     @Override
     protected Object toCommandResponse(Context context, HttpRequester.HttpResponse response) {
-        String body = response.getBody();
-
-        JsonExtractor.ExtractConfig extractConfig = context.getConfig().itemOf(
-                "jsonExtractor",
-                JsonExtractor.ExtractConfig.class
-        );
-        return new JsonExtractor().extract(extractConfig, body);
+        return new JsonExtractorHandler().extract(context, response.getBody());
     }
 }
