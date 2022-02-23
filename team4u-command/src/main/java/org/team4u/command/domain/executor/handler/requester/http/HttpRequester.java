@@ -1,6 +1,10 @@
 package org.team4u.command.domain.executor.handler.requester.http;
 
 import cn.hutool.core.lang.Dict;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 基于HTTP的请求者
@@ -16,6 +20,10 @@ public interface HttpRequester {
      * <p>
      * 为http请求适配器提供足够信
      */
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
     class HttpRequest {
         /**
          * http方法
@@ -24,6 +32,7 @@ public interface HttpRequester {
         /**
          * http参数
          */
+        @Builder.Default
         private Dict params = Dict.create();
         /**
          * 请求地址
@@ -32,87 +41,33 @@ public interface HttpRequester {
         /**
          * 连接超时时间（毫秒）
          */
+        @Builder.Default
         private int connectTimeoutMillis = 1500;
         /**
          * 读超时时间（毫秒）
          */
+        @Builder.Default
         private int readTimeoutMillis = 5000;
         /**
          * 请求头信息
          */
+        @Builder.Default
         private Dict headers = Dict.create();
         /**
          * 请求体
          */
         private String body;
-
-        public String getMethod() {
-            return method;
-        }
-
-        public HttpRequest setMethod(String method) {
-            this.method = method;
-            return this;
-        }
-
-        public Dict getParams() {
-            return params;
-        }
-
-        public HttpRequest setParams(Dict params) {
-            this.params = params;
-            return this;
-        }
-
-        public String getUrl() {
-            return url;
-        }
-
-        public HttpRequest setUrl(String url) {
-            this.url = url;
-            return this;
-        }
-
-        public Dict getHeaders() {
-            return headers;
-        }
-
-        public HttpRequest setHeaders(Dict headers) {
-            this.headers = headers;
-            return this;
-        }
-
-        public int getConnectTimeoutMillis() {
-            return connectTimeoutMillis;
-        }
-
-        public HttpRequest setConnectTimeoutMillis(int connectTimeoutMillis) {
-            this.connectTimeoutMillis = connectTimeoutMillis;
-            return this;
-        }
-
-        public int getReadTimeoutMillis() {
-            return readTimeoutMillis;
-        }
-
-        public HttpRequest setReadTimeoutMillis(int readTimeoutMillis) {
-            this.readTimeoutMillis = readTimeoutMillis;
-            return this;
-        }
-
-        public String getBody() {
-            return body;
-        }
-
-        public HttpRequest setBody(String body) {
-            this.body = body;
-            return this;
-        }
+        /**
+         * 扩展信息
+         */
+        @Builder.Default
+        private Dict ext = Dict.create();
     }
 
     /**
      * 基于http的响应信息
      */
+    @Data
     class HttpResponse {
         /**
          * http响应码
@@ -122,23 +77,5 @@ public interface HttpRequester {
          * http响应内容
          */
         private final String body;
-
-        public HttpResponse(int status, String body) {
-            this.status = status;
-            this.body = body;
-        }
-
-        public int getStatus() {
-            return status;
-        }
-
-        public String getBody() {
-            return body;
-        }
-
-        @Override
-        public String toString() {
-            return body;
-        }
     }
 }

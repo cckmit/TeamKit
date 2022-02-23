@@ -30,7 +30,7 @@ public class MockHttpCommandRequester extends HttpCommandRequester {
     protected HttpRequester.HttpRequest toRequest(Context context) {
         this.config = context.getConfig();
         this.request = context.getRequest();
-        return new HttpRequester.HttpRequest().setBody(context.getCommandId());
+        return HttpRequester.HttpRequest.builder().body(context.getCommandId()).build();
     }
 
     @Override
