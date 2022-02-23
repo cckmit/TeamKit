@@ -18,8 +18,8 @@ public class CodeMapper {
     public static final String NULL = "-";
 
     public String map(List<CodeMapping> codeMappings, String code, String subCode) {
-        code = ObjectUtil.defaultIfNull(code, NULL);
-        subCode = ObjectUtil.defaultIfNull(subCode, NULL);
+        code = ObjectUtil.defaultIfEmpty(code, NULL);
+        subCode = ObjectUtil.defaultIfEmpty(subCode, NULL);
         return CollUtil.newArrayList(
                         findSubCodeMapping(codeMappings, code, subCode),
                         findCodeMapping(codeMappings, code),
