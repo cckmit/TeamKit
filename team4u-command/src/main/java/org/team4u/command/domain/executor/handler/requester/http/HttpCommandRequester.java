@@ -22,6 +22,7 @@ public abstract class HttpCommandRequester extends CommandRequester<HttpRequeste
     @Override
     protected HttpRequester.HttpResponse execute(HttpRequester.HttpRequest httpRequest) {
         LogMessage lm = LogMessage.create(this.getClass().getSimpleName(), "execute");
+        lm.config().setMinSpendTimeMillsToDisplay(0);
 
         try {
             HttpRequester.HttpResponse httpResponse = httpRequester.execute(httpRequest);
