@@ -21,17 +21,24 @@ public abstract class HttpCommandRequester extends CommandRequester<HttpRequeste
 
     @Override
     protected HttpRequester.HttpResponse execute(HttpRequester.HttpRequest httpRequest) {
-        LogMessage lm = LogMessage.create(this.getClass().getSimpleName(), "execute")
-                .append("request", httpRequest);
+        LogMessage lm = LogMessage.create(this.getClass().getSimpleName(), "execute");
 
-        HttpRequester.HttpResponse response = httpRequester.execute(httpRequest);
+        try {
+            HttpRequester.HttpResponse httpResponse = httpRequester.execute(httpRequest);
 
-        lm.append("response", response);
+            if (log.isDebugEnabled()) {
+                // debug模式下输出完整信息
+                lm.append("request", httpRequest).append("response", httpResponse);
+            } else {
+                // 其余模式输出精简信息，防止打印敏感信息
+                lm.append("request", httpRequest.getUrl()).append("response", httpResponse.getStatus());
+            }
 
-        if (log.isDebugEnabled()) {
-            log.debug(lm.toString());
+            log.info(lm.success().toString());
+            return httpResponse;
+        } catch (Exception e) {
+            log.info(lm.fail().toString());
+            throw e;
         }
-
-        return response;
     }
 }

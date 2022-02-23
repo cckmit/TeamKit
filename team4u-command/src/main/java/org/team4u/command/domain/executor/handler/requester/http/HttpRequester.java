@@ -77,5 +77,10 @@ public interface HttpRequester {
          * http响应内容
          */
         private final String body;
+
+        @Override
+        public String toString() {
+            return status + "|" + body;
+        }
     }
 }
