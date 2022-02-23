@@ -5,7 +5,7 @@ import org.team4u.command.domain.executor.handler.requester.XmlExtractorHandler;
 /**
  * 基于HTTP和XML的命令处理器
  * <p>
- * 将JSON返回值转换为命令响应
+ * 将Xml返回值转换为命令响应
  *
  * @author jay.wu
  */
