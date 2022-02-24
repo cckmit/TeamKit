@@ -5,7 +5,7 @@ package org.team4u.command.domain.executor.handler.requester.http;
  *
  * @author jay.wu
  */
-public interface SoapRequester extends HttpRequester {
+public interface SoapRequester extends HttpBaseRequester {
 
     /**
      * 命名空间key
