@@ -11,7 +11,7 @@ import org.team4u.command.domain.executor.handler.requester.JsonExtractorHandler
  */
 public abstract class HttpJsonCommandRequester extends HttpCommandRequester {
 
-    protected HttpJsonCommandRequester(HttpRequester httpRequester) {
+    protected HttpJsonCommandRequester(HttpBaseRequester httpRequester) {
         super(httpRequester);
     }
 

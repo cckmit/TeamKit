@@ -11,7 +11,7 @@ import org.team4u.command.domain.executor.handler.requester.XmlExtractorHandler;
  */
 public abstract class HttpXmlCommandRequester extends HttpCommandRequester {
 
-    protected HttpXmlCommandRequester(HttpRequester httpRequester) {
+    protected HttpXmlCommandRequester(HttpBaseRequester httpRequester) {
         super(httpRequester);
     }
 

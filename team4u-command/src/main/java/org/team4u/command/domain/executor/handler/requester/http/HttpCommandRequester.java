@@ -13,9 +13,9 @@ public abstract class HttpCommandRequester extends CommandRequester<HttpRequeste
 
     protected final Log log = Log.get();
 
-    private final HttpRequester httpRequester;
+    private final HttpBaseRequester httpRequester;
 
-    public HttpCommandRequester(HttpRequester httpRequester) {
+    public HttpCommandRequester(HttpBaseRequester httpRequester) {
         this.httpRequester = httpRequester;
     }
 
