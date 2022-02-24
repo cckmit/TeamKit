@@ -34,6 +34,7 @@ public class CacheStepSequenceProviderTest {
         Assert.assertEquals(1L, p.provide(context));
         Assert.assertEquals(2L, p.provide(context));
         Assert.assertNull(p.provide(context));
+        Assert.assertTrue(p.isEmpty(context));
     }
 
     @Test
@@ -46,6 +47,7 @@ public class CacheStepSequenceProviderTest {
         Assert.assertEquals(2L, p.provide(context));
         Assert.assertEquals(3L, p.provide(context));
         Assert.assertNull(p.provide(context));
+        Assert.assertTrue(p.isEmpty(context));
     }
 
     @Test
@@ -57,6 +59,7 @@ public class CacheStepSequenceProviderTest {
         Assert.assertEquals(1L, p.provide(context));
         Assert.assertEquals(2L, p.provide(context));
         Assert.assertEquals(1L, p.provide(context));
+        Assert.assertFalse(p.isEmpty(context));
     }
 
     @Test
@@ -69,6 +72,7 @@ public class CacheStepSequenceProviderTest {
         Assert.assertEquals(2L, p.provide(context));
         Assert.assertEquals(3L, p.provide(context));
         Assert.assertEquals(1L, p.provide(context));
+        Assert.assertFalse(p.isEmpty(context));
     }
 
     @Test
@@ -82,6 +86,7 @@ public class CacheStepSequenceProviderTest {
         Assert.assertEquals(3L, p.provide(context));
         Assert.assertEquals(2L, p.provide(context));
         Assert.assertEquals(3L, p.provide(context));
+        Assert.assertFalse(p.isEmpty(context));
     }
 
 
@@ -93,6 +98,7 @@ public class CacheStepSequenceProviderTest {
         Assert.assertEquals(1L, p.provide(context()));
         Assert.assertEquals(2L, p.provide(context()));
         Assert.assertNull(p.provide(context()));
+        Assert.assertTrue(p.isEmpty(context()));
 
         ThreadUtil.sleep(10);
 

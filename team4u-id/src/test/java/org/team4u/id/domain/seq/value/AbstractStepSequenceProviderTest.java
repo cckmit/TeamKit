@@ -33,6 +33,7 @@ public abstract class AbstractStepSequenceProviderTest {
         });
 
         Assert.assertEquals(101, provider.provide(context()).intValue());
+        Assert.assertFalse(provider.isEmpty(context()));
     }
 
     @Test
@@ -44,6 +45,7 @@ public abstract class AbstractStepSequenceProviderTest {
         Assert.assertEquals(1L, provider.provide(context()));
         Assert.assertEquals(2L, provider.provide(context()));
         Assert.assertNull(provider.provide(context()));
+        Assert.assertTrue(provider.isEmpty(context()));
     }
 
     @Test
@@ -57,6 +59,7 @@ public abstract class AbstractStepSequenceProviderTest {
         Assert.assertEquals(2L, provider.provide(context()));
         Assert.assertEquals(1L, provider.provide(context()));
         Assert.assertEquals(2L, provider.provide(context()));
+        Assert.assertFalse(provider.isEmpty(context()));
     }
 
     @Test
@@ -71,6 +74,7 @@ public abstract class AbstractStepSequenceProviderTest {
         Assert.assertEquals(3L, provider.provide(context()));
         Assert.assertEquals(1L, provider.provide(context()));
         Assert.assertEquals(3L, provider.provide(context()));
+        Assert.assertFalse(provider.isEmpty(context()));
     }
 
     @Test
@@ -86,6 +90,7 @@ public abstract class AbstractStepSequenceProviderTest {
         Assert.assertEquals(4L, provider.provide(context()));
         Assert.assertEquals(2L, provider.provide(context()));
         Assert.assertEquals(4L, provider.provide(context()));
+        Assert.assertFalse(provider.isEmpty(context()));
     }
 
     @Test
@@ -101,6 +106,7 @@ public abstract class AbstractStepSequenceProviderTest {
         Assert.assertEquals(4L, provider.provide(context()));
         Assert.assertEquals(2L, provider.provide(context()));
         Assert.assertEquals(4L, provider.provide(context()));
+        Assert.assertFalse(provider.isEmpty(context()));
     }
 
     protected SequenceProvider.Context context() {
