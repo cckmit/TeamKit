@@ -192,7 +192,11 @@ public class ProxySimpleConfigConverter implements SimpleConfigConverter {
             // 简单类型直接注入
             if (ClassUtil.isSimpleTypeOrArray(toTypeClass) ||
                     Collection.class.isAssignableFrom(toTypeClass)) {
-                return Convert.convert(toValueType, valueString);
+                try {
+                    return Convert.convert(toValueType, valueString);
+                } catch (Exception e) {
+                    // Ignore error
+                }
             }
 
             // 复杂类型只支持json格式

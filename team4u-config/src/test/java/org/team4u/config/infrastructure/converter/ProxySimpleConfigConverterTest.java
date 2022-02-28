@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.thread.ThreadUtil;
+import lombok.Data;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -40,6 +41,7 @@ public class ProxySimpleConfigConverterTest {
         repository.allConfigs().get(0).setConfigValue("2");
         ThreadUtil.sleep(1000);
         Assert.assertEquals(2, config.getA());
+        Assert.assertTrue(config.isF());
     }
 
     @Test
@@ -92,50 +94,14 @@ public class ProxySimpleConfigConverterTest {
         Assert.assertEquals(new Demo("1", "2"), e.get(0));
     }
 
+    @Data
     public static class TestConfig {
-
         private int a;
         private String[] b;
         private List<Integer> c;
         private Map<String, String> d;
         private List<Demo> e;
-
-        public int getA() {
-            return a;
-        }
-
-        public TestConfig setA(int a) {
-            this.a = a;
-            return this;
-        }
-
-        public String[] getB() {
-            return b;
-        }
-
-        public void setB(String[] b) {
-            this.b = b;
-        }
-
-        public List<Integer> getC() {
-            return c;
-        }
-
-        public void setC(List<Integer> c) {
-            this.c = c;
-        }
-
-        public Map<String, String> getD() {
-            return d;
-        }
-
-        public void setD(Map<String, String> d) {
-            this.d = d;
-        }
-
-        public List<Demo> getE() {
-            return e;
-        }
+        private boolean f;
     }
 
     public static class Demo {
@@ -189,12 +155,13 @@ public class ProxySimpleConfigConverterTest {
                 c("c", "1,2"),
                 c("d", "{\"test\":1}"),
                 c("e", "[\n" +
-                        "                    {\n" +
-                        "                            \"a\": \"1\",\n" +
-                        "                    \"b\": \"2\",\n" +
-                        "                    \"c\": \"3\"\n" +
+                        "  {\n" +
+                        "    \"a\": \"1\",\n" +
+                        "    \"b\": \"2\",\n" +
+                        "    \"c\": \"3\"\n" +
                         "  }\n" +
-                        "]")
+                        "]"),
+                c("f", "false")
         );
 
         @Override
