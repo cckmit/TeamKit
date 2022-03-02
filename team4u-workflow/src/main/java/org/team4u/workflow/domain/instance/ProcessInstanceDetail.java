@@ -32,9 +32,8 @@ public class ProcessInstanceDetail extends IdentifiedValueObject {
         setBody(JSON.toJSONString(formBody));
     }
 
-    @SuppressWarnings("unchecked")
-    public <T> T toDetailObject(Class<?> type) {
-        return (T) ConvertUtil.convert(getBody(), type);
+    public <T> T toDetailObject(Class<T> type) {
+        return ConvertUtil.convert(getBody(), type);
     }
 
     public String getBody() {
