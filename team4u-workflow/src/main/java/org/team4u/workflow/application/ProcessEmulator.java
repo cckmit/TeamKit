@@ -138,22 +138,20 @@ public class ProcessEmulator {
                                    FormIndex formIndex,
                                    ProcessEmulatorScriptStep step) {
         if (processInstanceId == null) {
-            CreateProcessFormCommand command = CreateProcessFormCommand.Builder
-                    .create()
-                    .withOperatorId(step.getOperatorId())
-                    .withFormIndex(formIndex)
-                    .withProcessDefinitionId(processDefinitionId)
+            CreateProcessFormCommand command = CreateProcessFormCommand.builder()
+                    .operatorId(step.getOperatorId())
+                    .formIndex(formIndex)
+                    .processDefinitionId(processDefinitionId)
                     .build();
             processInstanceId = formAppService.create(command);
         }
 
-        StartProcessFormCommand command = StartProcessFormCommand.Builder
-                .create()
-                .withExt(step.getExt())
-                .withOperatorId(step.getOperatorId())
-                .withActionId(step.getActionId())
-                .withProcessInstanceId(processInstanceId)
-                .withFormIndex(formIndex)
+        StartProcessFormCommand command = StartProcessFormCommand.builder()
+                .ext(step.getExt())
+                .operatorId(step.getOperatorId())
+                .actionId(step.getActionId())
+                .processInstanceId(processInstanceId)
+                .formIndex(formIndex)
                 .build();
         formAppService.start(command);
 

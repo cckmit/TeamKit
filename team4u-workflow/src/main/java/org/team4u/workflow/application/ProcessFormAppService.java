@@ -116,7 +116,7 @@ public class ProcessFormAppService {
         // 创建流程
         ProcessInstance instance = processAppService.create(command);
         // 创建表单
-        saveForm(instance, null, command.getProcessForm());
+        saveForm(instance, null, command.getFormIndex());
 
         return instance.getProcessInstanceId();
     }
@@ -150,15 +150,14 @@ public class ProcessFormAppService {
 
         // 处理流程
         processAppService.start(
-                StartProcessInstanceCommand.Builder
-                        .create()
-                        .withActionId(command.getActionId())
-                        .withOperatorId(command.getOperatorId())
-                        .withProcessInstanceId(command.getProcessInstanceId())
+                StartProcessInstanceCommand.builder()
+                        .actionId(command.getActionId())
+                        .operatorId(command.getOperatorId())
+                        .processInstanceId(command.getProcessInstanceId())
                         // 不保存表单，流程实例明细也不做保存
-                        .withProcessInstanceDetail(isSaveForm ? command.getProcessInstanceDetail() : null)
-                        .withRemark(command.getRemark())
-                        .withExt(command.getExt())
+                        .processInstanceDetail(isSaveForm ? command.getProcessInstanceDetail() : null)
+                        .remark(command.getRemark())
+                        .ext(command.getExt())
                         .build()
         );
     }

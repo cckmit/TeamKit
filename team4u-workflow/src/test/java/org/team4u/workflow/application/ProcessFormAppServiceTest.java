@@ -69,13 +69,13 @@ public class ProcessFormAppServiceTest extends SpringDbTest {
         Dict detail = new Dict().set("x", TEST);
 
         processFormAppService.create(
-                CreateProcessFormCommand.Builder.create()
-                        .withProcessDefinitionId("simple")
-                        .withProcessInstanceId(TEST)
-                        .withProcessInstanceName(TEST)
-                        .withOperatorId(creator)
-                        .withProcessInstanceDetail(detail)
-                        .withFormIndex(
+                CreateProcessFormCommand.builder()
+                        .processDefinitionId("simple")
+                        .processInstanceId(TEST)
+                        .processInstanceName(TEST)
+                        .operatorId(creator)
+                        .processInstanceDetail(detail)
+                        .formIndex(
                                 TestFormIndex.Builder.newBuilder()
                                         .withName(TEST)
                                         .build()
@@ -83,12 +83,12 @@ public class ProcessFormAppServiceTest extends SpringDbTest {
                         .build()
         );
 
-        processFormAppService.start(StartProcessFormCommand.Builder.create()
-                .withActionId("submit")
-                .withOperatorId(creator)
-                .withProcessInstanceId(TEST)
-                .withProcessInstanceDetail(detail)
-                .withFormIndex(
+        processFormAppService.start(StartProcessFormCommand.builder()
+                .actionId("submit")
+                .operatorId(creator)
+                .processInstanceId(TEST)
+                .processInstanceDetail(detail)
+                .formIndex(
                         TestFormIndex.Builder.newBuilder()
                                 .withName(TEST)
                                 .build()
@@ -119,14 +119,13 @@ public class ProcessFormAppServiceTest extends SpringDbTest {
         submit();
 
         processFormAppService.start(
-                StartProcessFormCommand.Builder
-                        .create()
-                        .withActionId("reject")
-                        .withOperatorId(TEST)
-                        .withRemark(TEST)
-                        .withProcessInstanceId(TEST)
-                        .withProcessInstanceDetail(new Dict().set("x", TEST1))
-                        .withFormIndex(
+                StartProcessFormCommand.builder()
+                        .actionId("reject")
+                        .operatorId(TEST)
+                        .remark(TEST)
+                        .processInstanceId(TEST)
+                        .processInstanceDetail(new Dict().set("x", TEST1))
+                        .formIndex(
                                 TestFormIndex.Builder.newBuilder()
                                         .build()
                         )

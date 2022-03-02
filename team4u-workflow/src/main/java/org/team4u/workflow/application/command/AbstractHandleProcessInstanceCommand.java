@@ -1,10 +1,15 @@
 package org.team4u.workflow.application.command;
 
+import lombok.Data;
+import lombok.experimental.SuperBuilder;
+
 /**
  * 处理流程实例命令
  *
  * @author jay.wu
  */
+@Data
+@SuperBuilder
 public abstract class AbstractHandleProcessInstanceCommand {
     /**
      * 流程实例标识
@@ -22,39 +27,4 @@ public abstract class AbstractHandleProcessInstanceCommand {
      * 流程实例明细
      */
     private Object processInstanceDetail;
-
-    public String getProcessInstanceId() {
-        return processInstanceId;
-    }
-
-    public AbstractHandleProcessInstanceCommand setProcessInstanceId(String processInstanceId) {
-        this.processInstanceId = processInstanceId;
-        return this;
-    }
-
-    public String getOperatorId() {
-        return operatorId;
-    }
-
-    public AbstractHandleProcessInstanceCommand setOperatorId(String operatorId) {
-        this.operatorId = operatorId;
-        return this;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public AbstractHandleProcessInstanceCommand setRemark(String remark) {
-        this.remark = remark;
-        return this;
-    }
-
-    public Object getProcessInstanceDetail() {
-        return processInstanceDetail;
-    }
-
-    public void setProcessInstanceDetail(Object processInstanceDetail) {
-        this.processInstanceDetail = processInstanceDetail;
-    }
 }
