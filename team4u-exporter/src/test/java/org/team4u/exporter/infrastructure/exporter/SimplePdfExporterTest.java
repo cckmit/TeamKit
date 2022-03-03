@@ -15,7 +15,7 @@ public class SimplePdfExporterTest {
         SimplePdfExporter.getInstance().export(
                 SimplePdfExporter.Context.builder()
                         .template(FileUtil.readUtf8String("template/test.html"))
-                        .bindings(Dict.create().set("a", "1"))
+                        .bindings(Dict.create().set("a", "测试").set("b", "2"))
                         .outputStream(o)
                         .build()
         );
