@@ -10,30 +10,38 @@ import org.team4u.id.domain.seq.SequenceConfig;
 import org.team4u.id.domain.seq.value.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 public class CacheStepSequenceProviderTest {
 
     @Test
     public void concurrent() {
-        CacheStepSequenceProvider provider = provider(1, 100, 60);
+        CacheStepSequenceProvider provider = provider(1, 200, 60);
         List<CacheStepSequenceProvider> providers = copy(provider, 2);
         providers.add(provider);
         List<Future<?>> result = new ArrayList<>();
 
+        Collection<Integer> seqList = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
-            result.add(ThreadUtil.execAsync(() -> providers.get(RandomUtil.randomInt(0, 2)).provide(context())));
+            result.add(ThreadUtil.execAsync(() -> seqList.add(
+                    providers.get(RandomUtil.randomInt(0, 3)).provide(context()).intValue()
+            )));
         }
 
         result.forEach(it -> {
             try {
                 it.get();
+                Assert.assertTrue(it.isDone());
             } catch (Exception e) {
                 e.printStackTrace();
             }
         });
 
+        System.out.println(seqList.stream().sorted().collect(Collectors.toList()));
+        Assert.assertEquals(100, seqList.size());
         Assert.assertEquals(100, provider.getDelegateProvider().currentSequence(context()).intValue());
     }
 
