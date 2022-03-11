@@ -288,9 +288,13 @@ public class CacheStepSequenceProvider implements SequenceProvider {
          */
         private Long currentSeq;
         /**
-         * 缓冲池最大序列
+         * 当前缓冲池最大序列
          */
-        private Long maxSeqForBuffer;
+        private Long currentMaxSeqForBuffer;
+        /**
+         * 下次缓冲池最大序列
+         */
+        private Long nextMaxSeqForBuffer;
 
         public BufferCounter(Number seq) {
             if (seq == null) {
@@ -310,9 +314,20 @@ public class CacheStepSequenceProvider implements SequenceProvider {
                 this.currentSeq = seq.longValue();
             }
 
-            this.maxSeqForBuffer = seq.longValue() + delegateProvider.config().getStep();
-            if (maxSeqForBuffer > delegateProvider.config().getMaxValue()) {
-                maxSeqForBuffer = delegateProvider.config().getMaxValue();
+            // 更新下一个缓存最大值
+            refreshNextMaxSeqForBuffer(seq);
+
+            // 更新当前缓存最大值
+            if (currentMaxSeqForBuffer == null || overMaxValue()) {
+                refreshCurrentMaxSeqForBuffer();
+            }
+        }
+
+        private void refreshNextMaxSeqForBuffer(Number value) {
+            this.nextMaxSeqForBuffer = value.longValue() + delegateProvider.config().getStep();
+
+            if (nextMaxSeqForBuffer > delegateProvider.config().getMaxValue()) {
+                nextMaxSeqForBuffer = delegateProvider.config().getMaxValue();
             }
         }
 
@@ -324,7 +339,7 @@ public class CacheStepSequenceProvider implements SequenceProvider {
                 return true;
             }
 
-            return currentSeq >= maxSeqForBuffer;
+            return currentSeq >= currentMaxSeqForBuffer;
         }
 
         /**
@@ -335,7 +350,7 @@ public class CacheStepSequenceProvider implements SequenceProvider {
                 return true;
             }
 
-            return currentSeq > maxSeqForBuffer;
+            return currentSeq > currentMaxSeqForBuffer;
         }
 
         public Long next() {
@@ -352,16 +367,44 @@ public class CacheStepSequenceProvider implements SequenceProvider {
         }
 
         private void handleIfOverMaxValue() {
-            if (currentSeq > maxSeqForBuffer) {
-                currentSeq = null;
+            // 当前缓存号段未用完，无需处理
+            if (!overMaxValue()) {
+                return;
             }
+
+            // 当前缓存号段已用完，且无缓存可用
+            if (currentMaxSeqForBuffer >= nextMaxSeqForBuffer) {
+                resetCurrentSeq();
+                return;
+            }
+
+            // 尝试用下一个号段
+            refreshCurrentSeqByNextBuffer();
+            refreshCurrentMaxSeqForBuffer();
+
+            // 若仍然超出
+            if (overMaxValue()) {
+                resetCurrentSeq();
+            }
+        }
+
+        private void resetCurrentSeq() {
+            currentSeq = null;
+        }
+
+        private void refreshCurrentSeqByNextBuffer() {
+            currentSeq = nextMaxSeqForBuffer - delegateProvider.config().getStep() + config().getCacheStep();
+        }
+
+        private void refreshCurrentMaxSeqForBuffer() {
+            currentMaxSeqForBuffer = nextMaxSeqForBuffer;
         }
 
         /**
          * 剩余可用序号百分比
          */
         public int availableSeqPercent() {
-            return 100 - (int) (currentSeq * 100 / maxSeqForBuffer);
+            return 100 - (int) (currentSeq * 100 / currentMaxSeqForBuffer);
         }
 
         /**
@@ -373,7 +416,12 @@ public class CacheStepSequenceProvider implements SequenceProvider {
 
         @Override
         public String toString() {
-            return currentSeq + "/" + maxSeqForBuffer;
+            return String.format(
+                    "S:%s/MS:%s/NMS:%s",
+                    currentSeq,
+                    currentMaxSeqForBuffer,
+                    nextMaxSeqForBuffer
+            );
         }
     }
 

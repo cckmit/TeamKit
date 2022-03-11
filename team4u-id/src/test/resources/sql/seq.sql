@@ -8,6 +8,6 @@ create table `sequence`
     `create_time`    timestamp    not null default '1979-01-01 00:00:00' comment '创建时间',
     `update_time`    timestamp    not null default current_timestamp on update current_timestamp comment '更新时间',
     primary key (`id`),
-    unique index `idx_type_group` (`config_id`, `group_key`)
+    unique index `uniq_type_group` (`config_id`, `group_key`)
 )
 ;

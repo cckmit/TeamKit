@@ -14,5 +14,4 @@ public interface Filter<T> {
      * @param nextFilterInvoker 下一个过滤器执行者
      */
     void doFilter(T context, FilterInvoker<T> nextFilterInvoker);
-
 }

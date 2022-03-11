@@ -2,13 +2,49 @@ package org.team4u.id.infrastructure.seq;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.RandomUtil;
 import org.junit.Assert;
 import org.junit.Test;
 import org.team4u.base.bean.provider.BeanProviders;
 import org.team4u.id.domain.seq.SequenceConfig;
 import org.team4u.id.domain.seq.value.*;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Future;
+
 public class CacheStepSequenceProviderTest {
+
+    @Test
+    public void concurrent() {
+        CacheStepSequenceProvider provider = provider(1, 100, 60);
+        List<CacheStepSequenceProvider> providers = copy(provider, 2);
+        providers.add(provider);
+        List<Future<?>> result = new ArrayList<>();
+
+        for (int i = 0; i < 100; i++) {
+            result.add(ThreadUtil.execAsync(() -> providers.get(RandomUtil.randomInt(0, 2)).provide(context())));
+        }
+
+        result.forEach(it -> {
+            try {
+                it.get();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+        Assert.assertEquals(100, provider.getDelegateProvider().currentSequence(context()).intValue());
+    }
+
+    private List<CacheStepSequenceProvider> copy(CacheStepSequenceProvider provider, int n) {
+        List<CacheStepSequenceProvider> providers = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            providers.add(new CacheStepSequenceProvider(provider.config(), provider.getDelegateProvider()));
+        }
+
+        return providers;
+    }
 
     @Test
     public void provide() {
@@ -22,7 +58,23 @@ public class CacheStepSequenceProviderTest {
         Assert.assertEquals(3, p.provide(context).intValue());
         Assert.assertEquals(4, p.provide(context).intValue());
         Assert.assertEquals(5, p.provide(context).intValue());
-        Assert.assertTrue(sequenceProvider.currentSequence(context).intValue() >= 7);
+        Assert.assertTrue(sequenceProvider.currentSequence(context).intValue() >= 5);
+    }
+
+    @Test
+    public void provide2() {
+        CacheStepSequenceProvider p = provider(2, 100, 50);
+        p.config().setCacheStep(2L);
+        InMemoryStepSequenceProvider sequenceProvider = (InMemoryStepSequenceProvider) p.getDelegateProvider();
+
+        SequenceProvider.Context context = context();
+
+        Assert.assertEquals(1, p.provide(context).intValue());
+        Assert.assertEquals(3, p.provide(context).intValue());
+        Assert.assertEquals(5, p.provide(context).intValue());
+        Assert.assertEquals(7, p.provide(context).intValue());
+        Assert.assertEquals(9, p.provide(context).intValue());
+        Assert.assertTrue(sequenceProvider.currentSequence(context).intValue() >= 9);
     }
 
     @Test

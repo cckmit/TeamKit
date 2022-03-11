@@ -109,7 +109,7 @@ public abstract class AbstractStepSequenceProviderTest {
         Assert.assertFalse(provider.isEmpty(context()));
     }
 
-    protected SequenceProvider.Context context() {
+    public SequenceProvider.Context context() {
         SequenceConfig sequenceConfig = new SequenceConfig();
         sequenceConfig.setConfigId("TEST");
         return new SequenceProvider.Context(
