@@ -127,12 +127,8 @@ public class CacheStepSequenceProvider implements SequenceProvider {
         private QueueSequenceProvider(Context context) {
             this.context = context;
 
-            // 初始化序号失败
-            if (!initQueue()) {
-                setEmpty();
-                close();
-                return;
-            }
+            // 创建时即进行预热，尽可能避免无法获取序号的情况
+            onRun();
 
             start();
         }
@@ -160,11 +156,6 @@ public class CacheStepSequenceProvider implements SequenceProvider {
             } catch (InterruptedException e) {
                 throw new NestedException(e);
             }
-        }
-
-        private boolean initQueue() {
-            refreshSegment(context);
-            return offerAllCurrentSegmentSequence();
         }
 
         private void setEmpty() {
