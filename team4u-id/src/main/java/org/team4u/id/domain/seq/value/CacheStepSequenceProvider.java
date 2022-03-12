@@ -98,6 +98,14 @@ public class CacheStepSequenceProvider implements SequenceProvider {
      */
     private class QueueSequenceProvider extends LongTimeThread {
         /**
+         * 是否无可用序号
+         */
+        @Getter
+        private boolean empty = false;
+
+        @Getter
+        private final Context context;
+        /**
          * 无可用序列时返回此值
          * <p>
          * 队列无法offer null值，使用其他值代替该含义
@@ -108,14 +116,8 @@ public class CacheStepSequenceProvider implements SequenceProvider {
          */
         private long closedTime = 0;
         /**
-         * 是否无可用序号
+         * 号段
          */
-        @Getter
-        private boolean empty = false;
-
-        @Getter
-        private final Context context;
-
         private final Segment segment = new Segment();
         /**
          * 缓存队列
@@ -138,7 +140,7 @@ public class CacheStepSequenceProvider implements SequenceProvider {
          */
         public Number next() {
             // 已无可用序号，直接跳过，避免无效等待时间
-            if (empty) {
+            if (isEmpty()) {
                 return null;
             }
 
@@ -166,7 +168,7 @@ public class CacheStepSequenceProvider implements SequenceProvider {
         protected void onRun() {
             // 当前号段已耗尽，尝试获取新号段
             if (segment.isEmpty()) {
-                refreshSegment(context);
+                refreshSegment();
             }
 
             if (!offerAllCurrentSegmentSequences()) {
@@ -180,7 +182,7 @@ public class CacheStepSequenceProvider implements SequenceProvider {
          * <p>
          * 所有操作均在同一线程调用，无需考虑并发问题
          */
-        private void refreshSegment(Context context) {
+        private void refreshSegment() {
             LogMessage lm = LogMessage.create(this.getClass().getSimpleName(), "refreshSegment");
 
             // 从代理序号提供者获取下一个批次的号段
