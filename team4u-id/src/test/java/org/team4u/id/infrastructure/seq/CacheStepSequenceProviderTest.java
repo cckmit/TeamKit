@@ -26,9 +26,7 @@ public class CacheStepSequenceProviderTest {
 
         Collection<Integer> seqList = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
-            result.add(ThreadUtil.execAsync(() -> seqList.add(
-                    providers.get(RandomUtil.randomInt(0, 3)).provide(context()).intValue()
-            )));
+            result.add(ThreadUtil.execAsync(() -> seqList.add(providers.get(RandomUtil.randomInt(0, 3)).provide(context()).intValue())));
         }
 
         result.forEach(it -> {
@@ -42,7 +40,7 @@ public class CacheStepSequenceProviderTest {
 
         System.out.println(seqList.stream().sorted().collect(Collectors.toList()));
         Assert.assertEquals(100, seqList.size());
-        Assert.assertEquals(100, provider.getDelegateProvider().currentSequence(context()).intValue());
+        Assert.assertTrue(provider.getDelegateProvider().currentSequence(context()).intValue() >= 100);
     }
 
     private List<CacheStepSequenceProvider> copy(CacheStepSequenceProvider provider, int n) {
@@ -170,8 +168,7 @@ public class CacheStepSequenceProviderTest {
     public void create() {
         BeanProviders.getInstance().registerBean(new SequenceProviderFactoryHolder());
 
-        CacheStepSequenceProvider p = (CacheStepSequenceProvider) new CacheStepSequenceProvider.Factory()
-                .create(FileUtil.readUtf8String("cache_step_config.json"));
+        CacheStepSequenceProvider p = (CacheStepSequenceProvider) new CacheStepSequenceProvider.Factory().create(FileUtil.readUtf8String("cache_step_config.json"));
 
         Assert.assertEquals(2, p.getDelegateProvider().config().getStep().intValue());
         Assert.assertEquals(1, p.provide(context()).intValue());
@@ -192,10 +189,6 @@ public class CacheStepSequenceProviderTest {
     private SequenceProvider.Context context() {
         SequenceConfig sequenceConfig = new SequenceConfig();
         sequenceConfig.setConfigId("TEST");
-        return new SequenceProvider.Context(
-                sequenceConfig,
-                "TEST",
-                null
-        );
+        return new SequenceProvider.Context(sequenceConfig, "TEST", null);
     }
 }

@@ -38,7 +38,7 @@ public class CacheStepSequenceProvider implements SequenceProvider {
     /**
      * QueueSequenceProvider缓存池
      */
-    private final LazyFunction<Context, QueueSequenceProvider> lazyCounters = LazyFunction.of(
+    private final LazyFunction<Context, QueueSequenceProvider> lazyProviders = LazyFunction.of(
             LazyFunction.Config.builder().keyFunc(it -> ((Context) it).id()).build(),
             QueueSequenceProvider::new
     );
@@ -61,12 +61,12 @@ public class CacheStepSequenceProvider implements SequenceProvider {
     public Number provide(Context context) {
         // 根据不同上下文，获取专属的QueueSequenceProvider
         // 同一个上下文只会创建一次
-        return lazyCounters.apply(context).next();
+        return lazyProviders.apply(context).next();
     }
 
     @Override
     public boolean isEmpty(Context context) {
-        return lazyCounters.apply(context).isEmpty();
+        return lazyProviders.apply(context).isEmpty();
     }
 
     /**
@@ -75,7 +75,7 @@ public class CacheStepSequenceProvider implements SequenceProvider {
      * @return 已清理数量
      */
     public int clearExpiredCache() {
-        return lazyCounters.remove(it -> {
+        return lazyProviders.remove(it -> {
             // 已过期，返回需要清理的key
             if (it.isExpired()) {
                 return it.getContext();
@@ -115,7 +115,8 @@ public class CacheStepSequenceProvider implements SequenceProvider {
 
         @Getter
         private final Context context;
-        private BufferCounter bufferCounter;
+
+        private final Segment segment = new Segment();
         /**
          * 缓存队列
          * <p>
@@ -162,8 +163,8 @@ public class CacheStepSequenceProvider implements SequenceProvider {
         }
 
         private boolean initQueue() {
-            refreshBufferCounter(context);
-            return offerBufferSequence();
+            refreshSegment(context);
+            return offerAllCurrentSegmentSequence();
         }
 
         private void setEmpty() {
@@ -172,62 +173,50 @@ public class CacheStepSequenceProvider implements SequenceProvider {
 
         @Override
         protected void onRun() {
-            // 无可用序号或者低可用序号，刷新
-            if (bufferCounter.isEmpty() || bufferCounter.isLowAvailableSeq()) {
-                refreshBufferCounter(context);
+            // 当前号段已耗尽，尝试获取新号段
+            if (segment.isEmpty()) {
+                refreshSegment(context);
             }
 
-            if (!offerBufferSequence()) {
+            if (!offerAllCurrentSegmentSequence()) {
                 // 无可用序号，关闭线程
                 close();
             }
         }
 
         /**
-         * 刷新缓冲计数器
+         * 更新号段
          * <p>
          * 所有操作均在同一线程调用，无需考虑并发问题
          */
-        private void refreshBufferCounter(Context context) {
-            LogMessage lm = LogMessage.create(this.getClass().getSimpleName(), "refreshBufferCounter");
+        private void refreshSegment(Context context) {
+            LogMessage lm = LogMessage.create(this.getClass().getSimpleName(), "refreshSegment");
 
             // 从代理序号提供者获取下一个批次的号段
             Number seq = delegateProvider.provide(context);
-
-            if (bufferCounter == null) {
-                bufferCounter = new BufferCounter(seq);
-            } else {
-                bufferCounter.updateMaxSeqForBuffer(seq);
-            }
+            // 更新号段
+            segment.refreshSegment(seq);
 
             if (log.isInfoEnabled()) {
                 log.info(lm.success()
                         .append("context", context)
-                        .append("remoteSeq", seq)
-                        .append("bufferCounter", bufferCounter)
+                        .append("delegateSeq", seq)
+                        .append("segment", segment)
                         .toString());
             }
         }
 
         /**
-         * 将缓存的所有序号放入队列
+         * 将当前号段所有序号放入队列
          *
          * @return 是否有号段入队列
          */
-        private boolean offerBufferSequence() {
-            if (bufferCounter.overMaxValue()) {
-                try {
-                    offerEmptyNumber();
-                } catch (InterruptedException e) {
-                    // Ignore error
-                }
-                return false;
-            }
-
+        private boolean offerAllCurrentSegmentSequence() {
             do {
-                Number seq = bufferCounter.next();
+                Number seq = segment.next();
 
                 try {
+                    // 已无可用序号，退出
                     if (seq == null) {
                         offerEmptyNumber();
                         return false;
@@ -238,13 +227,13 @@ public class CacheStepSequenceProvider implements SequenceProvider {
                 } catch (InterruptedException e) {
                     return false;
                 }
-            } while (!bufferCounter.isEmpty());
+            } while (!segment.isEmpty());
 
             return true;
         }
 
         /**
-         * offer无法设置null值，当无可用序号时，设置特殊值代替
+         * put无法设置null值，当无可用序号时，设置特殊值代替
          */
         private void offerEmptyNumber() throws InterruptedException {
             cache.put(EMPTY_NUMBER);
@@ -252,7 +241,7 @@ public class CacheStepSequenceProvider implements SequenceProvider {
 
         @Override
         protected Number runIntervalMillis() {
-            // 通过队列的offer进行阻塞，故无需设置循环间隔
+            // 通过队列的put进行阻塞，故无需设置循环间隔
             return 0;
         }
 
@@ -282,145 +271,123 @@ public class CacheStepSequenceProvider implements SequenceProvider {
      * <p>
      * 负责缓存号段，并记录序号使用情况
      */
-    private class BufferCounter {
+    private class Segment {
         /**
          * 当前序列
          */
         private Long currentSeq;
         /**
-         * 当前缓冲池最大序列
+         * 当前号段（不包含）
          */
-        private Long currentMaxSeqForBuffer;
+        private Long currentSegment;
         /**
-         * 下次缓冲池最大序列
+         * 下一号段（不包含）
          */
-        private Long nextMaxSeqForBuffer;
+        private Long nextSegment;
 
-        public BufferCounter(Number seq) {
+        public void refreshSegment(Number seq) {
             if (seq == null) {
                 return;
-            }
-
-            this.currentSeq = seq.longValue();
-            updateMaxSeqForBuffer(seq);
-        }
-
-        public void updateMaxSeqForBuffer(Number seq) {
-            if (seq == null) {
-                return;
-            }
-
-            if (currentSeq == null) {
-                this.currentSeq = seq.longValue();
             }
 
             // 更新下一个缓存最大值
-            refreshNextMaxSeqForBuffer(seq);
+            refreshNextSegment(seq);
 
-            // 更新当前缓存最大值
-            if (currentMaxSeqForBuffer == null || overMaxValue()) {
-                refreshCurrentMaxSeqForBuffer();
-            }
+            // 如果当前号段已耗尽，需重新初始化
+            handleIfEmpty();
         }
 
-        private void refreshNextMaxSeqForBuffer(Number value) {
-            this.nextMaxSeqForBuffer = value.longValue() + delegateProvider.config().getStep();
-
-            if (nextMaxSeqForBuffer > delegateProvider.config().getMaxValue()) {
-                nextMaxSeqForBuffer = delegateProvider.config().getMaxValue();
-            }
+        private void refreshNextSegment(Number value) {
+            nextSegment = value.longValue() + delegateProvider.config().getStep();
         }
 
         /**
-         * 是否已经消耗完缓冲序列
+         * 当前号段是否已耗尽
          */
         public boolean isEmpty() {
             if (currentSeq == null) {
                 return true;
             }
 
-            return currentSeq >= currentMaxSeqForBuffer;
-        }
-
-        /**
-         * 是否超过最大值
-         */
-        public boolean overMaxValue() {
-            if (currentSeq == null) {
+            if (currentSeq >= currentSegment) {
                 return true;
             }
 
-            return currentSeq > currentMaxSeqForBuffer;
+            return currentSeq > delegateProvider.config().getMaxValue();
         }
 
         public Long next() {
-            if (overMaxValue()) {
+            if (isEmpty()) {
                 return null;
             }
 
             Long result = currentSeq;
             currentSeq += config.getCacheStep();
 
-            handleIfOverMaxValue();
-
             return result;
         }
 
-        private void handleIfOverMaxValue() {
+        private void handleIfEmpty() {
             // 当前缓存号段未用完，无需处理
-            if (!overMaxValue()) {
+            if (!isEmpty()) {
                 return;
             }
 
-            // 当前缓存号段已用完，且无缓存可用
-            if (currentMaxSeqForBuffer >= nextMaxSeqForBuffer) {
+            // 下一个号段不可用，重置seq
+            if (!isNextBufferAvailable()) {
                 resetCurrentSeq();
                 return;
             }
 
             // 尝试用下一个号段
-            refreshCurrentSeqByNextBuffer();
-            refreshCurrentMaxSeqForBuffer();
+            refreshCurrentSegment();
+            refreshCurrentSeqBySegment();
 
-            // 若仍然超出
-            if (overMaxValue()) {
+            // 若仍然超出，重置seq
+            if (isEmpty()) {
                 resetCurrentSeq();
             }
+        }
+
+        /**
+         * 下一个号段是否可用
+         */
+        private boolean isNextBufferAvailable() {
+            if (nextSegment == null) {
+                return false;
+            }
+
+            if (currentSegment == null) {
+                return true;
+            }
+
+            // 循环序号，永不耗尽
+            if (delegateProvider.config().isRecycleAfterMaxValue()) {
+                return true;
+            }
+
+            return !nextSegment.equals(currentSegment);
         }
 
         private void resetCurrentSeq() {
             currentSeq = null;
         }
 
-        private void refreshCurrentSeqByNextBuffer() {
-            currentSeq = nextMaxSeqForBuffer - delegateProvider.config().getStep() + config().getCacheStep();
+        private void refreshCurrentSeqBySegment() {
+            currentSeq = currentSegment - delegateProvider.config().getStep();
         }
 
-        private void refreshCurrentMaxSeqForBuffer() {
-            currentMaxSeqForBuffer = nextMaxSeqForBuffer;
-        }
-
-        /**
-         * 剩余可用序号百分比
-         */
-        public int availableSeqPercent() {
-            return 100 - (int) (currentSeq * 100 / currentMaxSeqForBuffer);
-        }
-
-        /**
-         * 缓冲池可用序号是否较低
-         */
-        public boolean isLowAvailableSeq() {
-            return availableSeqPercent() < config.getMinAvailableSeqPercent();
+        private void refreshCurrentSegment() {
+            currentSegment = nextSegment;
         }
 
         @Override
         public String toString() {
             return String.format(
-                    "S:%s/MS:%s/NMS:%s",
+                    "currentSeq:%s,currentSegment:%s,nextSegment:%s",
                     currentSeq,
-                    currentMaxSeqForBuffer,
-                    nextMaxSeqForBuffer
+                    currentSegment,
+                    nextSegment
             );
         }
     }
