@@ -222,6 +222,11 @@ public class CacheStepSequenceProvider implements SequenceProvider {
                     // 若队列中缓存序号已满，将阻塞线程
                     cache.put(seq);
                 } catch (InterruptedException e) {
+                    log.error(e, LogMessage.create(this.getClass().getSimpleName(), "offerAllCurrentSegmentSequences")
+                            .fail(e.getMessage())
+                            .append("segment", segment)
+                            .toString()
+                    );
                     return false;
                 }
             } while (!segment.isEmpty());
