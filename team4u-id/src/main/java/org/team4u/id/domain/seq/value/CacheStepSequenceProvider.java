@@ -129,7 +129,7 @@ public class CacheStepSequenceProvider implements SequenceProvider {
         private QueueSequenceProvider(Context context) {
             this.context = context;
 
-            // 创建时即进行预热，尽可能避免无法获取序号的情况
+            // 创建时即进行预热，避免线程未完全启动完成，导致客户端无法获取序号的情况
             onRun();
 
             start();
@@ -149,7 +149,7 @@ public class CacheStepSequenceProvider implements SequenceProvider {
                 Number result = cache.poll(config.getNextTimeoutMillis(), TimeUnit.MILLISECONDS);
 
                 // 无序号可用，直接返回null
-                if (Objects.equals(result, EMPTY_NUMBER)) {
+                if (isEmpty(result)) {
                     setEmpty();
                     return null;
                 }
@@ -158,6 +158,10 @@ public class CacheStepSequenceProvider implements SequenceProvider {
             } catch (InterruptedException e) {
                 throw new NestedException(e);
             }
+        }
+
+        private boolean isEmpty(Number result) {
+            return Objects.equals(result, EMPTY_NUMBER);
         }
 
         private void setEmpty() {
