@@ -169,7 +169,7 @@ public class CacheStepSequenceProvider implements SequenceProvider {
                 refreshSegment(context);
             }
 
-            if (!offerAllCurrentSegmentSequence()) {
+            if (!offerAllCurrentSegmentSequences()) {
                 // 无可用序号，关闭线程
                 close();
             }
@@ -202,7 +202,7 @@ public class CacheStepSequenceProvider implements SequenceProvider {
          *
          * @return 是否有号段入队列
          */
-        private boolean offerAllCurrentSegmentSequence() {
+        private boolean offerAllCurrentSegmentSequences() {
             do {
                 Number seq = segment.next();
 
