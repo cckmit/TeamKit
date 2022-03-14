@@ -33,10 +33,6 @@ public class CacheStepSequenceProvider implements SequenceProvider {
     private final SequenceQueueCleaner queueCleaner;
     private final LazyFunction<Context, SequenceQueue> queues;
 
-    /**
-     * @param config           配置
-     * @param delegateProvider 代理序号提供者，负责提供真正的序号
-     */
     public CacheStepSequenceProvider(CacheStepSequenceConfig config, StepSequenceProvider delegateProvider) {
         this.config = config;
         this.delegateProvider = delegateProvider;
@@ -69,7 +65,7 @@ public class CacheStepSequenceProvider implements SequenceProvider {
 
     @Override
     public Number provide(Context context) {
-        // 增加等待时间，避免消费速度过快，生产不足的情况
+        // 增加等待时间，避免消费过快，生产不足的情况
         return queues.apply(context).poll(config.getNextTimeoutMillis(), TimeUnit.MILLISECONDS);
     }
 
