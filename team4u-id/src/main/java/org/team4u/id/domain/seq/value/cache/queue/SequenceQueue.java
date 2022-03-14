@@ -14,9 +14,10 @@ import java.util.concurrent.TimeUnit;
 /**
  * 序号队列
  * <p>
- * 主要职责：
- * - 启动一个线程，异步刷新缓冲计数器，并从其中获取可用序号offer到队列，所有操作在同一个线程内完成，无需考虑并发问题
  * - 客户端获取序号时，直接从队列中poll即可，能获得较好的性能
+ * - 序号由SequenceQueueProducer负责推送
+ *
+ * @see SequenceQueueProducer
  */
 public class SequenceQueue {
     /**

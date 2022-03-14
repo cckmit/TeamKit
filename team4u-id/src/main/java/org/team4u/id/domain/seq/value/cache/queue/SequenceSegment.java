@@ -7,7 +7,8 @@ import org.team4u.id.domain.seq.value.cache.CacheStepSequenceConfig;
 /**
  * 序号号段
  * <p>
- * 负责缓存号段，并记录序号使用情况
+ * - 根据当前号段计算最新序号
+ * - 缓存未来号段，若当前号段耗尽，将自动切换
  */
 @Getter
 public class SequenceSegment {
@@ -69,9 +70,12 @@ public class SequenceSegment {
             return null;
         }
 
+        return getAndAdd();
+    }
+
+    private Long getAndAdd() {
         Long result = currentSeq;
         currentSeq += cacheConfig.getCacheStep();
-
         return result;
     }
 

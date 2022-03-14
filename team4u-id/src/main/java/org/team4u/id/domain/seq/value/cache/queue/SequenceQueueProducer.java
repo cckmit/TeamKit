@@ -8,16 +8,18 @@ import org.team4u.id.domain.seq.value.cache.CacheStepSequenceConfig;
 
 /**
  * 序号队列生产者
+ * <p>
+ * - 启动一个线程，异步刷新号段，并将当前号段内所有可用序号推送到队列
+ * - 所有操作在均同一个线程完成，无需考虑并发问题
  *
  * @author jay.wu
  */
 public class SequenceQueueProducer extends LongTimeThread {
+
     private final Log log = Log.get();
 
     private final SequenceQueue queue;
-    /**
-     * 号段
-     */
+
     private final SequenceSegment segment;
 
     private final StepSequenceProvider delegateProvider;
