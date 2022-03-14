@@ -67,7 +67,6 @@ public class SequenceQueueCleaner extends LongTimeThread {
         return System.currentTimeMillis() - queue.getStatus().getOccurredOn() > config.getExpiredWhenQueueExhaustedMillis();
     }
 
-
     @Override
     protected Number runIntervalMillis() {
         return config.getQueueCleanerRunIntervalMillis();
