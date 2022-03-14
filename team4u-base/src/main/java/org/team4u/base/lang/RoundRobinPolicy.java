@@ -60,12 +60,9 @@ public class RoundRobinPolicy<T> {
      * @param action    资源处理类
      */
     public void request(List<T> resources, final VoidFunc1<T> action) {
-        request(resources, new Func1<T, Void>() {
-            @Override
-            public Void call(T obj) throws Exception {
-                action.call(obj);
-                return null;
-            }
+        request(resources, (Func1<T, Void>) obj -> {
+            action.call(obj);
+            return null;
         });
     }
 

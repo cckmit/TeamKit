@@ -7,7 +7,13 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.team4u.base.bean.provider.BeanProviders;
 import org.team4u.id.domain.seq.SequenceConfig;
-import org.team4u.id.domain.seq.value.*;
+import org.team4u.id.domain.seq.value.InMemoryStepSequenceProvider;
+import org.team4u.id.domain.seq.value.SequenceProvider;
+import org.team4u.id.domain.seq.value.SequenceProviderFactoryHolder;
+import org.team4u.id.domain.seq.value.StepSequenceProvider;
+import org.team4u.id.domain.seq.value.cache.CacheStepSequenceConfig;
+import org.team4u.id.domain.seq.value.cache.CacheStepSequenceProvider;
+import org.team4u.id.domain.seq.value.cache.CacheStepSequenceProviderFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,7 +25,7 @@ public class CacheStepSequenceProviderTest {
 
     @Test
     public void concurrent() {
-        CacheStepSequenceProvider provider = provider(1, 200, 60);
+        CacheStepSequenceProvider provider = provider(1, 200);
         List<CacheStepSequenceProvider> providers = copy(provider, 2);
         providers.add(provider);
         List<Future<?>> result = new ArrayList<>();
@@ -54,7 +60,7 @@ public class CacheStepSequenceProviderTest {
 
     @Test
     public void provide() {
-        CacheStepSequenceProvider p = provider(2, 100, 50);
+        CacheStepSequenceProvider p = provider(2, 100);
         InMemoryStepSequenceProvider sequenceProvider = (InMemoryStepSequenceProvider) p.getDelegateProvider();
 
         SequenceProvider.Context context = context();
@@ -69,7 +75,7 @@ public class CacheStepSequenceProviderTest {
 
     @Test
     public void provide2() {
-        CacheStepSequenceProvider p = provider(2, 100, 50);
+        CacheStepSequenceProvider p = provider(2, 100);
         p.config().setCacheStep(2L);
         InMemoryStepSequenceProvider sequenceProvider = (InMemoryStepSequenceProvider) p.getDelegateProvider();
 
@@ -85,7 +91,7 @@ public class CacheStepSequenceProviderTest {
 
     @Test
     public void maxValue() {
-        CacheStepSequenceProvider p = provider(1, 2, 50);
+        CacheStepSequenceProvider p = provider(1, 2);
         SequenceProvider.Context context = context();
 
         // 不循环使用
@@ -97,7 +103,7 @@ public class CacheStepSequenceProviderTest {
 
     @Test
     public void maxValue2() {
-        CacheStepSequenceProvider p = provider(2, 3, 50);
+        CacheStepSequenceProvider p = provider(2, 3);
         SequenceProvider.Context context = context();
 
         // 不循环使用
@@ -110,7 +116,7 @@ public class CacheStepSequenceProviderTest {
 
     @Test
     public void maxValueWithRecycle() {
-        CacheStepSequenceProvider p = provider(1, 2, 50);
+        CacheStepSequenceProvider p = provider(1, 2);
         p.getDelegateProvider().config().setRecycleAfterMaxValue(true);
         SequenceProvider.Context context = context();
 
@@ -122,7 +128,7 @@ public class CacheStepSequenceProviderTest {
 
     @Test
     public void maxValueWithRecycle2() {
-        CacheStepSequenceProvider p = provider(2, 3, 50);
+        CacheStepSequenceProvider p = provider(2, 3);
         p.getDelegateProvider().config().setRecycleAfterMaxValue(true);
         SequenceProvider.Context context = context();
 
@@ -135,7 +141,7 @@ public class CacheStepSequenceProviderTest {
 
     @Test
     public void maxValueWithRecycle3() {
-        CacheStepSequenceProvider p = provider(2, 3, 50);
+        CacheStepSequenceProvider p = provider(2, 3);
         p.getDelegateProvider().config().setStart(2L);
         p.getDelegateProvider().config().setRecycleAfterMaxValue(true);
         SequenceProvider.Context context = context();
@@ -150,8 +156,8 @@ public class CacheStepSequenceProviderTest {
 
     @Test
     public void clearExpiredCache() {
-        CacheStepSequenceProvider p = provider(1, 2, 50);
-        p.config().setExpiredWhenCloseMillis(1);
+        CacheStepSequenceProvider p = provider(1, 2);
+        p.config().setExpiredWhenQueueExhaustedMillis(1);
 
         Assert.assertEquals(1L, p.provide(context()));
         Assert.assertEquals(2L, p.provide(context()));
@@ -160,23 +166,22 @@ public class CacheStepSequenceProviderTest {
 
         ThreadUtil.sleep(10);
 
-        Assert.assertEquals(1, p.clearExpiredCache());
-        Assert.assertEquals(0, p.clearExpiredCache());
+        Assert.assertEquals(1, p.getQueueCleaner().clear());
+        Assert.assertEquals(0, p.getQueueCleaner().clear());
     }
 
     @Test
     public void create() {
         BeanProviders.getInstance().registerBean(new SequenceProviderFactoryHolder());
 
-        CacheStepSequenceProvider p = (CacheStepSequenceProvider) new CacheStepSequenceProvider.Factory().create(FileUtil.readUtf8String("cache_step_config.json"));
+        CacheStepSequenceProvider p = (CacheStepSequenceProvider) new CacheStepSequenceProviderFactory().create(FileUtil.readUtf8String("cache_step_config.json"));
 
         Assert.assertEquals(2, p.getDelegateProvider().config().getStep().intValue());
         Assert.assertEquals(1, p.provide(context()).intValue());
     }
 
-    private CacheStepSequenceProvider provider(int step, int maxValue, int percent) {
-        CacheStepSequenceProvider.Config config = new CacheStepSequenceProvider.Config();
-        config.setMinAvailableSeqPercent(percent);
+    private CacheStepSequenceProvider provider(int step, int maxValue) {
+        CacheStepSequenceConfig config = new CacheStepSequenceConfig();
 
         StepSequenceProvider.Config delegateConfig = new StepSequenceProvider.Config();
         delegateConfig.setStep(step);
