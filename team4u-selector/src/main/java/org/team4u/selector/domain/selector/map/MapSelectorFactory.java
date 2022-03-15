@@ -14,7 +14,7 @@ public class MapSelectorFactory extends AbstractSelectorFactoryFactory<Map<Strin
 
     @Override
     protected Selector createWithConfig(Map<String, String> config) {
-        return new MapSelector(config);
+        return new MapSelector(new MapSelector.Config(config));
     }
 
     @Override

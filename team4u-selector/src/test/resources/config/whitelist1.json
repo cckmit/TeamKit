@@ -1,0 +1,20 @@
+{
+  "type": "whitelist",
+  "body": {
+    "names": {
+      "test": [
+        1
+      ],
+      "any": [
+        "*"
+      ]
+    },
+    "rules": [
+      {
+        "a": "test",
+        "b": "any",
+        "*": "test"
+      }
+    ]
+  }
+}

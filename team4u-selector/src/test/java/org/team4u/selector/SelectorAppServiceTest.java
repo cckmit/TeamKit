@@ -64,13 +64,11 @@ public class SelectorAppServiceTest {
 
     @Test
     public void whitelist() {
-        Assert.assertTrue(s.match("whitelistConfig", new SimpleMapBinding().set("a", 1)));
-        Assert.assertEquals("a", s.select("whitelistConfig", new SimpleMapBinding().set("a", 1)));
-        Assert.assertFalse(s.match("whitelistConfig", new SimpleMapBinding().set("a", 2)));
-        Assert.assertTrue(s.match("whitelistConfig", new SimpleMapBinding().set("b", 3)));
-        Assert.assertTrue(s.match("whitelistConfig", new SimpleMapBinding().set("d", 1)));
-        Assert.assertEquals("d", s.select("whitelistConfig", new SimpleMapBinding().set("d", 1)));
-        Assert.assertFalse(s.match("whitelistConfig", new SimpleMapBinding().set("d", 2)));
+        Assert.assertTrue(s.match("whitelist1", new SimpleMapBinding().set("a", 1)));
+        Assert.assertFalse(s.match("whitelist2", new SimpleMapBinding().set("a", 2)));
+        Assert.assertTrue(s.match("whitelist1", new SimpleMapBinding().set("b", 3)));
+        Assert.assertTrue(s.match("whitelist2", new SimpleMapBinding().set("d", 1)));
+        Assert.assertFalse(s.match("whitelist1", new SimpleMapBinding().set("d", 2)));
     }
 
     @Test

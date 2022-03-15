@@ -12,7 +12,7 @@ import cn.hutool.json.JSONUtil;
 public abstract class AbstractJsonCacheablePolicyFactory<C, P> extends AbstractCacheablePolicyFactory<C, String, P> {
 
     @Override
-    protected C toConfig(String configValue) {
+    public C toConfig(String configValue) {
         return JSONUtil.toBean(configValue, configType(), false);
     }
 }

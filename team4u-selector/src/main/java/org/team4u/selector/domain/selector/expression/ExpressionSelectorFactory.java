@@ -1,9 +1,7 @@
 package org.team4u.selector.domain.selector.expression;
 
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONUtil;
 import org.team4u.base.registrar.NoSuchPolicyException;
-import org.team4u.base.util.MapExtUtil;
 import org.team4u.selector.domain.selector.AbstractSelectorFactoryFactory;
 import org.team4u.selector.domain.selector.Selector;
 import org.team4u.template.TemplateEngine;
@@ -20,11 +18,6 @@ public class ExpressionSelectorFactory extends AbstractSelectorFactoryFactory<Ma
 
     private static final String TEMPLATE_ID_KEY = "template";
     private final TemplateEngines engines = new TemplateEngines();
-
-    @Override
-    public Map<String, String> toConfig(String jsonConfig) {
-        return MapExtUtil.convert(JSONUtil.parseObj(jsonConfig), String.class, String.class);
-    }
 
     @Override
     public String id() {

@@ -1,9 +1,12 @@
 package org.team4u.selector.domain.selector.whitelist;
 
 import cn.hutool.core.collection.CollUtil;
+import lombok.Data;
 import org.team4u.selector.domain.selector.Selector;
 import org.team4u.selector.domain.selector.binding.SelectorBinding;
 import org.team4u.selector.domain.selector.binding.SimpleMapBinding;
+import org.team4u.selector.domain.selector.binding.SingleValueBinding;
+import org.team4u.selector.domain.selector.map.MapSelector;
 
 import java.util.Collections;
 import java.util.List;
@@ -17,61 +20,37 @@ import java.util.Map;
 public class WhitelistSelector implements Selector {
 
     private final Config config;
+    private final MapSelector mapSelector;
 
     public WhitelistSelector(Config config) {
         this.config = config;
+        mapSelector = new MapSelector(new MapSelector.Config(config.getRules()));
     }
 
     /**
      * 选择
      *
-     * @return 若命中则返回常量MATCH，否则为当前key
+     * @return 若命中则返回常量MATCH，否则为NONE
      */
     @Override
     public String select(SelectorBinding binding) {
         Map.Entry<String, Object> value = value(binding);
+        String nameId = mapSelector.select(new SingleValueBinding(value.getKey()));
 
-        Boolean isMatch = matchKeyOrAny(value.getKey(), value.getValue());
-        if (isMatch == null || !isMatch) {
-            return NONE;
+        if (matchName(nameId, value.getValue())) {
+            return MATCH;
         }
 
-        return value.getKey();
+        return NONE;
     }
 
-    private Boolean matchKeyOrAny(String key, Object userId) {
-        Boolean isMatch = match(key, userId);
-        // 找到规则，返回命中结果
-        if (isMatch != null) {
-            return isMatch;
-        }
-
-        // 无法匹配key，则尝试查找*
-        return match(ANY, userId);
-    }
-
-    private Boolean match(String key, Object userId) {
-        for (Map<String, String> rule : config.getRules()) {
-            if (rule.containsKey(key)) {
-                return matchName(key, rule.get(key), userId);
-            }
-        }
-
-        // 无法找到规则
-        return null;
-    }
-
-    private boolean matchName(String key, String nameId, Object userId) {
-        if (key == null) {
-            return false;
-        }
-
+    private boolean matchName(String nameId, Object userId) {
         List<Object> names = namesOf(nameId);
         return CollUtil.contains(names, userId) || CollUtil.contains(names, ANY);
     }
 
     private List<Object> namesOf(String nameId) {
-        if (config.names == null) {
+        if (config.getNames() == null) {
             return Collections.emptyList();
         }
 
@@ -86,25 +65,9 @@ public class WhitelistSelector implements Selector {
         return null;
     }
 
-
+    @Data
     public static class Config {
         private Map<String, List<Object>> names;
-        private List<Map<String, String>> rules;
-
-        public Map<String, List<Object>> getNames() {
-            return names;
-        }
-
-        public void setNames(Map<String, List<Object>> names) {
-            this.names = names;
-        }
-
-        public List<Map<String, String>> getRules() {
-            return rules;
-        }
-
-        public void setRules(List<Map<String, String>> rules) {
-            this.rules = rules;
-        }
+        private Map<String, String> rules;
     }
 }
