@@ -1,5 +1,4 @@
 {
-  "id": "test",
   "type": "dynamicMap",
   "body": {
     "handlers": {

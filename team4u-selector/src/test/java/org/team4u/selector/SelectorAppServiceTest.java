@@ -2,7 +2,6 @@ package org.team4u.selector;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.team4u.base.bean.provider.BeanProviders;
 import org.team4u.base.config.LocalJsonConfigService;
 import org.team4u.selector.application.SelectorAppService;
 import org.team4u.selector.domain.selector.Selector;
@@ -14,8 +13,6 @@ import org.team4u.selector.domain.selector.binding.SingleValueBinding;
 import org.team4u.selector.domain.selector.map.DynamicMapSelector;
 import org.team4u.selector.domain.selector.probability.ProbabilitySelector;
 import org.team4u.selector.infrastructure.persistence.JsonSelectorConfigRepository;
-import org.team4u.template.TemplateFunctionService;
-import org.team4u.template.infrastructure.BeetlTemplateEngine;
 
 /**
  * 选择器应用服务测试
@@ -167,8 +164,6 @@ public class SelectorAppServiceTest {
 
     @Test
     public void expressionSelect() {
-        BeanProviders.getInstance().registerBean(new BeetlTemplateEngine(new TemplateFunctionService()));
-
         SimpleMapBinding binding = new SimpleMapBinding();
         binding.set("a", 1);
         String result = s.select("expressionConfig", binding);
