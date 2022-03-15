@@ -1,0 +1,8 @@
+{
+  "type": "expression",
+  "body": {
+    "template": "JS",
+    "x": "${a == 1}",
+    "y": "${a == 2}"
+  }
+}
