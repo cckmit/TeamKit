@@ -9,6 +9,7 @@ import org.team4u.selector.domain.selector.binding.SingleValueBinding;
 import org.team4u.selector.domain.selector.map.MapSelector;
 
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -68,6 +69,6 @@ public class WhitelistSelector implements Selector {
     @Data
     public static class Config {
         private Map<String, List<Object>> names;
-        private Map<String, String> rules;
+        private Map<String, String> rules = new LinkedHashMap<>();
     }
 }

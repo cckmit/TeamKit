@@ -11,6 +11,7 @@ import org.team4u.selector.domain.selector.SelectorValueService;
 import org.team4u.selector.domain.selector.binding.SelectorBinding;
 import org.team4u.selector.domain.selector.binding.SingleValueBinding;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -78,7 +79,7 @@ public class DynamicMapSelector implements Selector {
 
     @Data
     public static class Config {
-        private Map<String, String> rules;
+        private Map<String, String> rules = new LinkedHashMap<>();
         private Map<String, Dict> handlers;
     }
 }

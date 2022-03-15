@@ -1,11 +1,12 @@
 package org.team4u.selector.domain.selector.whitelist;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.json.JSONUtil;
 import lombok.Data;
+import org.team4u.base.serializer.HutoolJsonSerializer;
 import org.team4u.selector.domain.selector.AbstractSelectorFactoryFactory;
 import org.team4u.selector.domain.selector.Selector;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -29,7 +30,7 @@ public class WhitelistSelectorFactory extends AbstractSelectorFactoryFactory<Whi
     }
 
     private WhitelistSelector.Config parseOldConfig(String configValue) {
-        OldConfig oldConfig = JSONUtil.toBean(configValue, OldConfig.class);
+        OldConfig oldConfig = HutoolJsonSerializer.instance().deserialize(configValue, OldConfig.class);
 
         if (CollUtil.isEmpty(oldConfig.getRules())) {
             return null;
@@ -49,6 +50,6 @@ public class WhitelistSelectorFactory extends AbstractSelectorFactoryFactory<Whi
     @Data
     public static class OldConfig {
         private Map<String, List<Object>> names;
-        private List<Map<String, String>> rules;
+        private List<LinkedHashMap<String, String>> rules;
     }
 }

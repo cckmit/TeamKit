@@ -7,14 +7,14 @@ import org.team4u.selector.domain.selector.Selector;
 import org.team4u.template.TemplateEngine;
 import org.team4u.template.TemplateEngines;
 
-import java.util.Map;
+import java.util.LinkedHashMap;
 
 /**
  * 表达式选择器构建工厂
  *
  * @author jay.wu
  */
-public class ExpressionSelectorFactory extends AbstractSelectorFactoryFactory<Map<String, String>> {
+public class ExpressionSelectorFactory extends AbstractSelectorFactoryFactory<LinkedHashMap<String, String>> {
 
     private static final String TEMPLATE_ID_KEY = "template";
     private final TemplateEngines engines = new TemplateEngines();
@@ -25,7 +25,7 @@ public class ExpressionSelectorFactory extends AbstractSelectorFactoryFactory<Ma
     }
 
     @Override
-    protected Selector createWithConfig(Map<String, String> config) {
+    protected Selector createWithConfig(LinkedHashMap<String, String> config) {
         return new ExpressionSelector(templateEngineOf(config.get(TEMPLATE_ID_KEY)), config);
     }
 

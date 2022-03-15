@@ -1,6 +1,7 @@
 package org.team4u.base.serializer;
 
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONConfig;
 import cn.hutool.json.JSONUtil;
 
 import java.lang.reflect.Type;
@@ -33,7 +34,7 @@ public class HutoolJsonSerializer implements Serializer {
             return null;
         }
 
-        return JSONUtil.toBean(serialization, type);
+        return JSONUtil.parseObj(serialization, JSONConfig.create().setOrder(true)).toBean(type);
     }
 
     @Override
@@ -42,6 +43,7 @@ public class HutoolJsonSerializer implements Serializer {
             return null;
         }
 
-        return JSONUtil.toBean(serialization, type, false);
+        JSONConfig config = JSONConfig.create().setOrder(true);
+        return JSONUtil.parseObj(serialization, config).toBean(type);
     }
 }

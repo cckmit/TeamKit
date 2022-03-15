@@ -1,6 +1,6 @@
 package org.team4u.base.registrar.factory;
 
-import cn.hutool.json.JSONUtil;
+import org.team4u.base.serializer.HutoolJsonSerializer;
 
 /**
  * 基于Json配置的抽象缓存策略工厂
@@ -13,6 +13,6 @@ public abstract class AbstractJsonCacheablePolicyFactory<C, P> extends AbstractC
 
     @Override
     public C toConfig(String configValue) {
-        return JSONUtil.toBean(configValue, configType(), false);
+        return HutoolJsonSerializer.instance().deserialize(configValue, configType());
     }
 }

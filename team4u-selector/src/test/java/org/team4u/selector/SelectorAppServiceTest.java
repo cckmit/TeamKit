@@ -59,7 +59,7 @@ public class SelectorAppServiceTest {
         Assert.assertEquals("2", s.select("map", new SingleValueBinding("y")));
         Assert.assertEquals("3", s.select("map", new SingleValueBinding("z")));
         Assert.assertEquals("3", s.select("map", new SingleValueBinding("z1")));
-        Assert.assertEquals(Selector.NONE, s.select("map", new SingleValueBinding("1")));
+        Assert.assertEquals("4", s.select("map", new SingleValueBinding("1")));
     }
 
     @Test

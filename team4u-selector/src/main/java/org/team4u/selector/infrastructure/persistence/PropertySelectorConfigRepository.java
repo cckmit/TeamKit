@@ -1,8 +1,8 @@
 package org.team4u.selector.infrastructure.persistence;
 
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONUtil;
 import org.team4u.base.config.ConfigService;
+import org.team4u.base.serializer.HutoolJsonSerializer;
 import org.team4u.selector.domain.selector.SelectorConfig;
 import org.team4u.selector.domain.selector.SelectorConfigRepository;
 
@@ -31,7 +31,7 @@ public class PropertySelectorConfigRepository implements SelectorConfigRepositor
             return null;
         }
 
-        return JSONUtil.toBean(jsonString, SelectorConfig.class);
+        return HutoolJsonSerializer.instance().deserialize(jsonString, SelectorConfig.class);
     }
 
     public static class Config {
