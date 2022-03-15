@@ -161,16 +161,20 @@ public class SelectorAppServiceTest {
         }
     }
 
-
     @Test
     public void expressionSelect() {
+        expressionSelect("expressionBeetl");
+        expressionSelect("expressionJs");
+    }
+
+    private void expressionSelect(String configId) {
         SimpleMapBinding binding = new SimpleMapBinding();
         binding.set("a", 1);
-        String result = s.select("expressionConfig", binding);
+        String result = s.select(configId, binding);
         Assert.assertEquals("x", result);
 
         binding.set("a", 2);
-        result = s.select("expressionConfig", binding);
+        result = s.select(configId, binding);
         Assert.assertEquals("y", result);
     }
 
