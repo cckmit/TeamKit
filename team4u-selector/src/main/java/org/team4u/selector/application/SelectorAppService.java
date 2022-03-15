@@ -44,14 +44,16 @@ public class SelectorAppService {
     }
 
     /**
-     * 根据选择标识选择最终结果
+     * 根据配置标识，选择最终结果
      */
     public String select(String selectorConfigId) {
         return select(selectorConfigId, null);
     }
 
     /**
-     * 根据选择标识、绑定值最终结果
+     * 根据选择标识和绑定值，选择最终结果
+     *
+     * @return 选择结果，若未命中任何规则则返回NONE
      */
     public String select(String selectorConfigId, SelectorBinding binding) {
         LogMessageContext.createAndSet(this.getClass().getSimpleName(), "select")
@@ -63,7 +65,11 @@ public class SelectorAppService {
         return select(selectorConfig, binding);
     }
 
-
+    /**
+     * 根据配置对象和绑定值、选择最终结果
+     *
+     * @return 选择结果，若未命中任何规则则返回NONE
+     */
     public String select(SelectorConfig selectorConfig, SelectorBinding binding) {
         LogMessage lm = LogMessageContext.getOrCreate(this.getClass().getSimpleName(), "select");
 
@@ -83,7 +89,7 @@ public class SelectorAppService {
         // 执行选择
         Selector selector = selectorOfConfig(selectorConfig);
         if (selector == null) {
-            log.warn(lm.fail("selector is null").toString());
+            log.error(lm.fail("selector is null").toString());
             return Selector.NONE;
         }
 
@@ -93,14 +99,14 @@ public class SelectorAppService {
     }
 
     /**
-     * 根据选择标识判断是否命中
+     * 根据选择配置标识，判断是否命中
      */
     public boolean match(String selectorConfigId) {
         return match(selectorConfigId, null);
     }
 
     /**
-     * 根据选择标识、绑定值判断是否命中
+     * 根据选择配置标识和绑定值，判断是否命中
      */
     public boolean match(String selectorConfigId, SelectorBinding binding) {
         return !StrUtil.equals(select(selectorConfigId, binding), Selector.NONE);
