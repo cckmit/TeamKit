@@ -1,16 +1,15 @@
 package org.team4u.selector.domain.selector.expression;
 
-import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import org.team4u.base.registrar.NoSuchPolicyException;
+import org.team4u.base.util.MapExtUtil;
 import org.team4u.selector.domain.selector.AbstractSelectorFactoryFactory;
 import org.team4u.selector.domain.selector.Selector;
 import org.team4u.template.TemplateEngine;
 import org.team4u.template.TemplateEngines;
 
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * 表达式选择器构建工厂
@@ -24,13 +23,7 @@ public class ExpressionSelectorFactory extends AbstractSelectorFactoryFactory<Ma
 
     @Override
     public Map<String, String> toConfig(String jsonConfig) {
-        return JSONUtil.parseObj(jsonConfig)
-                .entrySet()
-                .stream()
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        it -> Convert.toStr(it.getValue())
-                ));
+        return MapExtUtil.convert(JSONUtil.parseObj(jsonConfig), String.class, String.class);
     }
 
     @Override

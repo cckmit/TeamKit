@@ -74,13 +74,13 @@ public class SelectorAppServiceTest {
     }
 
     @Test
-    public void weightSelect() {
+    public void weight() {
         int a = 0;
         int b = 0;
         int c = 0;
 
         for (int i = 0; i < 100; i++) {
-            switch (s.select("weightConfig", new ListBinding().addValue("a").addValue("b"))) {
+            switch (s.select("weight2", new ListBinding().addValue("a").addValue("b"))) {
                 case "a": {
                     a++;
                     break;
@@ -103,11 +103,11 @@ public class SelectorAppServiceTest {
     }
 
     @Test
-    public void zeroWeightSelect() {
+    public void zeroWeight() {
         int none = 0;
 
         for (int i = 0; i < 100; i++) {
-            if (Selector.NONE.equals(s.select("weightConfig", new ListBinding().addValue("c")))) {
+            if (Selector.NONE.equals(s.select("weight1", new ListBinding().addValue("c")))) {
                 none++;
             }
         }
@@ -115,15 +115,15 @@ public class SelectorAppServiceTest {
     }
 
     @Test
-    public void probabilitySelect() {
-        checkMatchAndNoneCount("probabilityConfig", 1, 100, 100, 0, 0);
-        checkMatchAndNoneCount("probabilityConfig", 2, 100, 100, 0, 0);
-        checkMatchAndNoneCount("probabilityConfig", 3, 100, 0, 100, 0);
-        checkMatchAndNoneCount("probabilityConfig", 4, 100, 1, 99, 5);
+    public void probability() {
+        checkMatchAndNoneCount("probability1", 1, 100, 100, 0, 0);
+        checkMatchAndNoneCount("probability1", 2, 100, 100, 0, 0);
+        checkMatchAndNoneCount("probability2", 3, 100, 0, 100, 0);
+        checkMatchAndNoneCount("probability2", 4, 100, 1, 99, 5);
     }
 
     @Test
-    public void modProbabilitySelect() {
+    public void modProbability() {
         checkMatchAndNoneCount("modProbabilityConfig", 0, 100, 0, 100, 0);
         checkMatchAndNoneCount("modProbabilityConfig", 1, 100, 100, 0, 0);
         checkMatchAndNoneCount("modProbabilityConfig", 2, 100, 0, 100, 0);
@@ -162,12 +162,12 @@ public class SelectorAppServiceTest {
     }
 
     @Test
-    public void expressionSelect() {
-        expressionSelect("expressionBeetl");
-        expressionSelect("expressionJs");
+    public void expression() {
+        expression("expressionBeetl");
+        expression("expressionJs");
     }
 
-    private void expressionSelect(String configId) {
+    private void expression(String configId) {
         SimpleMapBinding binding = new SimpleMapBinding();
         binding.set("a", 1);
         String result = s.select(configId, binding);

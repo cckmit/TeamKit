@@ -13,6 +13,6 @@ public abstract class AbstractJsonCacheablePolicyFactory<C, P> extends AbstractC
 
     @Override
     protected C toConfig(String configValue) {
-        return JSONUtil.toBean(configValue, configType());
+        return JSONUtil.toBean(configValue, configType(), false);
     }
 }

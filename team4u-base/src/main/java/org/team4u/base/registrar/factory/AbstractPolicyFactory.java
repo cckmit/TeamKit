@@ -1,6 +1,8 @@
 package org.team4u.base.registrar.factory;
 
-import cn.hutool.core.util.ClassUtil;
+import cn.hutool.core.util.TypeUtil;
+
+import java.lang.reflect.Type;
 
 /**
  * 抽象策略工厂
@@ -23,9 +25,8 @@ public abstract class AbstractPolicyFactory<CO, CI, P> implements PolicyFactory<
     /**
      * 获取期望配置类型
      */
-    @SuppressWarnings("unchecked")
-    protected Class<CO> configType() {
-        return (Class<CO>) ClassUtil.getTypeArgument(this.getClass());
+    protected Type configType() {
+        return TypeUtil.getTypeArgument(this.getClass());
     }
 
     /**
