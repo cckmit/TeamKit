@@ -45,6 +45,8 @@ public class SelectorAppService {
 
     /**
      * 根据配置标识，选择最终结果
+     *
+     * @return 选择结果，若未命中任何规则则返回NONE
      */
     public String select(String selectorConfigId) {
         return select(selectorConfigId, null);
