@@ -30,15 +30,15 @@ public class SelectorAppService {
     private final SelectorConfigRepository selectorConfigRepository;
     private final SelectorFactoryService selectorFactoryService;
 
-    private final SelectorInterceptorFactoryService selectorInterceptorFactoryService;
     private final SelectorInterceptorService selectorInterceptorService;
+    private final SelectorInterceptorFactoryService selectorInterceptorFactoryService;
 
     public SelectorAppService(SelectorConfigRepository selectorConfigRepository) {
         this.selectorConfigRepository = selectorConfigRepository;
-
-        this.selectorInterceptorFactoryService = new SelectorInterceptorFactoryService();
         this.selectorFactoryService = new SelectorFactoryService();
+
         this.selectorInterceptorService = new SelectorInterceptorService();
+        this.selectorInterceptorFactoryService = new SelectorInterceptorFactoryService();
     }
 
     /**
