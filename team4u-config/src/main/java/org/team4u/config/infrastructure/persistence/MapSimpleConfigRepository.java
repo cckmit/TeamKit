@@ -4,8 +4,8 @@ import cn.hutool.core.lang.Pair;
 import org.team4u.config.domain.SimpleConfig;
 import org.team4u.config.domain.SimpleConfigId;
 import org.team4u.config.domain.SimpleConfigRepository;
+import org.team4u.config.domain.SimpleConfigs;
 
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -18,10 +18,8 @@ public class MapSimpleConfigRepository implements SimpleConfigRepository {
     }
 
     @Override
-    public List<SimpleConfig> allConfigs() {
-        return getSource()
-                .entrySet()
-                .stream()
+    public SimpleConfigs allConfigs() {
+        return new SimpleConfigs(getSource().entrySet().stream()
                 .map(it -> {
                     Pair<String, String> typeAndKey = typeAndKey(it.getKey().toString());
 
@@ -35,7 +33,7 @@ public class MapSimpleConfigRepository implements SimpleConfigRepository {
                             null
                     );
                 })
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
     }
 
     protected Pair<String, String> typeAndKey(String originalKey) {

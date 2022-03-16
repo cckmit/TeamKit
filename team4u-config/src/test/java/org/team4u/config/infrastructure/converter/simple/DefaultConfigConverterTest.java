@@ -1,4 +1,4 @@
-package org.team4u.config.infrastructure.converter.proxy;
+package org.team4u.config.infrastructure.converter.simple;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Dict;
@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.team4u.config.TestUtil;
 import org.team4u.config.domain.SimpleConfig;
 import org.team4u.config.domain.SimpleConfigRepository;
+import org.team4u.config.domain.SimpleConfigs;
 import org.team4u.config.infrastructure.persistence.CacheableSimpleConfigRepository;
 import org.team4u.config.infrastructure.persistence.MapSimpleConfigRepository;
 import org.team4u.test.Benchmark;
@@ -21,12 +22,12 @@ import java.util.Objects;
 
 import static org.team4u.config.TestUtil.c;
 
-public class ProxySimpleConfigConverterTest {
+public class DefaultConfigConverterTest {
 
     @Test
     public void type() {
         MockSimpleConfigRepository repository = new MockSimpleConfigRepository();
-        ProxySimpleConfigConverter converter = new ProxySimpleConfigConverter(repository);
+        DefaultConfigConverter converter = new DefaultConfigConverter(repository);
         TestConfig config = converter.to(
                 TestConfig.class,
                 TestUtil.TEST_ID
@@ -39,7 +40,7 @@ public class ProxySimpleConfigConverterTest {
         Assert.assertEquals(new Demo("1", "2"), config.getE().get(0));
 
         // 配置项变动
-        repository.allConfigs().get(0).setConfigValue("2");
+        repository.allConfigs().getValue().get(0).setConfigValue("2");
         ThreadUtil.sleep(1000);
         Assert.assertEquals(2, config.getA());
         Assert.assertTrue(config.isF());
@@ -55,7 +56,7 @@ public class ProxySimpleConfigConverterTest {
                 new CacheableSimpleConfigRepository.Config().setMaxEffectiveSec(5),
                 repository1
         );
-        ProxySimpleConfigConverter converter = new ProxySimpleConfigConverter(repository2);
+        DefaultConfigConverter converter = new DefaultConfigConverter(repository2);
         TestConfig config = converter.to(
                 TestConfig.class,
                 TestUtil.TEST_ID
@@ -68,7 +69,7 @@ public class ProxySimpleConfigConverterTest {
 
     @Test
     public void value() {
-        ProxySimpleConfigConverter converter = new ProxySimpleConfigConverter(new MockSimpleConfigRepository());
+        DefaultConfigConverter converter = new DefaultConfigConverter(new MockSimpleConfigRepository());
         Integer a = converter.to(
                 Integer.class,
                 TestUtil.TEST_ID,
@@ -166,8 +167,8 @@ public class ProxySimpleConfigConverterTest {
         );
 
         @Override
-        public List<SimpleConfig> allConfigs() {
-            return list;
+        public SimpleConfigs allConfigs() {
+            return new SimpleConfigs(list);
         }
     }
 }

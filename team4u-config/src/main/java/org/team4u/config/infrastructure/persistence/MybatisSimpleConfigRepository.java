@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import org.team4u.config.domain.SimpleConfig;
 import org.team4u.config.domain.SimpleConfigId;
 import org.team4u.config.domain.SimpleConfigRepository;
+import org.team4u.config.domain.SimpleConfigs;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,15 +23,15 @@ public class MybatisSimpleConfigRepository implements SimpleConfigRepository {
     }
 
     @Override
-    public List<SimpleConfig> allConfigs() {
+    public SimpleConfigs allConfigs() {
         List<SystemConfigDo> systemConfigDos = mapper.selectList(new QueryWrapper<>());
         return toSimpleConfigs(systemConfigDos);
     }
 
-    private List<SimpleConfig> toSimpleConfigs(List<SystemConfigDo> systemConfigDos) {
-        return systemConfigDos.stream()
+    private SimpleConfigs toSimpleConfigs(List<SystemConfigDo> systemConfigDos) {
+        return new SimpleConfigs(systemConfigDos.stream()
                 .map(this::toSimpleConfig)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
     }
 
     private SimpleConfig toSimpleConfig(SystemConfigDo systemConfigDo) {

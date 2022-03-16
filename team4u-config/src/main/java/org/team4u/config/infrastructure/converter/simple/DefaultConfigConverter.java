@@ -1,4 +1,4 @@
-package org.team4u.config.infrastructure.converter.proxy;
+package org.team4u.config.infrastructure.converter.simple;
 
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.TypeUtil;
@@ -13,18 +13,18 @@ import org.team4u.config.domain.SimpleConfigs;
 import java.lang.reflect.Type;
 
 /**
- * 动态配置转换器
+ * 默认配置转换器
  * <p>
  * 当配置项动态下发后，配置类能够实时获取最新的配置值
  *
  * @author jay.wu
  */
-public class ProxySimpleConfigConverter implements SimpleConfigConverter {
+public class DefaultConfigConverter implements SimpleConfigConverter {
 
 
     private final SimpleConfigRepository simpleConfigRepository;
 
-    public ProxySimpleConfigConverter(SimpleConfigRepository simpleConfigRepository) {
+    public DefaultConfigConverter(SimpleConfigRepository simpleConfigRepository) {
         this.simpleConfigRepository = simpleConfigRepository;
     }
 
@@ -33,7 +33,7 @@ public class ProxySimpleConfigConverter implements SimpleConfigConverter {
         return SimpleAop.proxyOf(
                 toType,
                 ElementMatchers.isGetter(),
-                new ValueMethodInterceptor(toType, configType, this)
+                new ConfigBeanMethodInterceptor(toType, configType, this)
         );
     }
 
@@ -85,6 +85,6 @@ public class ProxySimpleConfigConverter implements SimpleConfigConverter {
 
     @Override
     public SimpleConfigs allConfigs() {
-        return new SimpleConfigs(simpleConfigRepository.allConfigs());
+        return simpleConfigRepository.allConfigs();
     }
 }

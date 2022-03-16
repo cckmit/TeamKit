@@ -1,4 +1,4 @@
-package org.team4u.config.infrastructure.converter.proxy;
+package org.team4u.config.infrastructure.converter.simple;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
@@ -15,11 +15,11 @@ import java.lang.reflect.Type;
 import java.util.Collection;
 
 /**
- * 对象转换器
+ * 配置对象转换器
  *
  * @author jay.wu
  */
-public class BeanConverter {
+public class ConfigBeanConverter {
 
     /**
      * 将配置项转换为目标对象

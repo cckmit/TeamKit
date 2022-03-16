@@ -7,10 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.team4u.config.TestUtil;
 import org.team4u.config.domain.SimpleConfig;
+import org.team4u.config.domain.SimpleConfigs;
 import org.team4u.config.infrastructure.BeanConfig;
 import org.team4u.test.spring.SpringDbTest;
-
-import java.util.List;
 
 @ContextConfiguration(classes = BeanConfig.class)
 public class MybatisSimpleConfigRepositoryTest extends SpringDbTest {
@@ -20,9 +19,9 @@ public class MybatisSimpleConfigRepositoryTest extends SpringDbTest {
 
     @Test
     public void allConfigs() {
-        List<SimpleConfig> configs = repository.allConfigs();
+        SimpleConfigs configs = repository.allConfigs();
         Assert.assertEquals(1, configs.size());
-        checkConfig(configs.get(0));
+        checkConfig(configs.getValue().get(0));
     }
 
     private void checkConfig(SimpleConfig config) {

@@ -1,4 +1,4 @@
-package org.team4u.config.infrastructure.converter.proxy;
+package org.team4u.config.infrastructure.converter.simple;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
@@ -17,7 +17,7 @@ import java.util.concurrent.Callable;
  *
  * @author jay.wu
  */
-public class ValueMethodInterceptor implements MethodInterceptor {
+public class ConfigBeanMethodInterceptor implements MethodInterceptor {
 
     private final Log log = Log.get();
 
@@ -25,12 +25,12 @@ public class ValueMethodInterceptor implements MethodInterceptor {
     private final Class<?> targetType;
     private SimpleConfigs currentConfigs = new SimpleConfigs();
 
-    private final BeanConverter beanConverter = new BeanConverter();
+    private final ConfigBeanConverter beanConverter = new ConfigBeanConverter();
     private final SimpleConfigConverter simpleConfigConverter;
 
-    public ValueMethodInterceptor(Class<?> targetType,
-                                  String configType,
-                                  SimpleConfigConverter simpleConfigConverter) {
+    public ConfigBeanMethodInterceptor(Class<?> targetType,
+                                       String configType,
+                                       SimpleConfigConverter simpleConfigConverter) {
         this.targetType = targetType;
         this.configType = configType;
         this.simpleConfigConverter = simpleConfigConverter;
@@ -64,9 +64,8 @@ public class ValueMethodInterceptor implements MethodInterceptor {
             return;
         }
 
-        Object newInstance = beanConverter.convert(latestConfigs, configType, targetType);
-        // 将最新的代理对象字段值赋值到当前对象
-        BeanUtil.copyProperties(newInstance, instance);
+        // 刷新当前配置对象
+        refreshInstance(latestConfigs, instance);
         // 刷新当前配置项
         refreshConfigs(latestConfigs);
 
@@ -78,6 +77,12 @@ public class ValueMethodInterceptor implements MethodInterceptor {
                 .append("configId", Optional.ofNullable(CollUtil.getFirst(configs.getValue()))
                         .map(it -> it.getConfigId().getConfigType())
                         .orElse(null));
+    }
+
+    private void refreshInstance(SimpleConfigs latestConfigs, Object instance) {
+        Object newInstance = beanConverter.convert(latestConfigs, configType, targetType);
+        // 将最新的代理对象字段值赋值到当前对象
+        BeanUtil.copyProperties(newInstance, instance);
     }
 
     private void refreshConfigs(SimpleConfigs latestConfigs) {
