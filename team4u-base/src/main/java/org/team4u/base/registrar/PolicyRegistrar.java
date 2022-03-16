@@ -208,7 +208,7 @@ public abstract class PolicyRegistrar<C, P extends Policy<C>> {
      * 获取所有注册策略集合
      */
     public List<P> policies() {
-        return new ArrayList<>(policies);
+        return Collections.unmodifiableList(policies);
     }
 
     /**

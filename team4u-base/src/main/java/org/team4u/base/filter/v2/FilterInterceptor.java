@@ -1,4 +1,4 @@
-package org.team4u.base.filter;
+package org.team4u.base.filter.v2;
 
 
 import org.team4u.base.registrar.StringIdPolicy;
@@ -27,5 +27,10 @@ public interface FilterInterceptor<Context, F extends Filter<Context>> extends S
     /**
      * 完成处理（无论是否异常最终执行）
      */
-    boolean afterCompletion(Context context, F filter, Exception ex) throws Exception;
+    boolean afterCompletion(Context context, F filter, Exception e) throws Exception;
+
+    @Override
+    default String id() {
+        return this.getClass().getSimpleName();
+    }
 }
