@@ -4,6 +4,7 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.func.Func1;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
+import org.team4u.base.error.DataNotExistException;
 import org.team4u.base.error.NestedException;
 import org.team4u.base.log.LogMessage;
 import org.team4u.base.log.LogMessageContext;
@@ -57,7 +58,7 @@ public class SelectorAppService {
      */
     public SelectorResult select(String selectorConfigId, SelectorBinding binding) {
         LogMessageContext.createAndSet(this.getClass().getSimpleName(), "select")
-                .append("selectorConfigId", selectorConfigId);
+                .append("id", selectorConfigId);
         SelectorConfig selectorConfig = selectorConfigOfId(selectorConfigId);
         return select(selectorConfig, binding);
     }
@@ -74,16 +75,16 @@ public class SelectorAppService {
             log.info(lm.fail("selectorConfig is null").toString());
             return SelectorResult.NOT_MATCH;
         }
-        lm.append("selectorConfigId", selectorConfig.getConfigId());
-
-        Selector selector = selectorOfConfig(selectorConfig);
-        if (selector == null) {
-            log.error(lm.fail("selector is null").toString());
-            return SelectorResult.NOT_MATCH;
-        }
+        lm.append("id", selectorConfig.getConfigId()).append("binding", binding);
 
         try {
-            return withInterceptor(selectorConfig, binding, selector::select);
+            SelectorResult result = withInterceptor(selectorConfig, binding, selectorOfConfig(selectorConfig)::select);
+
+            if (log.isDebugEnabled()) {
+                log.debug(lm.success().append("result", result).toString());
+            }
+
+            return result;
         } catch (Exception e) {
             log.error(e, lm.fail(e.getMessage()).toString());
             throw NestedException.wrap(e);
@@ -143,7 +144,7 @@ public class SelectorAppService {
         SelectorFactory factory = selectorFactoryService.policyOf(selectorConfig.getType());
 
         if (factory == null) {
-            return null;
+            throw new DataNotExistException("Unable to find selector|id=" + selectorConfig.getConfigId());
         }
 
         return factory.create(selectorConfig.getBody());

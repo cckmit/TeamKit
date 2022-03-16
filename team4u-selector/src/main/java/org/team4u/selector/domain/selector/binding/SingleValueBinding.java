@@ -20,4 +20,9 @@ public class SingleValueBinding implements SelectorBinding {
     public String value() {
         return value;
     }
+
+    @Override
+    public String toString() {
+        return value;
+    }
 }

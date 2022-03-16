@@ -68,6 +68,11 @@ public class DynamicMapSelector implements Selector {
             this.extend = extend;
             this.valueService = valueService == null ? new SelectorValueService() : valueService;
         }
+
+        @Override
+        public String toString() {
+            return "key=" + key + ", extend=" + extend;
+        }
     }
 
     @Data
