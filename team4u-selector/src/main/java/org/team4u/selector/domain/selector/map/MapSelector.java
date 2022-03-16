@@ -10,6 +10,8 @@ import org.team4u.selector.domain.selector.binding.SingleValueBinding;
 import java.util.Map;
 import java.util.Optional;
 
+import static org.team4u.selector.domain.selector.binding.SelectorBinding.ANY;
+
 /**
  * 映射选择器
  *

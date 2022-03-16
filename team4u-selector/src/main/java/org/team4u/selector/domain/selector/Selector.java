@@ -8,14 +8,11 @@ import org.team4u.selector.domain.selector.binding.SelectorBinding;
  * @author jay.wu
  */
 public interface Selector {
-
-    /**
-     * 任意值
-     */
-    String ANY = "*";
-
     /**
      * 根据绑定值选择最终结果
+     *
+     * @param binding 绑定值
+     * @return 选择器结果
      */
     SelectorResult select(SelectorBinding binding);
 }

@@ -35,7 +35,7 @@ public class DynamicMapSelector implements Selector {
         Binding mapBinding = ((Binding) binding);
 
         SelectorResult handlerIdResult = mapSelector.select(new SingleValueBinding(mapBinding.getKey()));
-        if (!handlerIdResult.isMatch()) {
+        if (handlerIdResult.isNotMatch()) {
             return SelectorResult.NOT_MATCH;
         }
 

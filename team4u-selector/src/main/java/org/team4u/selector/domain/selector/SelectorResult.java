@@ -59,6 +59,13 @@ public class SelectorResult {
         return true;
     }
 
+    /**
+     * 是否未匹配
+     */
+    public boolean isNotMatch() {
+        return !isMatch();
+    }
+
     @Override
     public String toString() {
         return to(String.class);

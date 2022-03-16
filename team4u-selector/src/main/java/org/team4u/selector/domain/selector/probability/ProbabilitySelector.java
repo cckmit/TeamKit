@@ -44,16 +44,17 @@ public class ProbabilitySelector implements Selector {
         String key = Convert.toStr(keyOf(binding));
         SelectorResult probabilityResult = mapSelector.select(new SingleValueBinding(key));
 
-        if (!probabilityResult.isMatch()) {
+        if (probabilityResult.isNotMatch()) {
             return SelectorResult.NOT_MATCH;
         }
 
-        return SelectorResult.valueOf(isMatch(probabilityResult.to(Double.class)));
+        return SelectorResult.valueOf(isMatch(
+                probabilityResult.to(Double.class)
+        ));
     }
 
     private boolean isMatch(Double probability) {
         int target = RandomUtil.randomInt(1, 101);
-
         return probability >= target;
     }
 

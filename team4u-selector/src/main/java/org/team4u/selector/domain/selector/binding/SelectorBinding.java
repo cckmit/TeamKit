@@ -6,4 +6,8 @@ package org.team4u.selector.domain.selector.binding;
  * @author jay.wu
  */
 public interface SelectorBinding {
+    /**
+     * 任意值
+     */
+    String ANY = "*";
 }

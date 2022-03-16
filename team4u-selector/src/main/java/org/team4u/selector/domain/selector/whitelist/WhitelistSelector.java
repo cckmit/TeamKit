@@ -14,6 +14,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.team4u.selector.domain.selector.binding.SelectorBinding.ANY;
+
 /**
  * 白名单选择器
  *
@@ -39,7 +41,7 @@ public class WhitelistSelector implements Selector {
         Map.Entry<String, Object> value = value(binding);
         SelectorResult nameIdResult = mapSelector.select(new SingleValueBinding(value.getKey()));
 
-        if (!nameIdResult.isMatch()) {
+        if (nameIdResult.isNotMatch()) {
             return SelectorResult.NOT_MATCH;
         }
 

@@ -27,9 +27,9 @@ public class ExpressionSelector implements Selector {
      * 构建表达式选择器
      *
      * @param templateEngine 模板引擎，用于解析表达式
-     * @param config         结果/表达式映射集合
-     *                       * 表达式格式为${...}，如${x == 1}，其中x通过context传入
-     *                       * 表达式返回值必须String支，持的值为：true、false、yes、ok、no，1,0
+     * @param config         表达式:结果映射集合
+     *                       * 表达式格式为${...}，如${x == 1}，其中x通过binding传入
+     *                       * 表达式返回值必须String，支持的值为：true、false、yes、ok、no、1、0
      */
     public ExpressionSelector(TemplateEngine templateEngine, Map<String, String> config) {
         this.templateEngine = templateEngine;
