@@ -36,6 +36,7 @@ public class ProxySimpleConfigConverterTest {
         Assert.assertArrayEquals(new String[]{"1", "2"}, config.getB());
         Assert.assertEquals(CollUtil.newArrayList(1, 2), config.getC());
         Assert.assertEquals("1", config.getD().get("test"));
+        Assert.assertEquals(new Demo("1", "2"), config.getE().get(0));
 
         // 配置项变动
         repository.allConfigs().get(0).setConfigValue("2");

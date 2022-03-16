@@ -38,7 +38,7 @@ public class ValueMethodInterceptor implements MethodInterceptor {
 
     @Override
     public Object intercept(Object instance, Object[] parameters, Method method, Callable<?> superMethod) throws Exception {
-        SimpleConfigs latestConfigs = simpleConfigConverter.allConfigs().filter(configType);
+        SimpleConfigs latestConfigs = latestConfigs();
 
         // 配置项没有变化，直接返回
         if (sameAs(latestConfigs)) {
@@ -52,11 +52,12 @@ public class ValueMethodInterceptor implements MethodInterceptor {
         return superMethod.call();
     }
 
+    private SimpleConfigs latestConfigs() {
+        return simpleConfigConverter.allConfigs().filter(configType);
+    }
+
     private void refresh(SimpleConfigs latestConfigs, Object instance) {
-        LogMessage lm = LogMessage.create(targetType.getSimpleName(), "refresh")
-                .append("configId", Optional.ofNullable(CollUtil.getFirst(latestConfigs.getValue()))
-                        .map(it -> it.getConfigId().getConfigType())
-                        .orElse(null));
+        LogMessage lm = logMessageOf(latestConfigs);
 
         if (sameAs(latestConfigs)) {
             log.info(lm.fail("Configs has not changed").toString());
@@ -70,6 +71,13 @@ public class ValueMethodInterceptor implements MethodInterceptor {
         refreshConfigs(latestConfigs);
 
         log.info(lm.success().toString());
+    }
+
+    private LogMessage logMessageOf(SimpleConfigs configs) {
+        return LogMessage.create(targetType.getSimpleName(), "refresh")
+                .append("configId", Optional.ofNullable(CollUtil.getFirst(configs.getValue()))
+                        .map(it -> it.getConfigId().getConfigType())
+                        .orElse(null));
     }
 
     private void refreshConfigs(SimpleConfigs latestConfigs) {
