@@ -27,12 +27,9 @@ public class SelectorAppService {
 
     private final SelectorConfigRepository selectorConfigRepository;
     private final SelectorFactoryService selectorFactoryService;
+
     private final SelectorInterceptorFactoryService selectorInterceptorFactoryService;
     private final SelectorInterceptorService selectorInterceptorService;
-
-    public SelectorAppService() {
-        this(null);
-    }
 
     public SelectorAppService(SelectorConfigRepository selectorConfigRepository) {
         this.selectorConfigRepository = selectorConfigRepository;
@@ -45,7 +42,7 @@ public class SelectorAppService {
     /**
      * 根据配置标识，选择最终结果
      *
-     * @return 选择结果，若未命中任何规则则返回NONE
+     * @return 选择结果
      */
     public SelectorResult select(String selectorConfigId) {
         return select(selectorConfigId, null);
@@ -54,7 +51,7 @@ public class SelectorAppService {
     /**
      * 根据选择标识和绑定值，选择最终结果
      *
-     * @return 选择结果，若未命中任何规则则返回NONE
+     * @return 选择结果
      */
     public SelectorResult select(String selectorConfigId, SelectorBinding binding) {
         LogMessageContext.createAndSet(this.getClass().getSimpleName(), "select")
@@ -69,7 +66,7 @@ public class SelectorAppService {
     /**
      * 根据配置对象和绑定值、选择最终结果
      *
-     * @return 选择结果，若未命中任何规则则返回NONE
+     * @return 选择结果
      */
     public SelectorResult select(SelectorConfig selectorConfig, SelectorBinding binding) {
         LogMessage lm = LogMessageContext.getOrCreate(this.getClass().getSimpleName(), "select");

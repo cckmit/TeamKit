@@ -43,7 +43,7 @@ public class WhitelistSelector implements Selector {
             return SelectorResult.NOT_MATCH;
         }
 
-        return SelectorResult.createWithMatch(matchName(nameIdResult.toStr(), value.getValue()));
+        return SelectorResult.valueOf(matchName(nameIdResult.toString(), value.getValue()));
     }
 
     private boolean matchName(String nameId, Object userId) {

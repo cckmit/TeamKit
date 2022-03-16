@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import org.team4u.base.bean.provider.BeanProviders;
 import org.team4u.base.config.LocalJsonConfigService;
 import org.team4u.selector.application.SelectorAppService;
+import org.team4u.selector.infrastructure.persistence.JsonSelectorConfigRepository;
 import org.team4u.template.TemplateFunctionService;
 import org.team4u.template.infrastructure.BeetlTemplateEngine;
 import org.team4u.workflow.domain.definition.ProcessDefinition;
@@ -102,7 +103,6 @@ public class TestUtil {
 
     public static SelectorAppService selectorAppService() {
         BeanProviders.getInstance().registerBean(new BeetlTemplateEngine(new TemplateFunctionService()));
-
-        return new SelectorAppService();
+        return new SelectorAppService(new JsonSelectorConfigRepository(new LocalJsonConfigService()));
     }
 }

@@ -48,7 +48,7 @@ public class ProbabilitySelector implements Selector {
             return SelectorResult.NOT_MATCH;
         }
 
-        return SelectorResult.createWithMatch(isMatch(probabilityResult.convert(Double.class)));
+        return SelectorResult.valueOf(isMatch(probabilityResult.to(Double.class)));
     }
 
     private boolean isMatch(Double probability) {

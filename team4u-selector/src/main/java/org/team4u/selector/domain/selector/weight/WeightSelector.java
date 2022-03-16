@@ -1,16 +1,12 @@
 package org.team4u.selector.domain.selector.weight;
 
-import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.WeightRandom;
-import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.RandomUtil;
 import org.team4u.selector.domain.selector.Selector;
 import org.team4u.selector.domain.selector.SelectorResult;
-import org.team4u.selector.domain.selector.binding.ListBinding;
 import org.team4u.selector.domain.selector.binding.SelectorBinding;
-import org.team4u.selector.domain.selector.binding.SingleValueBinding;
 
-import java.util.*;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -20,53 +16,26 @@ import java.util.stream.Collectors;
  */
 public class WeightSelector implements Selector {
 
-    private final Map<String, Double> config;
+    private final WeightRandom<String> weightRandom;
 
     /**
      * @param config 结果/权重映射集合
      */
     public WeightSelector(Map<String, Double> config) {
-        this.config = config;
+        this.weightRandom = buildWeightRandom(config);
+    }
+
+    private WeightRandom<String> buildWeightRandom(Map<String, Double> rules) {
+        return RandomUtil.weightRandom(
+                rules.entrySet()
+                        .stream()
+                        .map(it -> new WeightRandom.WeightObj<>(it.getKey(), it.getValue()))
+                        .collect(Collectors.toList())
+        );
     }
 
     @Override
     public SelectorResult select(SelectorBinding binding) {
-        if (MapUtil.isEmpty(config)) {
-            return SelectorResult.NOT_MATCH;
-        }
-
-        if (binding == null) {
-            return SelectorResult.NOT_MATCH;
-        }
-
-        Collection<String> values = values(binding);
-        if (values.isEmpty()) {
-            return SelectorResult.NOT_MATCH;
-        }
-
-        List<WeightRandom.WeightObj<String>> weightObjs = values(binding)
-                .stream()
-                .map(it -> new WeightRandom.WeightObj<>(it, this.config.get(it)))
-                .collect(Collectors.toList());
-
-        return SelectorResult.createWithValue(RandomUtil.weightRandom(weightObjs).next());
-    }
-
-    private Collection<String> values(SelectorBinding binding) {
-        Collection<String> values = new ArrayList<>();
-
-        if (binding instanceof SingleValueBinding) {
-            values.add(((SingleValueBinding) binding).value());
-            return values;
-        }
-
-        if (binding instanceof ListBinding) {
-            return ((ListBinding) binding)
-                    .stream()
-                    .map(Convert::toStr)
-                    .collect(Collectors.toList());
-        }
-
-        return Collections.emptyList();
+        return SelectorResult.valueOf(weightRandom.next());
     }
 }

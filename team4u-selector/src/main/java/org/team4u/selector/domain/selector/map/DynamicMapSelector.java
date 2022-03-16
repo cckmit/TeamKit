@@ -39,7 +39,7 @@ public class DynamicMapSelector implements Selector {
             return SelectorResult.NOT_MATCH;
         }
 
-        return select(mapBinding, handlerIdResult.toStr());
+        return select(mapBinding, handlerIdResult.toString());
     }
 
     private SelectorResult select(Binding binding, String key) {
