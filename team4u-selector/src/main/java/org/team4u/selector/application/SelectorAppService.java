@@ -59,8 +59,7 @@ public class SelectorAppService {
     public SelectorResult select(String selectorConfigId, SelectorBinding binding) {
         LogMessageContext.createAndSet(this.getClass().getSimpleName(), "select")
                 .append("id", selectorConfigId);
-        SelectorConfig selectorConfig = selectorConfigOfId(selectorConfigId);
-        return select(selectorConfig, binding);
+        return select(selectorConfigOfId(selectorConfigId), binding);
     }
 
     /**
@@ -140,7 +139,7 @@ public class SelectorAppService {
     /**
      * 获取选择器
      */
-    private Selector selectorOfConfig(SelectorConfig selectorConfig) {
+    private Selector selectorOfConfig(SelectorConfig selectorConfig) throws DataNotExistException {
         SelectorFactory factory = selectorFactoryService.policyOf(selectorConfig.getType());
 
         if (factory == null) {
