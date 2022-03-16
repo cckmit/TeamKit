@@ -5,6 +5,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.RandomUtil;
 import org.team4u.base.util.MapExtUtil;
 import org.team4u.selector.domain.selector.Selector;
+import org.team4u.selector.domain.selector.SelectorResult;
 import org.team4u.selector.domain.selector.binding.ListBinding;
 import org.team4u.selector.domain.selector.binding.SelectorBinding;
 import org.team4u.selector.domain.selector.binding.SimpleMapBinding;
@@ -39,25 +40,21 @@ public class ProbabilitySelector implements Selector {
      * @return 若命中则返回常量MATCH，否则为常量NONE
      */
     @Override
-    public String select(SelectorBinding binding) {
+    public SelectorResult select(SelectorBinding binding) {
         String key = Convert.toStr(keyOf(binding));
-        String value = mapSelector.select(new SingleValueBinding(key));
+        SelectorResult probabilityResult = mapSelector.select(new SingleValueBinding(key));
 
-        if (isNotMatch(value)) {
-            return NONE;
+        if (!probabilityResult.isMatch()) {
+            return SelectorResult.NOT_MATCH;
         }
 
-        return isMatch(Convert.toDouble(value));
+        return SelectorResult.createWithMatch(isMatch(probabilityResult.convert(Double.class)));
     }
 
-    private String isMatch(Double probability) {
+    private boolean isMatch(Double probability) {
         int target = RandomUtil.randomInt(1, 101);
 
-        if (probability >= target) {
-            return MATCH;
-        }
-
-        return NONE;
+        return probability >= target;
     }
 
     private Object keyOf(SelectorBinding binding) {

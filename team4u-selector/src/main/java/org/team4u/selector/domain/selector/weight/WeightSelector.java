@@ -3,9 +3,9 @@ package org.team4u.selector.domain.selector.weight;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.WeightRandom;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
 import org.team4u.selector.domain.selector.Selector;
+import org.team4u.selector.domain.selector.SelectorResult;
 import org.team4u.selector.domain.selector.binding.ListBinding;
 import org.team4u.selector.domain.selector.binding.SelectorBinding;
 import org.team4u.selector.domain.selector.binding.SingleValueBinding;
@@ -30,18 +30,18 @@ public class WeightSelector implements Selector {
     }
 
     @Override
-    public String select(SelectorBinding binding) {
+    public SelectorResult select(SelectorBinding binding) {
         if (MapUtil.isEmpty(config)) {
-            return NONE;
+            return SelectorResult.NOT_MATCH;
         }
 
         if (binding == null) {
-            return NONE;
+            return SelectorResult.NOT_MATCH;
         }
 
         Collection<String> values = values(binding);
         if (values.isEmpty()) {
-            return NONE;
+            return SelectorResult.NOT_MATCH;
         }
 
         List<WeightRandom.WeightObj<String>> weightObjs = values(binding)
@@ -49,7 +49,7 @@ public class WeightSelector implements Selector {
                 .map(it -> new WeightRandom.WeightObj<>(it, this.config.get(it)))
                 .collect(Collectors.toList());
 
-        return ObjectUtil.defaultIfNull(RandomUtil.weightRandom(weightObjs).next(), NONE);
+        return SelectorResult.createWithValue(RandomUtil.weightRandom(weightObjs).next());
     }
 
     private Collection<String> values(SelectorBinding binding) {

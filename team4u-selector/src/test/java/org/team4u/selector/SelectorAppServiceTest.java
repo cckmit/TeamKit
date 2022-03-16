@@ -4,14 +4,12 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.team4u.base.config.LocalJsonConfigService;
 import org.team4u.selector.application.SelectorAppService;
-import org.team4u.selector.domain.selector.Selector;
 import org.team4u.selector.domain.selector.SelectorValueHandler;
 import org.team4u.selector.domain.selector.SelectorValueService;
 import org.team4u.selector.domain.selector.binding.ListBinding;
 import org.team4u.selector.domain.selector.binding.SimpleMapBinding;
 import org.team4u.selector.domain.selector.binding.SingleValueBinding;
 import org.team4u.selector.domain.selector.map.DynamicMapSelector;
-import org.team4u.selector.domain.selector.probability.ProbabilitySelector;
 import org.team4u.selector.infrastructure.persistence.JsonSelectorConfigRepository;
 
 /**
@@ -49,17 +47,17 @@ public class SelectorAppServiceTest {
                                  String expected, String key) {
         Assert.assertEquals(
                 expected,
-                s.select("dynamicMap", new DynamicMapSelector.Binding(key, valueService))
+                s.select("dynamicMap", new DynamicMapSelector.Binding(key, valueService)).toStr()
         );
     }
 
     @Test
     public void map() {
-        Assert.assertEquals("1", s.select("map", new SingleValueBinding("x")));
-        Assert.assertEquals("2", s.select("map", new SingleValueBinding("y")));
-        Assert.assertEquals("3", s.select("map", new SingleValueBinding("z")));
-        Assert.assertEquals("3", s.select("map", new SingleValueBinding("z1")));
-        Assert.assertEquals("4", s.select("map", new SingleValueBinding("1")));
+        Assert.assertEquals("1", s.select("map", new SingleValueBinding("x")).toStr());
+        Assert.assertEquals("2", s.select("map", new SingleValueBinding("y")).toStr());
+        Assert.assertEquals("3", s.select("map", new SingleValueBinding("z")).toStr());
+        Assert.assertEquals("3", s.select("map", new SingleValueBinding("z1")).toStr());
+        Assert.assertEquals("4", s.select("map", new SingleValueBinding("1")).toStr());
     }
 
     @Test
@@ -78,7 +76,7 @@ public class SelectorAppServiceTest {
         int c = 0;
 
         for (int i = 0; i < 100; i++) {
-            switch (s.select("weight2", new ListBinding().addValue("a").addValue("b"))) {
+            switch (s.select("weight2", new ListBinding().addValue("a").addValue("b")).toStr()) {
                 case "a": {
                     a++;
                     break;
@@ -105,7 +103,7 @@ public class SelectorAppServiceTest {
         int none = 0;
 
         for (int i = 0; i < 100; i++) {
-            if (Selector.NONE.equals(s.select("weight1", new ListBinding().addValue("c")))) {
+            if (!s.select("weight1", new ListBinding().addValue("c")).isMatch()) {
                 none++;
             }
         }
@@ -137,16 +135,10 @@ public class SelectorAppServiceTest {
         int b = 0;
 
         for (int i = 0; i < repeatTimes; i++) {
-            switch (s.select(configId, new SingleValueBinding(binding))) {
-                case ProbabilitySelector.MATCH: {
-                    a++;
-                    break;
-                }
-
-                case ProbabilitySelector.NONE: {
-                    b++;
-                    break;
-                }
+            if (s.select(configId, new SingleValueBinding(binding)).isMatch()) {
+                a++;
+            } else {
+                b++;
             }
         }
 
@@ -168,11 +160,11 @@ public class SelectorAppServiceTest {
     private void expression(String configId) {
         SimpleMapBinding binding = new SimpleMapBinding();
         binding.set("a", 1);
-        String result = s.select(configId, binding);
+        String result = s.select(configId, binding).toStr();
         Assert.assertEquals("x", result);
 
         binding.set("a", 2);
-        result = s.select(configId, binding);
+        result = s.select(configId, binding).toStr();
         Assert.assertEquals("y", result);
     }
 

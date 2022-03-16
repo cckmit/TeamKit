@@ -1,6 +1,7 @@
 package org.team4u.selector.domain.interceptor;
 
 
+import org.team4u.selector.domain.selector.SelectorResult;
 import org.team4u.selector.domain.selector.binding.SelectorBinding;
 
 /**
@@ -27,5 +28,5 @@ public interface SelectorInterceptor {
      * @param value 选择原始选择结果
      * @return 返回值将覆盖原有结果
      */
-    String postHandle(SelectorBinding binding, String value);
+    SelectorResult postHandle(SelectorBinding binding, SelectorResult value);
 }

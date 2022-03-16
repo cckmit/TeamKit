@@ -1,7 +1,6 @@
 package org.team4u.selector.application;
 
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 import org.team4u.base.log.LogMessage;
@@ -48,7 +47,7 @@ public class SelectorAppService {
      *
      * @return 选择结果，若未命中任何规则则返回NONE
      */
-    public String select(String selectorConfigId) {
+    public SelectorResult select(String selectorConfigId) {
         return select(selectorConfigId, null);
     }
 
@@ -57,7 +56,7 @@ public class SelectorAppService {
      *
      * @return 选择结果，若未命中任何规则则返回NONE
      */
-    public String select(String selectorConfigId, SelectorBinding binding) {
+    public SelectorResult select(String selectorConfigId, SelectorBinding binding) {
         LogMessageContext.createAndSet(this.getClass().getSimpleName(), "select")
                 .append("selectorConfigId", selectorConfigId);
 
@@ -72,12 +71,12 @@ public class SelectorAppService {
      *
      * @return 选择结果，若未命中任何规则则返回NONE
      */
-    public String select(SelectorConfig selectorConfig, SelectorBinding binding) {
+    public SelectorResult select(SelectorConfig selectorConfig, SelectorBinding binding) {
         LogMessage lm = LogMessageContext.getOrCreate(this.getClass().getSimpleName(), "select");
 
         if (selectorConfig == null) {
             log.warn(lm.fail("selectorConfig is null").toString());
-            return Selector.NONE;
+            return null;
         }
 
         lm.append("selectorConfigId", selectorConfig.getConfigId());
@@ -92,10 +91,10 @@ public class SelectorAppService {
         Selector selector = selectorOfConfig(selectorConfig);
         if (selector == null) {
             log.error(lm.fail("selector is null").toString());
-            return Selector.NONE;
+            return null;
         }
 
-        String value = selector.select(newBinding);
+        SelectorResult value = selector.select(newBinding);
         // 处理后置拦截
         return selectorInterceptorService.postHandle(interceptors, newBinding, value);
     }
@@ -111,7 +110,7 @@ public class SelectorAppService {
      * 根据选择配置标识和绑定值，判断是否命中
      */
     public boolean match(String selectorConfigId, SelectorBinding binding) {
-        return !StrUtil.equals(select(selectorConfigId, binding), Selector.NONE);
+        return select(selectorConfigId, binding).isMatch();
     }
 
     /**

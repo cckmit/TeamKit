@@ -1,6 +1,7 @@
 package org.team4u.selector.domain.interceptor;
 
 import cn.hutool.core.bean.BeanUtil;
+import org.team4u.selector.domain.selector.SelectorResult;
 import org.team4u.selector.domain.selector.binding.SelectorBinding;
 import org.team4u.selector.domain.selector.binding.SimpleMapBinding;
 import org.team4u.selector.domain.selector.binding.SingleValueBinding;
@@ -14,7 +15,7 @@ import java.util.Map;
  */
 public class ModInterceptor implements SelectorInterceptor {
 
-    private Config config;
+    private final Config config;
 
     public ModInterceptor(Config config) {
         this.config = config;
@@ -44,7 +45,7 @@ public class ModInterceptor implements SelectorInterceptor {
     }
 
     @Override
-    public String postHandle(SelectorBinding context, String value) {
+    public SelectorResult postHandle(SelectorBinding context, SelectorResult value) {
         return value;
     }
 

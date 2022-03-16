@@ -1,5 +1,6 @@
 package org.team4u.selector.domain.interceptor;
 
+import org.team4u.selector.domain.selector.SelectorResult;
 import org.team4u.selector.domain.selector.binding.SelectorBinding;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public class SelectorInterceptorService {
         return binding;
     }
 
-    public String postHandle(List<SelectorInterceptor> interceptors, SelectorBinding binding, String value) {
+    public SelectorResult postHandle(List<SelectorInterceptor> interceptors, SelectorBinding binding, SelectorResult value) {
         for (SelectorInterceptor interceptor : interceptors) {
             value = interceptor.postHandle(binding, value);
         }

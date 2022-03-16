@@ -5,6 +5,7 @@ import cn.hutool.core.map.MapUtil;
 import lombok.Data;
 import org.team4u.base.error.DataNotExistException;
 import org.team4u.selector.domain.selector.Selector;
+import org.team4u.selector.domain.selector.SelectorResult;
 import org.team4u.selector.domain.selector.SelectorValueHandler;
 import org.team4u.selector.domain.selector.SelectorValueService;
 import org.team4u.selector.domain.selector.binding.SelectorBinding;
@@ -30,18 +31,18 @@ public class DynamicMapSelector implements Selector {
     }
 
     @Override
-    public String select(SelectorBinding binding) {
+    public SelectorResult select(SelectorBinding binding) {
         Binding mapBinding = ((Binding) binding);
 
-        String handlerId = mapSelector.select(new SingleValueBinding(mapBinding.getKey()));
-        if (isNotMatch(handlerId)) {
-            return NONE;
+        SelectorResult handlerIdResult = mapSelector.select(new SingleValueBinding(mapBinding.getKey()));
+        if (!handlerIdResult.isMatch()) {
+            return SelectorResult.NOT_MATCH;
         }
 
-        return select(mapBinding, handlerId);
+        return select(mapBinding, handlerIdResult.toStr());
     }
 
-    private String select(Binding binding, String key) {
+    private SelectorResult select(Binding binding, String key) {
         Dict params = config.getHandlers().get(key);
         if (MapUtil.isEmpty(params)) {
             throw new DataNotExistException("Unable to find SelectorValueHandler configuration|key=" + key);
@@ -49,7 +50,7 @@ public class DynamicMapSelector implements Selector {
 
         SelectorValueHandler.Context context = new SelectorValueHandler.Context(binding, params);
         SelectorValueHandler handler = binding.getValueService().availablePolicyOf(context.getId());
-        return handler.handle(context);
+        return new SelectorResult(handler.handle(context));
     }
 
     @Data

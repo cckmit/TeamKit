@@ -27,6 +27,6 @@ public class DynamicChoiceNodeHandler extends AbstractProcessNodeHandler<Dynamic
         return selectorAppService.select(
                 node.getRule(),
                 binding
-        );
+        ).toStr();
     }
 }

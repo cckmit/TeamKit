@@ -3,6 +3,7 @@ package org.team4u.selector.domain.selector.whitelist;
 import cn.hutool.core.collection.CollUtil;
 import lombok.Data;
 import org.team4u.selector.domain.selector.Selector;
+import org.team4u.selector.domain.selector.SelectorResult;
 import org.team4u.selector.domain.selector.binding.SelectorBinding;
 import org.team4u.selector.domain.selector.binding.SimpleMapBinding;
 import org.team4u.selector.domain.selector.binding.SingleValueBinding;
@@ -34,15 +35,15 @@ public class WhitelistSelector implements Selector {
      * @return 若命中则返回常量MATCH，否则为NONE
      */
     @Override
-    public String select(SelectorBinding binding) {
+    public SelectorResult select(SelectorBinding binding) {
         Map.Entry<String, Object> value = value(binding);
-        String nameId = mapSelector.select(new SingleValueBinding(value.getKey()));
+        SelectorResult nameIdResult = mapSelector.select(new SingleValueBinding(value.getKey()));
 
-        if (matchName(nameId, value.getValue())) {
-            return MATCH;
+        if (!nameIdResult.isMatch()) {
+            return SelectorResult.NOT_MATCH;
         }
 
-        return NONE;
+        return SelectorResult.createWithMatch(matchName(nameIdResult.toStr(), value.getValue()));
     }
 
     private boolean matchName(String nameId, Object userId) {

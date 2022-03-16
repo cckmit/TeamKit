@@ -2,7 +2,7 @@
   "type": "expression",
   "body": {
     "template": "JS",
-    "x": "${a == 1}",
-    "y": "${a == 2}"
+    "${a == 1}": "x",
+    "${a == 2}": "y"
   }
 }
