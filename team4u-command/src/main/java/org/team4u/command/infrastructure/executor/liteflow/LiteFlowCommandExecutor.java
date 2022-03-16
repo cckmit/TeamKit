@@ -67,7 +67,7 @@ public class LiteFlowCommandExecutor extends PolicyRegistrar<String, CommandRout
         try {
             executor.execute("main", context);
         } catch (Exception e) {
-            throw new NestedException(e);
+            throw NestedException.wrap(e);
         }
 
         return context.getResponse();

@@ -62,12 +62,7 @@ public abstract class AbstractMessageSubscriber<M> implements MessageSubscriber<
             log.info(lm.success().toString());
         } catch (Throwable e) {
             LogService.logForError(log, lm, e);
-
-            if (e instanceof RuntimeException) {
-                throw (RuntimeException) e;
-            } else {
-                throw new NestedException(e);
-            }
+            throw NestedException.wrap(e);
         }
     }
 

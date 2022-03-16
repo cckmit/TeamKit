@@ -36,7 +36,7 @@ public class DynamicMapSelector implements Selector {
 
         SelectorResult handlerIdResult = mapSelector.select(new SingleValueBinding(mapBinding.getKey()));
         if (handlerIdResult.isNotMatch()) {
-            return SelectorResult.NOT_MATCH;
+            throw new DataNotExistException("Unable to find SelectorValueHandler|id=" + handlerIdResult);
         }
 
         return select(mapBinding, handlerIdResult.toString());

@@ -1,8 +1,10 @@
 package org.team4u.selector.application;
 
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.lang.func.Func1;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
+import org.team4u.base.error.NestedException;
 import org.team4u.base.log.LogMessage;
 import org.team4u.base.log.LogMessageContext;
 import org.team4u.selector.domain.interceptor.SelectorInterceptor;
@@ -56,10 +58,7 @@ public class SelectorAppService {
     public SelectorResult select(String selectorConfigId, SelectorBinding binding) {
         LogMessageContext.createAndSet(this.getClass().getSimpleName(), "select")
                 .append("selectorConfigId", selectorConfigId);
-
-        // 获取选择器配置
         SelectorConfig selectorConfig = selectorConfigOfId(selectorConfigId);
-        // 处理后置拦截
         return select(selectorConfig, binding);
     }
 
@@ -72,28 +71,32 @@ public class SelectorAppService {
         LogMessage lm = LogMessageContext.getOrCreate(this.getClass().getSimpleName(), "select");
 
         if (selectorConfig == null) {
-            log.warn(lm.fail("selectorConfig is null").toString());
-            return null;
+            log.info(lm.fail("selectorConfig is null").toString());
+            return SelectorResult.NOT_MATCH;
         }
-
         lm.append("selectorConfigId", selectorConfig.getConfigId());
 
-        // 获取拦截器集合
-        List<SelectorInterceptor> interceptors = interceptorsOfConfig(selectorConfig);
-
-        // 处理前置拦截
-        SelectorBinding newBinding = selectorInterceptorService.preHandle(interceptors, binding);
-
-        // 执行选择
         Selector selector = selectorOfConfig(selectorConfig);
         if (selector == null) {
             log.error(lm.fail("selector is null").toString());
-            return null;
+            return SelectorResult.NOT_MATCH;
         }
 
-        SelectorResult value = selector.select(newBinding);
-        // 处理后置拦截
-        return selectorInterceptorService.postHandle(interceptors, newBinding, value);
+        try {
+            return withInterceptor(selectorConfig, binding, selector::select);
+        } catch (Exception e) {
+            log.error(e, lm.fail(e.getMessage()).toString());
+            throw NestedException.wrap(e);
+        }
+    }
+
+    private SelectorResult withInterceptor(SelectorConfig selectorConfig,
+                                           SelectorBinding binding,
+                                           Func1<SelectorBinding, SelectorResult> select) throws Exception {
+        List<SelectorInterceptor> interceptors = interceptorsOfConfig(selectorConfig);
+        SelectorBinding newBinding = selectorInterceptorService.preHandle(interceptors, binding);
+        SelectorResult result = select.call(newBinding);
+        return selectorInterceptorService.postHandle(interceptors, newBinding, result);
     }
 
     /**

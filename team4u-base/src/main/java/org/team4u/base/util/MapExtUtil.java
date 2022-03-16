@@ -25,6 +25,10 @@ public class MapExtUtil {
      */
     @SuppressWarnings("unchecked")
     public static <K, V> Map<K, V> convert(Map<?, ?> source, Class<K> targetKeyClass, Class<V> targetValueClass) {
+        if (source == null) {
+            return null;
+        }
+
         return source.entrySet()
                 .stream()
                 .collect(Collectors.toMap(

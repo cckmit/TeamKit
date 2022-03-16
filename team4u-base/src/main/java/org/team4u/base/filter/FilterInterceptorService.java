@@ -71,7 +71,7 @@ public class FilterInterceptorService<Context,
                     shouldCallNextFilter = false;
                 }
             } catch (Exception e) {
-                throw toRuntimeException(e);
+                throw NestedException.wrap(e);
             }
         }
 
@@ -126,13 +126,5 @@ public class FilterInterceptorService<Context,
         } catch (Exception e) {
             return afterCompletion(context, interceptorIds, filter, e);
         }
-    }
-
-    private RuntimeException toRuntimeException(Exception e) {
-        if (e instanceof RuntimeException) {
-            return (RuntimeException) e;
-        }
-
-        return new NestedException(e);
     }
 }

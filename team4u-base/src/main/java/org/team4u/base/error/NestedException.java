@@ -16,4 +16,12 @@ public class NestedException extends RuntimeException {
     public NestedException(Throwable cause) {
         super(cause);
     }
+
+    public static RuntimeException wrap(Throwable throwable) {
+        if (throwable instanceof RuntimeException) {
+            return (RuntimeException) throwable;
+        }
+
+        return new NestedException(throwable);
+    }
 }

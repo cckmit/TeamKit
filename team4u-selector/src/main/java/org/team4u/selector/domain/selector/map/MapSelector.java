@@ -1,7 +1,9 @@
 package org.team4u.selector.domain.selector.map;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ReUtil;
 import lombok.Data;
+import org.team4u.base.error.DataNotExistException;
 import org.team4u.selector.domain.selector.Selector;
 import org.team4u.selector.domain.selector.SelectorResult;
 import org.team4u.selector.domain.selector.binding.SelectorBinding;
@@ -23,6 +25,10 @@ public class MapSelector implements Selector {
 
     public MapSelector(Config config) {
         this.config = config;
+
+        if (CollUtil.isEmpty(config.getRules())) {
+            throw new DataNotExistException("Unable to find MapSelector rules");
+        }
     }
 
     @Override
@@ -59,6 +65,10 @@ public class MapSelector implements Selector {
         }
 
         private void initRules() {
+            if (rules == null) {
+                return;
+            }
+
             standardizedWildcard();
         }
 
