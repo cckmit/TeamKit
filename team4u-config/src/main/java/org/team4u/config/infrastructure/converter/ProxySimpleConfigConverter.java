@@ -3,6 +3,7 @@ package org.team4u.config.infrastructure.converter;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
@@ -23,6 +24,7 @@ import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
@@ -117,7 +119,7 @@ public class ProxySimpleConfigConverter implements SimpleConfigConverter {
         private final String configType;
         private final Class<?> targetType;
 
-        private List<SimpleConfig> currentSimpleConfigs = Collections.emptyList();
+        private List<SimpleConfig> currentConfigs = Collections.emptyList();
 
         private ValueMethodInterceptor(Class<?> targetType, String configType) {
             this.targetType = targetType;
@@ -126,35 +128,41 @@ public class ProxySimpleConfigConverter implements SimpleConfigConverter {
 
         @Override
         public Object intercept(Object instance, Object[] parameters, Method method, Callable<?> superMethod) throws Exception {
+            List<SimpleConfig> latestConfigs = allConfigs();
+
             // 配置项没有变化，直接返回
-            if (!isConfigChange()) {
+            if (sameAs(latestConfigs)) {
                 return superMethod.call();
             }
 
             synchronized (this) {
-                if (isConfigChange()) {
-                    // 获取最新配置项
-                    List<SimpleConfig> latestConfigs = latestConfigs();
-                    // 将最新的代理对象字段值赋值到当前对象
-                    BeanUtil.copyProperties(buildProxy(latestConfigs, targetType), instance);
-                    // 刷新配置项
-                    currentSimpleConfigs = latestConfigs;
-                }
+                refresh(latestConfigs, instance);
             }
 
             return superMethod.call();
         }
 
-        /**
-         * 判断配置项是否存在变动
-         */
-        private boolean isConfigChange() {
-            return !currentSimpleConfigs.equals(allConfigs());
+        private void refresh(List<SimpleConfig> latestConfigs, Object instance) {
+            LogMessage lm = LogMessage.create(targetType.getSimpleName(), "refresh")
+                    .append("configId", Optional.ofNullable(CollUtil.getFirst(latestConfigs))
+                            .map(it -> it.getConfigId().getConfigType())
+                            .orElse(null));
+
+            if (sameAs(latestConfigs)) {
+                log.info(lm.fail("Configs has not changed").toString());
+                return;
+            }
+
+            // 将最新的代理对象字段值赋值到当前对象
+            BeanUtil.copyProperties(buildProxy(latestConfigs, targetType), instance);
+            // 刷新当前配置项
+            refreshConfigs(latestConfigs);
+
+            log.info(lm.success().toString());
         }
 
-        private List<SimpleConfig> latestConfigs() {
-            return allConfigs()
-                    .stream()
+        private void refreshConfigs(List<SimpleConfig> latestConfigs) {
+            currentConfigs = latestConfigs.stream()
                     .map(it -> new SimpleConfig(
                             it.getConfigId(),
                             it.getConfigValue(),
@@ -167,8 +175,16 @@ public class ProxySimpleConfigConverter implements SimpleConfigConverter {
                     .collect(Collectors.toList());
         }
 
+        /**
+         * 判断配置项是否未变动
+         */
+        private boolean sameAs(List<SimpleConfig> latestConfigs) {
+            return currentConfigs.equals(latestConfigs);
+        }
+
         private Object buildProxy(List<SimpleConfig> configs, Class<?> classType) {
-            Object proxy = BeanUtil.fillBean(ReflectUtil.newInstanceIfPossible(classType),
+            return BeanUtil.fillBean(
+                    ReflectUtil.newInstanceIfPossible(classType),
                     new ValueProvider<String>() {
                         @Override
                         public Object value(String key, Type valueType) {
@@ -180,14 +196,8 @@ public class ProxySimpleConfigConverter implements SimpleConfigConverter {
                             return filterConfig(configs, configType, key) != null;
                         }
                     },
-                    CopyOptions.create());
-
-
-            log.info(LogMessage.create(ProxySimpleConfigConverter.class.getSimpleName(), "build")
-                    .success()
-                    .append("type", classType.getName())
-                    .toString());
-            return proxy;
+                    CopyOptions.create()
+            );
         }
 
         private <T> T toValue(Class<?> toTypeClass, Type toValueType, String valueString) {
