@@ -47,7 +47,7 @@ public class ProxySimpleConfigConverter implements SimpleConfigConverter {
     public <T> T to(Class<T> toType, String configType) {
         return SimpleAop.proxyOf(
                 toType,
-                ElementMatchers.any(),
+                ElementMatchers.isGetter(),
                 new ValueMethodInterceptor(toType, configType)
         );
     }
@@ -133,10 +133,12 @@ public class ProxySimpleConfigConverter implements SimpleConfigConverter {
 
             synchronized (this) {
                 if (isConfigChange()) {
-                    // 刷新配置项
-                    refreshConfigs();
+                    // 获取最新配置项
+                    List<SimpleConfig> latestConfigs = latestConfigs();
                     // 将最新的代理对象字段值赋值到当前对象
-                    BeanUtil.copyProperties(buildProxy(targetType), instance);
+                    BeanUtil.copyProperties(buildProxy(latestConfigs, targetType), instance);
+                    // 刷新配置项
+                    currentSimpleConfigs = latestConfigs;
                 }
             }
 
@@ -150,8 +152,8 @@ public class ProxySimpleConfigConverter implements SimpleConfigConverter {
             return !currentSimpleConfigs.equals(allConfigs());
         }
 
-        private void refreshConfigs() {
-            currentSimpleConfigs = allConfigs()
+        private List<SimpleConfig> latestConfigs() {
+            return allConfigs()
                     .stream()
                     .map(it -> new SimpleConfig(
                             it.getConfigId(),
@@ -165,7 +167,7 @@ public class ProxySimpleConfigConverter implements SimpleConfigConverter {
                     .collect(Collectors.toList());
         }
 
-        private Object buildProxy(Class<?> classType) {
+        private Object buildProxy(List<SimpleConfig> configs, Class<?> classType) {
             Object proxy = BeanUtil.fillBean(ReflectUtil.newInstanceIfPossible(classType),
                     new ValueProvider<String>() {
                         @Override
@@ -175,7 +177,7 @@ public class ProxySimpleConfigConverter implements SimpleConfigConverter {
 
                         @Override
                         public boolean containsKey(String key) {
-                            return filterConfig(currentSimpleConfigs, configType, key) != null;
+                            return filterConfig(configs, configType, key) != null;
                         }
                     },
                     CopyOptions.create());
