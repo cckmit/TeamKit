@@ -5,11 +5,9 @@ import cn.hutool.core.lang.Pair;
 import cn.hutool.core.util.StrUtil;
 import org.team4u.base.config.ConfigService;
 import org.team4u.config.application.SimpleConfigAppService;
-import org.team4u.config.domain.SimpleConfig;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * 基于SimpleConfig的ConfigService
@@ -42,12 +40,7 @@ public class SimpleConfigService implements ConfigService {
 
     @Override
     public Map<String, Object> allConfigs() {
-        return simpleConfigAppService.allConfigs()
-                .stream()
-                .collect(Collectors.toMap(
-                        it -> it.getConfigId().toString(),
-                        SimpleConfig::getConfigValue)
-                );
+        return simpleConfigAppService.allConfigs().toMap();
     }
 
     protected Pair<String, String> getConfigType(String key) {

@@ -1,4 +1,4 @@
-package org.team4u.config.infrastructure.converter;
+package org.team4u.config.infrastructure.converter.proxy;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Dict;
