@@ -2,7 +2,6 @@ package org.team4u.selector.domain.selector.map;
 
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.StrUtil;
 import lombok.Data;
 import org.team4u.base.error.DataNotExistException;
 import org.team4u.selector.domain.selector.Selector;
@@ -35,18 +34,11 @@ public class DynamicMapSelector implements Selector {
         Binding mapBinding = ((Binding) binding);
 
         String handlerId = mapSelector.select(new SingleValueBinding(mapBinding.getKey()));
-        if (isNone(handlerId)) {
+        if (isNotMatch(handlerId)) {
             return NONE;
         }
 
         return select(mapBinding, handlerId);
-    }
-
-    /**
-     * 是否为命中规则
-     */
-    private boolean isNone(String value) {
-        return StrUtil.equals(value, NONE);
     }
 
     private String select(Binding binding, String key) {

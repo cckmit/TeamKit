@@ -2,13 +2,14 @@ package org.team4u.selector.domain.selector.probability;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
+import org.team4u.base.util.MapExtUtil;
 import org.team4u.selector.domain.selector.Selector;
 import org.team4u.selector.domain.selector.binding.ListBinding;
 import org.team4u.selector.domain.selector.binding.SelectorBinding;
 import org.team4u.selector.domain.selector.binding.SimpleMapBinding;
 import org.team4u.selector.domain.selector.binding.SingleValueBinding;
+import org.team4u.selector.domain.selector.map.MapSelector;
 
 import java.util.Map;
 
@@ -19,15 +20,17 @@ import java.util.Map;
  */
 public class ProbabilitySelector implements Selector {
 
-    private final Map<String, Double> config;
+    private final MapSelector mapSelector;
 
     /**
      * @param config 值/百分比概率映射集合
-     *                           1001 -> 90，表示90%的概率命中1001
-     *                           * -> 10，表示默认命中概率为10%
+     *               1001 -> 90，表示90%的概率命中1001
+     *               * -> 10，表示默认命中概率为10%
      */
     public ProbabilitySelector(Map<String, Double> config) {
-        this.config = config;
+        mapSelector = new MapSelector(new MapSelector.Config(
+                MapExtUtil.convert(config, String.class, String.class)
+        ));
     }
 
     /**
@@ -37,10 +40,18 @@ public class ProbabilitySelector implements Selector {
      */
     @Override
     public String select(SelectorBinding binding) {
-        Object value = value(binding);
+        String key = Convert.toStr(keyOf(binding));
+        String value = mapSelector.select(new SingleValueBinding(key));
 
+        if (isNotMatch(value)) {
+            return NONE;
+        }
+
+        return isMatch(Convert.toDouble(value));
+    }
+
+    private String isMatch(Double probability) {
         int target = RandomUtil.randomInt(1, 101);
-        Double probability = probabilityOfValue(value);
 
         if (probability >= target) {
             return MATCH;
@@ -49,20 +60,7 @@ public class ProbabilitySelector implements Selector {
         return NONE;
     }
 
-    private Double probabilityOfValue(Object value) {
-        Double defaultProbability = ObjectUtil.defaultIfNull(config.get(ANY), 0.0);
-
-        if (value == null) {
-            return defaultProbability;
-        }
-
-        String stringValue = Convert.toStr(value);
-
-        Double probability = config.get(stringValue);
-        return ObjectUtil.defaultIfNull(probability, defaultProbability);
-    }
-
-    private Object value(SelectorBinding binding) {
+    private Object keyOf(SelectorBinding binding) {
         if (binding instanceof SingleValueBinding) {
             return ((SingleValueBinding) binding).value();
         }

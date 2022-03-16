@@ -1,5 +1,6 @@
 package org.team4u.selector.domain.selector;
 
+import cn.hutool.core.util.StrUtil;
 import org.team4u.selector.domain.selector.binding.SelectorBinding;
 
 /**
@@ -30,4 +31,11 @@ public interface Selector {
      * @return 返回命中值，若无法命中，则返回常量NONE
      */
     String select(SelectorBinding binding);
+
+    /**
+     * 是否为未中规则
+     */
+    default boolean isNotMatch(String value) {
+        return StrUtil.equals(value, NONE);
+    }
 }
