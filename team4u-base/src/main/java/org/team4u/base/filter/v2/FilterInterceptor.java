@@ -14,6 +14,8 @@ public interface FilterInterceptor<Context, F extends Filter<Context>> extends S
      * 前置处理
      * <p>
      * 命令执行前
+     *
+     * @return 是否继续执行下一个过滤器
      */
     boolean preHandle(Context context, F filter) throws Exception;
 
@@ -22,12 +24,12 @@ public interface FilterInterceptor<Context, F extends Filter<Context>> extends S
      * <p>
      * 命令执行后
      */
-    void postHandle(Context context, F filter) throws Exception;
+    void postHandle(Context context, F filter, boolean toNext) throws Exception;
 
     /**
-     * 完成处理（无论是否异常最终执行）
+     * 完成处理（异常时执行）
      */
-    boolean afterCompletion(Context context, F filter, Exception e) throws Exception;
+    void afterCompletion(Context context, F filter, Exception e) throws Exception;
 
     @Override
     default String id() {

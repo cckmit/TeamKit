@@ -15,21 +15,24 @@ public class LogInterceptor implements FilterInterceptor {
 
     @Override
     public boolean preHandle(Object context, Filter filter) {
-        LogMessageContext.createAndSet(filter.getClass().getSimpleName(), "doFilter").append("context", context);
+        LogMessageContext.createAndSet(filter.getClass().getSimpleName(), "doFilter")
+                .append("context", context);
 
         return true;
     }
 
     @Override
-    public void postHandle(Object o, Filter filter) {
+    public void postHandle(Object o, Filter filter, boolean toNext) {
         if (log.isDebugEnabled()) {
-            log.debug(LogMessageContext.get().success().toString());
+            log.debug(LogMessageContext.get()
+                    .success()
+                    .append("toNext", toNext)
+                    .toString());
         }
     }
 
     @Override
-    public boolean afterCompletion(Object o, Filter filter, Exception e) throws Exception {
+    public void afterCompletion(Object o, Filter filter, Exception e) {
         log.error(e, LogMessageContext.get().fail(e.getMessage()).toString());
-        throw e;
     }
 }

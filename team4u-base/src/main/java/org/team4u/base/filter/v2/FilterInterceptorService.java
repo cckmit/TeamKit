@@ -1,5 +1,7 @@
 package org.team4u.base.filter.v2;
 
+import cn.hutool.core.collection.CollUtil;
+import org.team4u.base.error.NestedException;
 import org.team4u.base.filter.FilterInvoker;
 import org.team4u.base.registrar.PolicyRegistrar;
 
@@ -10,10 +12,8 @@ import java.util.List;
  *
  * @author jay.wu
  */
-public class FilterInterceptorService<
-        Context,
-        F extends Filter<Context>
-        > extends PolicyRegistrar<String, FilterInterceptor<?, ?>> {
+public class FilterInterceptorService<Context, F extends Filter<Context>>
+        extends PolicyRegistrar<String, FilterInterceptor<?, ?>> {
 
     public FilterInterceptorService(List<? extends FilterInterceptor<?, ?>> interceptors) {
         registerPolicy(new LogInterceptor());
@@ -26,14 +26,15 @@ public class FilterInterceptorService<
      * 命令执行前
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public boolean preHandle(Context context, F filter) throws Exception {
-        for (FilterInterceptor interceptor : policies()) {
-            if (!interceptor.preHandle(context, filter)) {
-                return false;
-            }
-        }
-
-        return true;
+    public boolean preHandle(Context context, F filter) {
+        return policies().stream()
+                .allMatch(it -> {
+                    try {
+                        return ((FilterInterceptor) it).preHandle(context, filter);
+                    } catch (Exception e) {
+                        throw NestedException.wrap(e);
+                    }
+                });
     }
 
     /**
@@ -42,57 +43,52 @@ public class FilterInterceptorService<
      * 命令执行后
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public void postHandle(Context context, F filter) throws Exception {
-        List<FilterInterceptor<?, ?>> interceptors = policies();
-        for (int i = interceptors.size() - 1; i >= 0; i--) {
-            FilterInterceptor interceptor = interceptors.get(i);
-            interceptor.postHandle(context, filter);
-        }
+    public void postHandle(Context context, F filter, boolean toNext) {
+        CollUtil.reverse(policies())
+                .forEach(it -> {
+                    try {
+                        ((FilterInterceptor) it).postHandle(context, filter, toNext);
+                    } catch (Exception e) {
+                        throw NestedException.wrap(e);
+                    }
+                });
     }
 
     /**
      * 完成处理（无论是否异常最终执行）
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public boolean afterCompletion(Context context, F filter, Exception e) {
-        List<FilterInterceptor<?, ?>> interceptors = policies();
-        boolean shouldCallNextFilter = true;
-        Exception e2 = e;
-        for (int i = interceptors.size() - 1; i >= 0; i--) {
-            FilterInterceptor interceptor = interceptors.get(i);
-            try {
-                if (!interceptor.afterCompletion(context, filter, e2)) {
-                    shouldCallNextFilter = false;
-                }
-            } catch (Exception ex) {
-                e2 = ex;
-            }
-        }
+    public void afterCompletion(Context context, F filter, Exception e) {
+        CollUtil.reverse(policies())
+                .forEach(it -> {
+                    try {
+                        ((FilterInterceptor) it).afterCompletion(context, filter, e);
+                    } catch (Exception ex) {
+                        throw NestedException.wrap(ex);
+                    }
+                });
 
-        return shouldCallNextFilter;
+        throw NestedException.wrap(e);
     }
 
     /**
      * 执行处理器
      */
-    public void apply(Context context,
-                      FilterInvoker<Context> invoker,
-                      F filter) {
+    public void apply(Context context, FilterInvoker<Context> invoker, F filter) {
         try {
             if (!preHandle(context, filter)) {
                 return;
             }
 
-            boolean isToNextInvoker = filter.doFilter(context);
-            postHandle(context, filter);
+            boolean toNext = filter.doFilter(context);
+            postHandle(context, filter, toNext);
 
-            if (isToNextInvoker) {
+            if (toNext) {
                 invoker.invoke(context);
             }
         } catch (Exception e) {
-            if (afterCompletion(context, filter, e)) {
-                invoker.invoke(context);
-            }
+            afterCompletion(context, filter, e);
+            throw NestedException.wrap(e);
         }
     }
 }
