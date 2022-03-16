@@ -161,7 +161,7 @@ public class ProxySimpleConfigConverterTest {
                         "    \"c\": \"3\"\n" +
                         "  }\n" +
                         "]"),
-                c("f", "false")
+                c("f", "true")
         );
 
         @Override
