@@ -1,7 +1,13 @@
 package org.team4u.base.filter.v2;
 
-import cn.hutool.core.collection.CollUtil;
+import cn.hutool.log.Log;
+import lombok.Builder;
+import lombok.Data;
+import lombok.Getter;
 import org.team4u.base.filter.FilterInvoker;
+import org.team4u.base.log.LogMessage;
+import org.team4u.base.log.LogMessages;
+import org.team4u.base.log.LogService;
 
 import java.util.Collections;
 import java.util.List;
@@ -14,19 +20,21 @@ import java.util.List;
  */
 public class FilterChain<C, F extends Filter<C>> {
 
+    private final Log log = Log.get();
+
+    @Getter
+    private final Config config;
+
     /**
      * 第一个过滤器执行者
      */
     private FilterInvoker<C> header;
 
-    private final List<F> filters;
-
     private final FilterInterceptorService<C, F> interceptorService;
 
-    public FilterChain(List<F> filters,
-                       List<? extends FilterInterceptor<?, ?>> interceptors) {
-        this.filters = filters;
-        this.interceptorService = new FilterInterceptorService<>(interceptors);
+    public FilterChain(Config config) {
+        this.config = config;
+        this.interceptorService = new FilterInterceptorService<>(config.getInterceptors());
 
         initFilterChain();
     }
@@ -35,12 +43,10 @@ public class FilterChain<C, F extends Filter<C>> {
     private void initFilterChain() {
         FilterInvoker<C> last = FilterInvoker.EMPTY_INVOKER;
 
-        if (CollUtil.isNotEmpty(filters)) {
-            for (int i = filters.size() - 1; i >= 0; i--) {
-                FilterInvoker<C> next = last;
-                F filter = filters.get(i);
-                last = context -> interceptorService.apply(context, next, filter);
-            }
+        for (int i = config.getFilters().size() - 1; i >= 0; i--) {
+            FilterInvoker<C> next = last;
+            F filter = (F) config.getFilters().get(i);
+            last = context -> interceptorService.apply(context, next, filter);
         }
 
         setHeader(last);
@@ -51,60 +57,44 @@ public class FilterChain<C, F extends Filter<C>> {
      *
      * @param context 过滤上下文
      */
-    public void doFilter(C context) {
-        if (header == null) {
-            return;
-        }
+    public C doFilter(C context) {
+        LogMessage lm = LogMessages.create(config.getName(), "doFilter")
+                .append("context", context);
 
-        header.invoke(context);
+        try {
+            header.invoke(context);
+
+            if (log.isInfoEnabled()) {
+                log.info(lm.success().toString());
+            }
+
+            return context;
+        } catch (Exception e) {
+            LogService.logForError(log, lm, e);
+            throw e;
+        }
     }
 
     protected void setHeader(FilterInvoker<C> header) {
         this.header = header;
     }
 
-    /**
-     * 获取所有过滤器
-     *
-     * @return 过滤器集合
-     */
-    public List<F> filters() {
-        return Collections.unmodifiableList(filters);
-    }
+    @Data
+    @Builder
+    public static class Config {
+        @Builder.Default
+        private String name = FilterChain.class.getSimpleName();
 
-    /**
-     * 构建责任链
-     *
-     * @param filters 过滤器集合
-     * @param <C>     上下文类型
-     * @return 责任链
-     */
-    @SafeVarargs
-    public static <C, F extends Filter<C>> FilterChain<C, F> create(F... filters) {
-        return create(CollUtil.toList(filters));
-    }
+        @Builder.Default
+        private List<? extends Filter<?>> filters = Collections.emptyList();
 
-    /**
-     * 创建责任链
-     *
-     * @param filters 过滤器集合
-     * @param <C>     上下文类型
-     * @return 责任链
-     */
-    public static <C, F extends Filter<C>> FilterChain<C, F> create(List<F> filters) {
-        return new FilterChain<>(filters, Collections.emptyList());
-    }
+        private List<? extends FilterInterceptor<?, ?>> interceptors;
 
-    /**
-     * 创建责任链
-     *
-     * @param filters      过滤器集合
-     * @param interceptors 拦截器集合
-     * @param <C>          上下文类型
-     * @return 责任链
-     */
-    public static <C, F extends Filter<C>> FilterChain<C, F> create(List<F> filters,
-                                                                    List<? extends FilterInterceptor<?, ?>> interceptors) {
-        return new FilterChain<>(filters, interceptors);
+        private List<Class<?>> filterClasses = Collections.emptyList();
+
+        public List<? extends Filter<?>> filters() {
+            // TODO filterClasses
+            return filters;
+        }
     }
 }
