@@ -6,6 +6,8 @@ import org.team4u.base.log.LogMessage;
 import org.team4u.id.domain.seq.value.StepSequenceProvider;
 import org.team4u.id.domain.seq.value.cache.CacheStepSequenceConfig;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * 序号队列生产者
  * <p>
@@ -80,9 +82,15 @@ public class SequenceQueueProducer extends LongTimeThread {
             Number seq = segment.next();
 
             try {
-                // 若队列中缓存序号已满，将阻塞线程
-                queue.put(seq);
+                // 若队列中缓存序号已满，将短暂阻塞线程1s，为后续检测关闭状态提供机会
+                queue.offer(seq, 1, TimeUnit.SECONDS);
 
+                // 检查是否已被关闭，退出
+                if (isClosed()) {
+                    return false;
+                }
+
+                // 无可用序号，退出
                 if (seq == null) {
                     return false;
                 }

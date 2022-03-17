@@ -5,6 +5,7 @@ import org.team4u.base.registrar.StringIdPolicy;
 import org.team4u.base.registrar.factory.StringConfigPolicyFactory;
 import org.team4u.id.domain.seq.SequenceConfig;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -42,6 +43,21 @@ public interface SequenceProvider {
          * 扩展属性
          */
         private final Map<String, Object> ext;
+
+        public Context(SequenceConfig sequenceConfig, String groupKey, Map<String, Object> ext) {
+            this.sequenceConfig = sequenceConfig;
+            this.groupKey = groupKey;
+            this.ext = ext == null ? new HashMap<>() : ext;
+        }
+
+        @SuppressWarnings("unchecked")
+        public <T> T ext(String key) {
+            return (T) ext.get(key);
+        }
+
+        public void ext(String key, Object value) {
+            ext.put(key, value);
+        }
 
         public String id() {
             return sequenceConfig.getConfigId() + ":" + groupKey;

@@ -51,8 +51,9 @@ public class SequenceQueue {
 
     }
 
-    public void put(Number seq) throws InterruptedException {
-        cache.put(ObjectUtil.defaultIfNull(seq, NULL_SEQ));
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    public void offer(Number seq, long timeout, TimeUnit unit) throws InterruptedException {
+        cache.offer(ObjectUtil.defaultIfNull(seq, NULL_SEQ), timeout, unit);
     }
 
     /**

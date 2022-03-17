@@ -4,6 +4,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.RandomUtil;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.team4u.base.bean.provider.BeanProviders;
 import org.team4u.id.domain.seq.SequenceConfig;
@@ -14,6 +15,7 @@ import org.team4u.id.domain.seq.value.StepSequenceProvider;
 import org.team4u.id.domain.seq.value.cache.CacheStepSequenceConfig;
 import org.team4u.id.domain.seq.value.cache.CacheStepSequenceProvider;
 import org.team4u.id.domain.seq.value.cache.CacheStepSequenceProviderFactory;
+import org.team4u.id.domain.seq.value.cache.queue.SequenceQueueHolder;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,6 +24,11 @@ import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 public class CacheStepSequenceProviderTest {
+
+    @Before
+    public void setUp() {
+        SequenceQueueHolder.getInstance().clear();
+    }
 
     @Test
     public void concurrent() {
@@ -157,17 +164,16 @@ public class CacheStepSequenceProviderTest {
     @Test
     public void clearExpiredCache() {
         CacheStepSequenceProvider p = provider(1, 2);
-        p.config().setExpiredWhenQueueExhaustedMillis(1);
+        p.config().setExpiredWhenQueueStartedMillis(1);
 
         Assert.assertEquals(1L, p.provide(context()));
         Assert.assertEquals(2L, p.provide(context()));
         Assert.assertNull(p.provide(context()));
         Assert.assertTrue(p.isEmpty(context()));
 
-        ThreadUtil.sleep(10);
+        ThreadUtil.sleep(100);
 
-        Assert.assertEquals(1, p.getQueueCleaner().clear());
-        Assert.assertEquals(0, p.getQueueCleaner().clear());
+        Assert.assertEquals(0, p.getSequenceQueueHolder().getQueueCleaner().clear());
     }
 
     @Test

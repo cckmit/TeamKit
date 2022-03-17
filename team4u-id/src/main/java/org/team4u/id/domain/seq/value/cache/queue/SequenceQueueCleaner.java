@@ -1,5 +1,6 @@
 package org.team4u.id.domain.seq.value.cache.queue;
 
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.log.Log;
 import org.team4u.base.lang.LongTimeThread;
 import org.team4u.base.lang.lazy.LazyFunction;
@@ -17,28 +18,23 @@ public class SequenceQueueCleaner extends LongTimeThread {
 
     private final Log log = Log.get();
 
-    private final CacheStepSequenceConfig config;
+    private final LazyFunction<SequenceProvider.Context, SequenceQueueHolder.QueueAndProducer> queues;
 
-    private final LazyFunction<SequenceProvider.Context, SequenceQueue> queues;
-
-    public SequenceQueueCleaner(CacheStepSequenceConfig config,
-                                LazyFunction<SequenceProvider.Context, SequenceQueue> queues) {
+    public SequenceQueueCleaner(LazyFunction<SequenceProvider.Context, SequenceQueueHolder.QueueAndProducer> queues) {
         this.queues = queues;
-        this.config = config;
     }
 
     @Override
     protected void onRun() {
         LogMessage lm = LogMessage.create(this.getClass().getSimpleName(), "clear");
-
         try {
             int count = clear();
-            lm.append("count", count);
+            if (count > 0) {
+                log.info(lm.success().append("count", count).toString());
+            }
         } catch (Exception e) {
             log.info(lm.fail(e.getMessage()).toString());
         }
-
-        log.info(lm.success().toString());
     }
 
     /**
@@ -48,9 +44,11 @@ public class SequenceQueueCleaner extends LongTimeThread {
      */
     public int clear() {
         return queues.remove(it -> {
-            // 已过期，返回需要清理的key
-            if (isExpired(it)) {
-                return it.getContext();
+            if (isExpired(it.getQueue())) {
+                // 关闭队列生产者
+                IoUtil.close(it.getProducer());
+                // 已过期，返回需要清理的key
+                return it.getQueue().getContext();
             }
 
             return null;
@@ -58,17 +56,18 @@ public class SequenceQueueCleaner extends LongTimeThread {
     }
 
     private boolean isExpired(SequenceQueue queue) {
-        // 队列未耗尽或者永不过期，直接返回
-        if (!queue.isExhausted() || !config.shouldExpiredWhenQueueExhausted()) {
+        CacheStepSequenceConfig config = queue.getContext().ext(CacheSequenceContextKey.CACHE_STEP_SEQUENCE_CONFIG_KEY);
+        // 队列永不过期，直接返回
+        if (!config.isQueueWillExpire()) {
             return false;
         }
 
         // 判断是否超出存活时间
-        return System.currentTimeMillis() - queue.getStatus().getOccurredOn() > config.getExpiredWhenQueueExhaustedMillis();
+        return System.currentTimeMillis() - queue.getStatus().getOccurredOn() > config.getExpiredWhenQueueStartedMillis();
     }
 
     @Override
     protected Number runIntervalMillis() {
-        return config.getQueueCleanerRunIntervalMillis();
+        return 10;
     }
 }
