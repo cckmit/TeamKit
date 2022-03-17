@@ -91,7 +91,7 @@ public abstract class KeyValueServiceTest {
         Assert.assertEquals("1", s.get("x"));
         Assert.assertEquals("2", s.get("y"));
 
-        ThreadUtil.sleep(ttlMillis);
+        ThreadUtil.sleep(ttlMillis + 1);
 
         if (shouldClean) {
             keyValueRepository().removeExpirationValues(100);

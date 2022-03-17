@@ -8,17 +8,17 @@ public class LogAopServiceTest {
 
     @Test
     public void byteBuddyLogAop() {
-        A a = LogAopService.getInstance().proxy(new A());
+        A a = LogAopService.getInstance().proxy(
+                new A(),
+                LogAop.Config.builder().logAopId(ByteBuddyLogAop.ID).build()
+        );
         a.say("x");
         Assert.assertTrue(a.getClass().getSimpleName().contains(ByteBuddyLogAop.ID));
     }
 
     @Test
     public void springCglibLogAop() {
-        A a = LogAopService.getInstance().proxy(
-                new A(),
-                LogAop.Config.builder().logAopId(SpringCglibLogAop.ID).build()
-        );
+        A a = LogAopService.getInstance().proxy(new A());
         a.say("x");
         Assert.assertTrue(a.getClass().getSimpleName().contains("CGLIB"));
     }

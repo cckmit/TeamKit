@@ -18,7 +18,7 @@ public abstract class KeyValueCleanerTest {
         Assert.assertEquals("1", keyValueService.get("T", "x", String.class));
         Assert.assertEquals("1", keyValueService.get("T", "y", String.class));
 
-        ThreadUtil.sleep(500);
+        ThreadUtil.sleep(600);
 
         ExtKeyValueCleaner cleaner = newKeyValueCleaner(keyValueService, 1, 1);
 

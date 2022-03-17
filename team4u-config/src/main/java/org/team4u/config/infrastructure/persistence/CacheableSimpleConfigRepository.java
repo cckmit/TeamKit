@@ -3,12 +3,9 @@ package org.team4u.config.infrastructure.persistence;
 import cn.hutool.core.util.ObjectUtil;
 import lombok.Getter;
 import org.team4u.base.lang.lazy.LazyRefreshSupplier;
-import org.team4u.config.domain.SimpleConfig;
 import org.team4u.config.domain.SimpleConfigComparator;
 import org.team4u.config.domain.SimpleConfigRepository;
-
-import java.util.Collections;
-import java.util.List;
+import org.team4u.config.domain.SimpleConfigs;
 
 public class CacheableSimpleConfigRepository implements SimpleConfigRepository {
 
@@ -18,7 +15,7 @@ public class CacheableSimpleConfigRepository implements SimpleConfigRepository {
     private final SimpleConfigComparator simpleConfigComparator;
     private final SimpleConfigRepository delegateConfigRepository;
 
-    private final LazyRefreshSupplier<List<SimpleConfig>> configSupplier;
+    private final LazyRefreshSupplier<SimpleConfigs> configSupplier;
 
 
     public CacheableSimpleConfigRepository(Config config, SimpleConfigRepository delegateConfigRepository) {
@@ -36,15 +33,15 @@ public class CacheableSimpleConfigRepository implements SimpleConfigRepository {
     }
 
     @Override
-    public List<SimpleConfig> allConfigs() {
+    public SimpleConfigs allConfigs() {
         return configSupplier.get();
     }
 
-    private List<SimpleConfig> loadAndCompare() {
-        List<SimpleConfig> newConfigs = delegateConfigRepository.allConfigs();
-        List<SimpleConfig> oldConfigs = ObjectUtil.defaultIfNull(configSupplier.value(), Collections.emptyList());
+    private SimpleConfigs loadAndCompare() {
+        SimpleConfigs newConfigs = delegateConfigRepository.allConfigs();
+        SimpleConfigs oldConfigs = ObjectUtil.defaultIfNull(configSupplier.value(), SimpleConfigs.EMPTY);
 
-        simpleConfigComparator.compare(oldConfigs, newConfigs);
+        simpleConfigComparator.compare(oldConfigs.getValue(), newConfigs.getValue());
 
         return newConfigs;
     }

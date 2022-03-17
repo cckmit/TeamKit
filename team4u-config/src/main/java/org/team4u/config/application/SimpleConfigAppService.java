@@ -1,12 +1,11 @@
 package org.team4u.config.application;
 
-import org.team4u.config.domain.SimpleConfig;
 import org.team4u.config.domain.SimpleConfigConverter;
 import org.team4u.config.domain.SimpleConfigRepository;
-import org.team4u.config.infrastructure.converter.ProxySimpleConfigConverter;
+import org.team4u.config.domain.SimpleConfigs;
+import org.team4u.config.infrastructure.converter.simple.DefaultConfigConverter;
 
 import java.lang.reflect.Type;
-import java.util.List;
 
 /**
  * 配置应用服务
@@ -18,7 +17,7 @@ public class SimpleConfigAppService {
     private final SimpleConfigConverter simpleConfigConverter;
 
     public SimpleConfigAppService(SimpleConfigRepository simpleConfigRepository) {
-        this.simpleConfigConverter = new ProxySimpleConfigConverter(simpleConfigRepository);
+        this.simpleConfigConverter = new DefaultConfigConverter(simpleConfigRepository);
     }
 
     /**
@@ -82,7 +81,7 @@ public class SimpleConfigAppService {
      *
      * @return 配置项集合
      */
-    public List<SimpleConfig> allConfigs(){
+    public SimpleConfigs allConfigs() {
         return simpleConfigConverter.allConfigs();
     }
 }

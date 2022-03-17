@@ -6,6 +6,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.team4u.config.domain.SimpleConfig;
 import org.team4u.config.domain.SimpleConfigRepository;
+import org.team4u.config.domain.SimpleConfigs;
 import org.team4u.config.domain.event.ConfigDeletedEvent;
 import org.team4u.config.domain.event.ConfigValueChangedEvent;
 import org.team4u.ddd.domain.model.AbstractDomainEvent;
@@ -93,8 +94,8 @@ public class CacheableSimpleConfigRepositoryTest {
         private List<SimpleConfig> configs;
 
         @Override
-        public List<SimpleConfig> allConfigs() {
-            return configs;
+        public SimpleConfigs allConfigs() {
+            return new SimpleConfigs(configs);
         }
 
         public List<SimpleConfig> getConfigs() {

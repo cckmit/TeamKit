@@ -31,7 +31,7 @@ public class DynamicMaskerTest {
         Maskers.instance().register("TEST", new HideMasker());
 
         String value = masker.mask(new A("fjayblue"));
-        Assert.assertEquals("{\"name\":\"fjayblu*\",\"name2\":\"*\"}", value);
+        Assert.assertEquals("{\"name\":\"f******e\",\"name2\":\"*\"}", value);
     }
 
     @Test

@@ -12,8 +12,12 @@ public class TestUtil {
     public static final String TEST_ID3 = "TEST3";
 
     public static SimpleConfig c(String key, String value) {
+        return c(TEST_ID, key, value);
+    }
+
+    public static SimpleConfig c(String type, String key, String value) {
         return new SimpleConfig(
-                new SimpleConfigId(TestUtil.TEST_ID, key),
+                new SimpleConfigId(type, key),
                 value,
                 null,
                 0,

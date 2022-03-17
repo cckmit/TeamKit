@@ -28,7 +28,7 @@ public class LongTimeThreadTest {
         };
 
         t.start();
-        ThreadUtil.safeSleep(15);
+        ThreadUtil.safeSleep(10);
         t.close();
         t.awaitTermination();
         Assert.assertEquals(2, counter.get());

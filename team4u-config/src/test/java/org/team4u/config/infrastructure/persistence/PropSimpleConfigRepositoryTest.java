@@ -4,18 +4,17 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.team4u.config.domain.SimpleConfig;
 import org.team4u.config.domain.SimpleConfigId;
-
-import java.util.List;
+import org.team4u.config.domain.SimpleConfigs;
 
 public class PropSimpleConfigRepositoryTest {
 
     @Test
     public void allConfigs() {
         PropSimpleConfigRepository repository = new PropSimpleConfigRepository("test.properties");
-        List<SimpleConfig> configs = repository.allConfigs();
+        SimpleConfigs configs = repository.allConfigs();
         Assert.assertEquals(2, configs.size());
-        checkConfig(configs.get(0), "test2", "b", "2");
-        checkConfig(configs.get(1), "test1", "a", "1");
+        checkConfig(configs.getValue().get(0), "test2", "b", "2");
+        checkConfig(configs.getValue().get(1), "test1", "a", "1");
 
     }
 

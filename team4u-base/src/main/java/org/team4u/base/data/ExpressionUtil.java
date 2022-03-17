@@ -28,7 +28,7 @@ public class ExpressionUtil {
             return null;
         }
 
-        String leftExpression = StrUtil.subPre(expression, x);
+        String leftExpression = ObjectUtil.defaultIfEmpty(StrUtil.subPre(expression, x),".");
         String rightExpression = StrUtil.subSuf(expression, x + 2);
 
         Object listInBean = BeanUtil.getProperty(bean, leftExpression);

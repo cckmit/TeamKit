@@ -14,6 +14,7 @@ import java.lang.reflect.Type;
 public class HutoolJsonSerializer implements Serializer {
 
     private final static Serializer instance = new HutoolJsonSerializer();
+    private final JSONConfig config = JSONConfig.create().setOrder(true);
 
     public static Serializer instance() {
         return instance;
@@ -34,7 +35,7 @@ public class HutoolJsonSerializer implements Serializer {
             return null;
         }
 
-        return JSONUtil.parseObj(serialization, JSONConfig.create().setOrder(true)).toBean(type);
+        return JSONUtil.parse(serialization, config).toBean(type);
     }
 
     @Override
@@ -43,7 +44,6 @@ public class HutoolJsonSerializer implements Serializer {
             return null;
         }
 
-        JSONConfig config = JSONConfig.create().setOrder(true);
-        return JSONUtil.parseObj(serialization, config).toBean(type);
+        return JSONUtil.parse(serialization, config).toBean(type);
     }
 }
