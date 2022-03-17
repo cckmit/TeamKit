@@ -66,6 +66,7 @@ public abstract class LongTimeThread extends Thread implements Closeable {
                 ThreadUtil.safeSleep(runIntervalMillis());
             }
         }
+        log.info("Thread is closed|name=" + getName());
     }
 
     @Override

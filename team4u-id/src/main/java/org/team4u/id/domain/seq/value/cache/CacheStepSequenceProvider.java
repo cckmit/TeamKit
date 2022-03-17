@@ -3,7 +3,6 @@ package org.team4u.id.domain.seq.value.cache;
 import lombok.Getter;
 import org.team4u.id.domain.seq.value.SequenceProvider;
 import org.team4u.id.domain.seq.value.StepSequenceProvider;
-import org.team4u.id.domain.seq.value.cache.queue.CacheSequenceContextKey;
 import org.team4u.id.domain.seq.value.cache.queue.SequenceQueueHolder;
 
 import java.util.concurrent.TimeUnit;

@@ -1,4 +1,4 @@
-package org.team4u.id.domain.seq.value.cache.queue;
+package org.team4u.id.domain.seq.value.cache;
 
 public class CacheSequenceContextKey {
 

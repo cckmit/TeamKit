@@ -21,18 +21,19 @@ public class SequenceQueueProducer extends LongTimeThread {
     private final Log log = Log.get();
 
     private final SequenceQueue queue;
-
     private final SequenceSegment segment;
-
+    private final CacheStepSequenceConfig sequenceConfig;
     private final StepSequenceProvider delegateProvider;
 
     public SequenceQueueProducer(SequenceQueue queue,
                                  CacheStepSequenceConfig sequenceConfig,
                                  StepSequenceProvider delegateProvider) {
         this.queue = queue;
+        this.sequenceConfig = sequenceConfig;
         this.segment = new SequenceSegment(sequenceConfig, delegateProvider.config());
         this.delegateProvider = delegateProvider;
 
+        setName(queue.getContext().id());
         // 创建时即进行预热，避免线程未完全启动，导致客户端无法获取序号的情况
         onRun();
     }
@@ -82,8 +83,8 @@ public class SequenceQueueProducer extends LongTimeThread {
             Number seq = segment.next();
 
             try {
-                // 若队列中缓存序号已满，将短暂阻塞线程1s，为后续检测关闭状态提供机会
-                queue.offer(seq, 1, TimeUnit.SECONDS);
+                // 若队列中缓存序号已满，将短暂阻塞，为后续检测线程状态提供机会
+                queue.offer(seq, sequenceConfig.getNextTimeoutMillis(), TimeUnit.MILLISECONDS);
 
                 // 检查是否已被关闭，退出
                 if (isClosed()) {

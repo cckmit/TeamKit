@@ -7,13 +7,18 @@ import org.team4u.base.lang.lazy.LazySupplier;
 import org.team4u.id.domain.seq.value.SequenceProvider;
 import org.team4u.id.domain.seq.value.StepSequenceProvider;
 
-import static org.team4u.id.domain.seq.value.cache.queue.CacheSequenceContextKey.CACHE_STEP_SEQUENCE_CONFIG_KEY;
-import static org.team4u.id.domain.seq.value.cache.queue.CacheSequenceContextKey.STEP_SEQUENCE_PROVIDER_KEY;
+import static org.team4u.id.domain.seq.value.cache.CacheSequenceContextKey.CACHE_STEP_SEQUENCE_CONFIG_KEY;
+import static org.team4u.id.domain.seq.value.cache.CacheSequenceContextKey.STEP_SEQUENCE_PROVIDER_KEY;
 
 /**
  * 序号队列服务
+ * <p>
+ * -负责缓存序号队列和其生产者
+ * <p>
+ * - 负责启动序号队列清理器
  *
  * @author jay.wu
+ * @see SequenceQueueCleaner
  */
 public class SequenceQueueHolder {
 
@@ -65,6 +70,10 @@ public class SequenceQueueHolder {
 
     public SequenceQueue queueOf(SequenceProvider.Context context) {
         return queues.apply(context).getQueue();
+    }
+
+    public SequenceQueueProducer producerOf(SequenceProvider.Context context) {
+        return queues.apply(context).getProducer();
     }
 
     public void clear() {
