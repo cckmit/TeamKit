@@ -69,6 +69,6 @@ public class SequenceQueueCleaner extends LongTimeThread {
 
     @Override
     protected Number runIntervalMillis() {
-        return 10;
+        return 60000;
     }
 }

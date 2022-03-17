@@ -171,8 +171,9 @@ public class CacheStepSequenceProviderTest {
         Assert.assertNull(p.provide(context()));
         Assert.assertTrue(p.isEmpty(context()));
 
-        ThreadUtil.sleep(100);
+        ThreadUtil.sleep(10);
 
+        Assert.assertEquals(1, p.getSequenceQueueHolder().getQueueCleaner().clear());
         Assert.assertEquals(0, p.getSequenceQueueHolder().getQueueCleaner().clear());
     }
 
