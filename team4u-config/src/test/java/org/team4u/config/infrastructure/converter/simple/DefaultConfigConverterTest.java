@@ -130,7 +130,8 @@ public class DefaultConfigConverterTest {
                         "    \"c\": \"3\"\n" +
                         "  }\n" +
                         "]"),
-                c("f", "true")
+                c("f", "true"),
+                c(TestUtil.TEST_ID2, "a", "2")
         );
 
         @Override

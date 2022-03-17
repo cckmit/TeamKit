@@ -2,6 +2,7 @@ package org.team4u.config.infrastructure.converter.simple;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.log.Log;
+import lombok.Getter;
 import org.team4u.base.log.LogMessage;
 import org.team4u.config.domain.SimpleConfigs;
 
@@ -16,7 +17,9 @@ public class ConfigBeanRefresher {
 
     private final Log log = Log.get();
 
+    @Getter
     private final String configType;
+    @Getter
     private final Class<?> targetType;
 
     private SimpleConfigs currentConfigs = new SimpleConfigs();
@@ -31,18 +34,18 @@ public class ConfigBeanRefresher {
      * 是否无需刷新
      */
     public boolean isNotNeedToRefresh(SimpleConfigs latestConfigs) {
-        return currentConfigs.equals(latestConfigs);
+        return currentConfigs.equals(configsOfType(latestConfigs));
     }
 
     /**
      * 使用最新的配置项更新配置对象属性
      *
-     * @param allLatestConfigs 最新的配置项
+     * @param latestAllConfigs 最新的配置项
      * @param configBean       配置对象
      */
-    public synchronized void refresh(SimpleConfigs allLatestConfigs, Object configBean) {
+    public synchronized void refresh(SimpleConfigs latestAllConfigs, Object configBean) {
         withLog(() -> {
-            SimpleConfigs latestConfigs = allLatestConfigs.filter(configType);
+            SimpleConfigs latestConfigs = configsOfType(latestAllConfigs);
 
             if (isNotNeedToRefresh(latestConfigs)) {
                 return false;
@@ -57,7 +60,7 @@ public class ConfigBeanRefresher {
     }
 
     private void withLog(Supplier<Boolean> refreshWorker) {
-        LogMessage lm = LogMessage.create(targetType.getSimpleName(), "refresh")
+        LogMessage lm = LogMessage.create(targetType.getName(), "refresh")
                 .append("configType", configType);
         try {
             boolean refreshed = refreshWorker.get();
@@ -67,6 +70,10 @@ public class ConfigBeanRefresher {
             log.error(e, lm.fail(e.getMessage()).toString());
             throw e;
         }
+    }
+
+    private SimpleConfigs configsOfType(SimpleConfigs configs) {
+        return configs.filter(configType);
     }
 
     private void refreshInstance(SimpleConfigs latestConfigs, Object currentConfigBean) {
