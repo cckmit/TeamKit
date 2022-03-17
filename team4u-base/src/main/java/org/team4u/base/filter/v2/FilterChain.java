@@ -1,9 +1,11 @@
 package org.team4u.base.filter.v2;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.log.Log;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
+import org.team4u.base.bean.provider.BeanProviders;
 import org.team4u.base.filter.FilterInvoker;
 import org.team4u.base.log.LogMessage;
 import org.team4u.base.log.LogMessages;
@@ -11,6 +13,7 @@ import org.team4u.base.log.LogService;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 过滤器责任链
@@ -43,9 +46,8 @@ public class FilterChain<C, F extends Filter<C>> {
     private void initFilterChain() {
         FilterInvoker<C> last = FilterInvoker.EMPTY_INVOKER;
 
-        for (int i = config.getFilters().size() - 1; i >= 0; i--) {
+        for (F filter : CollUtil.reverse((List<F>) config.filtersWithClasses())) {
             FilterInvoker<C> next = last;
-            F filter = (F) config.getFilters().get(i);
             last = context -> interceptorService.apply(context, next, filter);
         }
 
@@ -88,13 +90,23 @@ public class FilterChain<C, F extends Filter<C>> {
         @Builder.Default
         private List<? extends Filter<?>> filters = Collections.emptyList();
 
-        private List<? extends FilterInterceptor<?, ?>> interceptors;
-
+        @Builder.Default
         private List<Class<?>> filterClasses = Collections.emptyList();
 
-        public List<? extends Filter<?>> filters() {
-            // TODO filterClasses
-            return filters;
+        private List<? extends FilterInterceptor<?, ?>> interceptors;
+
+        public List<? extends Filter<?>> filtersOfClasses() {
+            return filterClasses.stream()
+                    .map(it -> (Filter<?>) BeanProviders.getInstance().getBean(it))
+                    .collect(Collectors.toList());
+        }
+
+        public List<? extends Filter<?>> filtersWithClasses() {
+            if (!filters.isEmpty()) {
+                return filters;
+            }
+
+            return filtersOfClasses();
         }
     }
 }
