@@ -18,7 +18,6 @@ import org.team4u.test.Benchmark;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import static org.team4u.config.TestUtil.c;
 
@@ -106,46 +105,14 @@ public class DefaultConfigConverterTest {
         private boolean f;
     }
 
+    @Data
     public static class Demo {
-
         private String a;
         private String b;
 
         public Demo(String a, String b) {
             this.a = a;
             this.b = b;
-        }
-
-        public String getA() {
-            return a;
-        }
-
-        public Demo setA(String a) {
-            this.a = a;
-            return this;
-        }
-
-        public String getB() {
-            return b;
-        }
-
-        public Demo setB(String b) {
-            this.b = b;
-            return this;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            Demo demo = (Demo) o;
-            return a.equals(demo.a) &&
-                    b.equals(demo.b);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(a, b);
         }
     }
 

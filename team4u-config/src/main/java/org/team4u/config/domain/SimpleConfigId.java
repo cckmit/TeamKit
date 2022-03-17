@@ -1,9 +1,9 @@
 package org.team4u.config.domain;
 
 import cn.hutool.core.util.StrUtil;
+import lombok.Data;
 
-import java.util.Objects;
-
+@Data
 public class SimpleConfigId {
 
     private final static char SEPARATOR = '|';
@@ -17,14 +17,6 @@ public class SimpleConfigId {
         this.configKey = configKey;
     }
 
-    public String getConfigType() {
-        return configType;
-    }
-
-    public String getConfigKey() {
-        return configKey;
-    }
-
     public static SimpleConfigId of(String id) {
         String[] typeAndKey = StrUtil.splitToArray(id, SEPARATOR);
         return new SimpleConfigId(typeAndKey[0], typeAndKey[1]);
@@ -33,19 +25,5 @@ public class SimpleConfigId {
     @Override
     public String toString() {
         return configType + SEPARATOR + configKey;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        SimpleConfigId that = (SimpleConfigId) o;
-        return configType.equals(that.configType) &&
-                configKey.equals(that.configKey);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(configType, configKey);
     }
 }

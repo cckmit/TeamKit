@@ -21,7 +21,6 @@ import java.lang.reflect.Type;
  */
 public class DefaultConfigConverter implements SimpleConfigConverter {
 
-
     private final SimpleConfigRepository simpleConfigRepository;
 
     public DefaultConfigConverter(SimpleConfigRepository simpleConfigRepository) {
@@ -30,11 +29,14 @@ public class DefaultConfigConverter implements SimpleConfigConverter {
 
     @Override
     public <T> T to(Class<T> toType, String configType) {
-        return SimpleAop.proxyOf(
+        ConfigBeanRefresher configBeanRefresher = new ConfigBeanRefresher(configType, toType);
+        T configBean = SimpleAop.proxyOf(
                 toType,
                 ElementMatchers.isGetter(),
-                new ConfigBeanMethodInterceptor(toType, configType, this)
+                new ConfigBeanMethodInterceptor(configBeanRefresher, simpleConfigRepository)
         );
+        configBeanRefresher.refresh(allConfigs(), configBean);
+        return configBean;
     }
 
     @Override
