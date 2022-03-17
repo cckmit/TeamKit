@@ -208,7 +208,8 @@ public abstract class PolicyRegistrar<C, P extends Policy<C>> {
      * 获取所有注册策略集合
      */
     public List<P> policies() {
-        return Collections.unmodifiableList(policies);
+        // 返回新的可变集合，方便业务方直接操作元素，如反转
+        return new ArrayList<>(policies);
     }
 
     /**
