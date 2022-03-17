@@ -38,7 +38,7 @@ public class TimedAggregationTaskTest {
 
         // 超时
         ThreadUtil.sleep(101);
-        Assert.assertEquals(4, count.get());
+        Assert.assertEquals(3, count.get());
         Assert.assertEquals(2, size.get());
         Assert.assertEquals(2, task.getStatistic().getReceiveSize());
         Assert.assertEquals(2, task.getStatistic().getFlushSize());
