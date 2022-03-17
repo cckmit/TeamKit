@@ -51,9 +51,8 @@ public class SequenceQueue {
 
     }
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    public void offer(Number seq, long timeout, TimeUnit unit) throws InterruptedException {
-        cache.offer(ObjectUtil.defaultIfNull(seq, NULL_SEQ), timeout, unit);
+    public boolean offer(Number seq, long timeout, TimeUnit unit) throws InterruptedException {
+        return cache.offer(ObjectUtil.defaultIfNull(seq, NULL_SEQ), timeout, unit);
     }
 
     /**

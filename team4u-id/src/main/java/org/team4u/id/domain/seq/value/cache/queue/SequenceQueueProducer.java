@@ -84,7 +84,9 @@ public class SequenceQueueProducer extends LongTimeThread {
 
             try {
                 // 若队列中缓存序号已满，将短暂阻塞，为后续检测线程状态提供机会
-                queue.offer(seq, sequenceConfig.getNextTimeoutMillis(), TimeUnit.MILLISECONDS);
+                if(!offer(seq)){
+
+                }
 
                 // 检查是否已被关闭，退出
                 if (isClosed()) {
@@ -106,6 +108,11 @@ public class SequenceQueueProducer extends LongTimeThread {
         } while (!segment.isEmpty());
 
         return true;
+    }
+
+    private boolean offer(Number seq) throws InterruptedException {
+        // 若队列中缓存序号已满，将短暂阻塞，为后续检测线程状态提供机会
+       return queue.offer(seq, sequenceConfig.getNextTimeoutMillis(), TimeUnit.MILLISECONDS);
     }
 
     @Override

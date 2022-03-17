@@ -18,7 +18,7 @@ public class SequenceQueueCleanerTest {
         p.provide(sequenceProviderContext());
         SequenceQueueProducer producer = p.getSequenceQueueHolder().producerOf(sequenceProviderContext());
 
-        ThreadUtil.sleep(100);
+        ThreadUtil.sleep(200);
 
         Assert.assertTrue(producer.isClosed());
         Assert.assertFalse(producer.isAlive());
