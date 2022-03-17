@@ -6,6 +6,7 @@ import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 import org.team4u.base.error.DataNotExistException;
 import org.team4u.base.error.NestedException;
+import org.team4u.base.error.SystemDataNotExistException;
 import org.team4u.base.log.LogMessage;
 import org.team4u.base.log.LogMessageContext;
 import org.team4u.selector.domain.interceptor.SelectorInterceptor;
@@ -143,7 +144,7 @@ public class SelectorAppService {
         SelectorFactory factory = selectorFactoryService.policyOf(selectorConfig.getType());
 
         if (factory == null) {
-            throw new DataNotExistException("Unable to find selector|id=" + selectorConfig.getConfigId());
+            throw new SystemDataNotExistException("Unable to find selector|id=" + selectorConfig.getConfigId());
         }
 
         return factory.create(selectorConfig.getBody());

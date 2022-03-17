@@ -5,13 +5,13 @@ import cn.hutool.log.Log;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
+import lombok.Singular;
 import org.team4u.base.bean.provider.BeanProviders;
 import org.team4u.base.filter.FilterInvoker;
 import org.team4u.base.log.LogMessage;
 import org.team4u.base.log.LogMessages;
 import org.team4u.base.log.LogService;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -86,14 +86,14 @@ public class FilterChain<C, F extends Filter<C>> {
         @Builder.Default
         private String name = FilterChain.class.getSimpleName();
 
-        @Builder.Default
-        private List<? extends Filter<?>> filters = Collections.emptyList();
+        @Singular
+        private List<? extends Filter<?>> filters;
 
-        @Builder.Default
-        private List<Class<?>> filterClasses = Collections.emptyList();
+        @Singular
+        private List<Class<? extends Filter<?>>> filterClasses;
 
-        @Builder.Default
-        private List<? extends FilterInterceptor<?, ?>> interceptors = Collections.emptyList();
+        @Singular
+        private List<? extends FilterInterceptor<?, ?>> interceptors;
 
         public List<? extends Filter<?>> filtersOfClasses() {
             return filterClasses.stream()

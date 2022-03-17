@@ -3,7 +3,7 @@ package org.team4u.selector.domain.selector.map;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.map.MapUtil;
 import lombok.Data;
-import org.team4u.base.error.DataNotExistException;
+import org.team4u.base.error.SystemDataNotExistException;
 import org.team4u.selector.domain.selector.Selector;
 import org.team4u.selector.domain.selector.SelectorResult;
 import org.team4u.selector.domain.selector.SelectorValueHandler;
@@ -36,7 +36,7 @@ public class DynamicMapSelector implements Selector {
 
         SelectorResult handlerIdResult = mapSelector.select(new SingleValueBinding(mapBinding.getKey()));
         if (handlerIdResult.isNotMatch()) {
-            throw new DataNotExistException("Unable to find SelectorValueHandler|id=" + handlerIdResult);
+            throw new SystemDataNotExistException("Unable to find SelectorValueHandler|id=" + handlerIdResult);
         }
 
         return select(mapBinding, handlerIdResult.toString());
@@ -45,7 +45,7 @@ public class DynamicMapSelector implements Selector {
     private SelectorResult select(Binding binding, String key) {
         Dict params = config.getHandlers().get(key);
         if (MapUtil.isEmpty(params)) {
-            throw new DataNotExistException("Unable to find SelectorValueHandler configuration|key=" + key);
+            throw new SystemDataNotExistException("Unable to find SelectorValueHandler configuration|key=" + key);
         }
 
         SelectorValueHandler.Context context = new SelectorValueHandler.Context(binding, params);
