@@ -34,7 +34,7 @@ public class SequenceQueueHolder {
     private final LazyFunction<SequenceProvider.Context, QueueAndProducer> queues;
 
     public SequenceQueueHolder() {
-        queues = buildQueues();
+        queues = LazyFunction.of(buildLazyConfig(), this::buildQueue);
         queueCleaner = buildQueueCleaner();
     }
 
@@ -42,10 +42,6 @@ public class SequenceQueueHolder {
         SequenceQueueCleaner queueCleaner = new SequenceQueueCleaner(queues);
         queueCleaner.start();
         return queueCleaner;
-    }
-
-    private LazyFunction<SequenceProvider.Context, QueueAndProducer> buildQueues() {
-        return LazyFunction.of(buildLazyConfig(), this::buildQueue);
     }
 
     private LazyFunction.Config buildLazyConfig() {
