@@ -27,14 +27,9 @@ public class FilterInterceptorService<Context, F extends Filter<Context>>
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
     public boolean preHandle(Context context, F filter) {
-        return policies().stream()
-                .allMatch(it -> {
-                    try {
-                        return ((FilterInterceptor) it).preHandle(context, filter);
-                    } catch (Exception e) {
-                        throw NestedException.wrap(e);
-                    }
-                });
+        return policies().stream().allMatch(it ->
+                ((FilterInterceptor) it).preHandle(context, filter)
+        );
     }
 
     /**
@@ -44,14 +39,9 @@ public class FilterInterceptorService<Context, F extends Filter<Context>>
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
     public void postHandle(Context context, F filter, boolean toNext) {
-        CollUtil.reverse(policies())
-                .forEach(it -> {
-                    try {
-                        ((FilterInterceptor) it).postHandle(context, filter, toNext);
-                    } catch (Exception e) {
-                        throw NestedException.wrap(e);
-                    }
-                });
+        CollUtil.reverse(policies()).forEach(it ->
+                ((FilterInterceptor) it).postHandle(context, filter, toNext)
+        );
     }
 
     /**
@@ -59,14 +49,9 @@ public class FilterInterceptorService<Context, F extends Filter<Context>>
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
     public void afterCompletion(Context context, F filter, Exception e) {
-        CollUtil.reverse(policies())
-                .forEach(it -> {
-                    try {
-                        ((FilterInterceptor) it).afterCompletion(context, filter, e);
-                    } catch (Exception ex) {
-                        throw NestedException.wrap(ex);
-                    }
-                });
+        CollUtil.reverse(policies()).forEach(it ->
+                ((FilterInterceptor) it).afterCompletion(context, filter, e)
+        );
 
         throw NestedException.wrap(e);
     }
@@ -88,7 +73,6 @@ public class FilterInterceptorService<Context, F extends Filter<Context>>
             }
         } catch (Exception e) {
             afterCompletion(context, filter, e);
-            throw NestedException.wrap(e);
         }
     }
 }

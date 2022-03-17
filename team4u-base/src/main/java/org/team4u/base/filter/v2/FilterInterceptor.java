@@ -17,19 +17,19 @@ public interface FilterInterceptor<Context, F extends Filter<Context>> extends S
      *
      * @return 是否继续执行下一个过滤器
      */
-    boolean preHandle(Context context, F filter) throws Exception;
+    boolean preHandle(Context context, F filter);
 
     /**
      * 后置处理（非异常情况执行）
      * <p>
      * 命令执行后
      */
-    void postHandle(Context context, F filter, boolean toNext) throws Exception;
+    void postHandle(Context context, F filter, boolean toNext);
 
     /**
      * 完成处理（异常时执行）
      */
-    void afterCompletion(Context context, F filter, Exception e) throws Exception;
+    void afterCompletion(Context context, F filter, Exception e);
 
     @Override
     default String id() {

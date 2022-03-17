@@ -27,31 +27,35 @@ public class FilterChain<C, F extends Filter<C>> {
 
     @Getter
     private final Config config;
-
     /**
      * 第一个过滤器执行者
      */
-    private FilterInvoker<C> header;
+    private final FilterInvoker<C> header;
 
     private final FilterInterceptorService<C, F> interceptorService;
 
     public FilterChain(Config config) {
         this.config = config;
         this.interceptorService = new FilterInterceptorService<>(config.getInterceptors());
-
-        initFilterChain();
+        this.header = initFilterChain();
     }
 
     @SuppressWarnings("unchecked")
-    private void initFilterChain() {
+    private FilterInvoker<C> initFilterChain() {
+        LogMessage lm = LogMessages.create(config.getName(), "initFilterChain");
+
+        List<F> filters = (List<F>) config.filtersWithClasses();
+        lm.append("filters", filters.stream().map(it -> it.getClass().getName()).collect(Collectors.toList()));
+
         FilterInvoker<C> last = FilterInvoker.EMPTY_INVOKER;
 
-        for (F filter : CollUtil.reverse((List<F>) config.filtersWithClasses())) {
+        for (F filter : CollUtil.reverse(filters)) {
             FilterInvoker<C> next = last;
             last = context -> interceptorService.apply(context, next, filter);
         }
 
-        setHeader(last);
+        log.info(lm.success().toString());
+        return last;
     }
 
     /**
@@ -60,8 +64,7 @@ public class FilterChain<C, F extends Filter<C>> {
      * @param context 过滤上下文
      */
     public C doFilter(C context) {
-        LogMessage lm = LogMessages.create(config.getName(), "doFilter")
-                .append("context", context);
+        LogMessage lm = LogMessages.create(config.getName(), "doFilter").append("context", context);
 
         try {
             header.invoke(context);
@@ -77,10 +80,6 @@ public class FilterChain<C, F extends Filter<C>> {
         }
     }
 
-    protected void setHeader(FilterInvoker<C> header) {
-        this.header = header;
-    }
-
     @Data
     @Builder
     public static class Config {
@@ -93,7 +92,8 @@ public class FilterChain<C, F extends Filter<C>> {
         @Builder.Default
         private List<Class<?>> filterClasses = Collections.emptyList();
 
-        private List<? extends FilterInterceptor<?, ?>> interceptors;
+        @Builder.Default
+        private List<? extends FilterInterceptor<?, ?>> interceptors = Collections.emptyList();
 
         public List<? extends Filter<?>> filtersOfClasses() {
             return filterClasses.stream()
