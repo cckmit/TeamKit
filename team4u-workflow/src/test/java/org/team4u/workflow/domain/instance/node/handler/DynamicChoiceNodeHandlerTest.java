@@ -27,7 +27,15 @@ public class DynamicChoiceNodeHandlerTest {
     }
 
     private SelectorConfig selectorConfig() {
-        String json = "{\"type\":\"expression\",\"body\":[{\"x\":\"${ext.a == 1}\"},{\"y\":\"${ext.a == 2}\"}]}";
+        //language=JSON
+        String json = "{\n" +
+                "  \"type\": \"expression\",\n" +
+                "  \"body\": " +
+                "{\n" +
+                "    \"${ext.a == 1}\": \"x\",\n" +
+                "    \"${ext.a == 2}\": \"y\"\n" +
+                "  }\n" +
+                "}";
         return JSON.parseObject(json, SelectorConfig.class);
     }
 }

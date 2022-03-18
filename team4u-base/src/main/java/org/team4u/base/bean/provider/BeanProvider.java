@@ -49,4 +49,15 @@ public interface BeanProvider extends StringIdPolicy {
      * @param bean     bean
      */
     <T> boolean registerBean(String beanName, T bean);
+
+    /**
+     * 注册Bean
+     *
+     * @param <T>  Bean类型
+     * @param bean bean
+     */
+    default <T> boolean registerBean(T bean) {
+        return registerBean(bean.getClass().getSimpleName(), bean);
+    }
+
 }

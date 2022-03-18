@@ -59,7 +59,7 @@ public class BeanProvidersTest {
             providers.getBean("x");
             Assert.fail();
         } catch (NoSuchBeanDefinitionException e) {
-            Assert.assertEquals("x", e.getMessage());
+            Assert.assertEquals("name=x", e.getMessage());
         }
     }
 

@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import org.team4u.base.log.audit.domain.condition.ConditionHandler;
 import org.team4u.base.log.audit.domain.provider.OperatorProvider;
 import org.team4u.base.log.audit.domain.provider.ReferenceIdProvider;
 import org.team4u.base.message.AbstractMessageSubscriber;
+import org.team4u.base.message.MessagePublisher;
 import org.team4u.base.spring.SpringInitializedPublisher;
 import org.team4u.test.spring.BaseTestBeanConfig;
 
@@ -37,6 +39,11 @@ public class AuditLogAspectTest {
     @Before
     public void setUp() throws Exception {
         subscriber.setEvent(null);
+    }
+
+    @BeforeClass
+    public static void beforeClass() {
+        MessagePublisher.instance().reset();
     }
 
     @Test

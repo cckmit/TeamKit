@@ -3,10 +3,10 @@ package org.team4u.base.filter.v2;
 import cn.hutool.core.collection.CollUtil;
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.team4u.base.TestUtil;
 import org.team4u.base.bean.provider.BeanProviders;
-import org.team4u.base.bean.provider.LocalBeanProvider;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,10 +17,10 @@ public class FilterChainTest {
 
     private final TestFilterInterceptor testFilterInterceptor = new TestFilterInterceptor();
 
+    @Before
     @After
     public void clear() {
-        LocalBeanProvider provider = (LocalBeanProvider) BeanProviders.getInstance().policyOf(LocalBeanProvider.ID);
-        provider.unregisterAllBeans();
+        BeanProviders.getInstance().local().unregisterAllBeans();
     }
 
     @Test
@@ -39,7 +39,7 @@ public class FilterChainTest {
     @SuppressWarnings("unchecked")
     public void doFilterWithBeanCLasses() {
         List<Class<? extends Filter<?>>> f = beans().stream()
-                .filter(it -> BeanProviders.getInstance().registerBean(it))
+                .filter(it -> BeanProviders.getInstance().local().registerBean(it))
                 .map(it -> (Class<? extends Filter<?>>) it.getClass())
                 .collect(Collectors.toList());
 

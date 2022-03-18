@@ -23,7 +23,7 @@ public class RedisStepSequenceProviderTest extends AbstractStepSequenceProviderT
         BeanUtil.copyProperties(config, redisConfig);
         return new RedisStepSequenceProvider(
                 redisConfig,
-                TestUtil.createRedisTemplate()
+                template
         );
     }
 
@@ -31,7 +31,7 @@ public class RedisStepSequenceProviderTest extends AbstractStepSequenceProviderT
         RedisStepSequenceProvider.Config config = new RedisStepSequenceProvider.Config();
         return new RedisStepSequenceProvider(
                 config,
-                TestUtil.createRedisTemplate()
+                template
         );
     }
 }

@@ -1,6 +1,7 @@
 package org.team4u.base.filter;
 
 import cn.hutool.core.lang.Dict;
+import org.junit.After;
 import org.junit.Before;
 import org.team4u.base.bean.event.ApplicationInitializedEvent;
 import org.team4u.base.bean.provider.BeanProviders;
@@ -14,11 +15,13 @@ public class BeanSimpleFilterServiceTest extends AbstractSimpleFilterServiceTest
     private final BeanFilterService<Dict> service = new TestFilterService();
 
     @Before
+    @After
     public void before() throws Exception {
         for (Filter<Dict> filter : filters) {
-            BeanProviders.getInstance().registerBean(filter);
+            BeanProviders.getInstance().local().registerBean(filter);
         }
 
+        MessagePublisher.instance().reset();
         MessagePublisher.instance().subscribe(service);
         MessagePublisher.instance().publish(new ApplicationInitializedEvent());
     }

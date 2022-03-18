@@ -163,18 +163,16 @@ public class CacheStepSequenceProviderTest {
     @Test
     public void clearExpiredCache() {
         CacheStepSequenceProvider p = cacheProvider(1, 2);
-        p.config().setExpiredWhenQueueStartedMillis(20);
+        p.config().setExpiredWhenQueueStartedMillis(200);
 
         Assert.assertEquals(1L, p.provide(sequenceProviderContext()));
         SequenceQueueProducer producer = p.getSequenceQueueHolder().producerOf(sequenceProviderContext());
         Assert.assertEquals(2L, p.provide(sequenceProviderContext()));
         Assert.assertNull(p.provide(sequenceProviderContext()));
         Assert.assertTrue(p.isEmpty(sequenceProviderContext()));
-
-        ThreadUtil.sleep(10);
         Assert.assertEquals(0, p.getSequenceQueueHolder().getQueueCleaner().clear());
 
-        ThreadUtil.sleep(11);
+        ThreadUtil.sleep(200);
         Assert.assertEquals(1, p.getSequenceQueueHolder().getQueueCleaner().clear());
         Assert.assertEquals(0, p.getSequenceQueueHolder().getQueueCleaner().clear());
 

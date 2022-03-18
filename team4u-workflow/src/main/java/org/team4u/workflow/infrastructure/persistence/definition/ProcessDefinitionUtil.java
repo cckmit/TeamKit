@@ -28,7 +28,7 @@ public class ProcessDefinitionUtil {
         }
 
         ProcessDefinition definition = JSON.parseObject(
-                json, ProcessDefinition.class, Feature.SupportAutoType
+                json, ProcessDefinition.class, Feature.SupportAutoType, Feature.OrderedField
         );
 
         ReflectUtil.setFieldValue(definition, "processDefinitionId", processDefinitionId);

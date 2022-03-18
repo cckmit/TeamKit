@@ -43,7 +43,7 @@ public class SequenceQueueCleaner extends LongTimeThread {
         });
     }
 
-    private SequenceQueueContext close(SequenceQueueHolder.HolderValue it){
+    private SequenceQueueContext close(SequenceQueueHolder.HolderValue it) {
         if (!isExpired(it.getQueue())) {
             return null;
         }
@@ -63,6 +63,11 @@ public class SequenceQueueCleaner extends LongTimeThread {
 
         // 判断是否超出存活时间
         return System.currentTimeMillis() - queue.getStatus().getOccurredOn() > config.getExpiredWhenQueueStartedMillis();
+    }
+
+    @Override
+    protected boolean isSleepBeforeRun() {
+        return true;
     }
 
     @Override

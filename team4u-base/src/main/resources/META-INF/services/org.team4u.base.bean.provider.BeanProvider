@@ -1,2 +1,2 @@
-org.team4u.base.bean.provider.SpringBeanProvider
 org.team4u.base.bean.provider.LocalBeanProvider
+org.team4u.base.bean.provider.SpringBeanProvider

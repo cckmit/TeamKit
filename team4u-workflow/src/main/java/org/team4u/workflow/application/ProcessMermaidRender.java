@@ -102,8 +102,8 @@ public class ProcessMermaidRender {
                 for (Map.Entry<String, String> entry : config.entrySet()) {
                     flow.getElements().add(newSimpleLink(
                             node.getNodeId(),
-                            entry.getKey(),
-                            "\"" + entry.getValue() + "\""
+                            entry.getValue(),
+                            "\"" + entry.getKey() + "\""
                     ));
                 }
                 break;

@@ -71,4 +71,8 @@ public class MessagePublisher {
     public Set<MessageSubscriber<?>> subscribers() {
         return Collections.unmodifiableSet(subscribers);
     }
+
+    public void reset(){
+        subscribers.clear();
+    }
 }

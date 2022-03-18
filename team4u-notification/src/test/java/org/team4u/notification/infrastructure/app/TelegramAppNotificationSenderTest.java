@@ -1,11 +1,13 @@
 package org.team4u.notification.infrastructure.app;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.team4u.notification.domain.app.AppNotification;
 
 public class TelegramAppNotificationSenderTest {
 
     @Test
+    @Ignore
     public void send() {
         TelegramAppNotificationSender sender = new TelegramAppNotificationSender(
                 TelegramAppNotificationSender.Config.builder()

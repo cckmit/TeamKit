@@ -2,6 +2,7 @@ package org.team4u.exporter.infrastructure.exporter;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Dict;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.team4u.exporter.domain.Title;
 
@@ -12,6 +13,7 @@ public class SimpleCsvExporterTest {
     private final SimpleCsvExporter exporter = new SimpleCsvExporter();
 
     @Test
+    @Ignore
     public void exportMap() {
         SimpleCsvExporter.Context c = new SimpleCsvExporter.Context();
         c.setOutputStream(System.out)
@@ -27,6 +29,7 @@ public class SimpleCsvExporterTest {
     }
 
     @Test
+    @Ignore
     public void exportBean() {
         SimpleCsvExporter.Context c = new SimpleCsvExporter.Context();
         c.setOutputStream(System.out)

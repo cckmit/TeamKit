@@ -74,14 +74,10 @@
       "nodeName": "表达式选择器",
       "rule": {
         "type": "expression",
-        "body": [
-          {
-            "created": "${ext.a == 1}"
-          },
-          {
-            "pending": "${ext.a == 2}"
-          }
-        ]
+        "body": {
+          "${ext.a == 1}": "created",
+          "${ext.a == 2}": "pending"
+        }
       }
     },
     {

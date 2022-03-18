@@ -174,4 +174,8 @@ public class BeanProviders extends PolicyRegistrar<String, BeanProvider> {
     public <T> boolean registerBean(T bean) {
         return registerBean(bean.getClass().getSimpleName(), bean);
     }
+
+    public LocalBeanProvider local() {
+        return (LocalBeanProvider) BeanProviders.getInstance().policyOf(LocalBeanProvider.ID);
+    }
 }
