@@ -103,7 +103,7 @@ public class JdbcStepSequenceProvider extends RdbmsStepSequenceProvider {
         protected SequenceProvider createWithConfig(Config config) {
             return new JdbcStepSequenceProvider(
                     config,
-                    BeanProviders.getBean(DataSource.class, config.getDataSourceBeanId())
+                    BeanProviders.getInstance().getBean(DataSource.class, config.getDataSourceBeanId())
             );
         }
     }

@@ -2,6 +2,7 @@ package org.team4u.base.bean.provider;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Singleton;
+import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.team4u.base.bean.event.BeanInitializedEvent;
@@ -12,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
 
 /**
  * bean提供者服务
@@ -43,20 +45,38 @@ public class BeanProviders extends PolicyRegistrar<String, BeanProvider> {
      * <p>
      * 先尝试按指定bean标识获取，若不指定，则尝试按照类型获取
      *
-     * @param beanType bean类型
-     * @param beanId   bean标识
-     * @param <T>      bean类型
+     * @param beanType    bean类型
+     * @param beanIdRegex bean标识正则表达式
+     * @param <T>         bean类型
      * @return bean对象
      * @throws NoSuchBeanDefinitionException 无法找到bean时抛出此异常
      */
-    public static <T> T getBean(Class<T> beanType, String beanId) throws NoSuchBeanDefinitionException {
-        // 按照指定bean标识查找
-        if (StrUtil.isNotBlank(beanId)) {
-            return BeanProviders.getInstance().getBean(beanId);
+    public <T> T getBean(Class<T> beanType, String beanIdRegex) throws NoSuchBeanDefinitionException {
+        // 按照指定bean标识表达式查找
+        if (StrUtil.isNotBlank(beanIdRegex)) {
+            return getBean(beanType, name -> ReUtil.isMatch(beanIdRegex, name));
         }
 
         // 未指定bean标识，尝试按类型查找
-        return BeanProviders.getInstance().getBean(beanType);
+        return getBean(beanType);
+    }
+
+    /**
+     * 获取bean对象
+     *
+     * @param beanType       bean类型
+     * @param beanNameFilter bean名称过滤器
+     * @param <T>            bean类型
+     * @return bean对象
+     * @throws NoSuchBeanDefinitionException 无法找到bean时抛出此异常
+     */
+    public <T> T getBean(Class<T> beanType,
+                         Function<String, Boolean> beanNameFilter) throws NoSuchBeanDefinitionException {
+        return getBeansOfType(beanType).entrySet().stream()
+                .filter(it -> beanNameFilter.apply(it.getKey()))
+                .map(Map.Entry::getValue)
+                .findFirst()
+                .orElseThrow(() -> new NoSuchBeanDefinitionException("beanType=" + beanType.getName()));
     }
 
     /**
@@ -74,7 +94,7 @@ public class BeanProviders extends PolicyRegistrar<String, BeanProvider> {
                 .map(it -> (T) it.getBean(name))
                 .filter(Objects::nonNull)
                 .findFirst()
-                .orElseThrow(() -> new NoSuchBeanDefinitionException(name));
+                .orElseThrow(() -> new NoSuchBeanDefinitionException("name=" + name));
     }
 
     /**
@@ -91,7 +111,7 @@ public class BeanProviders extends PolicyRegistrar<String, BeanProvider> {
                 .map(it -> it.getBean(type))
                 .filter(Objects::nonNull)
                 .findFirst()
-                .orElseThrow(() -> new NoSuchBeanDefinitionException(type.getName()));
+                .orElseThrow(() -> new NoSuchBeanDefinitionException("beanType=" + type.getName()));
     }
 
     /**

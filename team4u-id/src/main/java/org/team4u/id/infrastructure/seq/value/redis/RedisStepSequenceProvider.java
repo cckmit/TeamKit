@@ -82,7 +82,7 @@ public class RedisStepSequenceProvider extends AutoIncrementStepSequenceProvider
         protected SequenceProvider createWithConfig(Config config) {
             return new RedisStepSequenceProvider(
                     config,
-                    BeanProviders.getBean(RedisTemplate.class, config.getRedisTemplateBeanId())
+                    BeanProviders.getInstance().getBean(RedisTemplate.class, config.getRedisTemplateBeanId())
             );
         }
     }

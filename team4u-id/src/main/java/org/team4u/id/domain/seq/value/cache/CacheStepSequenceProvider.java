@@ -26,6 +26,8 @@ import java.util.concurrent.TimeUnit;
  * @see CacheStepSequenceConfig
  */
 public class CacheStepSequenceProvider implements SequenceProvider {
+
+    private final CacheStepSequenceConfig config;
     /**
      * 代理序号提供者，负责提供号段
      */
@@ -33,7 +35,6 @@ public class CacheStepSequenceProvider implements SequenceProvider {
     private final StepSequenceProvider delegateProvider;
     @Getter
     private final SequenceQueueHolder sequenceQueueHolder;
-    private final CacheStepSequenceConfig config;
 
     public CacheStepSequenceProvider(CacheStepSequenceConfig config,
                                      StepSequenceProvider delegateProvider,
