@@ -8,13 +8,12 @@ import org.team4u.base.log.LogMessageContext;
  *
  * @author jay.wu
  */
-@SuppressWarnings("rawtypes")
-public class LogInterceptor implements FilterInterceptor {
+public class LogInterceptor implements FilterInterceptor<Object, Filter<Object>> {
 
     private final Log log = Log.get();
 
     @Override
-    public boolean preHandle(Object context, Filter filter) {
+    public boolean preHandle(Object context, Filter<Object> filter) {
         LogMessageContext.createAndSet(filter.getClass().getSimpleName(), "doFilter")
                 .append("context", context);
 
@@ -22,7 +21,7 @@ public class LogInterceptor implements FilterInterceptor {
     }
 
     @Override
-    public void postHandle(Object o, Filter filter, boolean toNext) {
+    public void postHandle(Object o, Filter<Object> filter, boolean toNext) {
         if (log.isDebugEnabled()) {
             log.debug(LogMessageContext.get()
                     .success()
@@ -32,7 +31,7 @@ public class LogInterceptor implements FilterInterceptor {
     }
 
     @Override
-    public void afterCompletion(Object o, Filter filter, Exception e) {
+    public void afterCompletion(Object o, Filter<Object> filter, Exception e) {
         log.error(e, LogMessageContext.get().fail(e.getMessage()).toString());
     }
 }

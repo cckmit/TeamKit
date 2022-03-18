@@ -27,7 +27,7 @@ public interface FilterInterceptor<Context, F extends Filter<Context>> extends S
     void postHandle(Context context, F filter, boolean toNext);
 
     /**
-     * 完成处理（异常时执行）
+     * 完成处理（异常情况执行）
      */
     void afterCompletion(Context context, F filter, Exception e);
 

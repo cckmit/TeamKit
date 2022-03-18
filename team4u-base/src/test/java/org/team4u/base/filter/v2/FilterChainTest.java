@@ -25,7 +25,7 @@ public class FilterChainTest {
 
     @Test
     public void doFilterWithBeans() {
-        FilterChain<List<String>, Filter<List<String>>> chain = new FilterChain<>(
+        FilterChain<List<String>, Filter<List<String>>> chain = FilterChain.create(
                 FilterChain.Config.builder()
                         .filters(beans())
                         .interceptor(testFilterInterceptor)
@@ -43,7 +43,7 @@ public class FilterChainTest {
                 .map(it -> (Class<? extends Filter<?>>) it.getClass())
                 .collect(Collectors.toList());
 
-        FilterChain<List<String>, Filter<List<String>>> chain = new FilterChain<>(
+        FilterChain<List<String>, Filter<List<String>>> chain = FilterChain.create(
                 FilterChain.Config.builder()
                         .filterClasses(f)
                         .interceptor(testFilterInterceptor)
@@ -55,8 +55,11 @@ public class FilterChainTest {
 
     @Test
     public void error() {
-        FilterChain<List<String>, Filter<List<String>>> chain = new FilterChain<>(
-                FilterChain.Config.builder().filter(new E()).build()
+        FilterChain<List<String>, Filter<List<String>>> chain = FilterChain.create(
+                FilterChain.Config.builder()
+                        .filter(new E())
+                        .interceptor(new Log2FilterInterceptor())
+                        .build()
         );
 
         try {
@@ -126,6 +129,19 @@ public class FilterChainTest {
         @Override
         public void afterCompletion(List<String> strings, Filter<List<String>> filter, Exception e) {
 
+        }
+    }
+
+    public static class Log2FilterInterceptor extends LogInterceptor {
+
+        @Override
+        public void afterCompletion(Object o, Filter<Object> filter, Exception e) {
+            // Ignore error log
+        }
+
+        @Override
+        public String id() {
+            return LogInterceptor.class.getSimpleName();
         }
     }
 }

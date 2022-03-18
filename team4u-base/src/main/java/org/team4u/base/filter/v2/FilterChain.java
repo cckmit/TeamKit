@@ -1,6 +1,7 @@
 package org.team4u.base.filter.v2;
 
-import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.func.VoidFunc1;
+import cn.hutool.core.util.ClassUtil;
 import cn.hutool.log.Log;
 import lombok.Builder;
 import lombok.Data;
@@ -9,11 +10,15 @@ import lombok.Singular;
 import org.team4u.base.bean.provider.BeanProviders;
 import org.team4u.base.filter.FilterInvoker;
 import org.team4u.base.log.LogMessage;
+import org.team4u.base.log.LogMessageContext;
 import org.team4u.base.log.LogMessages;
 import org.team4u.base.log.LogService;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
+
+import static org.team4u.base.log.LogService.withInfoLog;
 
 /**
  * 过滤器责任链
@@ -34,28 +39,38 @@ public class FilterChain<C, F extends Filter<C>> {
 
     private final FilterInterceptorService<C, F> interceptorService;
 
-    public FilterChain(Config config) {
+    private FilterChain(Config config) {
         this.config = config;
         this.interceptorService = new FilterInterceptorService<>(config.getInterceptors());
         this.header = initFilterChain();
     }
 
+    public static <C, F extends Filter<C>> FilterChain<C, F> create(Config config) {
+        return new FilterChain<>(config);
+    }
+
     @SuppressWarnings("unchecked")
     private FilterInvoker<C> initFilterChain() {
-        LogMessage lm = LogMessages.create(config.getName(), "initFilterChain");
+        return withInfoLog(log, "initFilterChain", () -> {
+            List<F> filters = (List<F>) config.filtersWithClasses();
+            LogMessageContext.get().append("filters", config.dump(filters));
 
-        List<F> filters = (List<F>) config.filtersWithClasses();
-        lm.append("filters", filters.stream().map(it -> it.getClass().getName()).collect(Collectors.toList()));
+            final AtomicReference<FilterInvoker<C>> last = new AtomicReference<FilterInvoker<C>>(
+                    FilterInvoker.EMPTY_INVOKER
+            );
+            reverse(filters, filter -> {
+                FilterInvoker<C> next = last.get();
+                last.set(context -> interceptorService.apply(context, next, filter));
+            });
 
-        FilterInvoker<C> last = FilterInvoker.EMPTY_INVOKER;
+            return last.get();
+        });
+    }
 
-        for (F filter : CollUtil.reverse(filters)) {
-            FilterInvoker<C> next = last;
-            last = context -> interceptorService.apply(context, next, filter);
+    private void reverse(List<F> filters, VoidFunc1<F> worker) {
+        for (int i = filters.size() - 1; i >= 0; i--) {
+            worker.callWithRuntimeException(filters.get(i));
         }
-
-        log.info(lm.success().toString());
-        return last;
     }
 
     /**
@@ -107,6 +122,12 @@ public class FilterChain<C, F extends Filter<C>> {
             }
 
             return filtersOfClasses();
+        }
+
+        public List<String> dump(List<? extends Filter<?>> filters) {
+            return filters.stream()
+                    .map(it -> ClassUtil.getShortClassName(it.getClass().getName()))
+                    .collect(Collectors.toList());
         }
     }
 }

@@ -46,12 +46,12 @@ public class SimpleLogMessageRender implements LogMessageRender {
 
     public static class LogStringBuilder {
 
-        StringBuilder stringBuilder;
-        LogMessageConfig config;
+        private final StringBuilder stringBuilder;
+        private final LogMessageConfig config;
 
         public LogStringBuilder(LogMessageConfig config) {
-            this.stringBuilder = new StringBuilder();
             this.config = config;
+            this.stringBuilder = new StringBuilder();
         }
 
         public LogStringBuilder append(Object value) {
