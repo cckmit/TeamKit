@@ -60,6 +60,8 @@ public class LogService {
         } catch (Exception e) {
             logForError(log, lm, e);
             throw NestedException.wrap(e);
+        } finally {
+            LogMessageContext.remove();
         }
     }
 

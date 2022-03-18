@@ -1,12 +1,13 @@
 package org.team4u.id.domain.seq.value.cache.queue;
 
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.lang.func.Func0;
 import cn.hutool.log.Log;
 import org.team4u.base.lang.LongTimeThread;
 import org.team4u.base.lang.lazy.LazyFunction;
-import org.team4u.base.log.LogMessage;
+import org.team4u.base.log.LogMessageContext;
 import org.team4u.id.domain.seq.value.cache.CacheStepSequenceConfig;
+
+import static org.team4u.base.log.LogService.withInfoLog;
 
 /**
  * 序号队列清理器
@@ -26,7 +27,7 @@ public class SequenceQueueCleaner extends LongTimeThread {
 
     @Override
     protected void onRun() {
-        withLog(this::clear);
+        clear();
     }
 
     /**
@@ -35,28 +36,21 @@ public class SequenceQueueCleaner extends LongTimeThread {
      * @return 已清理数量
      */
     public int clear() {
-        return queues.remove(it -> {
-            if (isExpired(it.getQueue())) {
-                // 关闭队列生产者
-                IoUtil.close(it.getProducer());
-                // 已过期，返回需要清理的key
-                return it.getQueue().getContext();
-            }
-
-            return null;
+        return withInfoLog(log, "clear", () -> {
+            int count = queues.remove(this::close);
+            LogMessageContext.get().append("count", count);
+            return count;
         });
     }
 
-    private void withLog(Func0<Integer> worker) {
-        LogMessage lm = LogMessage.create(this.getClass().getSimpleName(), "clear");
-        try {
-            int count = worker.call();
-            if (count > 0) {
-                log.info(lm.success().append("count", count).toString());
-            }
-        } catch (Exception e) {
-            log.error(e, lm.fail(e.getMessage()).toString());
+    private SequenceQueueContext close(SequenceQueueHolder.HolderValue it){
+        if (!isExpired(it.getQueue())) {
+            return null;
         }
+
+        // 关闭队列生产者
+        IoUtil.close(it.getProducer());
+        return it.getQueue().getContext();
     }
 
     private boolean isExpired(SequenceQueue queue) {
