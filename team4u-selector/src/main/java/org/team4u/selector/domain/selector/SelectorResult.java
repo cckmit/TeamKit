@@ -66,6 +66,9 @@ public class SelectorResult {
         return !isMatch();
     }
 
+    /**
+     * 将最终选择结果转换为字符串
+     */
     @Override
     public String toString() {
         return to(String.class);
