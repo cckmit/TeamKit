@@ -5,10 +5,6 @@ import lombok.Getter;
 import org.team4u.base.lang.lazy.LazyFunction;
 import org.team4u.base.lang.lazy.LazySupplier;
 import org.team4u.id.domain.seq.value.SequenceProvider;
-import org.team4u.id.domain.seq.value.StepSequenceProvider;
-
-import static org.team4u.id.domain.seq.value.cache.CacheSequenceContextKey.CACHE_STEP_SEQUENCE_CONFIG_KEY;
-import static org.team4u.id.domain.seq.value.cache.CacheSequenceContextKey.STEP_SEQUENCE_PROVIDER_KEY;
 
 /**
  * 序号队列服务
@@ -31,7 +27,7 @@ public class SequenceQueueHolder {
     @Getter
     private final SequenceQueueCleaner queueCleaner;
 
-    private final LazyFunction<SequenceProvider.Context, QueueAndProducer> queues;
+    private final LazyFunction<SequenceQueueContext, HolderValue> queues;
 
     public SequenceQueueHolder() {
         queues = LazyFunction.of(buildLazyConfig(), this::buildQueue);
@@ -46,30 +42,34 @@ public class SequenceQueueHolder {
 
     private LazyFunction.Config buildLazyConfig() {
         return LazyFunction.Config.builder()
-                .keyFunc(it -> ((SequenceProvider.Context) it).id())
+                .keyFunc(it -> ((SequenceQueueContext) it).id())
                 .build();
     }
 
-    private QueueAndProducer buildQueue(SequenceProvider.Context context) {
-        StepSequenceProvider delegateProvider = context.ext(STEP_SEQUENCE_PROVIDER_KEY);
+    private HolderValue buildQueue(SequenceQueueContext context) {
+        SequenceQueue queue = new SequenceQueue(context);
 
-        SequenceQueue queue = new SequenceQueue(context, delegateProvider);
-
-        SequenceQueueProducer producer = new SequenceQueueProducer(
-                queue,
-                context.ext(CACHE_STEP_SEQUENCE_CONFIG_KEY),
-                context.ext(STEP_SEQUENCE_PROVIDER_KEY)
-        );
+        SequenceQueueProducer producer = new SequenceQueueProducer(queue, context);
         producer.start();
-        return new QueueAndProducer(queue, producer);
+        return new HolderValue(queue, producer);
     }
 
-    public SequenceQueue queueOf(SequenceProvider.Context context) {
+    public SequenceQueue queueOf(SequenceQueueContext context) {
         return queues.apply(context).getQueue();
     }
 
     public SequenceQueueProducer producerOf(SequenceProvider.Context context) {
-        return queues.apply(context).getProducer();
+        HolderValue value = queues.apply(new SequenceQueueContext(
+                context,
+                null,
+                null
+        ));
+
+        if (value == null) {
+            return null;
+        }
+
+        return value.getProducer();
     }
 
     public void clear() {
@@ -77,7 +77,7 @@ public class SequenceQueueHolder {
     }
 
     @Data
-    public static class QueueAndProducer {
+    public static class HolderValue {
         private final SequenceQueue queue;
         private final SequenceQueueProducer producer;
     }

@@ -14,14 +14,15 @@ import org.team4u.id.domain.seq.value.SequenceProviderFactoryHolder;
 import org.team4u.id.domain.seq.value.cache.CacheStepSequenceProvider;
 import org.team4u.id.domain.seq.value.cache.CacheStepSequenceProviderFactory;
 import org.team4u.id.domain.seq.value.cache.queue.SequenceQueueHolder;
+import org.team4u.id.domain.seq.value.cache.queue.SequenceQueueProducer;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Future;
-import java.util.stream.Collectors;
 
 import static org.team4u.TestUtil.cacheProvider;
+import static org.team4u.TestUtil.sequenceProviderContext;
 
 public class CacheStepSequenceProviderTest {
 
@@ -51,7 +52,6 @@ public class CacheStepSequenceProviderTest {
             }
         });
 
-        System.out.println(seqList.stream().sorted().collect(Collectors.toList()));
         Assert.assertEquals(100, seqList.size());
         Assert.assertTrue(provider.getDelegateProvider().currentSequence(context()).intValue() >= 100);
     }
@@ -160,21 +160,24 @@ public class CacheStepSequenceProviderTest {
         Assert.assertFalse(p.isEmpty(context));
     }
 
-
     @Test
     public void clearExpiredCache() {
         CacheStepSequenceProvider p = cacheProvider(1, 2);
         p.config().setExpiredWhenQueueStartedMillis(1);
 
-        Assert.assertEquals(1L, p.provide(context()));
-        Assert.assertEquals(2L, p.provide(context()));
-        Assert.assertNull(p.provide(context()));
-        Assert.assertTrue(p.isEmpty(context()));
+        Assert.assertEquals(1L, p.provide(sequenceProviderContext()));
+        SequenceQueueProducer producer = p.getSequenceQueueHolder().producerOf(sequenceProviderContext());
+        Assert.assertEquals(2L, p.provide(sequenceProviderContext()));
+        Assert.assertNull(p.provide(sequenceProviderContext()));
+        Assert.assertTrue(p.isEmpty(sequenceProviderContext()));
 
         ThreadUtil.sleep(10);
 
         Assert.assertEquals(1, p.getSequenceQueueHolder().getQueueCleaner().clear());
         Assert.assertEquals(0, p.getSequenceQueueHolder().getQueueCleaner().clear());
+
+        Assert.assertTrue(producer.isClosed());
+        Assert.assertFalse(producer.isAlive());
     }
 
     @Test

@@ -29,6 +29,10 @@ public class CacheStepSequenceConfig {
      */
     private int nextTimeoutMillis = 20;
     /**
+     * 队列生产阻塞超时时间（毫秒）
+     */
+    private int queueOfferTimeoutMillis = 60000;
+    /**
      * 序号队列开启多长时间失效（毫秒）,0则表示永不失效
      */
     private int expiredWhenQueueStartedMillis = 0;

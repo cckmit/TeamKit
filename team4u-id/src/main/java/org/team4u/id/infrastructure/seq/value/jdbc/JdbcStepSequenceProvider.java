@@ -1,6 +1,5 @@
 package org.team4u.id.infrastructure.seq.value.jdbc;
 
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.db.Db;
 import cn.hutool.db.Entity;
 import cn.hutool.db.handler.BeanHandler;
@@ -102,7 +101,6 @@ public class JdbcStepSequenceProvider extends RdbmsStepSequenceProvider {
 
         @Override
         protected SequenceProvider createWithConfig(Config config) {
-            config = ObjectUtil.defaultIfNull(config, new Config());
             return new JdbcStepSequenceProvider(
                     config,
                     BeanProviders.getBean(DataSource.class, config.getDataSourceBeanId())

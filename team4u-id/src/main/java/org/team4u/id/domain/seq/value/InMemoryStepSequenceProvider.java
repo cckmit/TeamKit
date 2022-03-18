@@ -1,6 +1,5 @@
 package org.team4u.id.domain.seq.value;
 
-import cn.hutool.core.util.ObjectUtil;
 import org.team4u.base.lang.lazy.LazyFunction;
 
 import java.util.concurrent.atomic.AtomicLong;
@@ -51,7 +50,7 @@ public class InMemoryStepSequenceProvider extends AutoIncrementStepSequenceProvi
 
         @Override
         protected SequenceProvider createWithConfig(Config config) {
-            return new InMemoryStepSequenceProvider(ObjectUtil.defaultIfNull(config, new Config()));
+            return new InMemoryStepSequenceProvider(config);
         }
     }
 }

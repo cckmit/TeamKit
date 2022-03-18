@@ -1,12 +1,11 @@
 package org.team4u.id.domain.seq.value.cache.queue;
 
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.lang.func.Func0;
 import cn.hutool.log.Log;
 import org.team4u.base.lang.LongTimeThread;
 import org.team4u.base.lang.lazy.LazyFunction;
 import org.team4u.base.log.LogMessage;
-import org.team4u.id.domain.seq.value.SequenceProvider;
-import org.team4u.id.domain.seq.value.cache.CacheSequenceContextKey;
 import org.team4u.id.domain.seq.value.cache.CacheStepSequenceConfig;
 
 /**
@@ -19,23 +18,15 @@ public class SequenceQueueCleaner extends LongTimeThread {
 
     private final Log log = Log.get();
 
-    private final LazyFunction<SequenceProvider.Context, SequenceQueueHolder.QueueAndProducer> queues;
+    private final LazyFunction<SequenceQueueContext, SequenceQueueHolder.HolderValue> queues;
 
-    public SequenceQueueCleaner(LazyFunction<SequenceProvider.Context, SequenceQueueHolder.QueueAndProducer> queues) {
+    public SequenceQueueCleaner(LazyFunction<SequenceQueueContext, SequenceQueueHolder.HolderValue> queues) {
         this.queues = queues;
     }
 
     @Override
     protected void onRun() {
-        LogMessage lm = LogMessage.create(this.getClass().getSimpleName(), "clear");
-        try {
-            int count = clear();
-            if (count > 0) {
-                log.info(lm.success().append("count", count).toString());
-            }
-        } catch (Exception e) {
-            log.info(lm.fail(e.getMessage()).toString());
-        }
+        withLog(this::clear);
     }
 
     /**
@@ -56,8 +47,21 @@ public class SequenceQueueCleaner extends LongTimeThread {
         });
     }
 
+    private void withLog(Func0<Integer> worker) {
+        LogMessage lm = LogMessage.create(this.getClass().getSimpleName(), "clear");
+        try {
+            int count = worker.call();
+            if (count > 0) {
+                log.info(lm.success().append("count", count).toString());
+            }
+        } catch (Exception e) {
+            log.info(lm.fail(e.getMessage()).toString());
+        }
+    }
+
     private boolean isExpired(SequenceQueue queue) {
-        CacheStepSequenceConfig config = queue.getContext().ext(CacheSequenceContextKey.CACHE_STEP_SEQUENCE_CONFIG_KEY);
+        CacheStepSequenceConfig config = queue.getContext().getSequenceConfig();
+
         // 队列永不过期，直接返回
         if (!config.isQueueWillExpire()) {
             return false;

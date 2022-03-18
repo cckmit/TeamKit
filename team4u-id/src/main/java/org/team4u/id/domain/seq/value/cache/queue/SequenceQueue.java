@@ -3,8 +3,6 @@ package org.team4u.id.domain.seq.value.cache.queue;
 import cn.hutool.core.util.ObjectUtil;
 import lombok.Getter;
 import org.team4u.base.error.NestedException;
-import org.team4u.id.domain.seq.value.SequenceProvider;
-import org.team4u.id.domain.seq.value.StepSequenceProvider;
 
 import java.util.Objects;
 import java.util.concurrent.BlockingQueue;
@@ -35,7 +33,7 @@ public class SequenceQueue {
      * 上下文信息
      */
     @Getter
-    private final SequenceProvider.Context context;
+    private final SequenceQueueContext context;
     /**
      * 缓存队列
      * <p>
@@ -43,10 +41,9 @@ public class SequenceQueue {
      */
     private final BlockingQueue<Number> cache;
 
-    public SequenceQueue(SequenceProvider.Context context,
-                         StepSequenceProvider delegateProvider) {
+    public SequenceQueue(SequenceQueueContext context) {
         this.context = context;
-        this.cache = new LinkedBlockingQueue<>(delegateProvider.config().getStep());
+        this.cache = new LinkedBlockingQueue<>(context.getDelegateProvider().config().getStep());
         this.status = SequenceQueueStatus.CREATED;
 
     }

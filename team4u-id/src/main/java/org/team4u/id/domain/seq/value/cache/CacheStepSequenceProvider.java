@@ -3,6 +3,7 @@ package org.team4u.id.domain.seq.value.cache;
 import lombok.Getter;
 import org.team4u.id.domain.seq.value.SequenceProvider;
 import org.team4u.id.domain.seq.value.StepSequenceProvider;
+import org.team4u.id.domain.seq.value.cache.queue.SequenceQueueContext;
 import org.team4u.id.domain.seq.value.cache.queue.SequenceQueueHolder;
 
 import java.util.concurrent.TimeUnit;
@@ -49,9 +50,8 @@ public class CacheStepSequenceProvider implements SequenceProvider {
 
     @Override
     public Number provide(Context context) {
-        initContext(context);
         // 增加等待时间，避免消费过快，生产不足的情况
-        return sequenceQueueHolder.queueOf(context).poll(
+        return sequenceQueueHolder.queueOf(newHolderContext(context)).poll(
                 config.getNextTimeoutMillis(),
                 TimeUnit.MILLISECONDS
         );
@@ -59,13 +59,11 @@ public class CacheStepSequenceProvider implements SequenceProvider {
 
     @Override
     public boolean isEmpty(Context context) {
-        initContext(context);
-        return sequenceQueueHolder.queueOf(context).isExhausted();
+        return sequenceQueueHolder.queueOf(newHolderContext(context)).isExhausted();
     }
 
-    private void initContext(Context context) {
-        context.ext(CacheSequenceContextKey.STEP_SEQUENCE_PROVIDER_KEY, delegateProvider);
-        context.ext(CacheSequenceContextKey.CACHE_STEP_SEQUENCE_CONFIG_KEY, config);
+    private SequenceQueueContext newHolderContext(Context context) {
+        return new SequenceQueueContext(context, config, delegateProvider);
     }
 
     public CacheStepSequenceConfig config() {
