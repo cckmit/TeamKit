@@ -112,7 +112,7 @@ public class SequenceQueueProducer extends LongTimeThread {
 
     @Override
     protected Number runIntervalMillis() {
-        // 通过队列的offer进行阻塞，故无需设置循环间隔
+        // 通过putAndWait进行阻塞，故无需设置循环间隔
         return 0;
     }
 }

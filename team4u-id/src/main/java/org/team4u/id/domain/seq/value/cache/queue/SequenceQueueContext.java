@@ -22,4 +22,9 @@ public class SequenceQueueContext {
     public String id() {
         return providerContext.id();
     }
+
+    @Override
+    public String toString() {
+        return id();
+    }
 }
