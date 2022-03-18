@@ -188,7 +188,9 @@ public class CacheStepSequenceProviderTest {
     public void create() {
         BeanProviders.getInstance().registerBean(new SequenceProviderFactoryHolder());
 
-        CacheStepSequenceProvider p = (CacheStepSequenceProvider) new CacheStepSequenceProviderFactory().create(FileUtil.readUtf8String("cache_step_config.json"));
+        CacheStepSequenceProvider p = (CacheStepSequenceProvider) new CacheStepSequenceProviderFactory().create(
+                FileUtil.readUtf8String("cache_step_config.json")
+        );
 
         Assert.assertEquals(2, p.getDelegateProvider().config().getStep().intValue());
         Assert.assertEquals(1, p.provide(context()).intValue());
