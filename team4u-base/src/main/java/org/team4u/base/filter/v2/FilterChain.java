@@ -9,10 +9,7 @@ import lombok.Getter;
 import lombok.Singular;
 import org.team4u.base.bean.provider.BeanProviders;
 import org.team4u.base.filter.FilterInvoker;
-import org.team4u.base.log.LogMessage;
 import org.team4u.base.log.LogMessageContext;
-import org.team4u.base.log.LogMessages;
-import org.team4u.base.log.LogService;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -79,20 +76,11 @@ public class FilterChain<C, F extends Filter<C>> {
      * @param context 过滤上下文
      */
     public C doFilter(C context) {
-        LogMessage lm = LogMessages.create(config.getName(), "doFilter").append("context", context);
-
-        try {
+        return withInfoLog(log, "doFilter", () -> {
+            LogMessageContext.get().append("context", context);
             header.invoke(context);
-
-            if (log.isInfoEnabled()) {
-                log.info(lm.success().toString());
-            }
-
             return context;
-        } catch (Exception e) {
-            LogService.logForError(log, lm, e);
-            throw e;
-        }
+        });
     }
 
     @Data

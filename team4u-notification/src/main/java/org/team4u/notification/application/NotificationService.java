@@ -3,13 +3,15 @@ package org.team4u.notification.application;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 import org.team4u.base.error.RemoteCallException;
-import org.team4u.base.log.LogMessage;
-import org.team4u.base.log.LogService;
+import org.team4u.base.log.LogMessageContext;
 import org.team4u.base.registrar.PolicyRegistrar;
 import org.team4u.notification.domain.Notification;
 import org.team4u.notification.domain.NotificationSender;
 
 import java.util.List;
+import java.util.concurrent.Callable;
+
+import static org.team4u.base.log.LogService.withInfoLog;
 
 /**
  * 消息服务
@@ -37,19 +39,16 @@ public class NotificationService extends PolicyRegistrar<String, NotificationSen
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
     public void send(String type, Notification notification) throws RemoteCallException {
-        NotificationSender sender = availablePolicyOf(type);
+        withInfoLog(log, "send", (Callable<Void>) () -> {
+            NotificationSender sender = availablePolicyOf(type);
 
-        LogMessage lm = LogMessage.create(this.getClass().getSimpleName(), "send");
-        lm.append("notificationId", notification.getId())
-                .append("sender", sender.getClass().getSimpleName())
-                .append("type", type);
+            LogMessageContext.get()
+                    .append("notificationId", notification.getId())
+                    .append("sender", sender.getClass().getSimpleName())
+                    .append("type", type);
 
-        try {
             sender.send(notification);
-            log.info(lm.success().toString());
-        } catch (Exception e) {
-            LogService.logForError(log, lm, e);
-            throw e;
-        }
+            return null;
+        });
     }
 }

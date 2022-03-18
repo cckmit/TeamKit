@@ -31,7 +31,7 @@ public abstract class BeanFilterService<C> extends AbstractMessageSubscriber<App
     }
 
     @Override
-    protected void internalOnMessage(ApplicationInitializedEvent message) throws Throwable {
+    protected void internalOnMessage(ApplicationInitializedEvent message) throws Exception {
         simpleFilterService = new SimpleFilterService<>(filterClasses().stream()
                 .map(it -> (Filter<C>) BeanProviders.getInstance().getBean(it))
                 .collect(Collectors.toList()));

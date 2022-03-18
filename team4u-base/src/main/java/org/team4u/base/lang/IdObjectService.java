@@ -279,7 +279,7 @@ public abstract class IdObjectService<K, V extends IdObject<K>> {
     private class BeanInitializedEventSubscriber extends AbstractBeanInitializedEventSubscriber {
 
         @Override
-        protected void internalOnMessage(BeanInitializedEvent message) throws Throwable {
+        protected void internalOnMessage(BeanInitializedEvent message) throws Exception {
             saveIdObject(message.getBean());
         }
 

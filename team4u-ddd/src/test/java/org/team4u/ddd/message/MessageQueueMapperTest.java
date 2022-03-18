@@ -40,7 +40,7 @@ public class MessageQueueMapperTest {
         private A a;
 
         @Override
-        protected void internalOnMessage(A message) throws Throwable {
+        protected void internalOnMessage(A message) {
             this.a = message;
         }
 

@@ -36,7 +36,7 @@ public abstract class AbstractRetryableMethodTimedOutEventSubscriber extends Abs
     }
 
     @Override
-    protected void internalOnMessage(RetryableMethodTimedOutEvent event) throws Throwable {
+    protected void internalOnMessage(RetryableMethodTimedOutEvent event) throws Exception {
         RetryContextReader contextReader = new RetryContextReader(JSON.parseObject(event.getDescription()));
 
         TimeConstrainedProcessTracker tracker = trackerAppService.trackerOfProcessId(

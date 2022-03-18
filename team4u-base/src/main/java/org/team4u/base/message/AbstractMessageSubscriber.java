@@ -2,11 +2,12 @@ package org.team4u.base.message;
 
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
-import org.team4u.base.error.NestedException;
-import org.team4u.base.log.LogMessage;
-import org.team4u.base.log.LogService;
+import org.team4u.base.log.LogMessageContext;
 
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
+
+import static org.team4u.base.log.LogService.withInfoLog;
 
 /**
  * 抽象消息订阅者
@@ -53,24 +54,18 @@ public abstract class AbstractMessageSubscriber<M> implements MessageSubscriber<
     }
 
     protected void onMessageWithLog(M message) {
-        LogMessage lm = LogMessage.create(this.getClass().getSimpleName(), "onMessage")
-                .append("messageType", message.getClass().getSimpleName())
-                .append("message", message);
-
-        try {
+        withInfoLog(log, "onMessage", (Callable<Void>) () -> {
+            LogMessageContext.get().append("messageType", message.getClass().getSimpleName())
+                    .append("message", message);
             internalOnMessage(message);
-            log.info(lm.success().toString());
-        } catch (Throwable e) {
-            LogService.logForError(log, lm, e);
-            throw NestedException.wrap(e);
-        }
+            return null;
+        });
     }
 
     /**
      * 内部处理消息
      *
      * @param message 要处理的事件
-     * @throws Throwable 异常
      */
-    protected abstract void internalOnMessage(M message) throws Throwable;
+    protected abstract void internalOnMessage(M message) throws Exception;
 }
