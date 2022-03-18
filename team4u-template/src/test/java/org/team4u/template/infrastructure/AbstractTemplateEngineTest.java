@@ -3,12 +3,12 @@ package org.team4u.template.infrastructure;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.crypto.SecureUtil;
 import org.junit.Assert;
 import org.junit.Test;
 import org.team4u.template.TemplateEngine;
 import org.team4u.template.TemplateFunction;
 import org.team4u.template.TemplateFunctionService;
+import org.team4u.template.infrastructure.function.StringTemplateFunction;
 
 public abstract class AbstractTemplateEngineTest {
 
@@ -16,7 +16,7 @@ public abstract class AbstractTemplateEngineTest {
     public void render() {
         TemplateEngine engine = ReflectUtil.newInstance(
                 templateEngineClass(),
-                new TemplateFunctionService(CollUtil.newArrayList(new StringTemplateFunction()))
+                new TemplateFunctionService(CollUtil.newArrayList(function()))
         );
 
         Assert.assertEquals(
@@ -31,25 +31,7 @@ public abstract class AbstractTemplateEngineTest {
 
     protected abstract Class<? extends TemplateEngine> templateEngineClass();
 
-    public static class StringTemplateFunction implements TemplateFunction {
-
-        @Override
-        public String id() {
-            return "s";
-        }
-
-        /**
-         * 大写md5值
-         */
-        public static String md5u(String value) {
-            return SecureUtil.md5(value).toUpperCase();
-        }
-
-        /**
-         * 小写md5值
-         */
-        public static String md5l(String value) {
-            return md5u(value).toLowerCase();
-        }
+    protected TemplateFunction function() {
+        return new StringTemplateFunction();
     }
 }
