@@ -62,7 +62,7 @@ public class SequenceQueueCleaner extends LongTimeThread {
         }
 
         // 判断是否超出存活时间
-        return System.currentTimeMillis() - queue.getStatus().getOccurredOn() > config.getExpiredWhenQueueStartedMillis();
+        return System.currentTimeMillis() - queue.getCreatedAt() > config.getQueueExpiredMillis();
     }
 
     @Override

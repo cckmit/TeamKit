@@ -33,14 +33,14 @@ public class CacheStepSequenceConfig {
      */
     private int queueOfferTimeoutMillis = 60000;
     /**
-     * 序号队列开启多长时间失效（毫秒）,0则表示永不失效
+     * 队列失效时间（毫秒）,0则表示永不失效
      */
-    private int expiredWhenQueueStartedMillis = 0;
+    private int queueExpiredMillis = 0;
 
     /**
      * 序号队列是否会过期
      */
     public boolean isQueueWillExpire() {
-        return expiredWhenQueueStartedMillis > 0;
+        return queueExpiredMillis > 0;
     }
 }

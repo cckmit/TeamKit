@@ -17,6 +17,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @see SequenceQueueProducer
  */
+@Getter
 public class SequenceQueue {
     /**
      * 无可用序列时返回此值
@@ -25,14 +26,16 @@ public class SequenceQueue {
      */
     private static final Number NULL_SEQ = -1;
     /**
+     * 队列创建时间戳
+     */
+    private final long createdAt;
+    /**
      * 队列状态
      */
-    @Getter
     private SequenceQueueStatus status;
     /**
      * 上下文信息
      */
-    @Getter
     private final SequenceQueueContext context;
     /**
      * 缓存队列
@@ -45,6 +48,7 @@ public class SequenceQueue {
         this.context = context;
         this.cache = new LinkedBlockingQueue<>(context.getDelegateProvider().config().getStep());
         this.status = SequenceQueueStatus.CREATED;
+        this.createdAt = System.currentTimeMillis();
 
     }
 
