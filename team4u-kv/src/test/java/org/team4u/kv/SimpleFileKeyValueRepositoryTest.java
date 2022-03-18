@@ -2,7 +2,6 @@ package org.team4u.kv;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.thread.ThreadUtil;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,7 +12,6 @@ import org.team4u.kv.model.KeyValueId;
 public class SimpleFileKeyValueRepositoryTest extends KeyValueServiceTest {
 
     @Before
-    @After
     public void setUp() throws Exception {
         FileUtil.del("test_db.txt");
     }
