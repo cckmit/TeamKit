@@ -51,7 +51,7 @@ public class CacheStepSequenceProvider implements SequenceProvider {
     @Override
     public Number provide(Context context) {
         // 增加等待时间，避免消费过快，生产不足的情况
-        return sequenceQueueHolder.queueOf(newHolderContext(context)).poll(
+        return sequenceQueueHolder.queueOf(newQueueContext(context)).poll(
                 config.getNextTimeoutMillis(),
                 TimeUnit.MILLISECONDS
         );
@@ -59,10 +59,10 @@ public class CacheStepSequenceProvider implements SequenceProvider {
 
     @Override
     public boolean isEmpty(Context context) {
-        return sequenceQueueHolder.queueOf(newHolderContext(context)).isExhausted();
+        return sequenceQueueHolder.queueOf(newQueueContext(context)).isExhausted();
     }
 
-    private SequenceQueueContext newHolderContext(Context context) {
+    private SequenceQueueContext newQueueContext(Context context) {
         return new SequenceQueueContext(context, config, delegateProvider);
     }
 

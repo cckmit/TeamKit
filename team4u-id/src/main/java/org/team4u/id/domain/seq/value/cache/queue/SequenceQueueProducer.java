@@ -22,8 +22,7 @@ public class SequenceQueueProducer extends LongTimeThread {
     private final SequenceSegment segment;
     private final SequenceQueueContext context;
 
-    public SequenceQueueProducer(SequenceQueue queue,
-                                 SequenceQueueContext context) {
+    public SequenceQueueProducer(SequenceQueue queue, SequenceQueueContext context) {
         this.queue = queue;
         this.context = context;
         this.segment = new SequenceSegment(
@@ -82,7 +81,7 @@ public class SequenceQueueProducer extends LongTimeThread {
 
             try {
                 // 若队列中缓存序号已满，将阻塞，除非线程被关闭
-                offer(seq);
+                putAndWait(seq);
 
                 // 无可用序号，退出
                 if (seq == null) {
@@ -101,7 +100,8 @@ public class SequenceQueueProducer extends LongTimeThread {
         return true;
     }
 
-    private void offer(Number seq) throws InterruptedException {
+    private void putAndWait(Number seq) throws InterruptedException {
+        // 阻塞直到推送成功
         while (!queue.offer(seq, context.getSequenceConfig().getQueueOfferTimeoutMillis(), TimeUnit.MILLISECONDS)) {
             // 线程已被关闭，退出
             if (isClosed()) {

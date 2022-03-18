@@ -12,6 +12,8 @@ import org.team4u.id.domain.seq.value.SequenceProvider;
  * -负责缓存序号队列和其生产者
  * <p>
  * - 负责启动序号队列清理器
+ * <p>
+ * - 注意：当缓存配置发生变化时，需要等待下一个group周期才生效
  *
  * @author jay.wu
  * @see SequenceQueueCleaner
@@ -51,6 +53,7 @@ public class SequenceQueueHolder {
 
         SequenceQueueProducer producer = new SequenceQueueProducer(queue, context);
         producer.start();
+
         return new HolderValue(queue, producer);
     }
 

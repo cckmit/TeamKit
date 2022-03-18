@@ -55,7 +55,7 @@ public class SequenceQueueCleaner extends LongTimeThread {
                 log.info(lm.success().append("count", count).toString());
             }
         } catch (Exception e) {
-            log.info(lm.fail(e.getMessage()).toString());
+            log.error(e, lm.fail(e.getMessage()).toString());
         }
     }
 
