@@ -10,4 +10,9 @@ import org.team4u.base.registrar.factory.AbstractJsonCacheablePolicyFactory;
 public abstract class AbstractGroupKeyProviderFactory<C>
         extends AbstractJsonCacheablePolicyFactory<C, SequenceGroupKeyProvider>
         implements SequenceGroupKeyProvider.Factory {
+
+    @Override
+    protected boolean isAutoCreateConfigIfPossible() {
+        return true;
+    }
 }

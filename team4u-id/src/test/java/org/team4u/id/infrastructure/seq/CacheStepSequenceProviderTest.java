@@ -4,28 +4,36 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.RandomUtil;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.team4u.base.bean.provider.BeanProviders;
 import org.team4u.id.domain.seq.SequenceConfig;
 import org.team4u.id.domain.seq.value.InMemoryStepSequenceProvider;
 import org.team4u.id.domain.seq.value.SequenceProvider;
 import org.team4u.id.domain.seq.value.SequenceProviderFactoryHolder;
-import org.team4u.id.domain.seq.value.StepSequenceProvider;
-import org.team4u.id.domain.seq.value.cache.CacheStepSequenceConfig;
 import org.team4u.id.domain.seq.value.cache.CacheStepSequenceProvider;
 import org.team4u.id.domain.seq.value.cache.CacheStepSequenceProviderFactory;
+import org.team4u.id.domain.seq.value.cache.queue.SequenceQueueHolder;
+import org.team4u.id.domain.seq.value.cache.queue.SequenceQueueProducer;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Future;
-import java.util.stream.Collectors;
+
+import static org.team4u.TestUtil.cacheProvider;
+import static org.team4u.TestUtil.sequenceProviderContext;
 
 public class CacheStepSequenceProviderTest {
 
+    @Before
+    public void setUp() {
+        SequenceQueueHolder.getInstance().clear();
+    }
+
     @Test
     public void concurrent() {
-        CacheStepSequenceProvider provider = provider(1, 200);
+        CacheStepSequenceProvider provider = cacheProvider(1, 200);
         List<CacheStepSequenceProvider> providers = copy(provider, 2);
         providers.add(provider);
         List<Future<?>> result = new ArrayList<>();
@@ -44,7 +52,6 @@ public class CacheStepSequenceProviderTest {
             }
         });
 
-        System.out.println(seqList.stream().sorted().collect(Collectors.toList()));
         Assert.assertEquals(100, seqList.size());
         Assert.assertTrue(provider.getDelegateProvider().currentSequence(context()).intValue() >= 100);
     }
@@ -60,7 +67,7 @@ public class CacheStepSequenceProviderTest {
 
     @Test
     public void provide() {
-        CacheStepSequenceProvider p = provider(2, 100);
+        CacheStepSequenceProvider p = cacheProvider(2, 100);
         InMemoryStepSequenceProvider sequenceProvider = (InMemoryStepSequenceProvider) p.getDelegateProvider();
 
         SequenceProvider.Context context = context();
@@ -75,7 +82,7 @@ public class CacheStepSequenceProviderTest {
 
     @Test
     public void provide2() {
-        CacheStepSequenceProvider p = provider(2, 100);
+        CacheStepSequenceProvider p = cacheProvider(2, 100);
         p.config().setCacheStep(2L);
         InMemoryStepSequenceProvider sequenceProvider = (InMemoryStepSequenceProvider) p.getDelegateProvider();
 
@@ -91,7 +98,7 @@ public class CacheStepSequenceProviderTest {
 
     @Test
     public void maxValue() {
-        CacheStepSequenceProvider p = provider(1, 2);
+        CacheStepSequenceProvider p = cacheProvider(1, 2);
         SequenceProvider.Context context = context();
 
         // 不循环使用
@@ -103,7 +110,7 @@ public class CacheStepSequenceProviderTest {
 
     @Test
     public void maxValue2() {
-        CacheStepSequenceProvider p = provider(2, 3);
+        CacheStepSequenceProvider p = cacheProvider(2, 3);
         SequenceProvider.Context context = context();
 
         // 不循环使用
@@ -116,7 +123,7 @@ public class CacheStepSequenceProviderTest {
 
     @Test
     public void maxValueWithRecycle() {
-        CacheStepSequenceProvider p = provider(1, 2);
+        CacheStepSequenceProvider p = cacheProvider(1, 2);
         p.getDelegateProvider().config().setRecycleAfterMaxValue(true);
         SequenceProvider.Context context = context();
 
@@ -128,7 +135,7 @@ public class CacheStepSequenceProviderTest {
 
     @Test
     public void maxValueWithRecycle2() {
-        CacheStepSequenceProvider p = provider(2, 3);
+        CacheStepSequenceProvider p = cacheProvider(2, 3);
         p.getDelegateProvider().config().setRecycleAfterMaxValue(true);
         SequenceProvider.Context context = context();
 
@@ -141,7 +148,7 @@ public class CacheStepSequenceProviderTest {
 
     @Test
     public void maxValueWithRecycle3() {
-        CacheStepSequenceProvider p = provider(2, 3);
+        CacheStepSequenceProvider p = cacheProvider(2, 3);
         p.getDelegateProvider().config().setStart(2L);
         p.getDelegateProvider().config().setRecycleAfterMaxValue(true);
         SequenceProvider.Context context = context();
@@ -153,21 +160,24 @@ public class CacheStepSequenceProviderTest {
         Assert.assertFalse(p.isEmpty(context));
     }
 
-
     @Test
     public void clearExpiredCache() {
-        CacheStepSequenceProvider p = provider(1, 2);
-        p.config().setExpiredWhenQueueExhaustedMillis(1);
+        CacheStepSequenceProvider p = cacheProvider(1, 2);
+        p.config().setExpiredWhenQueueStartedMillis(1);
 
-        Assert.assertEquals(1L, p.provide(context()));
-        Assert.assertEquals(2L, p.provide(context()));
-        Assert.assertNull(p.provide(context()));
-        Assert.assertTrue(p.isEmpty(context()));
+        Assert.assertEquals(1L, p.provide(sequenceProviderContext()));
+        SequenceQueueProducer producer = p.getSequenceQueueHolder().producerOf(sequenceProviderContext());
+        Assert.assertEquals(2L, p.provide(sequenceProviderContext()));
+        Assert.assertNull(p.provide(sequenceProviderContext()));
+        Assert.assertTrue(p.isEmpty(sequenceProviderContext()));
 
         ThreadUtil.sleep(10);
 
-        Assert.assertEquals(1, p.getQueueCleaner().clear());
-        Assert.assertEquals(0, p.getQueueCleaner().clear());
+        Assert.assertEquals(1, p.getSequenceQueueHolder().getQueueCleaner().clear());
+        Assert.assertEquals(0, p.getSequenceQueueHolder().getQueueCleaner().clear());
+
+        Assert.assertTrue(producer.isClosed());
+        Assert.assertFalse(producer.isAlive());
     }
 
     @Test
@@ -178,17 +188,6 @@ public class CacheStepSequenceProviderTest {
 
         Assert.assertEquals(2, p.getDelegateProvider().config().getStep().intValue());
         Assert.assertEquals(1, p.provide(context()).intValue());
-    }
-
-    private CacheStepSequenceProvider provider(int step, int maxValue) {
-        CacheStepSequenceConfig config = new CacheStepSequenceConfig();
-
-        StepSequenceProvider.Config delegateConfig = new StepSequenceProvider.Config();
-        delegateConfig.setStep(step);
-        delegateConfig.setMaxValue((long) maxValue);
-        InMemoryStepSequenceProvider sequenceProvider = new InMemoryStepSequenceProvider(delegateConfig);
-
-        return new CacheStepSequenceProvider(config, sequenceProvider);
     }
 
     private SequenceProvider.Context context() {

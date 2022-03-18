@@ -3,8 +3,8 @@ package org.team4u.id.domain.seq.value.cache.queue;
 import cn.hutool.log.Log;
 import org.team4u.base.lang.LongTimeThread;
 import org.team4u.base.log.LogMessage;
-import org.team4u.id.domain.seq.value.StepSequenceProvider;
-import org.team4u.id.domain.seq.value.cache.CacheStepSequenceConfig;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * 序号队列生产者
@@ -19,18 +19,18 @@ public class SequenceQueueProducer extends LongTimeThread {
     private final Log log = Log.get();
 
     private final SequenceQueue queue;
-
     private final SequenceSegment segment;
+    private final SequenceQueueContext context;
 
-    private final StepSequenceProvider delegateProvider;
-
-    public SequenceQueueProducer(SequenceQueue queue,
-                                 CacheStepSequenceConfig sequenceConfig,
-                                 StepSequenceProvider delegateProvider) {
+    public SequenceQueueProducer(SequenceQueue queue, SequenceQueueContext context) {
         this.queue = queue;
-        this.segment = new SequenceSegment(sequenceConfig, delegateProvider.config());
-        this.delegateProvider = delegateProvider;
+        this.context = context;
+        this.segment = new SequenceSegment(
+                context.getSequenceConfig(),
+                context.getDelegateProvider().config()
+        );
 
+        setName(queue.getContext().id());
         // 创建时即进行预热，避免线程未完全启动，导致客户端无法获取序号的情况
         onRun();
     }
@@ -57,7 +57,7 @@ public class SequenceQueueProducer extends LongTimeThread {
         LogMessage lm = LogMessage.create(this.getClass().getSimpleName(), "refreshSegment");
 
         // 从代理序号提供者获取下一个批次的号段
-        Number seq = delegateProvider.provide(queue.getContext());
+        Number seq = context.getDelegateProvider().provide(context.getProviderContext());
         // 更新号段
         segment.refreshSegment(seq);
 
@@ -80,14 +80,15 @@ public class SequenceQueueProducer extends LongTimeThread {
             Number seq = segment.next();
 
             try {
-                // 若队列中缓存序号已满，将阻塞线程
-                queue.put(seq);
+                // 若队列中缓存序号已满，将阻塞，除非线程被关闭
+                putAndWait(seq);
 
+                // 无可用序号，退出
                 if (seq == null) {
                     return false;
                 }
             } catch (InterruptedException e) {
-                log.error(e, LogMessage.create(this.getClass().getSimpleName(), "offerAllCurrentSegmentSequences")
+                log.info(LogMessage.create(this.getClass().getSimpleName(), "offerAllCurrentSegmentSequences")
                         .fail(e.getMessage())
                         .append("segment", segment)
                         .toString()
@@ -99,9 +100,19 @@ public class SequenceQueueProducer extends LongTimeThread {
         return true;
     }
 
+    private void putAndWait(Number seq) throws InterruptedException {
+        // 阻塞直到推送成功
+        while (!queue.offer(seq, context.getSequenceConfig().getQueueOfferTimeoutMillis(), TimeUnit.MILLISECONDS)) {
+            // 线程已被关闭，退出
+            if (isClosed()) {
+                throw new InterruptedException("Thread is closed");
+            }
+        }
+    }
+
     @Override
     protected Number runIntervalMillis() {
-        // 通过队列的put进行阻塞，故无需设置循环间隔
+        // 通过putAndWait进行阻塞，故无需设置循环间隔
         return 0;
     }
 }

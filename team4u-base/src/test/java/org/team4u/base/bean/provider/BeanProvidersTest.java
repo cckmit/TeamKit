@@ -1,5 +1,6 @@
 package org.team4u.base.bean.provider;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,6 +15,7 @@ public class BeanProvidersTest {
     private final MockBeanProvider mockBeanProvider = new MockBeanProvider();
 
     @Before
+    @After
     public void setUp() {
         providers = new BeanProviders();
         providers.registerPolicy(mockBeanProvider);
@@ -31,6 +33,16 @@ public class BeanProvidersTest {
                 .map(it -> it.getKey() + "=" + it.getValue())
                 .collect(Collectors.toList());
         Assert.assertEquals("[test=test2, test1=test1]", result.toString());
+    }
+
+    @Test
+    public void getBeanWithFilter() {
+        providers.registerBean(TestUtil.TEST, TestUtil.TEST1);
+        providers.availablePolicyOf(LocalBeanProvider.ID).registerBean(TestUtil.TEST, TestUtil.TEST);
+
+        Assert.assertEquals(TestUtil.TEST1, providers.getBean(TestUtil.TEST.getClass(), TestUtil.TEST));
+        Assert.assertEquals(TestUtil.TEST1, providers.getBean(TestUtil.TEST.getClass(), "tes.+"));
+        Assert.assertEquals(TestUtil.TEST1, providers.getBean(TestUtil.TEST.getClass(), ""));
     }
 
     @Test

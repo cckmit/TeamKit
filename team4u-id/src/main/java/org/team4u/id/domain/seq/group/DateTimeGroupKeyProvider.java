@@ -1,7 +1,6 @@
 package org.team4u.id.domain.seq.group;
 
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.ObjectUtil;
 import lombok.Data;
 import lombok.Getter;
 
@@ -47,7 +46,7 @@ public class DateTimeGroupKeyProvider implements SequenceGroupKeyProvider {
 
         @Override
         protected SequenceGroupKeyProvider createWithConfig(Config config) {
-            return new DateTimeGroupKeyProvider(ObjectUtil.defaultIfNull(config, new Config()));
+            return new DateTimeGroupKeyProvider(config);
         }
     }
 }

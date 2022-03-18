@@ -1,12 +1,14 @@
 package org.team4u.id.infrastructure.seq.value.jdbc;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.RandomUtil;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.test.context.ContextConfiguration;
 import org.team4u.id.domain.seq.value.AbstractStepSequenceProviderTest;
+import org.team4u.id.domain.seq.value.SequenceProvider;
 import org.team4u.id.domain.seq.value.StepSequenceProvider;
 import org.team4u.test.spring.DbTestBeanConfig;
 import org.team4u.test.spring.SpringDbTest;
@@ -27,6 +29,16 @@ public class JdbcStepSequenceProviderTest extends SpringDbTest {
             BeanUtil.copyProperties(config, c);
             return new JdbcStepSequenceProvider(c, jdbcTemplate().getDataSource());
         }
+    }
+
+    @Test
+    public void create() {
+        SequenceProvider provider = new JdbcStepSequenceProvider.Factory().create(
+                FileUtil.readUtf8String("jdbc_step_config.json")
+        );
+        Assert.assertEquals(1, provider.provide(x.context()).intValue());
+        Assert.assertEquals(2, provider.provide(x.context()).intValue());
+        Assert.assertNull(provider.provide(x.context()));
     }
 
     @Test

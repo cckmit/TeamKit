@@ -3,8 +3,6 @@ package org.team4u.id.domain.seq.value.cache;
 import lombok.Data;
 import org.team4u.id.domain.seq.value.StepSequenceProvider;
 
-import java.util.concurrent.TimeUnit;
-
 /**
  * 缓存号段序号配置
  *
@@ -31,25 +29,18 @@ public class CacheStepSequenceConfig {
      */
     private int nextTimeoutMillis = 20;
     /**
-     * 序号队列关闭后多长时间失效（毫秒）,0则表示永不失效
+     * 队列生产阻塞超时时间（毫秒）
      */
-    private int expiredWhenQueueExhaustedMillis = (int) TimeUnit.HOURS.toMillis(25);
+    private int queueOfferTimeoutMillis = 60000;
     /**
-     * 序号队列清理器运行间隔（毫秒），0则表示不运行
+     * 序号队列开启多长时间失效（毫秒）,0则表示永不失效
      */
-    private int queueCleanerRunIntervalMillis = (int) TimeUnit.MINUTES.toMillis(1);
+    private int expiredWhenQueueStartedMillis = 0;
 
     /**
-     * 是否启动清理器
+     * 序号队列是否会过期
      */
-    public boolean shouldStartClearWorker() {
-        return queueCleanerRunIntervalMillis > 0;
-    }
-
-    /**
-     * 是否需要在序号队列耗尽后设置过期
-     */
-    public boolean shouldExpiredWhenQueueExhausted() {
-        return expiredWhenQueueExhaustedMillis > 0;
+    public boolean isQueueWillExpire() {
+        return expiredWhenQueueStartedMillis > 0;
     }
 }
