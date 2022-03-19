@@ -16,8 +16,11 @@ import java.util.Optional;
 
 /**
  * 默认配置项转换器
+ * <p>
+ * 配合CacheableSimpleConfigRepository可实现动态下发配置后实时生效
  *
  * @author jay.wu
+ * @see org.team4u.config.domain.repository.CacheableSimpleConfigRepository
  */
 @Getter
 public class DefaultConfigConverter implements SimpleConfigConverter {
@@ -57,7 +60,7 @@ public class DefaultConfigConverter implements SimpleConfigConverter {
         }
 
         public <T> T trace(Class<T> toType, String configType, T configBean) {
-            if(refreshers.containsKey(configType)){
+            if (refreshers.containsKey(configType)) {
                 return configBean;
             }
 

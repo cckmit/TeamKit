@@ -29,6 +29,7 @@ public class SimpleConfigAppService {
      * @param configType 配置项类型或配置项前缀
      * @param <T>        目标配置类型
      * @return 目标配置类
+     * @see org.team4u.config.domain.repository.CacheableSimpleConfigRepository
      */
     public <T> T to(Class<T> toType, String configType) {
         return simpleConfigConverter.to(toType, configType);
