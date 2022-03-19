@@ -33,7 +33,7 @@
         <beetl.version>3.9.3.RELEASE</beetl.version>
         <jetbrick.version>2.1.10</jetbrick.version>
         <fastjson.version>1.2.76</fastjson.version>
-        <byte-buddy.version>1.11.8</byte-buddy.version>
+        <byte-buddy.version>1.12.8</byte-buddy.version>
         <camel.version>3.11.0</camel.version>
         <testable.version>0.7.0</testable.version>
         <liteflow.version>2.5.10</liteflow.version>
