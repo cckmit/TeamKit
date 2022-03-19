@@ -7,6 +7,11 @@ import org.team4u.config.domain.SimpleConfigComparator;
 import org.team4u.config.domain.SimpleConfigRepository;
 import org.team4u.config.domain.SimpleConfigs;
 
+/**
+ * 可缓存的配置项资源库
+ *
+ * @author jay.wu
+ */
 public class CacheableSimpleConfigRepository implements SimpleConfigRepository {
 
     @Getter
@@ -15,7 +20,7 @@ public class CacheableSimpleConfigRepository implements SimpleConfigRepository {
     private final SimpleConfigComparator simpleConfigComparator;
     private final SimpleConfigRepository delegateConfigRepository;
 
-    private final LazyRefreshSupplier<SimpleConfigs> configSupplier;
+    private final LazyRefreshSupplier<SimpleConfigs> configsSupplier;
 
 
     public CacheableSimpleConfigRepository(Config config, SimpleConfigRepository delegateConfigRepository) {
@@ -23,7 +28,11 @@ public class CacheableSimpleConfigRepository implements SimpleConfigRepository {
         this.delegateConfigRepository = delegateConfigRepository;
         this.simpleConfigComparator = new SimpleConfigComparator();
 
-        configSupplier = LazyRefreshSupplier.of(
+        this.configsSupplier = buildConfigsSupplier();
+    }
+
+    private LazyRefreshSupplier<SimpleConfigs> buildConfigsSupplier() {
+        return LazyRefreshSupplier.of(
                 LazyRefreshSupplier.Config.builder()
                         .name(getClass().getSimpleName() + "|configSupplier")
                         .refreshIntervalMillis(config.getMaxEffectiveSec() * 1000L)
@@ -34,12 +43,12 @@ public class CacheableSimpleConfigRepository implements SimpleConfigRepository {
 
     @Override
     public SimpleConfigs allConfigs() {
-        return configSupplier.get();
+        return configsSupplier.get();
     }
 
     private SimpleConfigs loadAndCompare() {
         SimpleConfigs newConfigs = delegateConfigRepository.allConfigs();
-        SimpleConfigs oldConfigs = ObjectUtil.defaultIfNull(configSupplier.value(), SimpleConfigs.EMPTY);
+        SimpleConfigs oldConfigs = ObjectUtil.defaultIfNull(configsSupplier.value(), SimpleConfigs.EMPTY);
 
         simpleConfigComparator.compare(oldConfigs.getValue(), newConfigs.getValue());
 

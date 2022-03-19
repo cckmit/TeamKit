@@ -32,10 +32,10 @@ public abstract class SpringDbTest {
     private JdbcTemplate jdbcTemplate;
 
     @Before
-    public void initDdl() {
+    public void initDdl() throws Exception {
         for (String ddlPath : ddlResourcePaths()) {
             String ddl = FileUtil.readUtf8String(ddlPath);
-            jdbcTemplate().execute(ddl);
+            executeXDdl(ddl);
         }
     }
 
@@ -43,5 +43,9 @@ public abstract class SpringDbTest {
 
     public JdbcTemplate jdbcTemplate() {
         return jdbcTemplate;
+    }
+
+    protected void executeXDdl(String ddl) throws  Exception {
+        jdbcTemplate().execute(ddl);
     }
 }

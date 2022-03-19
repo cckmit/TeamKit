@@ -9,6 +9,11 @@ import org.team4u.config.domain.SimpleConfigs;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * 基于Map的配置项资源库
+ *
+ * @author jay.wu
+ */
 public class MapSimpleConfigRepository implements SimpleConfigRepository {
 
     private final Map<?, ?> source;

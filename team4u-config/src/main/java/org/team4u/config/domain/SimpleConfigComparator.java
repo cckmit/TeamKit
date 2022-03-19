@@ -5,6 +5,11 @@ import org.team4u.ddd.domain.model.DomainEventPublisher;
 
 import java.util.List;
 
+/**
+ * 配置项比对器
+ *
+ * @author jay.wu
+ */
 public class SimpleConfigComparator {
 
     public void compare(List<SimpleConfig> oldConfigs, List<SimpleConfig> newConfigs) {

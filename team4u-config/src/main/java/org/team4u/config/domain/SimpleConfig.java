@@ -8,6 +8,11 @@ import org.team4u.ddd.domain.model.AggregateRoot;
 import java.util.Date;
 import java.util.Objects;
 
+/**
+ * 配置项
+ *
+ * @author jay.wu
+ */
 @Data
 public class SimpleConfig extends AggregateRoot {
 

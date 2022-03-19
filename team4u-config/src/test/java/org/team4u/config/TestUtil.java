@@ -1,5 +1,7 @@
 package org.team4u.config;
 
+import cn.hutool.core.date.DateUtil;
+import org.junit.Assert;
 import org.team4u.config.domain.SimpleConfig;
 import org.team4u.config.domain.SimpleConfigId;
 
@@ -25,5 +27,22 @@ public class TestUtil {
                 null,
                 null
         );
+    }
+
+    public static void checkConfigByDb(SimpleConfig config) {
+        Assert.assertEquals(1, config.getSequenceNo());
+        Assert.assertTrue(config.getEnabled());
+        Assert.assertEquals(TestUtil.TEST_ID, config.getConfigId().getConfigKey());
+        Assert.assertEquals(TestUtil.TEST_ID, config.getConfigId().getConfigType());
+        Assert.assertEquals(TestUtil.TEST_ID, config.getConfigValue());
+        Assert.assertEquals(TestUtil.TEST_ID, config.getCreatedBy());
+        Assert.assertEquals(TestUtil.TEST_ID, config.getUpdatedBy());
+        Assert.assertEquals(TestUtil.TEST_ID, config.getDescription());
+        Assert.assertEquals("2020-08-21 00:00:00", DateUtil.formatDateTime(config.getCreateTime()));
+        Assert.assertEquals("2020-08-21 00:00:00", DateUtil.formatDateTime(config.getUpdateTime()));
+    }
+
+    public static String[] ddlResourcePaths() {
+        return new String[]{"sql/system_config.sql", "sql/system_config_data.sql"};
     }
 }
