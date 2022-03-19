@@ -9,11 +9,11 @@ import org.team4u.id.domain.seq.value.cache.queue.SequenceQueueHolder;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 基于缓存的趋势增长序列服务
+ * 基于缓存的趋势增长序号服务
  * <p>
  * 主要职责：
  * <p>
- * - 负责维护不同类型的序号队列，确保不同类型的队列不会相互干扰
+ * - 同一个JVM中，多个缓存序号服务将共享相同Context标识队列
  * <p>
  * - 序号队列生产者从代理序号提供者中获取一个范围号段，计算出序号并推送到队列；当号段耗尽时，再从代理提供者重新获取号段，如此往复
  * <p>
@@ -23,6 +23,7 @@ import java.util.concurrent.TimeUnit;
  * 同时配置CacheStepSequenceConfig.queueExpiredMillis
  *
  * @author jay.wu
+ * @see SequenceQueueHolder
  * @see CacheStepSequenceConfig
  */
 public class CacheStepSequenceProvider implements SequenceProvider {

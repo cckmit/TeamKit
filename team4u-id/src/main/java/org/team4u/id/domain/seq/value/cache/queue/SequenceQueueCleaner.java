@@ -43,14 +43,19 @@ public class SequenceQueueCleaner extends LongTimeThread {
         });
     }
 
-    private SequenceQueueContext close(SequenceQueueHolder.HolderValue it) {
-        if (!isExpired(it.getQueue())) {
+    /**
+     * 关闭队列生产者
+     *
+     * @return 返回关闭队列的上下文
+     */
+    private SequenceQueueContext close(SequenceQueueHolder.HolderValue holderValue) {
+        if (!isExpired(holderValue.getQueue())) {
             return null;
         }
 
         // 关闭队列生产者
-        IoUtil.close(it.getProducer());
-        return it.getQueue().getContext();
+        IoUtil.close(holderValue.getProducer());
+        return holderValue.getQueue().getContext();
     }
 
     private boolean isExpired(SequenceQueue queue) {

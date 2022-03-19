@@ -33,7 +33,11 @@ public class CacheStepSequenceConfig {
      */
     private int queueOfferTimeoutMillis = 60000;
     /**
-     * 队列失效时间（毫秒）,0则表示永不失效
+     * 队列失效时间（毫秒）
+     * <p>
+     * - 0则表示永不失效
+     * <p>
+     * - 建议与group周期一致
      */
     private int queueExpiredMillis = 0;
 

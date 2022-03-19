@@ -1,7 +1,5 @@
 package org.team4u.id.domain.seq.value;
 
-import org.team4u.base.lang.lazy.LazyFunction;
-
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -12,28 +10,21 @@ import java.util.concurrent.atomic.AtomicLong;
 public class InMemoryStepSequenceProvider extends AutoIncrementStepSequenceProvider {
 
     private final Config config;
-    private final LazyFunction<String, AtomicLong> lazyCounters;
+    private final AtomicLong counter;
 
     public InMemoryStepSequenceProvider(Config config) {
         this.config = config;
-        lazyCounters = LazyFunction.of(
-                LazyFunction.Config.builder().name(getClass().getSimpleName() + "|lazyCounters").build(),
-                it -> new AtomicLong(0)
-        );
-    }
-
-    private AtomicLong counterOf(Context context) {
-        return lazyCounters.apply(context.getGroupKey());
+        this.counter = new AtomicLong(0);
     }
 
     @Override
     public Number currentSequence(Context context) {
-        return counterOf(context).get();
+        return counter.get();
     }
 
     @Override
     protected Number addAndGet(Context context) {
-        return counterOf(context).addAndGet(config.getStep());
+        return counter.addAndGet(config.getStep());
     }
 
     @Override
