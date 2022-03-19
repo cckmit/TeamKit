@@ -1,11 +1,10 @@
 package org.team4u.config.domain.converter;
 
-import cn.hutool.core.util.ReflectUtil;
 import lombok.Getter;
 import org.team4u.config.domain.SimpleConfigConverter;
 import org.team4u.config.domain.SimpleConfigRepository;
 import org.team4u.config.domain.SimpleConfigs;
-import org.team4u.config.domain.event.AbstractConfigChangedEvent;
+import org.team4u.config.domain.event.ConfigAllChangedEvent;
 import org.team4u.ddd.domain.model.DomainEventPublisher;
 import org.team4u.ddd.message.AbstractMessageConsumer;
 
@@ -13,6 +12,7 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * 默认配置项转换器
@@ -37,7 +37,7 @@ public class DefaultConfigConverter implements SimpleConfigConverter {
 
     @Override
     public <T> T to(Class<T> toType, String configType) {
-        T configBean = ReflectUtil.newInstanceIfPossible(toType);
+        T configBean = configTypeBeanConverter.convert(allConfigs(), configType, toType);
         return configBeanTracker.trace(toType, configType, configBean);
     }
 
@@ -51,7 +51,7 @@ public class DefaultConfigConverter implements SimpleConfigConverter {
         return simpleConfigRepository.allConfigs();
     }
 
-    public class ConfigBeanTracker extends AbstractMessageConsumer<AbstractConfigChangedEvent<?>> {
+    public class ConfigBeanTracker extends AbstractMessageConsumer<ConfigAllChangedEvent> {
 
         private final Map<String, ConfigBeanRefresher> refreshers = new HashMap<>();
 
@@ -61,21 +61,24 @@ public class DefaultConfigConverter implements SimpleConfigConverter {
 
         public <T> T trace(Class<T> toType, String configType, T configBean) {
             if (refreshers.containsKey(configType)) {
-                return configBean;
+                return refreshers.get(configType).getConfigBean();
             }
 
-            ConfigBeanRefresher configBeanRefresher = new ConfigBeanRefresher(configType, toType);
-            configBeanRefresher.setConfigBean(configBean);
+            ConfigBeanRefresher configBeanRefresher = new ConfigBeanRefresher(configType, toType, configBean);
             refreshers.put(configType, configBeanRefresher);
-
-            configBeanRefresher.refresh(allConfigs());
             return configBean;
         }
 
         @Override
-        protected void internalOnMessage(AbstractConfigChangedEvent<?> message) {
-            Optional.ofNullable(refreshers.get(message.getConfigId().getConfigType()))
-                    .ifPresent(it -> it.refresh(allConfigs()));
+        protected void internalOnMessage(ConfigAllChangedEvent event) {
+            event.getChangedEvents()
+                    .stream()
+                    .map(it -> it.getConfigId().getConfigType())
+                    .collect(Collectors.toSet())
+                    .forEach(configType ->
+                            Optional.ofNullable(refreshers.get(configType))
+                                    .ifPresent(it -> it.refresh(allConfigs()))
+                    );
         }
     }
 }

@@ -3,7 +3,6 @@ package org.team4u.config.domain.converter;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.log.Log;
 import lombok.Getter;
-import lombok.Setter;
 import org.team4u.base.log.LogMessage;
 import org.team4u.base.log.LogMessageContext;
 import org.team4u.config.domain.SimpleConfigs;
@@ -18,9 +17,7 @@ import static org.team4u.base.log.LogService.withInfoLog;
 public class ConfigBeanRefresher {
 
     private final Log log = Log.get();
-    @Setter
-    @Getter
-    private Object configBean;
+    private final Object configBean;
     @Getter
     private final String configType;
     @Getter
@@ -29,9 +26,10 @@ public class ConfigBeanRefresher {
     private SimpleConfigs currentConfigs = new SimpleConfigs();
     private final ConfigTypeBeanConverter beanConverter = new ConfigTypeBeanConverter();
 
-    public ConfigBeanRefresher(String configType, Class<?> targetType) {
+    public ConfigBeanRefresher(String configType, Class<?> targetType, Object configBean) {
         this.configType = configType;
         this.targetType = targetType;
+        this.configBean = configBean;
     }
 
     /**
@@ -46,14 +44,14 @@ public class ConfigBeanRefresher {
      *
      * @param latestAllConfigs 最新的配置项
      */
-    public synchronized void refresh(SimpleConfigs latestAllConfigs) {
-        withInfoLog(log, "refresh", () -> {
+    public synchronized <T> T refresh(SimpleConfigs latestAllConfigs) {
+        return withInfoLog(log, "refresh", () -> {
             LogMessage lm = LogMessageContext.get().append("configType", configType);
 
             SimpleConfigs latestConfigs = configsOfType(latestAllConfigs);
             if (isNotNeedToRefresh(latestConfigs)) {
                 lm.append("refreshed", false);
-                return false;
+                return getConfigBean();
             }
 
             // 刷新当前配置对象
@@ -62,8 +60,13 @@ public class ConfigBeanRefresher {
             refreshConfigs(latestConfigs);
 
             lm.append("refreshed", true);
-            return null;
+            return getConfigBean();
         });
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T getConfigBean() {
+        return (T) configBean;
     }
 
     private SimpleConfigs configsOfType(SimpleConfigs configs) {
