@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
  * - 当客户端需获取序号时，直接从队列中获取序号
  * <p>
  * - 注意：为了提升性能，一个序号类型将启用一个线程进行异步处理，需要控制线程（类型）数量，
- * 同时配置CacheStepSequenceConfig.expiredWhenQueueStartedMillis
+ * 同时配置CacheStepSequenceConfig.queueExpiredMillis
  *
  * @author jay.wu
  * @see CacheStepSequenceConfig

@@ -31,11 +31,6 @@ public class WhitelistSelector implements Selector {
         mapSelector = new MapSelector(new MapSelector.Config(config.getRules()));
     }
 
-    /**
-     * 选择
-     *
-     * @return 若命中则返回常量MATCH，否则为NONE
-     */
     @Override
     public SelectorResult select(SelectorBinding binding) {
         Map.Entry<String, Object> value = value(binding);

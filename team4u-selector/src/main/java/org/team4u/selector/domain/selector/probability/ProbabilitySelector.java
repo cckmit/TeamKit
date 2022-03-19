@@ -34,11 +34,6 @@ public class ProbabilitySelector implements Selector {
         ));
     }
 
-    /**
-     * 选择
-     *
-     * @return 若命中则返回常量MATCH，否则为常量NONE
-     */
     @Override
     public SelectorResult select(SelectorBinding binding) {
         String key = Convert.toStr(keyOf(binding));
