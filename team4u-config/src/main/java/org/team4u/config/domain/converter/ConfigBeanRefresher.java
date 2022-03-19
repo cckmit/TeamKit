@@ -44,14 +44,14 @@ public class ConfigBeanRefresher {
      *
      * @param latestAllConfigs 最新的配置项
      */
-    public synchronized <T> T refresh(SimpleConfigs latestAllConfigs) {
-        return withInfoLog(log, "refresh", () -> {
+    public synchronized void refresh(SimpleConfigs latestAllConfigs) {
+        withInfoLog(log, "refresh", () -> {
             LogMessage lm = LogMessageContext.get().append("configType", configType);
 
             SimpleConfigs latestConfigs = configsOfType(latestAllConfigs);
             if (isNotNeedToRefresh(latestConfigs)) {
                 lm.append("refreshed", false);
-                return getConfigBean();
+                return false;
             }
 
             // 刷新当前配置对象
@@ -60,7 +60,7 @@ public class ConfigBeanRefresher {
             refreshConfigs(latestConfigs);
 
             lm.append("refreshed", true);
-            return getConfigBean();
+            return true;
         });
     }
 

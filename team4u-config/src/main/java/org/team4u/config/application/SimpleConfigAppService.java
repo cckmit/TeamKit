@@ -1,9 +1,7 @@
 package org.team4u.config.application;
 
 import org.team4u.config.domain.SimpleConfigConverter;
-import org.team4u.config.domain.SimpleConfigRepository;
 import org.team4u.config.domain.SimpleConfigs;
-import org.team4u.config.domain.converter.DefaultConfigConverter;
 
 import java.lang.reflect.Type;
 
@@ -16,20 +14,17 @@ public class SimpleConfigAppService {
 
     private final SimpleConfigConverter simpleConfigConverter;
 
-    public SimpleConfigAppService(SimpleConfigRepository simpleConfigRepository) {
-        this.simpleConfigConverter = new DefaultConfigConverter(simpleConfigRepository);
+    public SimpleConfigAppService(SimpleConfigConverter simpleConfigConverter) {
+        this.simpleConfigConverter = simpleConfigConverter;
     }
 
     /**
      * 将多个配置项转换为指定的配置类
-     * <p>
-     * 支持动态下发配置后实时生效
      *
      * @param toType     目标配置类型
      * @param configType 配置项类型或配置项前缀
      * @param <T>        目标配置类型
      * @return 目标配置类
-     * @see org.team4u.config.domain.repository.CacheableSimpleConfigRepository
      */
     public <T> T to(Class<T> toType, String configType) {
         return simpleConfigConverter.to(toType, configType);

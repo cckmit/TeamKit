@@ -4,12 +4,13 @@ import lombok.Data;
 import org.junit.Assert;
 import org.junit.Test;
 import org.team4u.config.application.SimpleConfigAppService;
+import org.team4u.config.domain.converter.DefaultConfigConverter;
 import org.team4u.config.domain.repository.PropSimpleConfigRepository;
 
 public class SimpleConfigServiceTest {
 
     private final SimpleConfigAppService simpleConfigAppService = new SimpleConfigAppService(
-            new PropSimpleConfigRepository("test.properties")
+            new DefaultConfigConverter(new PropSimpleConfigRepository("test.properties"))
     );
 
     @Test
