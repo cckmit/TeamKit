@@ -1,12 +1,13 @@
-package org.team4u.config.infrastructure.converter.simple;
+package org.team4u.config.domain.converter;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.log.Log;
 import lombok.Getter;
 import org.team4u.base.log.LogMessage;
+import org.team4u.base.log.LogMessageContext;
 import org.team4u.config.domain.SimpleConfigs;
 
-import java.util.function.Supplier;
+import static org.team4u.base.log.LogService.withInfoLog;
 
 /**
  * 配置对象更新器
@@ -23,7 +24,7 @@ public class ConfigBeanRefresher {
     private final Class<?> targetType;
 
     private SimpleConfigs currentConfigs = new SimpleConfigs();
-    private final ConfigBeanConverter beanConverter = new ConfigBeanConverter();
+    private final ConfigTypeBeanConverter beanConverter = new ConfigTypeBeanConverter();
 
     public ConfigBeanRefresher(String configType, Class<?> targetType) {
         this.configType = configType;
@@ -44,10 +45,12 @@ public class ConfigBeanRefresher {
      * @param configBean       配置对象
      */
     public synchronized void refresh(SimpleConfigs latestAllConfigs, Object configBean) {
-        withLog(() -> {
-            SimpleConfigs latestConfigs = configsOfType(latestAllConfigs);
+        withInfoLog(log, "refresh", () -> {
+            LogMessage lm = LogMessageContext.get().append("configType", configType);
 
+            SimpleConfigs latestConfigs = configsOfType(latestAllConfigs);
             if (isNotNeedToRefresh(latestConfigs)) {
+                lm.append("refreshed", false);
                 return false;
             }
 
@@ -55,21 +58,10 @@ public class ConfigBeanRefresher {
             refreshInstance(latestConfigs, configBean);
             // 刷新当前配置项
             refreshConfigs(latestConfigs);
-            return true;
+
+            lm.append("refreshed", true);
+            return null;
         });
-    }
-
-    private void withLog(Supplier<Boolean> refreshWorker) {
-        LogMessage lm = LogMessage.create(targetType.getName(), "refresh")
-                .append("configType", configType);
-        try {
-            boolean refreshed = refreshWorker.get();
-
-            log.info(lm.success().append("refreshed", refreshed).toString());
-        } catch (RuntimeException e) {
-            log.error(e, lm.fail(e.getMessage()).toString());
-            throw e;
-        }
     }
 
     private SimpleConfigs configsOfType(SimpleConfigs configs) {

@@ -1,4 +1,4 @@
-package org.team4u.config.infrastructure.converter.simple;
+package org.team4u.config.infrastructure.converter.bytebuddy;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Dict;
@@ -21,12 +21,12 @@ import java.util.Map;
 
 import static org.team4u.config.TestUtil.c;
 
-public class DefaultConfigConverterTest {
+public class ByteBuddyConfigConverterTest {
 
     @Test
     public void type() {
         MockSimpleConfigRepository repository = new MockSimpleConfigRepository();
-        DefaultConfigConverter converter = new DefaultConfigConverter(repository);
+        ByteBuddyConfigConverter converter = new ByteBuddyConfigConverter(repository);
         TestConfig config = converter.to(
                 TestConfig.class,
                 TestUtil.TEST_ID
@@ -55,7 +55,7 @@ public class DefaultConfigConverterTest {
                 new CacheableSimpleConfigRepository.Config().setMaxEffectiveSec(5),
                 repository1
         );
-        DefaultConfigConverter converter = new DefaultConfigConverter(repository2);
+        ByteBuddyConfigConverter converter = new ByteBuddyConfigConverter(repository2);
         TestConfig config = converter.to(
                 TestConfig.class,
                 TestUtil.TEST_ID
@@ -68,7 +68,7 @@ public class DefaultConfigConverterTest {
 
     @Test
     public void value() {
-        DefaultConfigConverter converter = new DefaultConfigConverter(new MockSimpleConfigRepository());
+        ByteBuddyConfigConverter converter = new ByteBuddyConfigConverter(new MockSimpleConfigRepository());
         Integer a = converter.to(
                 Integer.class,
                 TestUtil.TEST_ID,

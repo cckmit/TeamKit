@@ -1,9 +1,10 @@
-package org.team4u.config.infrastructure.converter.simple;
+package org.team4u.config.infrastructure.converter.bytebuddy;
 
 import lombok.Getter;
 import org.team4u.base.aop.MethodInterceptor;
 import org.team4u.config.domain.SimpleConfigRepository;
 import org.team4u.config.domain.SimpleConfigs;
+import org.team4u.config.domain.converter.ConfigBeanRefresher;
 
 import java.lang.reflect.Method;
 import java.util.concurrent.Callable;

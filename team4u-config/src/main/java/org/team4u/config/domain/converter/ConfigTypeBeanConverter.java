@@ -1,4 +1,4 @@
-package org.team4u.config.infrastructure.converter.simple;
+package org.team4u.config.domain.converter;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
@@ -15,18 +15,18 @@ import java.lang.reflect.Type;
 import java.util.Collection;
 
 /**
- * 配置对象转换器
+ * 基于配置类型的配置对象转换器
  *
  * @author jay.wu
  */
-public class ConfigBeanConverter {
+public class ConfigTypeBeanConverter {
 
     /**
      * 将配置项转换为目标对象
      */
-    public Object convert(SimpleConfigs simpleConfigs, String configType, Class<?> classType) {
+    public Object convert(SimpleConfigs simpleConfigs, String configType, Class<?> toType) {
         return BeanUtil.fillBean(
-                ReflectUtil.newInstanceIfPossible(classType),
+                ReflectUtil.newInstanceIfPossible(toType),
                 new ValueProvider<String>() {
                     @Override
                     public Object value(String key, Type valueType) {

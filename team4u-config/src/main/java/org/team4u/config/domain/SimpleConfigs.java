@@ -28,6 +28,13 @@ public class SimpleConfigs {
         this.value = value;
     }
 
+    /**
+     * 获取指定配置项
+     *
+     * @param configType 配置类型或配置前缀
+     * @param configKey  配置项key
+     * @return 配置项
+     */
     public SimpleConfig filter(String configType, String configKey) {
         return value.stream()
                 .filter(it -> StrUtil.equals(it.getConfigId().getConfigType(), configType))
@@ -37,6 +44,12 @@ public class SimpleConfigs {
                 .orElse(null);
     }
 
+    /**
+     * 获取指定配置类型的所有配置项
+     *
+     * @param configType 配置类型或配置前缀
+     * @return 配置项集合
+     */
     public SimpleConfigs filter(String configType) {
         return new SimpleConfigs(
                 value.stream()
@@ -46,6 +59,27 @@ public class SimpleConfigs {
         );
     }
 
+    /**
+     * 获取指定配置项对应的值
+     *
+     * @param configType 配置类型或配置前缀
+     * @param configKey  配置项key
+     * @return 配置值
+     */
+    public String value(String configType, String configKey) {
+        SimpleConfig config = filter(configType, configKey);
+        if (config == null) {
+            return null;
+        }
+
+        return config.getConfigValue();
+    }
+
+    /**
+     * 复制当前配置项集合
+     *
+     * @return 新的配置项集合
+     */
     public SimpleConfigs copy() {
         return new SimpleConfigs(
                 value.stream()
@@ -62,6 +96,11 @@ public class SimpleConfigs {
         );
     }
 
+    /**
+     * 将配置项集合转换为Map
+     *
+     * @return key=configId,value=configValue的Map
+     */
     public Map<String, Object> toMap() {
         return value.stream().collect(Collectors.toMap(
                 it -> it.getConfigId().toString(),
