@@ -1,5 +1,6 @@
 package org.team4u.config.domain.converter;
 
+import cn.hutool.core.util.ReflectUtil;
 import lombok.Getter;
 import org.team4u.config.domain.SimpleConfigConverter;
 import org.team4u.config.domain.SimpleConfigRepository;
@@ -33,7 +34,7 @@ public class DefaultConfigConverter implements SimpleConfigConverter {
 
     @Override
     public <T> T to(Class<T> toType, String configType) {
-        T configBean = configTypeBeanConverter.convert(allConfigs(), configType, toType);
+        T configBean = ReflectUtil.newInstanceIfPossible(toType);
         return configBeanTracker.trace(toType, configType, configBean);
     }
 
@@ -56,6 +57,10 @@ public class DefaultConfigConverter implements SimpleConfigConverter {
         }
 
         public <T> T trace(Class<T> toType, String configType, T configBean) {
+            if(refreshers.containsKey(configType)){
+                return configBean;
+            }
+
             ConfigBeanRefresher configBeanRefresher = new ConfigBeanRefresher(configType, toType);
             configBeanRefresher.setConfigBean(configBean);
             refreshers.put(configType, configBeanRefresher);

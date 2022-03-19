@@ -45,7 +45,6 @@ public class ConfigBeanRefresher {
      * 使用最新的配置项更新配置对象属性
      *
      * @param latestAllConfigs 最新的配置项
-     * @param configBean       配置对象
      */
     public synchronized void refresh(SimpleConfigs latestAllConfigs) {
         withInfoLog(log, "refresh", () -> {

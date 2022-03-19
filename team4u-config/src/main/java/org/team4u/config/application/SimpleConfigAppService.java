@@ -3,7 +3,7 @@ package org.team4u.config.application;
 import org.team4u.config.domain.SimpleConfigConverter;
 import org.team4u.config.domain.SimpleConfigRepository;
 import org.team4u.config.domain.SimpleConfigs;
-import org.team4u.config.infrastructure.converter.bytebuddy.ByteBuddyConfigConverter;
+import org.team4u.config.domain.converter.DefaultConfigConverter;
 
 import java.lang.reflect.Type;
 
@@ -17,7 +17,7 @@ public class SimpleConfigAppService {
     private final SimpleConfigConverter simpleConfigConverter;
 
     public SimpleConfigAppService(SimpleConfigRepository simpleConfigRepository) {
-        this.simpleConfigConverter = new ByteBuddyConfigConverter(simpleConfigRepository);
+        this.simpleConfigConverter = new DefaultConfigConverter(simpleConfigRepository);
     }
 
     /**
