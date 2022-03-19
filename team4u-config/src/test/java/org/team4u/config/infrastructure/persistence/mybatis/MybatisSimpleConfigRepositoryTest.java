@@ -1,4 +1,4 @@
-package org.team4u.config.infrastructure.persistence;
+package org.team4u.config.infrastructure.persistence.mybatis;
 
 import org.junit.Assert;
 import org.junit.Test;

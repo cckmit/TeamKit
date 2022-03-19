@@ -1,53 +1,42 @@
-package org.team4u.config.infrastructure.persistence;
+package org.team4u.config.infrastructure.persistence.mybatis;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.db.Db;
-import cn.hutool.db.Entity;
-import lombok.Getter;
-import org.team4u.base.error.NestedException;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.team4u.config.domain.SimpleConfig;
 import org.team4u.config.domain.SimpleConfigId;
 import org.team4u.config.domain.SimpleConfigRepository;
 import org.team4u.config.domain.SimpleConfigs;
 
-import javax.sql.DataSource;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 基于JDBC的配置项资源库
+ * 基于Mybatis的配置项资源库
  *
  * @author jay.wu
  */
-public class JdbcSimpleConfigRepository implements SimpleConfigRepository {
+@Component
+public class MybatisSimpleConfigRepository implements SimpleConfigRepository {
 
-    @Getter
-    private final Db db;
+    private final SystemConfigMapper mapper;
 
-    public JdbcSimpleConfigRepository(DataSource dataSource) {
-        this.db = Db.use(dataSource);
+    @Autowired
+    public MybatisSimpleConfigRepository(SystemConfigMapper mapper) {
+        this.mapper = mapper;
     }
 
     @Override
     public SimpleConfigs allConfigs() {
-        try {
-            List<SystemConfigDo> systemConfigDos = db.findAll(
-                    Entity.create("system_config"),
-                    SystemConfigDo.class
-            );
-            return toSimpleConfigs(systemConfigDos);
-        } catch (SQLException e) {
-            throw new NestedException(e);
-        }
+        List<SystemConfigDo> systemConfigDos = mapper.selectList(new QueryWrapper<>());
+        return toSimpleConfigs(systemConfigDos);
     }
 
     private SimpleConfigs toSimpleConfigs(List<SystemConfigDo> systemConfigDos) {
-        return new SimpleConfigs(
-                systemConfigDos.stream()
-                        .map(this::toSimpleConfig)
-                        .collect(Collectors.toList())
-        );
+        return new SimpleConfigs(systemConfigDos.stream()
+                .map(this::toSimpleConfig)
+                .collect(Collectors.toList()));
     }
 
     private SimpleConfig toSimpleConfig(SystemConfigDo systemConfigDo) {

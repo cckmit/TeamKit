@@ -1,4 +1,4 @@
-package org.team4u.config.infrastructure.persistence;
+package org.team4u.config.infrastructure.persistence.jdbc;
 
 import org.junit.Assert;
 import org.junit.Test;
