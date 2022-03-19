@@ -1,14 +1,12 @@
-package org.team4u.config.infrastructure.persistence;
+package org.team4u.config.domain;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import org.junit.Assert;
 import org.junit.Test;
-import org.team4u.config.domain.SimpleConfig;
-import org.team4u.config.domain.SimpleConfigRepository;
-import org.team4u.config.domain.SimpleConfigs;
 import org.team4u.config.domain.event.ConfigDeletedEvent;
 import org.team4u.config.domain.event.ConfigValueChangedEvent;
+import org.team4u.config.domain.repository.CacheableSimpleConfigRepository;
 import org.team4u.ddd.domain.model.AbstractDomainEvent;
 import org.team4u.ddd.domain.model.DomainEventPublisher;
 import org.team4u.ddd.message.AbstractMessageConsumer;

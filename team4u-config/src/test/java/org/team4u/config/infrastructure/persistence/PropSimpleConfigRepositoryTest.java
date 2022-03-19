@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.team4u.config.domain.SimpleConfig;
 import org.team4u.config.domain.SimpleConfigId;
 import org.team4u.config.domain.SimpleConfigs;
+import org.team4u.config.domain.repository.PropSimpleConfigRepository;
 
 public class PropSimpleConfigRepositoryTest {
 

@@ -3,8 +3,8 @@ package org.team4u.config.infrastructure.converter.bytebuddy;
 import net.bytebuddy.matcher.ElementMatchers;
 import org.team4u.base.aop.SimpleAop;
 import org.team4u.config.domain.SimpleConfigRepository;
-import org.team4u.config.domain.converter.AbstractSimpleConfigConverter;
 import org.team4u.config.domain.converter.ConfigBeanRefresher;
+import org.team4u.config.domain.converter.DefaultConfigConverter;
 
 /**
  * 基于ByteBuddy的配置转换器
@@ -13,7 +13,7 @@ import org.team4u.config.domain.converter.ConfigBeanRefresher;
  *
  * @author jay.wu
  */
-public class ByteBuddyConfigConverter extends AbstractSimpleConfigConverter {
+public class ByteBuddyConfigConverter extends DefaultConfigConverter {
 
     public ByteBuddyConfigConverter(SimpleConfigRepository simpleConfigRepository) {
         super(simpleConfigRepository);
@@ -27,7 +27,8 @@ public class ByteBuddyConfigConverter extends AbstractSimpleConfigConverter {
                 ElementMatchers.isGetter(),
                 new ConfigBeanMethodInterceptor(configBeanRefresher, getSimpleConfigRepository())
         );
-        configBeanRefresher.refresh(allConfigs(), configBean);
+        configBeanRefresher.setConfigBean(configBean);
+        configBeanRefresher.refresh(allConfigs());
         return configBean;
     }
 }

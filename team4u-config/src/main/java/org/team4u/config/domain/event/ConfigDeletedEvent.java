@@ -1,18 +1,16 @@
 package org.team4u.config.domain.event;
 
-import org.team4u.config.domain.SimpleConfigId;
-import org.team4u.ddd.domain.model.AbstractDomainEvent;
+import lombok.Getter;
+import org.team4u.config.domain.SimpleConfig;
 
-public class ConfigDeletedEvent extends AbstractDomainEvent {
+@Getter
+public class ConfigDeletedEvent extends AbstractConfigChangedEvent<SimpleConfig> {
 
-    private final String updatedBy;
+    private final SimpleConfig simpleConfig;
 
-    public ConfigDeletedEvent(SimpleConfigId simpleConfigId, String updatedBy) {
-        super(simpleConfigId.toString());
-        this.updatedBy = updatedBy;
-    }
+    public ConfigDeletedEvent(SimpleConfig simpleConfig) {
+        super(simpleConfig.getConfigId(), simpleConfig, null, simpleConfig.getUpdatedBy());
+        this.simpleConfig = simpleConfig;
 
-    public String getUpdatedBy() {
-        return updatedBy;
     }
 }

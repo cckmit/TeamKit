@@ -1,4 +1,4 @@
-package org.team4u.config.infrastructure.persistence;
+package org.team4u.config.domain.repository;
 
 import cn.hutool.core.lang.Pair;
 import org.team4u.config.domain.SimpleConfig;

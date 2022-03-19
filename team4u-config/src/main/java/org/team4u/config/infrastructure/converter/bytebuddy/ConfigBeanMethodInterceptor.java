@@ -36,7 +36,7 @@ public class ConfigBeanMethodInterceptor implements MethodInterceptor {
         }
 
         // 刷新配置对象
-        configBeanRefresher.refresh(latestConfigs, instance);
+        configBeanRefresher.refresh(latestConfigs);
         return superMethod.call();
     }
 }

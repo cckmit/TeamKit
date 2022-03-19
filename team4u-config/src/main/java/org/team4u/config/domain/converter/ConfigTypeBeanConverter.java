@@ -24,7 +24,7 @@ public class ConfigTypeBeanConverter {
     /**
      * 将配置项转换为目标对象
      */
-    public Object convert(SimpleConfigs simpleConfigs, String configType, Class<?> toType) {
+    public <T> T convert(SimpleConfigs simpleConfigs, String configType, Class<T> toType) {
         return BeanUtil.fillBean(
                 ReflectUtil.newInstanceIfPossible(toType),
                 new ValueProvider<String>() {

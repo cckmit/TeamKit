@@ -4,6 +4,7 @@ import lombok.Data;
 import org.junit.Assert;
 import org.junit.Test;
 import org.team4u.config.application.SimpleConfigAppService;
+import org.team4u.config.domain.repository.PropSimpleConfigRepository;
 
 public class SimpleConfigServiceTest {
 

@@ -1,4 +1,4 @@
-package org.team4u.config.infrastructure.persistence;
+package org.team4u.config.domain.repository;
 
 import cn.hutool.core.util.ObjectUtil;
 import lombok.Getter;

@@ -51,15 +51,7 @@ public class SimpleConfig extends AggregateRoot {
     }
 
     public void create() {
-        publishEvent(new ConfigCreatedEvent(
-                getConfigId(),
-                getConfigValue(),
-                getDescription(),
-                getSequenceNo(),
-                getEnabled(),
-                getCreatedBy(),
-                getCreateTime()
-        ));
+        publishEvent(new ConfigCreatedEvent(this));
     }
 
     public void enable(String updatedBy) {
@@ -129,7 +121,7 @@ public class SimpleConfig extends AggregateRoot {
     }
 
     public void delete() {
-        publishEvent(new ConfigDeletedEvent(getConfigId(), updatedBy));
+        publishEvent(new ConfigDeletedEvent(this));
     }
 
     @Override

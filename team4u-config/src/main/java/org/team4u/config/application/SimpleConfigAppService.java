@@ -1,8 +1,8 @@
 package org.team4u.config.application;
 
+import org.team4u.config.domain.SimpleConfigConverter;
 import org.team4u.config.domain.SimpleConfigRepository;
 import org.team4u.config.domain.SimpleConfigs;
-import org.team4u.config.domain.converter.SimpleConfigConverter;
 import org.team4u.config.infrastructure.converter.bytebuddy.ByteBuddyConfigConverter;
 
 import java.lang.reflect.Type;
