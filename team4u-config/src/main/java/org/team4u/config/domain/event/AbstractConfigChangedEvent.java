@@ -25,6 +25,6 @@ public abstract class AbstractConfigChangedEvent<V> extends AbstractDomainEvent 
 
     @Override
     public String toString() {
-        return configId.toString();
+        return this.getClass().getSimpleName() + "|" + configId.toString();
     }
 }
