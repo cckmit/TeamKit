@@ -2,6 +2,7 @@ package org.team4u.config.domain.converter;
 
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.TypeUtil;
+import cn.hutool.json.JSONUtil;
 import org.team4u.base.serializer.*;
 import org.team4u.config.domain.SimpleConfigs;
 
@@ -33,7 +34,8 @@ public class ConfigValueBeanConverter {
         }
 
         // 简单类型直接转换
-        if (ClassUtil.isSimpleTypeOrArray(TypeUtil.getClass(toType))) {
+        if (ClassUtil.isSimpleTypeOrArray(TypeUtil.getClass(toType)) ||
+                !JSONUtil.isJson(value)) {
             return simpleSerializer(isCacheResult).deserialize(value, toType);
         }
 
