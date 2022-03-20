@@ -15,4 +15,9 @@ public class ConfigAllChangedEvent extends AbstractDomainEvent {
         super(IdUtil.fastSimpleUUID());
         this.changedEvents = changedEvents;
     }
+
+    @Override
+    public String toString() {
+        return changedEvents + "";
+    }
 }

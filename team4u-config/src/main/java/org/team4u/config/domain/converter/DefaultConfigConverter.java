@@ -28,7 +28,7 @@ public class DefaultConfigConverter implements SimpleConfigConverter {
 
     @Override
     public <T> T to(Type toType, String configType, String configKey, boolean isCacheResult) {
-        return configValueBeanConverter.to(allConfigs(), toType, configType, configKey, isCacheResult);
+        return configValueBeanConverter.convert(allConfigs(), toType, configType, configKey, isCacheResult);
     }
 
     @Override

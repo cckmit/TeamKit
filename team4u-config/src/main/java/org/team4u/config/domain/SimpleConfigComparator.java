@@ -1,9 +1,9 @@
 package org.team4u.config.domain;
 
 import cn.hutool.core.util.StrUtil;
+import org.team4u.base.message.MessagePublisher;
 import org.team4u.config.domain.event.AbstractConfigChangedEvent;
 import org.team4u.config.domain.event.ConfigAllChangedEvent;
-import org.team4u.ddd.domain.model.DomainEventPublisher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +35,7 @@ public class SimpleConfigComparator {
         }
 
         if (!changedEvents.isEmpty()) {
-            DomainEventPublisher.instance().publish(new ConfigAllChangedEvent(changedEvents));
+            MessagePublisher.instance().publish(new ConfigAllChangedEvent(changedEvents));
         }
     }
 
@@ -86,7 +86,7 @@ public class SimpleConfigComparator {
     }
 
     private void publishEvent(List<AbstractConfigChangedEvent<?>> changedEvents, SimpleConfig config) {
-        DomainEventPublisher.instance().publishAll(config.events());
+        MessagePublisher.instance().publish(config.events());
         changedEvents.addAll(config.events().stream()
                 .map(it -> (AbstractConfigChangedEvent<?>) it)
                 .collect(Collectors.toList()));

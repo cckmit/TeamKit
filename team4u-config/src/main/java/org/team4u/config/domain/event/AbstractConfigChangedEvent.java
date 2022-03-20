@@ -22,4 +22,9 @@ public abstract class AbstractConfigChangedEvent<V> extends AbstractDomainEvent 
         this.newValue = newValue;
         this.updatedBy = updatedBy;
     }
+
+    @Override
+    public String toString() {
+        return configId.toString();
+    }
 }

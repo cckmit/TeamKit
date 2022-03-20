@@ -1,10 +1,10 @@
 package org.team4u.config.domain.converter;
 
 import lombok.Getter;
+import org.team4u.base.message.AbstractMessageSubscriber;
+import org.team4u.base.message.MessagePublisher;
 import org.team4u.config.domain.SimpleConfigRepository;
 import org.team4u.config.domain.event.ConfigAllChangedEvent;
-import org.team4u.ddd.domain.model.DomainEventPublisher;
-import org.team4u.ddd.message.AbstractMessageConsumer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,12 +34,12 @@ public class TraceableConfigConverter extends DefaultConfigConverter {
         return configBeanTracker.trace(toType, configType, configBean);
     }
 
-    public class ConfigBeanTracker extends AbstractMessageConsumer<ConfigAllChangedEvent> {
+    public class ConfigBeanTracker extends AbstractMessageSubscriber<ConfigAllChangedEvent> {
 
         private final Map<String, ConfigBeanRefresher> refreshers = new HashMap<>();
 
         public ConfigBeanTracker() {
-            DomainEventPublisher.instance().subscribe(this);
+            MessagePublisher.instance().subscribe(this);
         }
 
         public <T> T trace(Class<T> toType, String configType, T configBean) {

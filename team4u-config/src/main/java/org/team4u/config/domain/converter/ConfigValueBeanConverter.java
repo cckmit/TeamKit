@@ -26,7 +26,7 @@ public class ConfigValueBeanConverter {
      * @param <T>           目标配置类型
      * @return 目标配置类
      */
-    public <T> T to(SimpleConfigs configs, Type toType, String configType, String configKey, boolean isCacheResult) {
+    public <T> T convert(SimpleConfigs configs, Type toType, String configType, String configKey, boolean isCacheResult) {
         String value = configs.value(configType, configKey);
         if (value == null) {
             return null;
