@@ -8,6 +8,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * 配置所有变更事件
+ *
+ * @author jay.wu
+ */
 @Getter
 public class ConfigAllChangedEvent extends AbstractDomainEvent {
 
@@ -18,6 +23,11 @@ public class ConfigAllChangedEvent extends AbstractDomainEvent {
         this.changedEvents = changedEvents;
     }
 
+    /**
+     * 获取所有变更的配置类型集合
+     *
+     * @author jay.wu
+     */
     public Set<String> changedConfigTypes() {
         return changedEvents.stream()
                 .map(it -> it.getConfigId().getConfigType())

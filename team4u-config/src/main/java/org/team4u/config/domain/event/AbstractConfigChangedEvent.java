@@ -4,6 +4,11 @@ import lombok.Getter;
 import org.team4u.config.domain.SimpleConfigId;
 import org.team4u.ddd.domain.model.AbstractDomainEvent;
 
+/**
+ * 抽象配置项变更事件
+ *
+ * @author jay.wu
+ */
 @Getter
 public abstract class AbstractConfigChangedEvent<V> extends AbstractDomainEvent {
 
