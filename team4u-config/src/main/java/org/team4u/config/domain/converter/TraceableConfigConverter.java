@@ -9,7 +9,6 @@ import org.team4u.config.domain.event.ConfigAllChangedEvent;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * 动态跟踪配置项转换器
@@ -55,14 +54,12 @@ public class TraceableConfigConverter extends DefaultConfigConverter {
 
         @Override
         protected void internalOnMessage(ConfigAllChangedEvent event) {
-            event.getChangedEvents()
-                    .stream()
-                    .map(it -> it.getConfigId().getConfigType())
-                    .collect(Collectors.toSet())
-                    .forEach(configType ->
-                            Optional.ofNullable(refreshers.get(configType))
-                                    .ifPresent(it -> it.refresh(allConfigs()))
-                    );
+            event.changedConfigTypes().forEach(this::refresh);
+        }
+
+        private void refresh(String configType) {
+            Optional.ofNullable(refreshers.get(configType))
+                    .ifPresent(it -> it.refresh(allConfigs()));
         }
     }
 }
