@@ -17,10 +17,10 @@ import static org.team4u.config.TestUtil.c;
 
 public class CacheableSimpleConfigRepositoryTest {
 
-    private final ConfigEventConsumer configEventConsumer = new ConfigEventConsumer();
+    private final ConfigEventSubscriber configEventSubscriber = new ConfigEventSubscriber();
 
     public CacheableSimpleConfigRepositoryTest() {
-        MessagePublisher.instance().subscribe(configEventConsumer);
+        MessagePublisher.instance().subscribe(configEventSubscriber);
     }
 
     @Test
@@ -34,6 +34,7 @@ public class CacheableSimpleConfigRepositoryTest {
 
         Assert.assertEquals(1, repository.allConfigs().size());
         Assert.assertEquals(repository.allConfigs(), repository.allConfigs());
+        Assert.assertNull(configEventSubscriber.getEvent());
     }
 
     @Test
@@ -51,9 +52,9 @@ public class CacheableSimpleConfigRepositoryTest {
         ThreadUtil.sleep(1500);
 
         Assert.assertEquals(0, repository.allConfigs().size());
-        Assert.assertEquals(ConfigAllChangedEvent.class, configEventConsumer.getEvent().getClass());
+        Assert.assertEquals(ConfigAllChangedEvent.class, configEventSubscriber.getEvent().getClass());
 
-        ConfigDisabledEvent disabledEvent = (ConfigDisabledEvent) configEventConsumer.getEvent().getAllEvents().get(0);
+        ConfigDisabledEvent disabledEvent = (ConfigDisabledEvent) configEventSubscriber.getEvent().getAllEvents().get(0);
         Assert.assertNull(disabledEvent.getNewValue());
     }
 
@@ -71,13 +72,13 @@ public class CacheableSimpleConfigRepositoryTest {
         ThreadUtil.sleep(1500);
 
         Assert.assertEquals(1, repository.allConfigs().size());
-        ConfigAllChangedEvent configAllChangedEvent = configEventConsumer.getEvent();
+        ConfigAllChangedEvent configAllChangedEvent = configEventSubscriber.getEvent();
         ConfigValueChangedEvent changedEvent = (ConfigValueChangedEvent) configAllChangedEvent.getAllEvents().get(0);
         Assert.assertEquals("1", changedEvent.getOldValue());
         Assert.assertEquals("2", changedEvent.getNewValue());
     }
 
-    private static class ConfigEventConsumer extends AbstractMessageSubscriber<ConfigAllChangedEvent> {
+    private static class ConfigEventSubscriber extends AbstractMessageSubscriber<ConfigAllChangedEvent> {
 
         private ConfigAllChangedEvent event;
 
