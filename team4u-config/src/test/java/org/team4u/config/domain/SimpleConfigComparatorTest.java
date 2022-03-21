@@ -16,7 +16,7 @@ public class SimpleConfigComparatorTest {
     @Test
     public void create() {
         List<SimpleConfig> newConfigs = CollUtil.newArrayList(c("a", "1"));
-        List<SimpleConfigEvent> events = new SimpleConfigComparator().compare(CollUtil.newArrayList(), newConfigs);
+        List<SimpleConfigEvent> events = c.compare(CollUtil.newArrayList(), newConfigs);
         Assert.assertEquals(1, events.size());
         ConfigCreatedEvent event = (ConfigCreatedEvent) events.get(0);
         Assert.assertEquals("1", event.getNewValue());
@@ -27,7 +27,7 @@ public class SimpleConfigComparatorTest {
     @Test
     public void disable() {
         List<SimpleConfig> oldConfigs = CollUtil.newArrayList(c("a", "1"));
-        List<SimpleConfigEvent> events = new SimpleConfigComparator().compare(oldConfigs, CollUtil.newArrayList());
+        List<SimpleConfigEvent> events = c.compare(oldConfigs, CollUtil.newArrayList());
         Assert.assertEquals(1, events.size());
         ConfigDisabledEvent event = (ConfigDisabledEvent) events.get(0);
         Assert.assertEquals("1", event.getOldValue());
@@ -36,7 +36,7 @@ public class SimpleConfigComparatorTest {
 
     @Test
     public void changeValue() {
-        List<SimpleConfigEvent> events = new SimpleConfigComparator().compare(
+        List<SimpleConfigEvent> events = c.compare(
                 CollUtil.newArrayList(c("a", "1")),
                 CollUtil.newArrayList(c("a", "2"))
         );
@@ -51,7 +51,7 @@ public class SimpleConfigComparatorTest {
         SimpleConfig n = c("a", "1");
         n.setDescription("1");
 
-        List<SimpleConfigEvent> events = new SimpleConfigComparator().compare(
+        List<SimpleConfigEvent> events = c.compare(
                 CollUtil.newArrayList(c("a", "1")),
                 CollUtil.newArrayList(n)
         );
@@ -66,7 +66,7 @@ public class SimpleConfigComparatorTest {
         SimpleConfig n = c("a", "1");
         n.setSequenceNo(1);
 
-        List<SimpleConfigEvent> events = new SimpleConfigComparator().compare(
+        List<SimpleConfigEvent> events = c.compare(
                 CollUtil.newArrayList(c("a", "1")),
                 CollUtil.newArrayList(n)
         );
@@ -81,7 +81,7 @@ public class SimpleConfigComparatorTest {
         SimpleConfig n = c("a", "1");
         n.setEnabled(false);
 
-        List<SimpleConfigEvent> events = new SimpleConfigComparator().compare(
+        List<SimpleConfigEvent> events = c.compare(
                 CollUtil.newArrayList(n),
                 CollUtil.newArrayList(c("a", "1"))
         );
