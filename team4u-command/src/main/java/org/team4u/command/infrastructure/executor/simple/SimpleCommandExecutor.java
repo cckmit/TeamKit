@@ -12,9 +12,13 @@ import java.util.Map;
 
 /**
  * 基于责任链的简单命令执行器
+ * <p>
+ * Deprecated, use FilterCommandExecutor instead
  *
  * @author jay.wu
+ * @see org.team4u.command.infrastructure.executor.filter.FilterCommandExecutor
  */
+@Deprecated
 public class SimpleCommandExecutor
         extends PolicyRegistrar<String, CommandRoutesBuilder>
         implements CommandExecutor {

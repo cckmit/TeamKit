@@ -2,6 +2,8 @@ package org.team4u.base.filter;
 
 /**
  * 过滤器
+ * <p>
+ * Deprecated，use org.team4u.base.filter.v2.Filter instead
  *
  * @author jay.wu
  * @see org.team4u.base.filter.v2.Filter

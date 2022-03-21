@@ -67,9 +67,7 @@ public class CommandAppService {
         try {
             response = (Response) commandExecutor.execute(context);
 
-            log.info(lm.success()
-                    .append("response", response)
-                    .toString());
+            log.info(lm.success().append("response", response).toString());
             return response;
         } catch (ControlException e) {
             log.info(lm.success()
