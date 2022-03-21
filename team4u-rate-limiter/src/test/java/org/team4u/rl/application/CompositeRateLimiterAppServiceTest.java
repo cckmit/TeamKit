@@ -9,7 +9,7 @@ import org.team4u.rl.infrastructure.limiter.RedisCountRateLimiter;
 
 public class CompositeRateLimiterAppServiceTest extends AbstractRateLimiterAppServiceTest {
 
-    private final StringRedisTemplate template = TestUtil.createRedisTemplate();
+    private static final StringRedisTemplate template = TestUtil.createRedisTemplate();
 
     @Before
     public void setUp() {
