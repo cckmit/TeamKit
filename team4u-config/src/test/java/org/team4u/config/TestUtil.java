@@ -1,6 +1,5 @@
 package org.team4u.config;
 
-import cn.hutool.core.date.DateUtil;
 import org.junit.Assert;
 import org.team4u.config.domain.SimpleConfig;
 import org.team4u.config.domain.SimpleConfigId;
@@ -23,9 +22,7 @@ public class TestUtil {
                 value,
                 null,
                 0,
-                true,
-                null,
-                null
+                true
         );
     }
 
@@ -35,11 +32,7 @@ public class TestUtil {
         Assert.assertEquals(TestUtil.TEST_ID, config.getConfigId().getConfigKey());
         Assert.assertEquals(TestUtil.TEST_ID, config.getConfigId().getConfigType());
         Assert.assertEquals(TestUtil.TEST_ID, config.getConfigValue());
-        Assert.assertEquals(TestUtil.TEST_ID, config.getCreatedBy());
-        Assert.assertEquals(TestUtil.TEST_ID, config.getUpdatedBy());
         Assert.assertEquals(TestUtil.TEST_ID, config.getDescription());
-        Assert.assertEquals("2020-08-21 00:00:00", DateUtil.formatDateTime(config.getCreateTime()));
-        Assert.assertEquals("2020-08-21 00:00:00", DateUtil.formatDateTime(config.getUpdateTime()));
     }
 
     public static String[] ddlResourcePaths() {

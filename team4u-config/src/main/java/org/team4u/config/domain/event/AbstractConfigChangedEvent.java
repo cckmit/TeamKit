@@ -10,22 +10,19 @@ import org.team4u.ddd.domain.model.AbstractDomainEvent;
  * @author jay.wu
  */
 @Getter
-public abstract class AbstractConfigChangedEvent<V> extends AbstractDomainEvent {
+public abstract class AbstractConfigChangedEvent<V> extends AbstractDomainEvent implements SimpleConfigEvent {
 
     private final SimpleConfigId configId;
     private final V oldValue;
     private final V newValue;
-    private final String updatedBy;
 
     public AbstractConfigChangedEvent(SimpleConfigId simpleConfigId,
                                       V oldValue,
-                                      V newValue,
-                                      String updatedBy) {
+                                      V newValue) {
         super(simpleConfigId.toString());
         this.configId = simpleConfigId;
         this.oldValue = oldValue;
         this.newValue = newValue;
-        this.updatedBy = updatedBy;
     }
 
     @Override

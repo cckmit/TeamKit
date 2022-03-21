@@ -11,8 +11,7 @@ public class ConfigSequenceNoChangedEvent extends AbstractConfigChangedEvent<Int
 
     public ConfigSequenceNoChangedEvent(SimpleConfigId simpleConfigId,
                                         Integer oldValue,
-                                        Integer newValue,
-                                        String updatedBy) {
-        super(simpleConfigId, oldValue, newValue, updatedBy);
+                                        Integer newValue) {
+        super(simpleConfigId, oldValue, newValue);
     }
 }

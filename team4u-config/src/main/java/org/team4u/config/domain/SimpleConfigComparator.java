@@ -1,12 +1,12 @@
 package org.team4u.config.domain;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import org.team4u.base.message.MessagePublisher;
-import org.team4u.config.domain.event.AbstractConfigChangedEvent;
 import org.team4u.config.domain.event.ConfigAllChangedEvent;
+import org.team4u.config.domain.event.SimpleConfigEvent;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -16,81 +16,102 @@ import java.util.stream.Collectors;
  */
 public class SimpleConfigComparator {
 
-    public void compare(List<SimpleConfig> oldConfigs, List<SimpleConfig> newConfigs) {
-        List<AbstractConfigChangedEvent<?>> changedEvents = new ArrayList<>();
-        for (SimpleConfig oldConfig : oldConfigs) {
-            SimpleConfig newConfig = configOf(newConfigs, oldConfig.getConfigId());
-
-            // 更新、删除
-            compare(changedEvents, oldConfig, newConfig);
-        }
-
-        for (SimpleConfig newConfig : newConfigs) {
-            SimpleConfig oldConfig = configOf(oldConfigs, newConfig.getConfigId());
-
-            // 新增
-            if (oldConfig == null) {
-                compare(changedEvents, null, newConfig);
-            }
-        }
-
-        if (!changedEvents.isEmpty()) {
-            MessagePublisher.instance().publish(new ConfigAllChangedEvent(changedEvents));
-        }
+    public List<SimpleConfigEvent> compare(List<SimpleConfig> oldConfigs, List<SimpleConfig> newConfigs) {
+        List<SimpleConfigEvent> allEvents = new ArrayList<>();
+        allEvents.addAll(compareUpdatedAndDeletedConfig(oldConfigs, newConfigs));
+        allEvents.addAll(compareNewConfig(oldConfigs, newConfigs));
+        return allEvents;
     }
 
-    public void compare(List<AbstractConfigChangedEvent<?>> changedEvents,
-                        SimpleConfig oldConfig,
-                        SimpleConfig newConfig) {
+    public void compareAndPublishEvents(List<SimpleConfig> oldConfigs, List<SimpleConfig> newConfigs) {
+        publishEvents(compare(oldConfigs, newConfigs));
+    }
+
+    private List<SimpleConfigEvent> compareUpdatedAndDeletedConfig(List<SimpleConfig> oldConfigs,
+                                                                   List<SimpleConfig> newConfigs) {
+        return oldConfigs.stream()
+                .map(oldConfig -> {
+                    SimpleConfig newConfig = configOf(newConfigs, oldConfig.getConfigId());
+                    compare(oldConfig, newConfig);
+                    return eventsOf(oldConfig, newConfig);
+                })
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+    }
+
+    private List<SimpleConfigEvent> compareNewConfig(List<SimpleConfig> oldConfigs, List<SimpleConfig> newConfigs) {
+        return newConfigs.stream()
+                .map(newConfig -> {
+                    SimpleConfig oldConfig = configOf(oldConfigs, newConfig.getConfigId());
+                    // 新增
+                    if (oldConfig != null) {
+                        return null;
+                    }
+
+                    compare(null, newConfig);
+                    return eventsOf(newConfig);
+                })
+                .filter(Objects::nonNull)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+    }
+
+    public void publishEvents(List<SimpleConfigEvent> allEvents) {
+        MessagePublisher.instance().publish(new ConfigAllChangedEvent(allEvents));
+        allEvents.forEach(it -> MessagePublisher.instance().publish(it));
+    }
+
+    public void compare(SimpleConfig oldConfig, SimpleConfig newConfig) {
         if (oldConfig == null) {
             if (newConfig != null) {
                 newConfig.create();
-                publishEvent(changedEvents, newConfig);
             }
 
             return;
         }
 
         if (newConfig == null) {
-            oldConfig.delete();
-            publishEvent(changedEvents, oldConfig);
-            return;
-        }
-
-        if (!oldConfig.getEnabled() && newConfig.getEnabled()) {
-            oldConfig.enable(newConfig.getUpdatedBy());
-            publishEvent(changedEvents, oldConfig);
+            oldConfig.disable();
             return;
         }
 
         if (oldConfig.getEnabled() && !newConfig.getEnabled()) {
-            oldConfig.disable(newConfig.getUpdatedBy());
-            publishEvent(changedEvents, oldConfig);
+            oldConfig.disable();
             return;
         }
 
+        if (!oldConfig.getEnabled() && newConfig.getEnabled()) {
+            oldConfig.enable();
+        }
+
         if (!StrUtil.equals(oldConfig.getConfigValue(), newConfig.getConfigValue())) {
-            oldConfig.changeConfigValue(newConfig.getConfigValue(), newConfig.getUpdatedBy());
-            publishEvent(changedEvents, oldConfig);
+            oldConfig.changeConfigValue(newConfig.getConfigValue());
         }
 
         if (!StrUtil.equals(oldConfig.getDescription(), newConfig.getDescription())) {
-            oldConfig.changeDescription(newConfig.getDescription(), newConfig.getUpdatedBy());
-            publishEvent(changedEvents, oldConfig);
+            oldConfig.changeDescription(newConfig.getDescription());
         }
 
         if (oldConfig.getSequenceNo() != newConfig.getSequenceNo()) {
-            oldConfig.changeSequenceNo(newConfig.getSequenceNo(), newConfig.getUpdatedBy());
-            publishEvent(changedEvents, oldConfig);
+            oldConfig.changeSequenceNo(newConfig.getSequenceNo());
         }
     }
 
-    private void publishEvent(List<AbstractConfigChangedEvent<?>> changedEvents, SimpleConfig config) {
-        MessagePublisher.instance().publish(config.events());
-        changedEvents.addAll(config.events().stream()
-                .map(it -> (AbstractConfigChangedEvent<?>) it)
-                .collect(Collectors.toList()));
+    private List<? extends SimpleConfigEvent> eventsOf(SimpleConfig oldConfig, SimpleConfig newConfig) {
+        List<? extends SimpleConfigEvent> allEvents = new ArrayList<>();
+        CollUtil.addAll(allEvents, eventsOf(oldConfig));
+        CollUtil.addAll(allEvents, eventsOf(newConfig));
+        return allEvents;
+    }
+
+    private List<? extends SimpleConfigEvent> eventsOf(SimpleConfig config) {
+        if (config == null) {
+            return Collections.emptyList();
+        }
+
+        List<? extends SimpleConfigEvent> events = config.configEvents();
         config.clearEvents();
+        return events;
     }
 
     private SimpleConfig configOf(List<SimpleConfig> configs, SimpleConfigId configId) {

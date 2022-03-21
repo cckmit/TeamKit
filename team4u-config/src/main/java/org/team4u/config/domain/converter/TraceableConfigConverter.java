@@ -54,7 +54,7 @@ public class TraceableConfigConverter extends DefaultConfigConverter {
 
         @Override
         protected void internalOnMessage(ConfigAllChangedEvent event) {
-            event.changedConfigTypes().forEach(this::refresh);
+            event.allConfigTypes().forEach(this::refresh);
         }
 
         private void refresh(String configType) {

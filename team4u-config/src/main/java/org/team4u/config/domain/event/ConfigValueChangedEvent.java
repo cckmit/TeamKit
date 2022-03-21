@@ -11,8 +11,7 @@ public class ConfigValueChangedEvent extends AbstractConfigChangedEvent<String> 
 
     public ConfigValueChangedEvent(SimpleConfigId simpleConfigId,
                                    String oldValue,
-                                   String newValue,
-                                   String updatedBy) {
-        super(simpleConfigId, oldValue, newValue, updatedBy);
+                                   String newValue) {
+        super(simpleConfigId, oldValue, newValue);
     }
 }

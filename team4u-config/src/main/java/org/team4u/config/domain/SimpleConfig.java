@@ -1,22 +1,26 @@
 package org.team4u.config.domain;
 
 import cn.hutool.core.util.StrUtil;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.team4u.config.domain.event.*;
 import org.team4u.ddd.domain.model.AggregateRoot;
 
-import java.util.Date;
-import java.util.Objects;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 配置项
  *
  * @author jay.wu
  */
+@EqualsAndHashCode(callSuper = false)
 @Data
+@AllArgsConstructor
 public class SimpleConfig extends AggregateRoot {
 
-    private SimpleConfigId configId;
+    private final SimpleConfigId configId;
 
     private String configValue;
 
@@ -26,59 +30,31 @@ public class SimpleConfig extends AggregateRoot {
 
     private Boolean enabled;
 
-    private String createdBy;
-
-    private String updatedBy;
-
-    private Date createTime;
-
-    private Date updateTime;
-
-    public SimpleConfig(SimpleConfigId configId,
-                        String configValue,
-                        String description,
-                        int sequenceNo,
-                        Boolean enabled,
-                        String createdBy,
-                        Date createTime) {
-        this.configId = configId;
-        this.configValue = configValue;
-        this.description = description;
-        this.sequenceNo = sequenceNo;
-        this.enabled = enabled;
-        this.createdBy = createdBy;
-        this.createTime = createTime;
-    }
-
     public void create() {
         publishEvent(new ConfigCreatedEvent(this));
     }
 
-    public void enable(String updatedBy) {
+    public void enable() {
         if (getEnabled()) {
             return;
         }
 
         setEnabled(true);
-        setUpdatedBy(updatedBy);
-        setUpdateTime(new Date());
 
-        publishEvent(new ConfigEnabledEvent(getConfigId(), updatedBy));
+        publishEvent(new ConfigEnabledEvent(this));
     }
 
-    public void disable(String updatedBy) {
+    public void disable() {
         if (!getEnabled()) {
             return;
         }
 
         setEnabled(false);
-        setUpdatedBy(updatedBy);
-        setUpdateTime(new Date());
 
-        publishEvent(new ConfigDisabledEvent(getConfigId(), updatedBy));
+        publishEvent(new ConfigDisabledEvent(this));
     }
 
-    public void changeConfigValue(String newValue, String updatedBy) {
+    public void changeConfigValue(String newValue) {
         if (StrUtil.equals(getConfigValue(), newValue)) {
             return;
         }
@@ -86,13 +62,11 @@ public class SimpleConfig extends AggregateRoot {
         String oldValue = getConfigValue();
 
         setConfigValue(newValue);
-        setUpdatedBy(updatedBy);
-        setUpdateTime(new Date());
 
-        publishEvent(new ConfigValueChangedEvent(getConfigId(), oldValue, newValue, updatedBy));
+        publishEvent(new ConfigValueChangedEvent(getConfigId(), oldValue, newValue));
     }
 
-    public void changeSequenceNo(int newValue, String updatedBy) {
+    public void changeSequenceNo(int newValue) {
         if (getSequenceNo() == newValue) {
             return;
         }
@@ -100,13 +74,11 @@ public class SimpleConfig extends AggregateRoot {
         int oldValue = getSequenceNo();
 
         setSequenceNo(newValue);
-        setUpdatedBy(updatedBy);
-        setUpdateTime(new Date());
 
-        publishEvent(new ConfigSequenceNoChangedEvent(getConfigId(), oldValue, newValue, updatedBy));
+        publishEvent(new ConfigSequenceNoChangedEvent(getConfigId(), oldValue, newValue));
     }
 
-    public void changeDescription(String newValue, String updatedBy) {
+    public void changeDescription(String newValue) {
         if (StrUtil.equals(getDescription(), newValue)) {
             return;
         }
@@ -114,35 +86,13 @@ public class SimpleConfig extends AggregateRoot {
         String oldValue = getDescription();
 
         setDescription(newValue);
-        setUpdatedBy(updatedBy);
-        setUpdateTime(new Date());
 
-        publishEvent(new ConfigDescChangedEvent(getConfigId(), oldValue, newValue, updatedBy));
+        publishEvent(new ConfigDescChangedEvent(getConfigId(), oldValue, newValue));
     }
 
-    public void delete() {
-        publishEvent(new ConfigDeletedEvent(this));
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        SimpleConfig that = (SimpleConfig) o;
-        return sequenceNo == that.sequenceNo && configId.equals(that.configId) && Objects.equals(configValue, that.configValue) && Objects.equals(description, that.description) && enabled.equals(that.enabled);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(configId, configValue, description, sequenceNo, enabled);
-    }
-
-    @Override
-    public String toString() {
-        return configId +
-                "=" + configValue +
-                ", description='" + description + '\'' +
-                ", sequenceNo=" + sequenceNo +
-                ", enabled=" + enabled;
+    public List<? extends SimpleConfigEvent> configEvents() {
+        return events().stream()
+                .map(it -> (SimpleConfigEvent) it)
+                .collect(Collectors.toList());
     }
 }

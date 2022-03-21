@@ -33,9 +33,7 @@ public class MapSimpleConfigRepository implements SimpleConfigRepository {
                             it.getValue().toString(),
                             null,
                             0,
-                            true,
-                            null,
-                            null
+                            true
                     );
                 })
                 .collect(Collectors.toList()));

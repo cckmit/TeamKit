@@ -7,9 +7,9 @@ import org.junit.Test;
 import org.team4u.base.message.AbstractMessageSubscriber;
 import org.team4u.base.message.MessagePublisher;
 import org.team4u.config.domain.event.ConfigAllChangedEvent;
+import org.team4u.config.domain.event.ConfigDisabledEvent;
 import org.team4u.config.domain.event.ConfigValueChangedEvent;
 import org.team4u.config.domain.repository.CacheableSimpleConfigRepository;
-import org.team4u.ddd.domain.model.AbstractDomainEvent;
 
 import java.util.List;
 
@@ -52,6 +52,9 @@ public class CacheableSimpleConfigRepositoryTest {
 
         Assert.assertEquals(0, repository.allConfigs().size());
         Assert.assertEquals(ConfigAllChangedEvent.class, configEventConsumer.getEvent().getClass());
+
+        ConfigDisabledEvent disabledEvent = (ConfigDisabledEvent) configEventConsumer.getEvent().getAllEvents().get(0);
+        Assert.assertNull(disabledEvent.getNewValue());
     }
 
     @Test
@@ -68,22 +71,22 @@ public class CacheableSimpleConfigRepositoryTest {
         ThreadUtil.sleep(1500);
 
         Assert.assertEquals(1, repository.allConfigs().size());
-        ConfigAllChangedEvent configAllChangedEvent = (ConfigAllChangedEvent) configEventConsumer.getEvent();
-        ConfigValueChangedEvent changedEvent = (ConfigValueChangedEvent) configAllChangedEvent.getChangedEvents().get(0);
+        ConfigAllChangedEvent configAllChangedEvent = configEventConsumer.getEvent();
+        ConfigValueChangedEvent changedEvent = (ConfigValueChangedEvent) configAllChangedEvent.getAllEvents().get(0);
         Assert.assertEquals("1", changedEvent.getOldValue());
         Assert.assertEquals("2", changedEvent.getNewValue());
     }
 
-    private static class ConfigEventConsumer extends AbstractMessageSubscriber<AbstractDomainEvent> {
+    private static class ConfigEventConsumer extends AbstractMessageSubscriber<ConfigAllChangedEvent> {
 
-        private AbstractDomainEvent event;
+        private ConfigAllChangedEvent event;
 
         @Override
-        protected void internalOnMessage(AbstractDomainEvent message) {
+        protected void internalOnMessage(ConfigAllChangedEvent message) {
             event = message;
         }
 
-        public AbstractDomainEvent getEvent() {
+        public ConfigAllChangedEvent getEvent() {
             return event;
         }
     }
@@ -95,10 +98,6 @@ public class CacheableSimpleConfigRepositoryTest {
         @Override
         public SimpleConfigs allConfigs() {
             return new SimpleConfigs(configs);
-        }
-
-        public List<SimpleConfig> getConfigs() {
-            return configs;
         }
 
         public void setConfigs(List<SimpleConfig> configs) {

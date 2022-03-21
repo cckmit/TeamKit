@@ -56,9 +56,7 @@ public class JdbcSimpleConfigRepository implements SimpleConfigRepository {
                 systemConfigDo.getConfigValue(),
                 systemConfigDo.getDescription(),
                 systemConfigDo.getSequenceNo(),
-                systemConfigDo.getEnabled(),
-                systemConfigDo.getCreatedBy(),
-                systemConfigDo.getCreateTime()
+                systemConfigDo.getEnabled()
         );
 
         BeanUtil.copyProperties(systemConfigDo, simpleConfig);

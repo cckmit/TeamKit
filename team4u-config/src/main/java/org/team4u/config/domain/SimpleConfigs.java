@@ -88,9 +88,7 @@ public class SimpleConfigs {
                                 it.getConfigValue(),
                                 it.getDescription(),
                                 it.getSequenceNo(),
-                                it.getEnabled(),
-                                it.getCreatedBy(),
-                                it.getCreateTime()
+                                it.getEnabled()
                         ))
                         .collect(Collectors.toList())
         );

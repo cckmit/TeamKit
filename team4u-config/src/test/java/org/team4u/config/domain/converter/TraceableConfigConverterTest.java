@@ -17,7 +17,7 @@ public class TraceableConfigConverterTest extends AbstractConfigConverterTest {
         // 配置项变动
         SimpleConfigs newConfigs = repository.allConfigs().copy();
         newConfigs.getValue().get(0).setConfigValue("2");
-        new SimpleConfigComparator().compare(repository.allConfigs().getValue(), newConfigs.getValue());
+        new SimpleConfigComparator().compareAndPublishEvents(repository.allConfigs().getValue(), newConfigs.getValue());
 
         Assert.assertEquals(2, config.getA());
         Assert.assertTrue(config.isF());

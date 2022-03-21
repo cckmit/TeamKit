@@ -1,6 +1,5 @@
 package org.team4u.config.domain.repository;
 
-import cn.hutool.core.util.ObjectUtil;
 import lombok.Getter;
 import org.team4u.base.lang.lazy.LazyRefreshSupplier;
 import org.team4u.config.domain.SimpleConfigComparator;
@@ -48,9 +47,14 @@ public class CacheableSimpleConfigRepository implements SimpleConfigRepository {
 
     private SimpleConfigs loadAndCompare() {
         SimpleConfigs newConfigs = delegateConfigRepository.allConfigs();
-        SimpleConfigs oldConfigs = ObjectUtil.defaultIfNull(configsSupplier.value(), SimpleConfigs.EMPTY);
 
-        simpleConfigComparator.compare(oldConfigs.getValue(), newConfigs.getValue());
+        // 首次初始化不做比对
+        if (configsSupplier.value() != null) {
+            simpleConfigComparator.compareAndPublishEvents(
+                    configsSupplier.value().getValue(),
+                    newConfigs.getValue()
+            );
+        }
 
         return newConfigs;
     }

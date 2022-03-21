@@ -16,11 +16,11 @@ import java.util.stream.Collectors;
 @Getter
 public class ConfigAllChangedEvent extends AbstractDomainEvent {
 
-    private final List<AbstractConfigChangedEvent<?>> changedEvents;
+    private final List<? extends SimpleConfigEvent> allEvents;
 
-    public ConfigAllChangedEvent(List<AbstractConfigChangedEvent<?>> changedEvents) {
+    public ConfigAllChangedEvent(List<? extends SimpleConfigEvent> allEvents) {
         super(IdUtil.fastSimpleUUID());
-        this.changedEvents = changedEvents;
+        this.allEvents = allEvents;
     }
 
     /**
@@ -28,14 +28,14 @@ public class ConfigAllChangedEvent extends AbstractDomainEvent {
      *
      * @author jay.wu
      */
-    public Set<String> changedConfigTypes() {
-        return changedEvents.stream()
+    public Set<String> allConfigTypes() {
+        return allEvents.stream()
                 .map(it -> it.getConfigId().getConfigType())
                 .collect(Collectors.toSet());
     }
 
     @Override
     public String toString() {
-        return changedEvents.toString();
+        return allEvents.toString();
     }
 }
