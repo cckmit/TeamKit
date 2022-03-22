@@ -31,7 +31,7 @@ public class SequenceQueueHolder {
     @Getter
     private final SequenceQueueCleaner queueCleaner;
 
-    private final LazyFunction<SequenceQueueContext, HolderValue> queues;
+    private final LazyFunction<SequenceQueueContext, Value> queues;
 
     public SequenceQueueHolder() {
         queues = LazyFunction.of(buildLazyConfig(), this::buildQueue);
@@ -51,13 +51,13 @@ public class SequenceQueueHolder {
                 .build();
     }
 
-    private HolderValue buildQueue(SequenceQueueContext context) {
+    private Value buildQueue(SequenceQueueContext context) {
         SequenceQueue queue = new SequenceQueue(context);
 
         SequenceQueueProducer producer = new SequenceQueueProducer(queue, context);
         producer.start();
 
-        return new HolderValue(queue, producer);
+        return new Value(queue, producer);
     }
 
     public SequenceQueue queueOf(SequenceQueueContext context) {
@@ -65,7 +65,7 @@ public class SequenceQueueHolder {
     }
 
     public SequenceQueueProducer producerOf(SequenceProvider.Context context) {
-        HolderValue value = queues.apply(new SequenceQueueContext(
+        Value value = queues.apply(new SequenceQueueContext(
                 context,
                 null,
                 null
@@ -78,7 +78,7 @@ public class SequenceQueueHolder {
         return value.getProducer();
     }
 
-    public List<HolderValue> values() {
+    public List<Value> values() {
         return queues.values();
     }
 
@@ -95,7 +95,7 @@ public class SequenceQueueHolder {
     }
 
     @Data
-    public static class HolderValue {
+    public static class Value {
         private final SequenceQueue queue;
         private final SequenceQueueProducer producer;
     }
