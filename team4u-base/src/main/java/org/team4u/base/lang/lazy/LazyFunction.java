@@ -165,32 +165,22 @@ public class LazyFunction<T, R> implements Function<T, R> {
         config.getCache().clear();
     }
 
+
     /**
      * 删除缓存
      *
-     * @param keyFunc 返回需要删除的key，若key = null则不删除
+     * @param key 目标key
      */
-    @SuppressWarnings("unchecked")
-    public int remove(Function<R, T> keyFunc) {
-        int count = 0;
-        for (Object value : config.getCache()) {
-            Object key = keyFunc.apply((R) value);
-            if (key == null) {
-                continue;
-            }
-
-            config.getCache().remove(config.keyFunc.apply(key));
-            count++;
-        }
-
-        return count;
-    }
-
     @SuppressWarnings("unchecked")
     public void remove(T key) {
         removeByRawKey(config.keyFunc.apply(key));
     }
 
+    /**
+     * 删除缓存
+     *
+     * @param key 经过keyFunc转换后的最终key
+     */
     @SuppressWarnings("unchecked")
     public void removeByRawKey(Object key) {
         LogMessage lm = LogMessage.create(config.getName(), "remove");
@@ -200,11 +190,19 @@ public class LazyFunction<T, R> implements Function<T, R> {
         log.info(lm.append("key", key).append("size", size()).success().toString());
     }
 
+    /**
+     * 获取缓存键值对集合
+     * <p>
+     * 注意：key为经过keyFunc转换后的最终key
+     */
     @SuppressWarnings("unchecked")
     public List<CacheObj<?, R>> keyAndValues() {
         return CollUtil.newArrayList(config.getCache().cacheObjIterator());
     }
 
+    /**
+     * 获取缓存结果集合
+     */
     public List<R> values() {
         return keyAndValues()
                 .stream()

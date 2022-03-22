@@ -38,6 +38,6 @@ public class CacheableProcessDefinitionRepository implements ProcessDefinitionRe
     public void save(ProcessDefinition domain) {
         delegate.save(domain);
         // 保存后及时更新缓存
-        lazyDefinition.remove(it -> it.getProcessDefinitionId().toString());
+        lazyDefinition.remove(domain.getProcessDefinitionId().toString());
     }
 }
