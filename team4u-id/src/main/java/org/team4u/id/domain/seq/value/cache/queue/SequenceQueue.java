@@ -3,6 +3,8 @@ package org.team4u.id.domain.seq.value.cache.queue;
 import cn.hutool.core.util.ObjectUtil;
 import lombok.Getter;
 import org.team4u.base.error.NestedException;
+import org.team4u.id.domain.seq.value.StepSequenceProvider;
+import org.team4u.id.domain.seq.value.cache.CacheStepSequenceConfig;
 
 import java.util.Objects;
 import java.util.concurrent.BlockingQueue;
@@ -46,7 +48,10 @@ public class SequenceQueue {
 
     public SequenceQueue(SequenceQueueContext context) {
         this.context = context;
-        this.cache = new LinkedBlockingQueue<>(context.getDelegateProvider().config().getStep());
+        this.cache = new LinkedBlockingQueue<>(maxCacheSeqSize(
+                context.getSequenceConfig(),
+                context.getDelegateProvider().config()
+        ));
         this.status = SequenceQueueStatus.CREATED;
         this.createdAt = System.currentTimeMillis();
 
@@ -82,6 +87,14 @@ public class SequenceQueue {
 
     public boolean isExhausted() {
         return status == SequenceQueueStatus.EXHAUSTED;
+    }
+
+    private int maxCacheSeqSize(CacheStepSequenceConfig cacheConfig, StepSequenceProvider.Config delegateConfig) {
+        if (cacheConfig.getMaxCacheSeqSize() <= 0) {
+            return delegateConfig.getStep();
+        }
+
+        return cacheConfig.getMaxCacheSeqSize();
     }
 
     private boolean isNull(Number result) {

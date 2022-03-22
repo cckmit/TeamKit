@@ -25,6 +25,12 @@ public class CacheStepSequenceConfig {
      */
     private String delegateConfig;
     /**
+     * 最大缓存序号数量
+     * <p>
+     * 默认使用delegateConfig.step值
+     */
+    private int maxCacheSeqSize;
+    /**
      * 获取序号超时时间（毫秒）
      */
     private int nextTimeoutMillis = 20;
