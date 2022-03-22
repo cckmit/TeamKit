@@ -24,7 +24,7 @@ public class SequenceQueueCleaner extends LongTimeThread {
     }
 
     /**
-     * 清理过期缓存
+     * 清理过期队列集合
      *
      * @return 已清理数量
      */
@@ -36,7 +36,7 @@ public class SequenceQueueCleaner extends LongTimeThread {
     }
 
     /**
-     * 清理队列
+     * 清理过期队列
      */
     private boolean clear(SequenceQueueHolder.HolderValue value) {
         if (!isExpired(value.getQueue())) {
