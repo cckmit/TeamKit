@@ -3,6 +3,8 @@ package org.team4u.base.lang.lazy;
 
 import cn.hutool.cache.Cache;
 import cn.hutool.cache.CacheUtil;
+import cn.hutool.cache.impl.CacheObj;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.caller.CallerUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.log.Log;
@@ -12,7 +14,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.team4u.base.log.LogMessage;
 
+import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * 懒加载函数
@@ -148,6 +152,13 @@ public class LazyFunction<T, R> implements Function<T, R> {
     }
 
     /**
+     * 缓存大小
+     */
+    public int size() {
+        return config.getCache().size();
+    }
+
+    /**
      * 重置缓存
      */
     public void reset() {
@@ -173,6 +184,32 @@ public class LazyFunction<T, R> implements Function<T, R> {
         }
 
         return count;
+    }
+
+    @SuppressWarnings("unchecked")
+    public void remove(T key) {
+        removeByRawKey(config.keyFunc.apply(key));
+    }
+
+    @SuppressWarnings("unchecked")
+    public void removeByRawKey(Object key) {
+        LogMessage lm = LogMessage.create(config.getName(), "remove");
+
+        config.getCache().remove(key);
+
+        log.info(lm.append("key", key).append("size", size()).success().toString());
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<CacheObj<?, R>> keyAndValues() {
+        return CollUtil.newArrayList(config.getCache().cacheObjIterator());
+    }
+
+    public List<R> values() {
+        return keyAndValues()
+                .stream()
+                .map(CacheObj::getValue)
+                .collect(Collectors.toList());
     }
 
     public <R2> LazyFunction<T, R2> map(Function<R, R2> function) {

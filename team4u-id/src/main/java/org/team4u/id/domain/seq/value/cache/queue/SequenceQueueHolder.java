@@ -6,6 +6,8 @@ import org.team4u.base.lang.lazy.LazyFunction;
 import org.team4u.base.lang.lazy.LazySupplier;
 import org.team4u.id.domain.seq.value.SequenceProvider;
 
+import java.util.List;
+
 /**
  * 序号队列服务
  * <p>
@@ -37,13 +39,14 @@ public class SequenceQueueHolder {
     }
 
     private SequenceQueueCleaner buildQueueCleaner() {
-        SequenceQueueCleaner queueCleaner = new SequenceQueueCleaner(queues);
+        SequenceQueueCleaner queueCleaner = new SequenceQueueCleaner(this);
         queueCleaner.start();
         return queueCleaner;
     }
 
     private LazyFunction.Config buildLazyConfig() {
         return LazyFunction.Config.builder()
+                .name(this.getClass().getSimpleName())
                 .keyFunc(it -> ((SequenceQueueContext) it).id())
                 .build();
     }
@@ -75,8 +78,20 @@ public class SequenceQueueHolder {
         return value.getProducer();
     }
 
-    public void clear() {
+    public List<HolderValue> values() {
+        return queues.values();
+    }
+
+    public void remove(SequenceQueueContext context) {
+        queues.remove(context);
+    }
+
+    public void reset() {
         queues.reset();
+    }
+
+    public int size() {
+        return queues.size();
     }
 
     @Data

@@ -1,13 +1,8 @@
 package org.team4u.id.domain.seq.value.cache.queue;
 
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.log.Log;
 import org.team4u.base.lang.LongTimeThread;
-import org.team4u.base.lang.lazy.LazyFunction;
-import org.team4u.base.log.LogMessageContext;
 import org.team4u.id.domain.seq.value.cache.CacheStepSequenceConfig;
-
-import static org.team4u.base.log.LogService.withInfoLog;
 
 /**
  * 序号队列清理器
@@ -17,12 +12,10 @@ import static org.team4u.base.log.LogService.withInfoLog;
  */
 public class SequenceQueueCleaner extends LongTimeThread {
 
-    private final Log log = Log.get();
+    private final SequenceQueueHolder queueHolder;
 
-    private final LazyFunction<SequenceQueueContext, SequenceQueueHolder.HolderValue> queues;
-
-    public SequenceQueueCleaner(LazyFunction<SequenceQueueContext, SequenceQueueHolder.HolderValue> queues) {
-        this.queues = queues;
+    public SequenceQueueCleaner(SequenceQueueHolder queueHolder) {
+        this.queueHolder = queueHolder;
     }
 
     @Override
@@ -36,26 +29,25 @@ public class SequenceQueueCleaner extends LongTimeThread {
      * @return 已清理数量
      */
     public int clear() {
-        return withInfoLog(log, "clear", () -> {
-            int count = queues.remove(this::close);
-            LogMessageContext.get().append("count", count);
-            return count;
-        });
+        return (int) queueHolder.values()
+                .stream()
+                .filter(this::clear)
+                .count();
     }
 
     /**
-     * 关闭队列生产者
-     *
-     * @return 返回关闭队列的上下文
+     * 清理队列
      */
-    private SequenceQueueContext close(SequenceQueueHolder.HolderValue holderValue) {
-        if (!isExpired(holderValue.getQueue())) {
-            return null;
+    private boolean clear(SequenceQueueHolder.HolderValue value) {
+        if (!isExpired(value.getQueue())) {
+            return false;
         }
 
         // 关闭队列生产者
-        IoUtil.close(holderValue.getProducer());
-        return holderValue.getQueue().getContext();
+        IoUtil.close(value.getProducer());
+        // 移除队列
+        queueHolder.remove(value.getQueue().getContext());
+        return true;
     }
 
     private boolean isExpired(SequenceQueue queue) {

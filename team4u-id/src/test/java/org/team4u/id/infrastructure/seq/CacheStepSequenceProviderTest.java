@@ -28,7 +28,7 @@ public class CacheStepSequenceProviderTest {
 
     @Before
     public void setUp() {
-        SequenceQueueHolder.getInstance().clear();
+        SequenceQueueHolder.getInstance().reset();
     }
 
     @Test
@@ -175,7 +175,7 @@ public class CacheStepSequenceProviderTest {
         ThreadUtil.sleep(200);
         Assert.assertEquals(1, p.getSequenceQueueHolder().getQueueCleaner().clear());
         Assert.assertEquals(0, p.getSequenceQueueHolder().getQueueCleaner().clear());
-
+        Assert.assertEquals(0, p.getSequenceQueueHolder().size());
         Assert.assertTrue(producer.isClosed());
 
         producer.awaitTermination();
