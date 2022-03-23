@@ -44,7 +44,12 @@ public class CommandAppServiceTest {
                                          MockCommandRequest request,
                                          MockCommandResponse response) {
         Mockito.when(configRepository.configOfId(commandId)).thenReturn(config);
-        Mockito.when(commandExecutor.execute(new CommandHandler.Context(commandId, config, request))).thenReturn(response);
+
+        Mockito.doAnswer(invocationOnMock -> {
+            CommandHandler.Context c = invocationOnMock.getArgumentAt(0, CommandHandler.Context.class);
+            c.setResponse(response);
+            return null;
+        }).when(commandExecutor).execute(new CommandHandler.Context(commandId, config, request));
 
         return new CommandAppService(commandExecutor, configRepository);
     }

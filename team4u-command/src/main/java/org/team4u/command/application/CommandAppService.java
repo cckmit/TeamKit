@@ -57,24 +57,23 @@ public class CommandAppService {
      * @param <Response> 命令响应
      * @return 命令响应
      */
-    @SuppressWarnings("unchecked")
     public <Response> Response execute(CommandHandler.Context context) {
         LogMessage lm = LogMessages.createWithMasker(
-                this.getClass().getSimpleName(),
-                "execute|" + context.getCommandId()
+                this.getClass().getSimpleName(), "execute|" + context.getCommandId()
         ).append("request", context.getRequest());
-        Response response = null;
-        try {
-            response = (Response) commandExecutor.execute(context);
 
-            log.info(lm.success().append("response", response).toString());
-            return response;
+        try {
+            commandExecutor.execute(context);
+
+            log.info(lm.success().append("response", context.getResponse()).toString());
+
+            return context.getResponse();
         } catch (ControlException e) {
             log.info(lm.success()
-                    .append("response", response)
+                    .append("response", context.getResponse())
                     .append("stop", e.getMessage())
                     .toString());
-            return response;
+            return context.getResponse();
         } catch (Exception e) {
             LogService.logForError(log, lm, e);
             throw e;

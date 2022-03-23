@@ -58,7 +58,7 @@ public class LiteFlowCommandExecutor extends PolicyRegistrar<String, CommandRout
     }
 
     @Override
-    public Object execute(CommandHandler.Context context) {
+    public void execute(CommandHandler.Context context) {
         FlowExecutor executor = flowMap.get(context.getCommandId());
         if (executor == null) {
             throw new SystemDataNotExistException("commandId=" + context.getCommandId());
@@ -69,7 +69,5 @@ public class LiteFlowCommandExecutor extends PolicyRegistrar<String, CommandRout
         } catch (Exception e) {
             throw NestedException.wrap(e);
         }
-
-        return context.getResponse();
     }
 }

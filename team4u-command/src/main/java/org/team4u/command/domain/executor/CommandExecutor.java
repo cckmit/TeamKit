@@ -14,7 +14,6 @@ public interface CommandExecutor {
      * 执行命令
      *
      * @param context 上下文
-     * @return 命令响应
      */
-    Object execute(CommandHandler.Context context);
+    void execute(CommandHandler.Context context);
 }

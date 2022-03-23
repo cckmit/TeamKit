@@ -12,13 +12,14 @@ public abstract class AbstractCommandExecutorTest {
 
     @Test
     public void execute() {
-        MockCommandResponse response = (MockCommandResponse) commandExecutor().execute(
-                new CommandHandler.Context(
-                        "test",
-                        new CommandConfig(new HashMap<>()),
-                        new MockCommandRequest("test")
-                )
+        CommandHandler.Context c = new CommandHandler.Context(
+                "test",
+                new CommandConfig(new HashMap<>()),
+                new MockCommandRequest("test")
         );
+        commandExecutor().execute(c);
+
+        MockCommandResponse response = c.getResponse();
 
         Assert.assertEquals("test", response.getChannelCode());
         Assert.assertEquals("test", response.getChannelRawBody());

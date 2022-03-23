@@ -56,19 +56,16 @@ public class CamelCommandExecutor extends PolicyRegistrar<String, CommandRoutesB
     }
 
     @Override
-    public Object execute(CommandHandler.Context context) {
+    public void execute(CommandHandler.Context context) {
         CamelContext camelContext = contexts.get(context.getCommandId());
         if (camelContext == null) {
             throw new SystemDataNotExistException("commandId=" + context.getCommandId());
         }
 
-        camelContext.createProducerTemplate()
-                .sendBody(
-                        "direct:" + context.getCommandId(),
-                        ExchangePattern.InOut,
-                        context
-                );
-
-        return context.getResponse();
+        camelContext.createProducerTemplate().sendBody(
+                "direct:" + context.getCommandId(),
+                ExchangePattern.InOut,
+                context
+        );
     }
 }

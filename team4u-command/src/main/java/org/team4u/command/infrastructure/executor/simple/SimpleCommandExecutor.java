@@ -52,13 +52,12 @@ public class SimpleCommandExecutor
     }
 
     @Override
-    public Object execute(CommandHandler.Context context) {
+    public void execute(CommandHandler.Context context) {
         FilterChain<CommandHandler.Context> filterChain = filterChainMap.get(context.getCommandId());
         if (filterChain == null) {
             throw new SystemDataNotExistException("commandId=" + context.getCommandId());
         }
 
         filterChain.doFilter(context);
-        return context.getResponse();
     }
 }

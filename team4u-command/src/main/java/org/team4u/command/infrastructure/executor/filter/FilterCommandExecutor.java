@@ -49,10 +49,9 @@ public class FilterCommandExecutor extends PolicyRegistrar<String, CommandRoutes
     }
 
     @Override
-    public Object execute(CommandHandler.Context context) {
+    public void execute(CommandHandler.Context context) {
         Optional.ofNullable(filterChainMap.get(context.getCommandId()))
                 .map(it -> it.doFilter(context))
                 .orElseThrow(() -> new SystemDataNotExistException("commandId=" + context.getCommandId()));
-        return context.getResponse();
     }
 }
