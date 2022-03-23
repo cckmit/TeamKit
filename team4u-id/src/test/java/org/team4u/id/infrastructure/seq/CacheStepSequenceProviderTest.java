@@ -13,6 +13,7 @@ import org.team4u.id.domain.seq.value.SequenceProvider;
 import org.team4u.id.domain.seq.value.SequenceProviderFactoryHolder;
 import org.team4u.id.domain.seq.value.cache.CacheStepSequenceProvider;
 import org.team4u.id.domain.seq.value.cache.CacheStepSequenceProviderFactory;
+import org.team4u.id.domain.seq.value.cache.queue.SequenceQueueContext;
 import org.team4u.id.domain.seq.value.cache.queue.SequenceQueueHolder;
 import org.team4u.id.domain.seq.value.cache.queue.SequenceQueueProducer;
 
@@ -166,7 +167,9 @@ public class CacheStepSequenceProviderTest {
         p.config().setQueueExpiredMillis(200);
 
         Assert.assertEquals(1L, p.provide(sequenceProviderContext()));
-        SequenceQueueProducer producer = p.getSequenceQueueHolder().producerOf(sequenceProviderContext());
+        SequenceQueueProducer producer = p.getSequenceQueueHolder().producerOf(
+                new SequenceQueueContext(sequenceProviderContext(), null, null)
+        );
         Assert.assertEquals(2L, p.provide(sequenceProviderContext()));
         Assert.assertNull(p.provide(sequenceProviderContext()));
         Assert.assertTrue(p.isEmpty(sequenceProviderContext()));

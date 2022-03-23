@@ -4,9 +4,9 @@ import lombok.Data;
 import lombok.Getter;
 import org.team4u.base.lang.lazy.LazyFunction;
 import org.team4u.base.lang.lazy.LazySupplier;
-import org.team4u.id.domain.seq.value.SequenceProvider;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 序号队列服务
@@ -64,18 +64,10 @@ public class SequenceQueueHolder {
         return queues.apply(context).getQueue();
     }
 
-    public SequenceQueueProducer producerOf(SequenceProvider.Context context) {
-        Value value = queues.apply(new SequenceQueueContext(
-                context,
-                null,
-                null
-        ));
-
-        if (value == null) {
-            return null;
-        }
-
-        return value.getProducer();
+    public SequenceQueueProducer producerOf(SequenceQueueContext context) {
+        return Optional.ofNullable(queues.value(context))
+                .map(Value::getProducer)
+                .orElse(null);
     }
 
     public List<Value> values() {

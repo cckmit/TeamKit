@@ -67,23 +67,46 @@ public class LazyFunction<T, R> implements Function<T, R> {
         return new LazyFunction<>(config, valueFunc);
     }
 
+    /**
+     * 根据Key获取或者创建值
+     *
+     * <p>
+     * - 若值不存在则创建
+     * <p>
+     * - 相同key仅创建一次
+     *
+     * @param key 键
+     * @return 值
+     */
     @Override
     public R apply(T key) {
         Object cacheKey = cacheKey(key);
 
-        R result = valueOfCache(cacheKey);
+        R result = valueOfCacheKey(cacheKey);
         if (result != null) {
             return result;
         }
 
         synchronized (lockOfKey(cacheKey)) {
-            result = valueOfCache(cacheKey);
+            result = valueOfCacheKey(cacheKey);
             if (result != null) {
                 return result;
             }
 
             return applyNewValue(cacheKey, key);
         }
+    }
+
+    /**
+     * 直接获取值
+     * <p>
+     * 该方法不会创建值
+     *
+     * @param key 键
+     * @return 仅返回已存在的值，不存在则返回null
+     */
+    public R value(T key) {
+        return valueOfCacheKey(cacheKey(key));
     }
 
     private Object lockOfKey(Object cacheKey) {
@@ -123,8 +146,14 @@ public class LazyFunction<T, R> implements Function<T, R> {
         return result;
     }
 
+    /**
+     * 根据最终的缓存key获取值
+     *
+     * @param cacheKey 最终的缓存key
+     * @return 值
+     */
     @SuppressWarnings("unchecked")
-    private R valueOfCache(Object cacheKey) {
+    private R valueOfCacheKey(Object cacheKey) {
         return (R) config.getCache().get(cacheKey);
     }
 
@@ -152,7 +181,7 @@ public class LazyFunction<T, R> implements Function<T, R> {
     }
 
     /**
-     * 缓存大小
+     * 值数量
      */
     public int size() {
         return config.getCache().size();
@@ -167,27 +196,26 @@ public class LazyFunction<T, R> implements Function<T, R> {
 
 
     /**
-     * 删除缓存
+     * 删除值
      *
      * @param key 目标key
      */
-    @SuppressWarnings("unchecked")
     public void remove(T key) {
-        removeByRawKey(config.keyFunc.apply(key));
+        removeByCacheKey(cacheKey(key));
     }
 
     /**
-     * 删除缓存
+     * 根据最终的缓存key删除值
      *
-     * @param key 经过keyFunc转换后的最终key
+     * @param cacheKey 经过keyFunc转换后的最终key
      */
     @SuppressWarnings("unchecked")
-    public void removeByRawKey(Object key) {
+    public void removeByCacheKey(Object cacheKey) {
         LogMessage lm = LogMessage.create(config.getName(), "remove");
 
-        config.getCache().remove(key);
+        config.getCache().remove(cacheKey);
 
-        log.info(lm.append("key", key).append("size", size()).success().toString());
+        log.info(lm.append("key", cacheKey).append("size", size()).success().toString());
     }
 
     /**
@@ -201,7 +229,7 @@ public class LazyFunction<T, R> implements Function<T, R> {
     }
 
     /**
-     * 获取缓存结果集合
+     * 获取值集合
      */
     public List<R> values() {
         return keyAndValues()

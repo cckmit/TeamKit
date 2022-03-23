@@ -87,7 +87,7 @@ public class JdbcStepSequenceProvider extends RdbmsStepSequenceProvider {
     @Data
     public static class Config extends StepSequenceProvider.Config {
         /**
-         * 数据源 bean标识，若不指定则默认获取类型为DataSource的bean
+         * 数据源 bean标识正则表达式，若不指定则默认获取类型为DataSource的bean
          */
         private String dataSourceBeanId;
     }
