@@ -35,7 +35,7 @@ public class CacheStepSequenceConfig {
      */
     private int nextTimeoutMillis = 300;
     /**
-     * 队列生产阻塞超时时间（毫秒）
+     * 队列生产者推送阻塞超时时间（毫秒）
      */
     private int queueOfferTimeoutMillis = 60000;
     /**
