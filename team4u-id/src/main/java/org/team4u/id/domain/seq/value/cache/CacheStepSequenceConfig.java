@@ -28,6 +28,10 @@ public class CacheStepSequenceConfig extends IdentifiedConfig {
      */
     private String delegateConfig;
     /**
+     * 代理序号提供者配置对象
+     */
+    private StepSequenceProvider.Config delegateConfigBean;
+    /**
      * 最大缓存序号数量
      * <p>
      * 默认使用delegateConfig.step值
@@ -37,23 +41,54 @@ public class CacheStepSequenceConfig extends IdentifiedConfig {
      * 获取序号超时时间（毫秒）
      */
     private int nextTimeoutMillis = 300;
+
     /**
      * 队列生产者推送阻塞超时时间（毫秒）
      */
     private int queueOfferTimeoutMillis = 60000;
     /**
-     * 队列失效时间（毫秒）
+     * 队列正常失效时间（毫秒）
      * <p>
      * - 0则表示永不失效
      * <p>
      * - 建议与group周期一致
      */
     private int queueExpiredMillis = 0;
+    /**
+     * 当配置更新后队列失效时间（毫秒）
+     * <p>
+     * 0则表示更新不失效，将等待正常失效
+     */
+    private int queueExpiredWhenConfigChangedMillis = 2000;
 
     /**
      * 序号队列是否会过期
      */
     public boolean isQueueWillExpire() {
         return queueExpiredMillis > 0;
+    }
+
+    /**
+     * 序号队列是否会过期
+     */
+    public boolean isQueueWillExpireWhenConfigChanged() {
+        return queueExpiredMillis > 0;
+    }
+
+    public int maxCacheSeqSize() {
+        if (getMaxCacheSeqSize() <= 0) {
+            return delegateConfigBean.getStep();
+        }
+
+        return getMaxCacheSeqSize();
+    }
+
+    public void resetQueueExpiredMillisWhenConfigChanged() {
+        if (!isQueueWillExpireWhenConfigChanged()) {
+            return;
+        }
+
+        // 为了防止旧队列仍然被并发访问，需要延迟过期
+        setQueueExpiredMillis(getQueueExpiredWhenConfigChangedMillis());
     }
 }

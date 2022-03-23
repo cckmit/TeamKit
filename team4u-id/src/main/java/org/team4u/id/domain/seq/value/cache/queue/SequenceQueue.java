@@ -3,7 +3,6 @@ package org.team4u.id.domain.seq.value.cache.queue;
 import cn.hutool.core.util.ObjectUtil;
 import lombok.Getter;
 import org.team4u.base.error.NestedException;
-import org.team4u.id.domain.seq.value.StepSequenceProvider;
 import org.team4u.id.domain.seq.value.cache.CacheStepSequenceConfig;
 
 import java.util.Objects;
@@ -48,10 +47,7 @@ public class SequenceQueue {
 
     public SequenceQueue(SequenceQueueContext context) {
         this.context = context;
-        this.cache = new LinkedBlockingQueue<>(maxCacheSeqSize(
-                context.getSequenceConfig(),
-                context.getDelegateProvider().config()
-        ));
+        this.cache = buildCache(context.getCacheConfig().maxCacheSeqSize());
     }
 
     public boolean offer(Number seq, long timeout, TimeUnit unit) throws InterruptedException {
@@ -86,12 +82,12 @@ public class SequenceQueue {
         return status == Status.EXHAUSTED;
     }
 
-    private int maxCacheSeqSize(CacheStepSequenceConfig cacheConfig, StepSequenceProvider.Config delegateConfig) {
-        if (cacheConfig.getMaxCacheSeqSize() <= 0) {
-            return delegateConfig.getStep();
-        }
+    public boolean isChange(CacheStepSequenceConfig newCacheConfig) {
+        return newCacheConfig.maxCacheSeqSize() != context.getCacheConfig().getMaxCacheSeqSize();
+    }
 
-        return cacheConfig.getMaxCacheSeqSize();
+    private LinkedBlockingQueue<Number> buildCache(int maxCacheSeqSize) {
+        return new LinkedBlockingQueue<>(maxCacheSeqSize);
     }
 
     private boolean isNull(Number result) {

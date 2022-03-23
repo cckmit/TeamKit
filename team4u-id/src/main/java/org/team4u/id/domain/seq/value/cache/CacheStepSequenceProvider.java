@@ -41,8 +41,11 @@ public class CacheStepSequenceProvider implements SequenceProvider {
                                      StepSequenceProvider delegateProvider,
                                      SequenceQueueHolder queueHolder) {
         this.config = config;
+        this.config.setDelegateConfigBean(delegateProvider.config());
         this.delegateProvider = delegateProvider;
         this.queueHolder = queueHolder;
+
+        queueHolder.refresh(config);
     }
 
     public CacheStepSequenceProvider(CacheStepSequenceConfig config,

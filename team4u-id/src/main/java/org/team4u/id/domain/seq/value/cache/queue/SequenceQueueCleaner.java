@@ -47,7 +47,7 @@ public class SequenceQueueCleaner extends LongTimeThread {
     }
 
     private boolean isExpired(SequenceQueue queue) {
-        CacheStepSequenceConfig config = queue.getContext().getSequenceConfig();
+        CacheStepSequenceConfig config = queue.getContext().getCacheConfig();
 
         // 队列永不过期，直接返回
         if (!config.isQueueWillExpire()) {
@@ -65,6 +65,6 @@ public class SequenceQueueCleaner extends LongTimeThread {
 
     @Override
     protected Number runIntervalMillis() {
-        return 60000;
+        return 5000;
     }
 }

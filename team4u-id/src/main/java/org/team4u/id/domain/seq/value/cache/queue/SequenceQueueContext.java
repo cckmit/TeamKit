@@ -15,7 +15,7 @@ public class SequenceQueueContext {
 
     private final SequenceProvider.Context providerContext;
 
-    private final CacheStepSequenceConfig sequenceConfig;
+    private final CacheStepSequenceConfig cacheConfig;
 
     private final StepSequenceProvider delegateProvider;
 

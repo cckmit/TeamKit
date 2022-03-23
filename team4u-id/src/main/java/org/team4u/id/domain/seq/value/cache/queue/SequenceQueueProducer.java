@@ -26,7 +26,7 @@ public class SequenceQueueProducer extends LongTimeThread {
         this.queue = queue;
         this.context = context;
         this.segment = new SequenceSegment(
-                context.getSequenceConfig(),
+                context.getCacheConfig(),
                 context.getDelegateProvider().config()
         );
 
@@ -63,7 +63,7 @@ public class SequenceQueueProducer extends LongTimeThread {
 
         if (log.isInfoEnabled()) {
             log.info(lm.success()
-                    .append("context", queue.getContext())
+                    .append("context", context)
                     .append("delegateSeq", seq)
                     .append("segment", segment)
                     .toString());
@@ -102,7 +102,7 @@ public class SequenceQueueProducer extends LongTimeThread {
 
     private void putAndWait(Number seq) throws InterruptedException {
         // 阻塞直到推送成功
-        while (!queue.offer(seq, context.getSequenceConfig().getQueueOfferTimeoutMillis(), TimeUnit.MILLISECONDS)) {
+        while (!queue.offer(seq, context.getCacheConfig().getQueueOfferTimeoutMillis(), TimeUnit.MILLISECONDS)) {
             // 线程已被关闭，退出
             if (isClosed()) {
                 throw new InterruptedException("Thread is closed");

@@ -1,10 +1,12 @@
 package org.team4u.id.domain.seq.value.cache.queue;
 
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.util.StrUtil;
 import lombok.Data;
 import lombok.Getter;
 import org.team4u.base.lang.lazy.LazyFunction;
 import org.team4u.base.lang.lazy.LazySupplier;
+import org.team4u.id.domain.seq.value.cache.CacheStepSequenceConfig;
 
 import java.util.List;
 import java.util.Optional;
@@ -58,7 +60,7 @@ public class SequenceQueueHolder {
         SequenceQueueProducer producer = new SequenceQueueProducer(queue, context);
         producer.start();
 
-        return new Value(queue, producer);
+        return new Value(context.getCacheConfig(), queue, producer);
     }
 
     public SequenceQueue queueOf(SequenceQueueContext context) {
@@ -73,10 +75,6 @@ public class SequenceQueueHolder {
 
     public List<Value> values() {
         return queues.values();
-    }
-
-    public void expire(SequenceQueueContext context) {
-        Optional.ofNullable(queues.value(context)).ifPresent(Value::expire);
     }
 
     public void remove(SequenceQueueContext context) {
@@ -94,14 +92,24 @@ public class SequenceQueueHolder {
         return queues.size();
     }
 
+    /**
+     * 刷新配置
+     * <p>
+     * 当有新配置时，通过调整旧配置队列过期时间实现快速过期
+     *
+     * @param newCacheConfig 新增配置
+     */
+    public void refresh(CacheStepSequenceConfig newCacheConfig) {
+        values().stream()
+                .filter(it -> StrUtil.equals(it.getCacheConfig().getConfigId(), newCacheConfig.getConfigId()))
+                .filter(it -> !it.getCacheConfig().equals(newCacheConfig))
+                .forEach(it -> it.getCacheConfig().resetQueueExpiredMillisWhenConfigChanged());
+    }
+
     @Data
     public static class Value {
-        private long expiredAt;
+        private final CacheStepSequenceConfig cacheConfig;
         private final SequenceQueue queue;
         private final SequenceQueueProducer producer;
-
-        public void expire() {
-            expiredAt = System.currentTimeMillis();
-        }
     }
 }
