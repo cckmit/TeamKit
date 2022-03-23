@@ -33,7 +33,7 @@ public class CacheStepSequenceConfig {
     /**
      * 获取序号超时时间（毫秒）
      */
-    private int nextTimeoutMillis = 20;
+    private int nextTimeoutMillis = 300;
     /**
      * 队列生产阻塞超时时间（毫秒）
      */
