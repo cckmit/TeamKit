@@ -5,7 +5,6 @@ import org.team4u.command.domain.executor.ContextNames;
 import org.team4u.command.domain.executor.handler.CommandHandler;
 
 import java.util.Date;
-import java.util.Optional;
 
 /**
  * 命令日志处理器
@@ -22,8 +21,7 @@ public class CommandLogHandler implements CommandHandler {
 
     @Override
     public void handle(Context context) {
-        CommandLog commandLog = Optional.ofNullable((CommandLog) context.extraAttribute(ContextNames.COMMAND_LOG))
-                .orElseGet(() -> commandLogRepository.logOf(context.getCommandLogId()));
+        CommandLog commandLog = context.extraAttribute(ContextNames.COMMAND_LOG);
 
         if (commandLog == null) {
             commandLog = newCommandLog(context)
