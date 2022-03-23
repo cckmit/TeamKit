@@ -28,13 +28,13 @@ public class SequenceQueue {
      */
     private static final Number NULL_SEQ = -1;
     /**
-     * 队列创建时间戳
-     */
-    private final long createdAt;
-    /**
      * 队列状态
      */
-    private SequenceQueueStatus status;
+    private Status status = Status.CREATED;
+    /**
+     * 队列创建时间戳
+     */
+    private final long createdAt = System.currentTimeMillis();
     /**
      * 上下文信息
      */
@@ -52,9 +52,6 @@ public class SequenceQueue {
                 context.getSequenceConfig(),
                 context.getDelegateProvider().config()
         ));
-        this.status = SequenceQueueStatus.CREATED;
-        this.createdAt = System.currentTimeMillis();
-
     }
 
     public boolean offer(Number seq, long timeout, TimeUnit unit) throws InterruptedException {
@@ -86,7 +83,7 @@ public class SequenceQueue {
     }
 
     public boolean isExhausted() {
-        return status == SequenceQueueStatus.EXHAUSTED;
+        return status == Status.EXHAUSTED;
     }
 
     private int maxCacheSeqSize(CacheStepSequenceConfig cacheConfig, StepSequenceProvider.Config delegateConfig) {
@@ -102,11 +99,21 @@ public class SequenceQueue {
     }
 
     private void exhaust() {
-        status = SequenceQueueStatus.EXHAUSTED;
+        status = Status.EXHAUSTED;
     }
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName();
+        return this.getClass().getSimpleName() + "|" + context.id();
+    }
+
+    /**
+     * 序号队列状态
+     *
+     * @author jay.wu
+     */
+    public enum Status {
+        CREATED,
+        EXHAUSTED
     }
 }
