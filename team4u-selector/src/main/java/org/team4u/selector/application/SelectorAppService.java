@@ -147,7 +147,7 @@ public class SelectorAppService {
             throw new SystemDataNotExistException("Unable to find selector|id=" + selectorConfig.getConfigId());
         }
 
-        return factory.create(selectorConfig.getBody());
+        return factory.create(selectorConfig.getConfigId(), selectorConfig.getBody());
     }
 
     /**

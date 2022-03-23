@@ -14,6 +14,8 @@ import redis.clients.jedis.JedisPoolConfig;
 
 public class TestUtil {
 
+    public static final String TEST_ID = "test";
+
     public static StringRedisTemplate createRedisTemplate() {
         StringRedisTemplate template = new StringRedisTemplate();
 

@@ -10,6 +10,7 @@ import java.util.List;
 
 public class LazyListTest {
 
+    @SuppressWarnings({"UseBulkOperation", "MismatchedQueryAndUpdateOfCollection"})
     @Test
     public void hasNext() {
         List<Integer> list = new LazyList<>(new LazyList.OffsetLoader<Integer>() {

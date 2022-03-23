@@ -29,20 +29,20 @@ import java.util.concurrent.TimeUnit;
 public class CacheStepSequenceProvider implements SequenceProvider {
 
     private final CacheStepSequenceConfig config;
+    @Getter
+    private final SequenceQueueHolder queueHolder;
     /**
      * 代理序号提供者，负责提供号段
      */
     @Getter
     private final StepSequenceProvider delegateProvider;
-    @Getter
-    private final SequenceQueueHolder sequenceQueueHolder;
 
     public CacheStepSequenceProvider(CacheStepSequenceConfig config,
                                      StepSequenceProvider delegateProvider,
-                                     SequenceQueueHolder sequenceQueueHolder) {
+                                     SequenceQueueHolder queueHolder) {
         this.config = config;
         this.delegateProvider = delegateProvider;
-        this.sequenceQueueHolder = sequenceQueueHolder;
+        this.queueHolder = queueHolder;
     }
 
     public CacheStepSequenceProvider(CacheStepSequenceConfig config,
@@ -53,7 +53,7 @@ public class CacheStepSequenceProvider implements SequenceProvider {
     @Override
     public Number provide(Context context) {
         // 增加等待时间，避免消费过快，生产不足的情况
-        return sequenceQueueHolder.queueOf(newQueueContext(context)).poll(
+        return queueHolder.queueOf(newQueueContext(context)).poll(
                 config.getNextTimeoutMillis(),
                 TimeUnit.MILLISECONDS
         );
@@ -61,7 +61,7 @@ public class CacheStepSequenceProvider implements SequenceProvider {
 
     @Override
     public boolean isEmpty(Context context) {
-        return sequenceQueueHolder.queueOf(newQueueContext(context)).isExhausted();
+        return queueHolder.queueOf(newQueueContext(context)).isExhausted();
     }
 
     private SequenceQueueContext newQueueContext(Context context) {

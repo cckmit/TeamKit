@@ -1,5 +1,6 @@
 package org.team4u.base.registrar.factory;
 
+import cn.hutool.core.lang.Pair;
 import org.team4u.base.lang.lazy.LazyFunction;
 
 /**
@@ -14,24 +15,24 @@ import org.team4u.base.lang.lazy.LazyFunction;
  */
 public abstract class AbstractCacheablePolicyFactory<CO, CI, P> extends AbstractPolicyFactory<CO, CI, P> {
 
-    private final LazyFunction<CI, P> lazyFactory;
+    private final LazyFunction<Pair<String, CI>, P> lazyFactory;
 
     public AbstractCacheablePolicyFactory() {
         this.lazyFactory = createLazyFactory();
     }
 
     @Override
-    public P create(CI config) {
-        return lazyFactory.apply(config);
+    public P create(String configId, CI config) {
+        return lazyFactory.apply(Pair.of(configId, config));
     }
 
     /**
      * 创建懒加载工厂
      */
-    protected LazyFunction<CI, P> createLazyFactory() {
+    protected LazyFunction<Pair<String, CI>, P> createLazyFactory() {
         return LazyFunction.of(
                 LazyFunction.Config.builder().name(getClass().getName() + "|lazyFactory").build(),
-                super::create
+                config -> super.create(config.getKey(), config.getValue())
         );
     }
 }

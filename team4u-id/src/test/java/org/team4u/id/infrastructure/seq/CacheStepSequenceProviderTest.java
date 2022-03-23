@@ -6,6 +6,7 @@ import cn.hutool.core.util.RandomUtil;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.team4u.TestUtil;
 import org.team4u.base.bean.provider.BeanProviders;
 import org.team4u.id.domain.seq.SequenceConfig;
 import org.team4u.id.domain.seq.value.InMemoryStepSequenceProvider;
@@ -167,18 +168,18 @@ public class CacheStepSequenceProviderTest {
         p.config().setQueueExpiredMillis(200);
 
         Assert.assertEquals(1L, p.provide(sequenceProviderContext()));
-        SequenceQueueProducer producer = p.getSequenceQueueHolder().producerOf(
+        SequenceQueueProducer producer = p.getQueueHolder().producerOf(
                 new SequenceQueueContext(sequenceProviderContext(), null, null)
         );
         Assert.assertEquals(2L, p.provide(sequenceProviderContext()));
         Assert.assertNull(p.provide(sequenceProviderContext()));
         Assert.assertTrue(p.isEmpty(sequenceProviderContext()));
-        Assert.assertEquals(0, p.getSequenceQueueHolder().getQueueCleaner().clear());
+        Assert.assertEquals(0, p.getQueueHolder().getQueueCleaner().clear());
 
         ThreadUtil.sleep(200);
-        Assert.assertEquals(1, p.getSequenceQueueHolder().getQueueCleaner().clear());
-        Assert.assertEquals(0, p.getSequenceQueueHolder().getQueueCleaner().clear());
-        Assert.assertEquals(0, p.getSequenceQueueHolder().size());
+        Assert.assertEquals(1, p.getQueueHolder().getQueueCleaner().clear());
+        Assert.assertEquals(0, p.getQueueHolder().getQueueCleaner().clear());
+        Assert.assertEquals(0, p.getQueueHolder().size());
         Assert.assertTrue(producer.isClosed());
 
         producer.awaitTermination();
@@ -190,11 +191,12 @@ public class CacheStepSequenceProviderTest {
         BeanProviders.getInstance().registerBean(new SequenceProviderFactoryHolder());
 
         CacheStepSequenceProvider p = (CacheStepSequenceProvider) new CacheStepSequenceProviderFactory().create(
-                FileUtil.readUtf8String("cache_step_config.json")
+                TestUtil.TEST_ID, FileUtil.readUtf8String("cache_step_config.json")
         );
 
         Assert.assertEquals(2, p.getDelegateProvider().config().getStep().intValue());
         Assert.assertEquals(1, p.provide(context()).intValue());
+        Assert.assertEquals(TestUtil.TEST_ID, p.config().getConfigId());
     }
 
     private SequenceProvider.Context context() {

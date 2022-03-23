@@ -1,6 +1,8 @@
 package org.team4u.base.registrar.factory;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.TypeUtil;
+import org.team4u.base.config.IdentifiedConfig;
 
 import java.lang.reflect.Type;
 
@@ -18,8 +20,8 @@ import java.lang.reflect.Type;
 public abstract class AbstractPolicyFactory<CO, CI, P> implements PolicyFactory<CI, P> {
 
     @Override
-    public P create(CI config) {
-        return createWithConfig(toConfig(config));
+    public P create(String configId, CI config) {
+        return createWithConfig(setConfigId(configId, toConfig(config)));
     }
 
     /**
@@ -44,4 +46,19 @@ public abstract class AbstractPolicyFactory<CO, CI, P> implements PolicyFactory<
      * @return 策略
      */
     protected abstract P createWithConfig(CO config);
+
+    protected CO setConfigId(String configId, CO config) {
+        if (!(config instanceof IdentifiedConfig)) {
+            return config;
+        }
+
+        IdentifiedConfig identifiedConfig = (IdentifiedConfig) config;
+        if (StrUtil.isNotBlank(identifiedConfig.getConfigId())) {
+            return config;
+        }
+
+        identifiedConfig.setConfigId(configId);
+
+        return config;
+    }
 }

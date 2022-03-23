@@ -21,6 +21,7 @@ public class SequenceGroupKeyFactoryHolder extends PolicyRegistrar<String, Seque
      */
     public String provide(SequenceGroupKeyProvider.Context context) {
         SequenceGroupKeyProvider provider = crete(
+                context.getSequenceConfig().getConfigId(),
                 context.getSequenceConfig().getGroupFactoryId(),
                 context.getSequenceConfig().getGroupConfig()
         );
@@ -39,13 +40,13 @@ public class SequenceGroupKeyFactoryHolder extends PolicyRegistrar<String, Seque
      * @param config    工厂配置
      * @return 分组提供者
      */
-    public SequenceGroupKeyProvider crete(String factoryId, String config) {
+    public SequenceGroupKeyProvider crete(String configId, String factoryId, String config) {
         SequenceGroupKeyProvider.Factory factory = policyOf(factoryId);
 
         if (factory == null) {
             return null;
         }
 
-        return factory.create(config);
+        return factory.create(configId, config);
     }
 }

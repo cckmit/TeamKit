@@ -1,5 +1,6 @@
 package org.team4u.id.domain.seq.value.cache.queue;
 
+import cn.hutool.core.io.IoUtil;
 import lombok.Data;
 import lombok.Getter;
 import org.team4u.base.lang.lazy.LazyFunction;
@@ -74,7 +75,14 @@ public class SequenceQueueHolder {
         return queues.values();
     }
 
+    public void expire(SequenceQueueContext context) {
+        Optional.ofNullable(queues.value(context)).ifPresent(Value::expire);
+    }
+
     public void remove(SequenceQueueContext context) {
+        // 关闭队列生产者
+        IoUtil.close(producerOf(context));
+        // 移除队列
         queues.remove(context);
     }
 
@@ -88,7 +96,12 @@ public class SequenceQueueHolder {
 
     @Data
     public static class Value {
+        private long expiredAt;
         private final SequenceQueue queue;
         private final SequenceQueueProducer producer;
+
+        public void expire() {
+            expiredAt = System.currentTimeMillis();
+        }
     }
 }

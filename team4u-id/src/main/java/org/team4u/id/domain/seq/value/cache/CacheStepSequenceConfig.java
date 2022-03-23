@@ -1,6 +1,8 @@
 package org.team4u.id.domain.seq.value.cache;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.team4u.base.config.IdentifiedConfig;
 import org.team4u.id.domain.seq.value.StepSequenceProvider;
 
 /**
@@ -8,8 +10,9 @@ import org.team4u.id.domain.seq.value.StepSequenceProvider;
  *
  * @author jay.wu
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class CacheStepSequenceConfig {
+public class CacheStepSequenceConfig extends IdentifiedConfig {
     /**
      * 缓存步进
      */

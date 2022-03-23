@@ -7,8 +7,8 @@ import cn.hutool.core.util.RandomUtil;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.test.context.ContextConfiguration;
+import org.team4u.TestUtil;
 import org.team4u.id.domain.seq.value.AbstractStepSequenceProviderTest;
-import org.team4u.id.domain.seq.value.SequenceProvider;
 import org.team4u.id.domain.seq.value.StepSequenceProvider;
 import org.team4u.test.spring.DbTestBeanConfig;
 import org.team4u.test.spring.SpringDbTest;
@@ -33,12 +33,13 @@ public class JdbcStepSequenceProviderTest extends SpringDbTest {
 
     @Test
     public void create() {
-        SequenceProvider provider = new JdbcStepSequenceProvider.Factory().create(
-                FileUtil.readUtf8String("jdbc_step_config.json")
+        StepSequenceProvider provider = (StepSequenceProvider) new JdbcStepSequenceProvider.Factory().create(
+                TestUtil.TEST_ID, FileUtil.readUtf8String("jdbc_step_config.json")
         );
         Assert.assertEquals(1, provider.provide(x.context()).intValue());
         Assert.assertEquals(2, provider.provide(x.context()).intValue());
         Assert.assertNull(provider.provide(x.context()));
+        Assert.assertEquals(TestUtil.TEST_ID, provider.config().getConfigId());
     }
 
     @Test

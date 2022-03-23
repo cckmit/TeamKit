@@ -1,6 +1,8 @@
 package org.team4u.id.domain.seq.value;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.team4u.base.config.IdentifiedConfig;
 
 /**
  * 趋势增长序号提供者
@@ -29,8 +31,9 @@ public interface StepSequenceProvider extends SequenceProvider {
         return currentSequence(context).longValue() >= config().getMaxValue();
     }
 
+    @EqualsAndHashCode(callSuper = true)
     @Data
-    class Config {
+    class Config extends IdentifiedConfig {
         /**
          * 初始值
          */

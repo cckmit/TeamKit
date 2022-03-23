@@ -21,6 +21,7 @@ public class SequenceProviderFactoryHolder extends PolicyRegistrar<String, Seque
      */
     public Number provide(SequenceProvider.Context context) {
         return create(
+                context.getSequenceConfig().getConfigId(),
                 context.getSequenceConfig().getSequenceFactoryId(),
                 context.getSequenceConfig().getSequenceConfig()
         ).provide(context);
@@ -33,6 +34,7 @@ public class SequenceProviderFactoryHolder extends PolicyRegistrar<String, Seque
      */
     public boolean isEmpty(SequenceProvider.Context context) {
         return create(
+                context.getSequenceConfig().getConfigId(),
                 context.getSequenceConfig().getSequenceFactoryId(),
                 context.getSequenceConfig().getSequenceConfig()
         ).isEmpty(context);
@@ -46,7 +48,7 @@ public class SequenceProviderFactoryHolder extends PolicyRegistrar<String, Seque
      * @return 提供者
      */
     @SuppressWarnings("unchecked")
-    public <T extends SequenceProvider> T create(String factoryId, String config) {
-        return (T) availablePolicyOf(factoryId).create(config);
+    public <T extends SequenceProvider> T create(String configId, String factoryId, String config) {
+        return (T) availablePolicyOf(factoryId).create(configId, config);
     }
 }

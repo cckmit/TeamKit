@@ -26,6 +26,7 @@ public class CacheStepSequenceProviderFactory extends AbstractSequenceProviderFa
 
     private StepSequenceProvider delegateProvider(CacheStepSequenceConfig config) {
         return holder().create(
+                config.getConfigId(),
                 config.getDelegateId(),
                 config.getDelegateConfig()
         );

@@ -1,6 +1,5 @@
 package org.team4u.id.domain.seq.value.cache.queue;
 
-import cn.hutool.core.io.IoUtil;
 import org.team4u.base.lang.LongTimeThread;
 import org.team4u.id.domain.seq.value.cache.CacheStepSequenceConfig;
 
@@ -43,9 +42,6 @@ public class SequenceQueueCleaner extends LongTimeThread {
             return false;
         }
 
-        // 关闭队列生产者
-        IoUtil.close(value.getProducer());
-        // 移除队列
         queueHolder.remove(value.getQueue().getContext());
         return true;
     }

@@ -4,6 +4,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import org.junit.Assert;
 import org.junit.Test;
+import org.team4u.TestUtil;
 
 import java.util.Date;
 
@@ -25,7 +26,7 @@ public class DateTimeGroupKeyProviderTest {
     public void create() {
         DateTimeGroupKeyProvider.Factory factory = new DateTimeGroupKeyProvider.Factory();
         DateTimeGroupKeyProvider p = (DateTimeGroupKeyProvider) factory.create(
-                FileUtil.readUtf8String("date_group_key_config.json")
+                TestUtil.TEST_ID, FileUtil.readUtf8String("date_group_key_config.json")
         );
 
         Assert.assertEquals("yyyy", p.getConfig().getFormat());
