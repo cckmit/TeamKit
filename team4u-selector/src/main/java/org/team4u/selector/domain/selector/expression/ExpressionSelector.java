@@ -47,7 +47,7 @@ public class ExpressionSelector implements Selector {
                 .findFirst()
                 .orElse(null);
 
-        return new SelectorResult(result);
+        return SelectorResult.valueOf(result);
     }
 
     private boolean isMatch(String key, SimpleMapBinding binding) {

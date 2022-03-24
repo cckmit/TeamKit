@@ -21,6 +21,10 @@ public class SelectorResult {
      */
     private final Object value;
 
+    private SelectorResult(Object value) {
+        this.value = value;
+    }
+
     /**
      * 根据原始值重建结果对象
      *

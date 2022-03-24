@@ -35,7 +35,7 @@ public class MapSelector implements Selector {
     public SelectorResult select(SelectorBinding binding) {
         String key = ((SingleValueBinding) binding).value();
         // 优先匹配精确key，其次匹配符合正则表达式的key，若均无法找到则返回null
-        return new SelectorResult(
+        return SelectorResult.valueOf(
                 findByFullKey(key).orElseGet(
                         () -> findByRegexKey(key).orElse(null)
                 )

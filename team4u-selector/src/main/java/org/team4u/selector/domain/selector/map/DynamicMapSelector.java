@@ -50,7 +50,7 @@ public class DynamicMapSelector implements Selector {
 
         SelectorValueHandler.Context context = new SelectorValueHandler.Context(binding, params);
         SelectorValueHandler handler = binding.getValueService().availablePolicyOf(context.getId());
-        return new SelectorResult(handler.handle(context));
+        return SelectorResult.valueOf(handler.handle(context));
     }
 
     @Data
