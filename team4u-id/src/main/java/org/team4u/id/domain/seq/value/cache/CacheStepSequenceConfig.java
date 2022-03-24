@@ -34,7 +34,9 @@ public class CacheStepSequenceConfig extends IdentifiedConfig {
     /**
      * 最大缓存序号数量
      * <p>
-     * 默认使用delegateConfig.step值
+     * - 默认使用delegateConfig.step值
+     * <p>
+     * - 最小值为1
      */
     private int maxCacheSeqSize;
     /**
