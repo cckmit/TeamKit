@@ -2,7 +2,6 @@ package org.team4u.base.lang.lazy;
 
 import cn.hutool.core.lang.caller.CallerUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.log.Log;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,8 +17,6 @@ import java.util.function.Supplier;
  * @author jay.wu
  */
 public class LazyRefreshSupplier<T> extends LongTimeThread implements Supplier<T> {
-
-    private static final Log log = Log.get();
 
     private T value;
 

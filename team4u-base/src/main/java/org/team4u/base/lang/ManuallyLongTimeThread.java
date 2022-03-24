@@ -1,8 +1,6 @@
 package org.team4u.base.lang;
 
 import cn.hutool.core.thread.ThreadUtil;
-import cn.hutool.log.Log;
-import cn.hutool.log.LogFactory;
 
 /**
  * 手工控制的长时线程
@@ -10,8 +8,6 @@ import cn.hutool.log.LogFactory;
  * @author jay.wu
  */
 public abstract class ManuallyLongTimeThread extends LongTimeThread {
-
-    private static final Log log = LogFactory.get();
 
     private int runCount = 0;
 

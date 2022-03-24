@@ -1,6 +1,5 @@
 package org.team4u.id.domain.seq.value.cache.queue;
 
-import cn.hutool.log.Log;
 import org.team4u.base.lang.LongTimeThread;
 import org.team4u.base.log.LogMessage;
 
@@ -15,8 +14,6 @@ import java.util.concurrent.TimeUnit;
  * @author jay.wu
  */
 public class SequenceQueueProducer extends LongTimeThread {
-
-    private final Log log = Log.get();
 
     private final SequenceQueue queue;
     private final SequenceSegment segment;

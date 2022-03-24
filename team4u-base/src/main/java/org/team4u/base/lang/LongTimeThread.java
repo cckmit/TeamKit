@@ -14,7 +14,7 @@ import java.io.Closeable;
  */
 public abstract class LongTimeThread extends Thread implements Closeable {
 
-    private final Log log = LogFactory.get();
+    protected final Log log = LogFactory.get();
 
     private volatile boolean closed = false;
 
