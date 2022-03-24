@@ -82,8 +82,15 @@ public class SequenceQueue {
         return status == Status.EXHAUSTED;
     }
 
-    public boolean isChange(CacheStepSequenceConfig newCacheConfig) {
-        return newCacheConfig.maxCacheSeqSize() != context.getCacheConfig().getMaxCacheSeqSize();
+    public boolean isExpired() {
+        CacheStepSequenceConfig config = getContext().getCacheConfig();
+
+        // 永不过期，直接返回
+        if (!config.isQueueWillExpire()) {
+            return false;
+        }
+
+        return System.currentTimeMillis() - getCreatedAt() > config.getQueueExpiredMillis();
     }
 
     private LinkedBlockingQueue<Number> buildCache(int maxCacheSeqSize) {

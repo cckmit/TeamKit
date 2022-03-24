@@ -187,6 +187,16 @@ public class CacheStepSequenceProviderTest {
     }
 
     @Test
+    public void refreshConfig() {
+        CacheStepSequenceProvider p1 = cacheProvider(1, 2);
+        Assert.assertEquals(1L, p1.provide(sequenceProviderContext()));
+
+        CacheStepSequenceProvider p2 = cacheProvider(1, 3);
+        ThreadUtil.sleep(10);
+        Assert.assertEquals(1, p2.getQueueHolder().getQueueCleaner().clear());
+    }
+
+    @Test
     public void create() {
         BeanProviders.getInstance().registerBean(new SequenceProviderFactoryHolder());
 

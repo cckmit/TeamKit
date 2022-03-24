@@ -1,7 +1,6 @@
 package org.team4u.id.domain.seq.value.cache.queue;
 
 import org.team4u.base.lang.LongTimeThread;
-import org.team4u.id.domain.seq.value.cache.CacheStepSequenceConfig;
 
 /**
  * 序号队列清理器
@@ -38,24 +37,12 @@ public class SequenceQueueCleaner extends LongTimeThread {
      * 清理过期队列
      */
     private boolean clear(SequenceQueueHolder.Value value) {
-        if (!isExpired(value.getQueue())) {
+        if (!value.getQueue().isExpired()) {
             return false;
         }
 
         queueHolder.remove(value.getQueue().getContext());
         return true;
-    }
-
-    private boolean isExpired(SequenceQueue queue) {
-        CacheStepSequenceConfig config = queue.getContext().getCacheConfig();
-
-        // 队列永不过期，直接返回
-        if (!config.isQueueWillExpire()) {
-            return false;
-        }
-
-        // 判断是否超出存活时间
-        return System.currentTimeMillis() - queue.getCreatedAt() > config.getQueueExpiredMillis();
     }
 
     @Override

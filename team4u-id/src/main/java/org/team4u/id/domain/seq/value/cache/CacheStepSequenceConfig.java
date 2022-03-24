@@ -55,40 +55,40 @@ public class CacheStepSequenceConfig extends IdentifiedConfig {
      */
     private int queueExpiredMillis = 0;
     /**
-     * 当配置更新后队列失效时间（毫秒）
+     * 当配置更新后最快生效时间（毫秒）
      * <p>
-     * 0则表示更新不失效，将等待正常失效
+     * - 0则表示永不生效
+     * <p>
+     * - 为了防止旧配置仍然被并发访问，需延迟生效
      */
-    private int queueExpiredWhenConfigChangedMillis = 2000;
+    private int refreshConfigAfterChangedMillis = 2000;
 
     /**
      * 序号队列是否会过期
      */
     public boolean isQueueWillExpire() {
-        return queueExpiredMillis > 0;
+        return getQueueExpiredMillis() > 0;
     }
 
     /**
-     * 序号队列是否会过期
+     * 最大缓存序号数量
      */
-    public boolean isQueueWillExpireWhenConfigChanged() {
-        return queueExpiredMillis > 0;
-    }
-
     public int maxCacheSeqSize() {
         if (getMaxCacheSeqSize() <= 0) {
-            return delegateConfigBean.getStep();
+            return getDelegateConfigBean().getStep();
         }
 
         return getMaxCacheSeqSize();
     }
 
-    public void resetQueueExpiredMillisWhenConfigChanged() {
-        if (!isQueueWillExpireWhenConfigChanged()) {
+    /**
+     * 当配置更新后，重置队列过期时间
+     */
+    public void resetQueueExpiredMillisAfterConfigChanged() {
+        if (getRefreshConfigAfterChangedMillis() <= 0) {
             return;
         }
 
-        // 为了防止旧队列仍然被并发访问，需要延迟过期
-        setQueueExpiredMillis(getQueueExpiredWhenConfigChangedMillis());
+        setQueueExpiredMillis(getRefreshConfigAfterChangedMillis());
     }
 }

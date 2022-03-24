@@ -17,11 +17,10 @@ import java.util.Optional;
  * -负责缓存序号队列和其生产者，相同的Context标识，仅初始化一次
  * <p>
  * - 负责启动序号队列清理器，定时清理过期队列
- * <p>
- * - 注意：当缓存配置发生变化时，需要等待下一个group周期才生效
  *
  * @author jay.wu
  * @see SequenceQueueCleaner
+ * @see CacheStepSequenceConfig
  */
 public class SequenceQueueHolder {
 
@@ -95,7 +94,9 @@ public class SequenceQueueHolder {
     /**
      * 刷新配置
      * <p>
-     * 当有新配置时，通过调整旧配置队列过期时间实现快速过期
+     * - 当有新配置时，通过调整旧配置队列过期时间实现快速过期
+     * <p>
+     * - 最快需要等待queueExpiredAfterConfigChangedMillis后才生效
      *
      * @param newCacheConfig 新增配置
      */
@@ -103,7 +104,7 @@ public class SequenceQueueHolder {
         values().stream()
                 .filter(it -> StrUtil.equals(it.getCacheConfig().getConfigId(), newCacheConfig.getConfigId()))
                 .filter(it -> !it.getCacheConfig().equals(newCacheConfig))
-                .forEach(it -> it.getCacheConfig().resetQueueExpiredMillisWhenConfigChanged());
+                .forEach(it -> it.getCacheConfig().resetQueueExpiredMillisAfterConfigChanged());
     }
 
     @Data
