@@ -96,7 +96,7 @@ public class SequenceQueueHolder {
      * <p>
      * - 当有新配置时，通过调整旧配置队列过期时间实现快速过期
      * <p>
-     * - 最快需要等待queueExpiredAfterConfigChangedMillis后才生效
+     * - 最快需要等待refreshConfigAfterChangedMillis后才生效
      *
      * @param newCacheConfig 新增配置
      */
