@@ -55,7 +55,7 @@ public class CacheStepSequenceConfig extends IdentifiedConfig {
      * <p>
      * - 建议与group周期一致
      */
-    private int queueExpiredMillis = 0;
+    private long queueExpiredMillis = 0;
     /**
      * 当配置更新后最快生效时间（毫秒）
      * <p>
