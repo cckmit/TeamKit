@@ -57,6 +57,10 @@ public class SimpleConfigComparator {
     }
 
     public void publishEvents(List<SimpleConfigEvent> allEvents) {
+        if(allEvents.isEmpty()){
+            return;
+        }
+
         MessagePublisher.instance().publish(new ConfigAllChangedEvent(allEvents));
         allEvents.forEach(it -> MessagePublisher.instance().publish(it));
     }
