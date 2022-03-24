@@ -1,5 +1,7 @@
 package org.team4u.workflow.domain.emulator;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.team4u.base.config.IdentifiedConfig;
 
 import java.util.List;
@@ -9,25 +11,11 @@ import java.util.List;
  *
  * @author jay.wu
  */
+@EqualsAndHashCode(callSuper = true)
+@Data
 public class ProcessEmulatorScript extends IdentifiedConfig {
 
     private String processDefinitionId;
 
     private List<ProcessEmulatorScriptStep> steps;
-
-    public String getProcessDefinitionId() {
-        return processDefinitionId;
-    }
-
-    public void setProcessDefinitionId(String processDefinitionId) {
-        this.processDefinitionId = processDefinitionId;
-    }
-
-    public List<ProcessEmulatorScriptStep> getSteps() {
-        return steps;
-    }
-
-    public void setSteps(List<ProcessEmulatorScriptStep> steps) {
-        this.steps = steps;
-    }
 }

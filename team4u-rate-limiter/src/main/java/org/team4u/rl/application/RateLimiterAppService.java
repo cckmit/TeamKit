@@ -2,7 +2,6 @@ package org.team4u.rl.application;
 
 import cn.hutool.log.Log;
 import org.team4u.base.lang.lazy.LazyFunction;
-import org.team4u.base.lang.lazy.LazyValueFormatter;
 import org.team4u.base.log.LogMessage;
 import org.team4u.rl.domain.RateLimitConfigRepository;
 import org.team4u.rl.domain.RateLimiter;
@@ -136,12 +135,7 @@ public class RateLimiterAppService {
         private final LazyFunction<RateLimiterConfig, RateLimiter> lazyLimiter = LazyFunction.of(
                 LazyFunction.Config.builder()
                         .name(getClass().getSimpleName() + "|lazyLimiter")
-                        .parameterFormatter(new LazyValueFormatter() {
-                            @Override
-                            public String format(Log log, Object value) {
-                                return ((RateLimiterConfig) value).getConfigId();
-                            }
-                        })
+                        .parameterFormatter((log, value) -> ((RateLimiterConfig) value).getConfigId())
                         .build(),
                 this::createLimiter
         );

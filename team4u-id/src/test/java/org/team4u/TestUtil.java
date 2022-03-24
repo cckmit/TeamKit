@@ -35,7 +35,6 @@ public class TestUtil {
 
     public static CacheStepSequenceProvider cacheProvider(int step, int maxValue) {
         CacheStepSequenceConfig config = new CacheStepSequenceConfig();
-        config.setRefreshConfigAfterChangedMillis(1);
 
         StepSequenceProvider.Config delegateConfig = new StepSequenceProvider.Config();
         delegateConfig.setStep(step);
