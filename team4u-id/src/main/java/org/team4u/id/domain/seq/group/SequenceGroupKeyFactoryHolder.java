@@ -20,7 +20,7 @@ public class SequenceGroupKeyFactoryHolder extends PolicyRegistrar<String, Seque
      * @return 分组标识，当无法找到工厂时，将返回空字符串
      */
     public String provide(SequenceGroupKeyProvider.Context context) {
-        SequenceGroupKeyProvider provider = crete(
+        SequenceGroupKeyProvider provider = create(
                 context.getSequenceConfig().getConfigId(),
                 context.getSequenceConfig().getGroupFactoryId(),
                 context.getSequenceConfig().getGroupConfig()
@@ -40,7 +40,7 @@ public class SequenceGroupKeyFactoryHolder extends PolicyRegistrar<String, Seque
      * @param config    工厂配置
      * @return 分组提供者
      */
-    public SequenceGroupKeyProvider crete(String configId, String factoryId, String config) {
+    public SequenceGroupKeyProvider create(String configId, String factoryId, String config) {
         SequenceGroupKeyProvider.Factory factory = policyOf(factoryId);
 
         if (factory == null) {
