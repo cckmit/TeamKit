@@ -78,7 +78,7 @@ public class SequenceQueueProducer extends LongTimeThread {
 
             try {
                 // 若队列中缓存序号已满，将阻塞，除非线程被关闭
-                putAndWait(seq);
+                offerAndWait(seq);
 
                 // 无可用序号，退出
                 if (seq == null) {
@@ -97,8 +97,10 @@ public class SequenceQueueProducer extends LongTimeThread {
         return true;
     }
 
-    private void putAndWait(Number seq) throws InterruptedException {
-        // 阻塞直到推送成功
+    /**
+     * 阻塞直到推送成功
+     */
+    private void offerAndWait(Number seq) throws InterruptedException {
         while (!queue.offer(seq, context.getCacheConfig().getQueueOfferTimeoutMillis(), TimeUnit.MILLISECONDS)) {
             // 线程已被关闭，退出
             if (isClosed()) {
@@ -109,7 +111,7 @@ public class SequenceQueueProducer extends LongTimeThread {
 
     @Override
     protected Number runIntervalMillis() {
-        // 通过putAndWait进行阻塞，故无需设置循环间隔
+        // 通过offerAndWait进行阻塞，无需设置循环间隔
         return 0;
     }
 }

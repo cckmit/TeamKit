@@ -20,7 +20,6 @@ import java.util.Optional;
  *
  * @author jay.wu
  * @see SequenceQueueCleaner
- * @see CacheStepSequenceConfig
  */
 public class SequenceQueueHolder {
 
