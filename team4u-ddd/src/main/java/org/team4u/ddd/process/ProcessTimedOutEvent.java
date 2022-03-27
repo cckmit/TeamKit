@@ -2,13 +2,14 @@ package org.team4u.ddd.process;
 
 
 import org.team4u.ddd.domain.model.AbstractDomainEvent;
+import org.team4u.ddd.domain.model.TransientDomainEvent;
 
 /**
  * 超时事件
  *
  * @author jay.wu
  */
-public class ProcessTimedOutEvent extends AbstractDomainEvent {
+public class ProcessTimedOutEvent extends AbstractDomainEvent implements TransientDomainEvent {
 
     /**
      * 上下文描述

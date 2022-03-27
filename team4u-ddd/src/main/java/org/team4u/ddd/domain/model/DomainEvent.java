@@ -5,7 +5,7 @@ import org.team4u.base.message.Message;
 import java.util.Date;
 
 /**
- * 领域事件接口
+ * 领域事件
  *
  * @author jay.wu
  */

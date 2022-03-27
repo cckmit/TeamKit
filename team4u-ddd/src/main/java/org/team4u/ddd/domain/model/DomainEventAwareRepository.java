@@ -36,6 +36,9 @@ public abstract class DomainEventAwareRepository<E extends Entity> implements Do
         }
 
         for (DomainEvent event : aggregateRoot.events()) {
+            if (event instanceof TransientDomainEvent) {
+                continue;
+            }
             eventStore.append(event);
         }
     }
