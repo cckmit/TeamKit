@@ -125,6 +125,34 @@ public class DbKeyValueRepository implements KeyValueRepository {
         return keyValue.id();
     }
 
+    @Override
+    public KeyValueId saveIfAbsent(KeyValue keyValue) {
+        if (keyValue == null) {
+            return null;
+        }
+
+        StoreResource resource = withResource(keyValue.id());
+
+        LogMessage lm = LogMessageContext.createAndSet(this.getClass().getSimpleName(), "saveIfAbsent")
+                .append("resource", resource.toString())
+                .append("id", keyValue.id());
+
+
+        KeyValueEntity entity = toKeyValueEntity(keyValue);
+        // 先删除过期记录
+        boolean isRemoveIfExpired = removeIfExpired(entity);
+        lm.append("isRemoveIfExpired", isRemoveIfExpired);
+
+        // 再尝试插入
+        if (insert(entity)) {
+            log.info(lm.success().toString());
+            return keyValue.id();
+        }
+
+        log.info(lm.fail("duplicateKey").toString());
+        return null;
+    }
+
     private boolean update(KeyValueEntity entity) {
         int count = dbKeyValueMapper.update(
                 entity.setUpdateTime(new Date()),
@@ -148,38 +176,15 @@ public class DbKeyValueRepository implements KeyValueRepository {
         }
     }
 
-    @Override
-    public KeyValueId saveIfAbsent(KeyValue keyValue) {
-        if (keyValue == null) {
-            return null;
-        }
-
-        StoreResource resource = withResource(keyValue.id());
-
-        LogMessage lm = LogMessageContext.createAndSet(this.getClass().getSimpleName(), "saveIfAbsent")
-                .append("resource", resource.toString())
-                .append("id", keyValue.id());
-
-
-        KeyValueEntity entity = toKeyValueEntity(keyValue);
-        // 先删除过期记录
-        int deleteCount = dbKeyValueMapper.delete(
+    private boolean removeIfExpired(KeyValueEntity entity) {
+        int count = dbKeyValueMapper.delete(
                 new LambdaQueryWrapper<KeyValueEntity>()
-                        .eq(KeyValueEntity::getType, keyValue.id().getType())
-                        .eq(KeyValueEntity::getName, keyValue.id().getName())
+                        .eq(KeyValueEntity::getType, entity.getType())
+                        .eq(KeyValueEntity::getName, entity.getName())
                         .and(this::expirationWrapper)
         );
 
-        lm.append("deleteCount", deleteCount);
-
-        // 再尝试插入
-        if (insert(entity)) {
-            log.info(lm.success().toString());
-            return keyValue.id();
-        }
-
-        log.info(lm.fail("duplicateKey").toString());
-        return null;
+        return count > 0;
     }
 
     @Override
