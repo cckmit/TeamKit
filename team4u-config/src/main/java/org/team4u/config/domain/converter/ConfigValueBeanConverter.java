@@ -1,9 +1,7 @@
 package org.team4u.config.domain.converter;
 
-import cn.hutool.core.util.ClassUtil;
-import cn.hutool.core.util.TypeUtil;
-import cn.hutool.json.JSONUtil;
-import org.team4u.base.serializer.*;
+import org.team4u.base.serializer.JsonOrSimpleValueSerializer;
+import org.team4u.base.serializer.Serializer;
 import org.team4u.config.domain.SimpleConfigs;
 
 import java.lang.reflect.Type;
@@ -33,33 +31,14 @@ public class ConfigValueBeanConverter {
             return null;
         }
 
-        // 简单类型直接转换
-        if (ClassUtil.isSimpleTypeOrArray(TypeUtil.getClass(toType)) ||
-                !JSONUtil.isJson(value)) {
-            return simpleSerializer(isCacheResult).deserialize(value, toType);
-        }
-
-        // 复杂类型通过JSON反序列化
-        return jsonSerializer(isCacheResult).deserialize(value, toType);
+        return serializer(isCacheResult).deserialize(value, toType);
     }
 
-    protected Serializer simpleSerializer(boolean isCacheResult) {
-        // 缓存结果对象，仅value不同时进行反序列化
+    protected Serializer serializer(boolean isCacheResult) {
         if (isCacheResult) {
-            return SimpleValueCacheSerializer.instance();
+            return JsonOrSimpleValueSerializer.cache();
         }
 
-        // 不缓存结果对象，每次进行反序列化
-        return SimpleValueSerializer.instance();
-    }
-
-    protected Serializer jsonSerializer(boolean isCacheResult) {
-        // 缓存结果对象，仅value不同时进行反序列化
-        if (isCacheResult) {
-            return HutoolJsonCacheSerializer.instance();
-        }
-
-        // 不缓存结果对象，每次进行反序列化
-        return HutoolJsonSerializer.instance();
+        return JsonOrSimpleValueSerializer.noCache();
     }
 }

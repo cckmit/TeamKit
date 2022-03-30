@@ -27,11 +27,12 @@ public class SimpleStoreResourceServiceTest {
     }
 
     private SimpleStoreResourceService newSimpleStoreResourceService() {
-        SimpleStoreResourceService.Config config = new SimpleStoreResourceService.Config()
-                .setMaxResourceCount(4)
-                .setResourceCount(2)
-                .setResourceName("T")
-                .setResourceType("DB");
+        SimpleStoreResourceService.Config config = SimpleStoreResourceService.Config.builder()
+                .maxResourceCount(4)
+                .resourceCount(2)
+                .resourceName("T")
+                .resourceType("DB")
+                .build();
         return new SimpleStoreResourceService(config);
     }
 }

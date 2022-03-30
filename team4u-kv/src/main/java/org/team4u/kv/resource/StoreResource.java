@@ -10,17 +10,17 @@ public class StoreResource {
     /**
      * 资源标识
      */
-    private String id;
+    private final String id;
 
     /**
      * 资源类型
      */
-    private String type;
+    private final String type;
 
     /**
      * 资源名称
      */
-    private String name;
+    private final String name;
 
     public StoreResource(String id, String type, String name) {
         this.id = id;

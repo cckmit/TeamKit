@@ -4,7 +4,8 @@ import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 import org.team4u.base.log.LogMessage;
-import org.team4u.kv.infrastructure.translator.JsonValueTranslator;
+import org.team4u.base.serializer.JsonOrSimpleValueSerializer;
+import org.team4u.base.serializer.Serializer;
 import org.team4u.kv.model.KeyValue;
 import org.team4u.kv.model.KeyValueFactory;
 import org.team4u.kv.model.KeyValueId;
@@ -27,7 +28,7 @@ public class KeyValueService {
     /**
      * 值转换器
      */
-    private final ValueTranslator valueTranslator;
+    private final Serializer valueSerializer;
     /**
      * 键值资源库
      */
@@ -39,13 +40,13 @@ public class KeyValueService {
 
     public KeyValueService(KeyValueRepository keyValueRepository,
                            KeyValueCleaner keyValueCleaner) {
-        this(new JsonValueTranslator(), keyValueRepository, keyValueCleaner);
+        this(JsonOrSimpleValueSerializer.noCache(), keyValueRepository, keyValueCleaner);
     }
 
-    public KeyValueService(ValueTranslator valueTranslator,
+    public KeyValueService(Serializer valueSerializer,
                            KeyValueRepository keyValueRepository,
                            KeyValueCleaner keyValueCleaner) {
-        this.valueTranslator = valueTranslator;
+        this.valueSerializer = valueSerializer;
         this.keyValueRepository = keyValueRepository;
 
         if (keyValueCleaner != null) {
@@ -63,7 +64,7 @@ public class KeyValueService {
             return null;
         }
 
-        return valueTranslator.translateToValue(valueClass, kv.getValue());
+        return valueSerializer.deserialize(kv.getValue(), valueClass);
     }
 
     /**
@@ -95,7 +96,7 @@ public class KeyValueService {
             ThreadUtil.sleep(retryDelayMillis);
         }
 
-        throw new TimeoutException();
+        throw new TimeoutException(String.format("type=%s|key=%s", type, key));
     }
 
     /**
@@ -159,7 +160,7 @@ public class KeyValueService {
         KeyValue kv = KeyValueFactory.create(
                 type,
                 key,
-                valueTranslator.translateToString(value),
+                valueSerializer.serialize(value),
                 ttlMillis
         );
 
@@ -216,7 +217,7 @@ public class KeyValueService {
         return keyValueRepository().byType(type)
                 .stream()
                 .filter(it -> !it.isExpired())
-                .map(it -> valueTranslator.translateToValue(valueClass, it.getValue()))
+                .map(it -> valueSerializer.deserialize(it.getValue(), valueClass))
                 .collect(Collectors.toSet());
     }
 
@@ -229,7 +230,7 @@ public class KeyValueService {
                 .map(it -> new KeyValueEntry<>(
                                 type,
                                 it.id().getName(),
-                                valueTranslator.translateToValue(valueClass, it.getValue())
+                                valueSerializer.deserialize(it.getValue(), valueClass)
                         )
                 )
                 .collect(Collectors.toSet());
@@ -278,8 +279,8 @@ public class KeyValueService {
     /**
      * 获取值转换器
      */
-    public ValueTranslator valueTranslator() {
-        return valueTranslator;
+    public Serializer valueSerializer() {
+        return valueSerializer;
     }
 
     public KeyValueRepository keyValueRepository() {

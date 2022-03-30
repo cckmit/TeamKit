@@ -1,6 +1,10 @@
 package org.team4u.kv.infrastructure.resource;
 
 import cn.hutool.core.lang.ConsistentHash;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.team4u.kv.resource.StoreResource;
 import org.team4u.kv.resource.StoreResourceService;
 
@@ -16,7 +20,7 @@ import java.util.List;
  */
 public class SimpleStoreResourceService implements StoreResourceService {
 
-    private Config config;
+    private final Config config;
 
     private List<StoreResource> resources;
     private ConsistentHash<StoreResource> resourceSelector;
@@ -53,6 +57,10 @@ public class SimpleStoreResourceService implements StoreResourceService {
         return config;
     }
 
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class Config {
         /**
          * 资源类型
@@ -70,41 +78,5 @@ public class SimpleStoreResourceService implements StoreResourceService {
          * 最大资源数量
          */
         private int maxResourceCount = 1;
-
-        public String getResourceType() {
-            return resourceType;
-        }
-
-        public Config setResourceType(String resourceType) {
-            this.resourceType = resourceType;
-            return this;
-        }
-
-        public String getResourceName() {
-            return resourceName;
-        }
-
-        public Config setResourceName(String resourceName) {
-            this.resourceName = resourceName;
-            return this;
-        }
-
-        public int getResourceCount() {
-            return resourceCount;
-        }
-
-        public Config setResourceCount(int resourceCount) {
-            this.resourceCount = resourceCount;
-            return this;
-        }
-
-        public int getMaxResourceCount() {
-            return maxResourceCount;
-        }
-
-        public Config setMaxResourceCount(int maxResourceCount) {
-            this.maxResourceCount = maxResourceCount;
-            return this;
-        }
     }
 }

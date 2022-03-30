@@ -1,6 +1,7 @@
 package org.team4u.kv;
 
-import org.team4u.kv.infrastructure.translator.JsonValueTranslator;
+import org.team4u.base.serializer.JsonOrSimpleValueSerializer;
+import org.team4u.base.serializer.Serializer;
 
 import java.util.Collection;
 import java.util.Map;
@@ -36,7 +37,7 @@ public class SimpleKeyValueService<V> {
     public SimpleKeyValueService(String type,
                                  Class<V> valueClass,
                                  KeyValueRepository keyValueRepository) {
-        this(type, 0, valueClass, new JsonValueTranslator(), keyValueRepository, null);
+        this(type, 0, valueClass, JsonOrSimpleValueSerializer.noCache(), keyValueRepository, null);
     }
 
 
@@ -45,19 +46,19 @@ public class SimpleKeyValueService<V> {
                                  Class<V> valueClass,
                                  KeyValueRepository keyValueRepository,
                                  KeyValueCleaner keyValueCleaner) {
-        this(type, ttlMillis, valueClass, new JsonValueTranslator(), keyValueRepository, keyValueCleaner);
+        this(type, ttlMillis, valueClass, JsonOrSimpleValueSerializer.noCache(), keyValueRepository, keyValueCleaner);
     }
 
     public SimpleKeyValueService(String type,
                                  int ttlMillis,
                                  Class<V> valueClass,
-                                 ValueTranslator valueTranslator,
+                                 Serializer valueSerializer,
                                  KeyValueRepository keyValueRepository,
                                  KeyValueCleaner keyValueCleaner) {
         this.type = type;
         this.ttlMillis = ttlMillis;
         this.valueClass = valueClass;
-        this.keyValueService = new KeyValueService(valueTranslator, keyValueRepository, keyValueCleaner);
+        this.keyValueService = new KeyValueService(valueSerializer, keyValueRepository, keyValueCleaner);
     }
 
     /**
@@ -192,8 +193,8 @@ public class SimpleKeyValueService<V> {
     /**
      * 获取值转换器
      */
-    public ValueTranslator valueTranslator() {
-        return keyValueService.valueTranslator();
+    public Serializer valueSerializer() {
+        return keyValueService.valueSerializer();
     }
 
     /**

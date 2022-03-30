@@ -31,10 +31,12 @@ public class BeanConfig {
 
     @Bean
     public SimpleStoreResourceService storeResourceService() {
-        return new SimpleStoreResourceService(new SimpleStoreResourceService.Config()
-                .setResourceType("DB")
-                .setResourceName("key_value")
-                .setResourceCount(2)
-                .setMaxResourceCount(4));
+        return new SimpleStoreResourceService(SimpleStoreResourceService.Config.builder()
+                .resourceType("DB")
+                .resourceName("key_value")
+                .resourceCount(2)
+                .maxResourceCount(4)
+                .build()
+        );
     }
 }

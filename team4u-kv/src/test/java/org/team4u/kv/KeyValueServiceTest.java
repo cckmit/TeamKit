@@ -181,7 +181,7 @@ public abstract class KeyValueServiceTest {
                 int x = count.incrementAndGet();
 
                 if (x == waitingCount) {
-                    return valueTranslator().translateToValue(valueClass, "1");
+                    return valueSerializer().deserialize("1", valueClass);
                 }
 
                 return null;
