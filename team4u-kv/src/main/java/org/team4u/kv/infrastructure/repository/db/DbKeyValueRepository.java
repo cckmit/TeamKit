@@ -68,11 +68,11 @@ public class DbKeyValueRepository implements KeyValueRepository {
     public int removeExpirationValues(int maxBatchSize) {
         return withResources(() -> {
             List<Long> idListToRemove = dbKeyValueMapper.selectPage(
-                    new Page<KeyValueEntity>(1, maxBatchSize).setSearchCount(false),
-                    new LambdaQueryWrapper<KeyValueEntity>()
-                            .select(KeyValueEntity::getId)
-                            .and(this::expirationWrapper)
-            )
+                            new Page<KeyValueEntity>(1, maxBatchSize).setSearchCount(false),
+                            new LambdaQueryWrapper<KeyValueEntity>()
+                                    .select(KeyValueEntity::getId)
+                                    .and(this::expirationWrapper)
+                    )
                     .getRecords()
                     .stream()
                     .map(KeyValueEntity::getId)
@@ -101,31 +101,51 @@ public class DbKeyValueRepository implements KeyValueRepository {
 
     @Override
     public KeyValueId save(KeyValue keyValue) {
-        KeyValueId id = saveIfAbsent(keyValue);
-        // 插入成功
-        if (id != null) {
-            return id;
+        LogMessage lm = LogMessageContext.createAndSet(this.getClass().getSimpleName(), "save")
+                .append("id", keyValue.id());
+
+        KeyValueEntity entity = toKeyValueEntity(keyValue).setUpdateTime(new Date());
+
+        // 尝试插入
+        if (!containsKey(keyValue.id())) {
+            KeyValueId id = saveIfAbsent(keyValue);
+            if (id != null) {
+                return id;
+            }
         }
 
-        // 插入失败，执行更新
-        int count = dbKeyValueMapper.update(
-                toKeyValueEntity(keyValue).setUpdateTime(new Date()),
-                new LambdaQueryWrapper<KeyValueEntity>()
-                        .eq(KeyValueEntity::getType, keyValue.id().getType())
-                        .eq(KeyValueEntity::getName, keyValue.id().getName())
-        );
-
-        LogMessage lm = LogMessageContext.get().setEventName("save").append("updateCount", count);
-
-        // 更新失败
-        if (count == 0) {
+        // 尝试更新
+        if (!update(entity)) {
             log.error(lm.fail().toString());
             return null;
         }
 
-        log.debug(lm.success().toString());
+        log.info(lm.success().toString());
 
         return keyValue.id();
+    }
+
+    private boolean update(KeyValueEntity entity) {
+        int count = dbKeyValueMapper.update(
+                entity.setUpdateTime(new Date()),
+                new LambdaQueryWrapper<KeyValueEntity>()
+                        .eq(KeyValueEntity::getType, entity.getType())
+                        .eq(KeyValueEntity::getName, entity.getName())
+        );
+
+        return count > 0;
+    }
+
+    private boolean insert(KeyValueEntity entity) {
+        try {
+            // 尝试插入
+            dbKeyValueMapper.insert(
+                    entity.setCreateTime(new Date()).setUpdateTime(new Date())
+            );
+            return true;
+        } catch (DuplicateKeyException e) {
+            return false;
+        }
     }
 
     @Override
@@ -137,32 +157,29 @@ public class DbKeyValueRepository implements KeyValueRepository {
         StoreResource resource = withResource(keyValue.id());
 
         LogMessage lm = LogMessageContext.createAndSet(this.getClass().getSimpleName(), "saveIfAbsent")
-                .append("resource", resource.toString());
+                .append("resource", resource.toString())
+                .append("id", keyValue.id());
 
-        try {
-            KeyValueEntity entity = toKeyValueEntity(keyValue);
-            // 先删除过期记录
-            int deleteCount = dbKeyValueMapper.delete(
-                    new LambdaQueryWrapper<KeyValueEntity>()
-                            .eq(KeyValueEntity::getType, keyValue.id().getType())
-                            .eq(KeyValueEntity::getName, keyValue.id().getName())
-                            .and(this::expirationWrapper)
-            );
 
-            lm.append("deleteCount", deleteCount);
+        KeyValueEntity entity = toKeyValueEntity(keyValue);
+        // 先删除过期记录
+        int deleteCount = dbKeyValueMapper.delete(
+                new LambdaQueryWrapper<KeyValueEntity>()
+                        .eq(KeyValueEntity::getType, keyValue.id().getType())
+                        .eq(KeyValueEntity::getName, keyValue.id().getName())
+                        .and(this::expirationWrapper)
+        );
 
-            // 再尝试插入
-            int insertCount = dbKeyValueMapper.insert(
-                    entity.setCreateTime(new Date()).setUpdateTime(new Date())
-            );
-            lm.append("insertCount", insertCount);
-            log.debug(lm.success().toString());
+        lm.append("deleteCount", deleteCount);
+
+        // 再尝试插入
+        if (insert(entity)) {
+            log.info(lm.success().toString());
             return keyValue.id();
-        } catch (DuplicateKeyException e) {
-            // 重复主键，插入失败
-            log.debug(lm.fail().append("insertCount", 0).toString());
-            return null;
         }
+
+        log.info(lm.fail("duplicateKey").toString());
+        return null;
     }
 
     @Override
@@ -252,8 +269,8 @@ public class DbKeyValueRepository implements KeyValueRepository {
     /**
      * 构建不过期的查询条件
      */
-    private LambdaQueryWrapper<KeyValueEntity> notExpirationWrapper(LambdaQueryWrapper<KeyValueEntity> wrapper) {
-        return wrapper.ge(KeyValueEntity::getExpirationTimestamp, new Date().getTime())
+    private void notExpirationWrapper(LambdaQueryWrapper<KeyValueEntity> wrapper) {
+        wrapper.ge(KeyValueEntity::getExpirationTimestamp, new Date().getTime())
                 .or()
                 .eq(KeyValueEntity::getExpirationTimestamp, 0);
     }
@@ -261,8 +278,8 @@ public class DbKeyValueRepository implements KeyValueRepository {
     /**
      * 构建过期的查询条件
      */
-    private LambdaQueryWrapper<KeyValueEntity> expirationWrapper(LambdaQueryWrapper<KeyValueEntity> wrapper) {
-        return wrapper.lt(KeyValueEntity::getExpirationTimestamp, new Date().getTime())
+    private void expirationWrapper(LambdaQueryWrapper<KeyValueEntity> wrapper) {
+        wrapper.lt(KeyValueEntity::getExpirationTimestamp, new Date().getTime())
                 .gt(KeyValueEntity::getExpirationTimestamp, 0);
     }
 
