@@ -53,6 +53,8 @@ public class SelectorAppServiceTest {
         Assert.assertEquals("3", s.select("map", new SingleValueBinding("z1")).toString());
         Assert.assertEquals("4", s.select("map", new SingleValueBinding("1")).toString());
         Assert.assertEquals("4", s.select("map", null).toString());
+        Assert.assertNull(s.select("map2", null).toString());
+        Assert.assertNull(s.select("map2" , new SingleValueBinding("1")).toString());
     }
 
     @Test

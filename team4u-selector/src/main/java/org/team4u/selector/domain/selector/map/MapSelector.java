@@ -1,7 +1,6 @@
 package org.team4u.selector.domain.selector.map;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
 import lombok.Data;
 import org.team4u.base.error.SystemDataNotExistException;
@@ -34,7 +33,7 @@ public class MapSelector implements Selector {
 
     @Override
     public SelectorResult select(SelectorBinding binding) {
-        String key = keyOf(binding);
+        String key = keyOf((SingleValueBinding) binding);
         // 优先匹配精确key，其次匹配符合正则表达式的key，若均无法找到则返回null
         return SelectorResult.valueOf(
                 findByFullKey(key).orElseGet(
@@ -43,12 +42,11 @@ public class MapSelector implements Selector {
         );
     }
 
-    private String keyOf(SelectorBinding binding) {
-        if (binding == null) {
-            return "";
-        }
-
-        return ObjectUtil.defaultIfNull(((SingleValueBinding) binding).value(), "");
+    private String keyOf(SingleValueBinding binding) {
+        return Optional.ofNullable(binding)
+                .map(SingleValueBinding::value)
+                // 返回空字符串以匹配*
+                .orElse("");
     }
 
     private Optional<String> findByFullKey(String key) {
