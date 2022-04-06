@@ -11,6 +11,14 @@ import java.util.Objects;
 
 /**
  * 响应码映射器
+ * <p>
+ * 1 originalCode和originalSubCode支持匹配为空字符串或者null，如：originalCode:"-"
+ * <p>
+ * 2 originalCode和originalSubCode支持正则表达式，如：originalCode:"1.1"，表示111,121等均匹配
+ * <p>
+ * 3 支持只配置originalCode，不配置originalSubCode，表示仅匹配originalCode
+ * <p>
+ * 4支持兜底规则，即不配置originalCode和originalSubCode，只配置standardCode
  *
  * @author jay.wu
  */
