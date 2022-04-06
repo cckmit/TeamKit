@@ -3,6 +3,7 @@ package org.team4u.command.infrastructure.util;
 import cn.hutool.core.collection.CollUtil;
 import org.junit.Assert;
 import org.junit.Test;
+import org.team4u.command.infrastructure.util.CodeMapper.CodeMapping;
 
 import java.util.List;
 
@@ -11,29 +12,35 @@ public class CodeMapperTest {
 
     @Test
     public void map() {
-        String code = mapper.map(codeMappings(), null, null);
-        Assert.assertEquals("1", code);
+        check(null, null, "1");
 
-         code = mapper.map(codeMappings(), "2", "2");
-        Assert.assertEquals("2", code);
+        check("2", "2", "2");
 
-        code = mapper.map(codeMappings(), "3", "3");
-        Assert.assertEquals("3", code);
+        check("3", "3", "3");
 
-        code = mapper.map(codeMappings(), null, "4");
-        Assert.assertEquals("4", code);
+        check(null, "4", "4");
 
-        code = mapper.map(codeMappings(), "1", null);
-        Assert.assertEquals("0", code);
+        check("1", null, "0");
+
+        // 正则表达式
+        check("131", "4", "5");
+        check("121", "4", "5");
+        check("1221", "4", "0");
+        check("11", "4", "0");
     }
 
-    private List<CodeMapper.CodeMapping> codeMappings() {
+    private void check(String originalCode, String originalSubCode, String standardCode) {
+        Assert.assertEquals(standardCode, mapper.map(codeMappings(), originalCode, originalSubCode));
+    }
+
+    private List<CodeMapping> codeMappings() {
         return CollUtil.newArrayList(
-                new CodeMapper.CodeMapping(null, null, "0"),
-                new CodeMapper.CodeMapping("-", null, "1"),
-                new CodeMapper.CodeMapping("2", null, "2"),
-                new CodeMapper.CodeMapping("3", "3", "3"),
-                new CodeMapper.CodeMapping("-", "4", "4")
+                new CodeMapping(null, null, "0"),
+                new CodeMapping("-", null, "1"),
+                new CodeMapping("2", null, "2"),
+                new CodeMapping("3", "3", "3"),
+                new CodeMapping("-", "4", "4"),
+                new CodeMapping("1.1", "4", "5")
         );
     }
 }

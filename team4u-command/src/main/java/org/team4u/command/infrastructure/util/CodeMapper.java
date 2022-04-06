@@ -2,6 +2,7 @@ package org.team4u.command.infrastructure.util;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.Data;
 
@@ -41,8 +42,8 @@ public class CodeMapper {
      */
     private CodeMapping findSubCodeMapping(List<CodeMapping> codeMappings, String code, String subCode) {
         return codeMappings.stream()
-                .filter(it -> StrUtil.equals(code, it.getOriginalCode()))
-                .filter(it -> StrUtil.equals(subCode, it.getOriginalSubCode()))
+                .filter(it -> isMatch(code, it.getOriginalCode()))
+                .filter(it -> isMatch(subCode, it.getOriginalSubCode()))
                 .findFirst()
                 .orElse(null);
     }
@@ -56,7 +57,7 @@ public class CodeMapper {
      */
     private CodeMapping findCodeMapping(List<CodeMapping> codeMappings, String code) {
         return codeMappings.stream()
-                .filter(it -> StrUtil.equals(code, it.getOriginalCode()))
+                .filter(it -> isMatch(code, it.getOriginalCode()))
                 .filter(it -> StrUtil.isEmpty(it.getOriginalSubCode()))
                 .findFirst()
                 .orElse(null);
@@ -74,6 +75,18 @@ public class CodeMapper {
                 .filter(it -> StrUtil.isEmpty(it.getOriginalSubCode()))
                 .findFirst()
                 .orElse(null);
+    }
+
+    private boolean isMatch(String actualCode, String originalCode) {
+        if (originalCode == null) {
+            return StrUtil.equals(actualCode, null);
+        }
+
+        if (StrUtil.equals(actualCode, originalCode)) {
+            return true;
+        }
+
+        return ReUtil.isMatch(originalCode, actualCode);
     }
 
     @Data
