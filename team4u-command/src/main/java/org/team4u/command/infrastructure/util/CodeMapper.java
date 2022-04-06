@@ -104,6 +104,9 @@ public class CodeMapper {
         return ReUtil.isMatch(originalCode, actualCode);
     }
 
+    /**
+     * 错误码映射规则
+     */
     @Data
     public static class CodeMapping {
         /**
