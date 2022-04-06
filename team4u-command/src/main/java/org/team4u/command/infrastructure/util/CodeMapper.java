@@ -1,13 +1,11 @@
 package org.team4u.command.infrastructure.util;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.Data;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * 响应码映射器
@@ -29,15 +27,24 @@ public class CodeMapper {
     public String map(List<CodeMapping> codeMappings, String code, String subCode) {
         code = ObjectUtil.defaultIfEmpty(code, NULL);
         subCode = ObjectUtil.defaultIfEmpty(subCode, NULL);
-        return CollUtil.newArrayList(
-                        findSubCodeMapping(codeMappings, code, subCode),
-                        findCodeMapping(codeMappings, code),
-                        findDefaultCodeMapping(codeMappings)
-                ).stream()
-                .filter(Objects::nonNull)
-                .findFirst()
-                .orElse(new CodeMapping())
-                .getStandardCode();
+
+        CodeMapping codeMapping = findSubCodeMapping(codeMappings, code, subCode);
+        if (codeMapping != null) {
+            return codeMapping.getStandardCode();
+        }
+
+
+        codeMapping = findCodeMapping(codeMappings, code);
+        if (codeMapping != null) {
+            return codeMapping.getStandardCode();
+        }
+
+        codeMapping = findDefaultCodeMapping(codeMappings);
+        if (codeMapping != null) {
+            return codeMapping.getStandardCode();
+        }
+
+        return null;
     }
 
     /**
@@ -99,8 +106,25 @@ public class CodeMapper {
 
     @Data
     public static class CodeMapping {
+        /**
+         * 一级原始响应码
+         * <p>
+         * 支持匹配空字符串或者null：-
+         * <p>
+         * 支持正则表达式
+         */
         private String originalCode;
+        /**
+         * 二级级原始响应码
+         * <p>
+         * 支持匹配空字符串或者null：-
+         * <p>
+         * 支持正则表达式
+         */
         private String originalSubCode;
+        /**
+         * 映射后的标准响应码
+         */
         private String standardCode;
 
         public CodeMapping() {
