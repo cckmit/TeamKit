@@ -45,11 +45,7 @@ public abstract class AbstractMessageSubscriber<M> implements MessageSubscriber<
         }
 
         executorService.execute(() -> {
-            try {
-                onMessageWithLog(message);
-            } catch (Exception e) {
-                // ignore error
-            }
+            onMessageWithLog(message);
         });
     }
 

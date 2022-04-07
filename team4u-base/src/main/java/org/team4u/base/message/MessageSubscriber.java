@@ -1,5 +1,6 @@
 package org.team4u.base.message;
 
+import cn.hutool.core.lang.Singleton;
 import cn.hutool.core.util.ClassUtil;
 
 /**
@@ -23,7 +24,7 @@ public interface MessageSubscriber<M> {
      */
     @SuppressWarnings("unchecked")
     default Class<M> messageType() {
-        return (Class<M>) ClassUtil.getTypeArgument(this.getClass());
+        return Singleton.get(getClass().getName(), () -> (Class<M>) ClassUtil.getTypeArgument(this.getClass()));
     }
 
     /**
