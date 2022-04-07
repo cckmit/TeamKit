@@ -15,7 +15,7 @@ public class SimpleValueSerializer implements Serializer {
 
     private final static Serializer instance = new SimpleValueSerializer();
 
-    public static Serializer instance() {
+    public static Serializer getInstance() {
         return instance;
     }
 

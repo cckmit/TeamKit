@@ -2,7 +2,7 @@ package org.team4u.ddd.process.retry.process;
 
 import cn.hutool.core.util.ClassUtil;
 import org.team4u.base.error.BusinessException;
-import org.team4u.base.serializer.FastJsonSerializer;
+import org.team4u.base.serializer.json.JsonSerializers;
 import org.team4u.ddd.domain.model.DomainEvent;
 import org.team4u.ddd.message.AbstractMessageConsumer;
 import org.team4u.ddd.process.TimeConstrainedProcessTracker;
@@ -105,7 +105,7 @@ public abstract class AbstractRetryableProcessEventSubscriber<E extends DomainEv
                 event.getOccurredOn(),
                 retryStrategyId(event),
                 timedOutEventClass(),
-                FastJsonSerializer.instance().serialize(event)
+                JsonSerializers.getInstance().serialize(event)
         );
     }
 }

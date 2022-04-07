@@ -1,7 +1,7 @@
 package org.team4u.ddd.notification;
 
 import org.junit.Test;
-import org.team4u.base.serializer.FastJsonSerializer;
+import org.team4u.base.serializer.json.JsonSerializers;
 import org.team4u.ddd.domain.model.DomainEvent;
 
 import static org.junit.Assert.assertEquals;
@@ -12,7 +12,7 @@ public class NotificationReaderTest {
     public void testReadBasicProperties() {
         DomainEvent domainEvent = new FakeDomainEvent("testing");
         Notification notification = new Notification(1, domainEvent);
-        String serializedNotification = FastJsonSerializer.instance().serialize(notification);
+        String serializedNotification = JsonSerializers.getInstance().serialize(notification);
 
         NotificationReader reader = new NotificationReader(serializedNotification);
 

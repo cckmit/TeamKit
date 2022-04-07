@@ -200,6 +200,15 @@ public abstract class PolicyRegistrar<C, P extends Policy<C>> {
         return policiesStreamOf(context).collect(Collectors.toList());
     }
 
+    /**
+     * 第一个可用策略
+     *
+     * @return 策略对象
+     */
+    public P firstAvailablePolicy() {
+        return CollUtil.getFirst(policies);
+    }
+
     private Stream<P> policiesStreamOf(C context) {
         return policies.stream().filter(it -> it.supports(context));
     }

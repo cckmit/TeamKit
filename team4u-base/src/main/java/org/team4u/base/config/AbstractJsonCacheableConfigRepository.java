@@ -3,8 +3,8 @@ package org.team4u.base.config;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.StrUtil;
 import org.team4u.base.serializer.CacheableSerializer;
-import org.team4u.base.serializer.HutoolJsonSerializer;
 import org.team4u.base.serializer.Serializer;
+import org.team4u.base.serializer.json.JsonSerializers;
 
 import java.util.Set;
 
@@ -61,7 +61,7 @@ public abstract class AbstractJsonCacheableConfigRepository<T> {
     }
 
     protected Serializer serializer() {
-        return HutoolJsonSerializer.instance();
+        return JsonSerializers.getInstance().serializer();
     }
 
     public ConfigService getConfigService() {

@@ -1,18 +1,21 @@
 package org.team4u.base.serializer;
 
+import cn.hutool.core.lang.Singleton;
+
 /**
  * 简单类型可缓存序列化器
  *
  * @author jay.wu
  * @see SimpleValueCacheSerializer
  */
-public class SimpleValueCacheSerializer {
+public class SimpleValueCacheSerializer extends AbstractCacheableSerializer {
 
-    private final static CacheableSerializer instance = new CacheableSerializer(
-            SimpleValueSerializer.instance()
-    );
+    public static SimpleValueCacheSerializer getInstance() {
+        return Singleton.get(SimpleValueCacheSerializer.class);
+    }
 
-    public static CacheableSerializer instance() {
-        return instance;
+    @Override
+    protected Serializer newSerializer() {
+        return SimpleValueSerializer.getInstance();
     }
 }

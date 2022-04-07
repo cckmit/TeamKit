@@ -2,6 +2,7 @@ package org.team4u.base.serializer;
 
 
 import cn.hutool.core.lang.TypeReference;
+import org.team4u.base.registrar.StringIdPolicy;
 
 import java.lang.reflect.Type;
 
@@ -10,7 +11,7 @@ import java.lang.reflect.Type;
  *
  * @author jay.wu
  */
-public interface Serializer {
+public interface Serializer extends StringIdPolicy {
 
     /**
      * 序列化
@@ -38,4 +39,9 @@ public interface Serializer {
      * @see TypeReference
      */
     <T> T deserialize(String serialization, Type type);
+
+    @Override
+    default String id() {
+        return this.getClass().getSimpleName();
+    }
 }

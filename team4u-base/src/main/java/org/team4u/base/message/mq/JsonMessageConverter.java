@@ -1,7 +1,6 @@
-package org.team4u.ddd.infrastructure.message;
+package org.team4u.base.message.mq;
 
 import org.team4u.base.serializer.json.JsonSerializers;
-import org.team4u.ddd.message.MessageConverter;
 
 import java.util.UnknownFormatConversionException;
 

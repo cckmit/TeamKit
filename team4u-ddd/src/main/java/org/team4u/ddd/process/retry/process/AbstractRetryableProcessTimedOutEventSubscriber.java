@@ -1,7 +1,7 @@
 package org.team4u.ddd.process.retry.process;
 
 import cn.hutool.core.util.ClassUtil;
-import org.team4u.base.serializer.FastJsonSerializer;
+import org.team4u.base.serializer.json.JsonSerializers;
 import org.team4u.ddd.domain.model.DomainEvent;
 import org.team4u.ddd.process.TimeConstrainedProcessTrackerAppService;
 
@@ -24,7 +24,7 @@ public abstract class AbstractRetryableProcessTimedOutEventSubscriber<
 
     @Override
     protected void handleTimedOutEvent(R timedOutEvent) {
-        P processEvent = FastJsonSerializer.instance().deserialize(
+        P processEvent = JsonSerializers.getInstance().deserialize(
                 timedOutEvent.getDescription(),
                 processEventClass()
         );

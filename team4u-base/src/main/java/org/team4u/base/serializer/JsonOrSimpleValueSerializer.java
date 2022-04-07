@@ -3,6 +3,8 @@ package org.team4u.base.serializer;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.TypeUtil;
 import cn.hutool.json.JSONUtil;
+import org.team4u.base.serializer.json.JsonCacheableSerializers;
+import org.team4u.base.serializer.json.JsonSerializers;
 
 import java.lang.reflect.Type;
 
@@ -58,27 +60,26 @@ public class JsonOrSimpleValueSerializer implements Serializer {
     }
 
     private boolean isSimpleType(String value, Class<?> toType) {
-        return ClassUtil.isSimpleTypeOrArray(toType) ||
-                !JSONUtil.isJson(value);
+        return ClassUtil.isSimpleTypeOrArray(toType) || !JSONUtil.isJson(value);
     }
 
     protected Serializer simpleSerializer(boolean isCacheResult) {
         // 缓存结果对象，仅value不同时进行反序列化
         if (isCacheResult) {
-            return SimpleValueCacheSerializer.instance();
+            return SimpleValueCacheSerializer.getInstance();
         }
 
         // 不缓存结果对象，每次进行反序列化
-        return SimpleValueSerializer.instance();
+        return SimpleValueSerializer.getInstance();
     }
 
     protected Serializer jsonSerializer(boolean isCacheResult) {
         // 缓存结果对象，仅value不同时进行反序列化
         if (isCacheResult) {
-            return HutoolJsonCacheSerializer.instance();
+            return JsonCacheableSerializers.getInstance().serializer();
         }
 
         // 不缓存结果对象，每次进行反序列化
-        return HutoolJsonSerializer.instance();
+        return JsonSerializers.getInstance().serializer();
     }
 }

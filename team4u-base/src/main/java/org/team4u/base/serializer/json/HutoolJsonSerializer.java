@@ -1,25 +1,21 @@
-package org.team4u.base.serializer;
+package org.team4u.base.serializer.json;
 
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.serializer.SerializerFeature;
+import cn.hutool.json.JSONConfig;
+import cn.hutool.json.JSONUtil;
+import org.team4u.base.serializer.Serializer;
 
 import java.lang.reflect.Type;
 
 /**
- * 基于fastjson的Json序列化器
+ * 基于hutool的Json序列化器
  *
  * @author jay.wu
  */
-public class FastJsonSerializer implements Serializer {
+public class HutoolJsonSerializer implements JsonSerializer {
 
-    private final static Serializer instance = new FastJsonSerializer();
-
-    private final SerializerFeature[] features;
-
-    public FastJsonSerializer(SerializerFeature... features) {
-        this.features = features;
-    }
+    private final static Serializer instance = new HutoolJsonSerializer();
+    private final JSONConfig config = JSONConfig.create().setOrder(true);
 
     public static Serializer instance() {
         return instance;
@@ -31,7 +27,7 @@ public class FastJsonSerializer implements Serializer {
             return null;
         }
 
-        return JSON.toJSONString(value, features);
+        return JSONUtil.toJsonStr(value);
     }
 
     @Override
@@ -40,7 +36,7 @@ public class FastJsonSerializer implements Serializer {
             return null;
         }
 
-        return JSON.parseObject(serialization, type);
+        return JSONUtil.parse(serialization, config).toBean(type);
     }
 
     @Override
@@ -49,6 +45,11 @@ public class FastJsonSerializer implements Serializer {
             return null;
         }
 
-        return JSON.parseObject(serialization, type);
+        return JSONUtil.parse(serialization, config).toBean(type);
+    }
+
+    @Override
+    public int priority() {
+        return 20;
     }
 }

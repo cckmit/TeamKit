@@ -4,7 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.team4u.base.error.BusinessException;
 import org.team4u.base.error.SystemException;
-import org.team4u.base.serializer.FastJsonSerializer;
+import org.team4u.base.serializer.json.JsonSerializers;
 import org.team4u.ddd.TestUtil;
 import org.team4u.ddd.message.FakeEvent1;
 import org.team4u.ddd.process.FakeTimeConstrainedProcessTrackerRepository;
@@ -42,7 +42,7 @@ public class AbstractRetryableProcessCombinedEventSubscriberTest {
         FakeEvent1 e1 = new FakeEvent1(TestUtil.TEST_ID);
         FakeRetryableProcessTimedOutEvent e = new FakeRetryableProcessTimedOutEvent(
                 TestUtil.TEST_ID,
-                FastJsonSerializer.instance().serialize(e1)
+                JsonSerializers.getInstance().serialize(e1)
         );
 
         subscriber.onMessage(e);

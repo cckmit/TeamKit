@@ -4,7 +4,7 @@ import cn.hutool.core.util.XmlUtil;
 import cn.hutool.log.Log;
 import org.team4u.base.lang.lazy.LazySupplier;
 import org.team4u.base.log.LogMessage;
-import org.team4u.base.serializer.HutoolJsonSerializer;
+import org.team4u.base.serializer.json.JsonSerializers;
 
 /**
  * Xml提取器
@@ -29,7 +29,7 @@ public class XmlExtractor extends JsonExtractor {
         if (log.isDebugEnabled()) {
             log.debug(LogMessage.create(this.getClass().getSimpleName(), "extractableSource")
                     .success()
-                    .append("source", HutoolJsonSerializer.instance().serialize(source))
+                    .append("source", JsonSerializers.getInstance().serialize(source))
                     .toString());
         }
         return source;

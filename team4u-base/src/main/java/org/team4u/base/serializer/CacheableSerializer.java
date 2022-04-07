@@ -9,9 +9,11 @@ import org.team4u.base.lang.lazy.NullValueException;
 import java.lang.reflect.Type;
 
 /**
- * 简单可缓存的序列化器
+ * 可缓存的序列化器
  * <p>
- * * @author jay.wu
+ * 最大可缓存最近使用的1000个元素
+ *
+ * @author jay.wu
  */
 public class CacheableSerializer implements Serializer {
 

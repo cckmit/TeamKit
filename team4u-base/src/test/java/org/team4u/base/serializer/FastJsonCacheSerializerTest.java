@@ -1,9 +1,11 @@
 package org.team4u.base.serializer;
 
+import org.team4u.base.serializer.json.FastJsonCacheSerializer;
+
 public class FastJsonCacheSerializerTest extends AbstractCacheSerializerTest {
 
     @Override
-    protected CacheableSerializer serializer() {
-        return FastJsonCacheSerializer.instance();
+    protected Serializer serializer() {
+        return new FastJsonCacheSerializer();
     }
 }

@@ -1,7 +1,7 @@
 package org.team4u.ddd.notification;
 
-import org.team4u.base.serializer.FastJsonSerializer;
 import org.team4u.base.serializer.Serializer;
+import org.team4u.base.serializer.json.JsonSerializers;
 
 import java.lang.reflect.Type;
 
@@ -16,16 +16,16 @@ public class NotificationSerializer implements Serializer {
 
     @Override
     public String serialize(Object value) {
-        return FastJsonSerializer.instance().serialize(value);
+        return JsonSerializers.getInstance().serialize(value);
     }
 
     @Override
     public <T> T deserialize(String serialization, Class<T> type) {
-        return FastJsonSerializer.instance().deserialize(serialization, type);
+        return JsonSerializers.getInstance().deserialize(serialization, type);
     }
 
     @Override
     public <T> T deserialize(String serialization, Type type) {
-        return FastJsonSerializer.instance().deserialize(serialization, type);
+        return JsonSerializers.getInstance().deserialize(serialization, type);
     }
 }

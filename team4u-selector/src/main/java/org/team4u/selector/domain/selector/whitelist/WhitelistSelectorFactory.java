@@ -2,7 +2,7 @@ package org.team4u.selector.domain.selector.whitelist;
 
 import cn.hutool.core.collection.CollUtil;
 import lombok.Data;
-import org.team4u.base.serializer.HutoolJsonSerializer;
+import org.team4u.base.serializer.json.JsonSerializers;
 import org.team4u.selector.domain.selector.AbstractSelectorFactoryFactory;
 import org.team4u.selector.domain.selector.Selector;
 
@@ -30,7 +30,7 @@ public class WhitelistSelectorFactory extends AbstractSelectorFactoryFactory<Whi
     }
 
     private WhitelistSelector.Config parseOldConfig(String configValue) {
-        OldConfig oldConfig = HutoolJsonSerializer.instance().deserialize(configValue, OldConfig.class);
+        OldConfig oldConfig = JsonSerializers.getInstance().deserialize(configValue, OldConfig.class);
 
         if (CollUtil.isEmpty(oldConfig.getRules())) {
             return null;
