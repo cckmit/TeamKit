@@ -41,12 +41,12 @@ public class MessagePublisher {
      * @param subscriber 订阅者
      */
     public void subscribe(MessageSubscriber<?> subscriber) {
-        subscribers.add(subscriber);
-
-        log.info(LogMessage.create(this.getClass().getSimpleName(), "subscribe")
-                .success()
-                .append("subscriber", subscriber.getClass().getSimpleName())
-                .toString());
+        if (subscribers.add(subscriber)) {
+            log.info(LogMessage.create(this.getClass().getSimpleName(), "subscribe")
+                    .success()
+                    .append("subscriber", subscriber.getClass().getSimpleName())
+                    .toString());
+        }
     }
 
     /**
@@ -72,7 +72,7 @@ public class MessagePublisher {
         return Collections.unmodifiableSet(subscribers);
     }
 
-    public void reset(){
+    public void reset() {
         subscribers.clear();
     }
 }

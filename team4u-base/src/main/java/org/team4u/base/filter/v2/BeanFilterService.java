@@ -4,6 +4,7 @@ import lombok.Getter;
 import org.team4u.base.bean.event.ApplicationInitializedEvent;
 import org.team4u.base.bean.provider.BeanProviders;
 import org.team4u.base.message.jvm.AbstractMessageSubscriber;
+import org.team4u.base.message.jvm.MessagePublisher;
 
 /**
  * 基于bean管理器的过滤器服务
@@ -16,6 +17,10 @@ public abstract class BeanFilterService<C, F extends Filter<C>> extends Abstract
 
     @Getter
     private FilterChain<C, F> filterChain;
+
+    public BeanFilterService(){
+        MessagePublisher.instance().subscribe(this);
+    }
 
     @Override
     protected void internalOnMessage(ApplicationInitializedEvent message) throws Exception {

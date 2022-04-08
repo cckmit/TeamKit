@@ -37,6 +37,8 @@ public class CommandLogHandler implements CommandHandler {
         );
 
         commandLogRepository.save(commandLog);
+
+        commandLog.setSaveBefore(true);
         context.setExtraAttribute(ContextNames.COMMAND_LOG, commandLog);
     }
 

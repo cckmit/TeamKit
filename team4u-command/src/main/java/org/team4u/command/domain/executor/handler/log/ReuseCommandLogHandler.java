@@ -48,6 +48,8 @@ public class ReuseCommandLogHandler extends CommandLogHandler {
                             commandLog.getUpdateTime().getTime() - commandLog.getCreateTime().getTime()
                     );
             commandLogRepository.save(commandLog);
+
+            commandLog.setSaveBefore(true);
         }
 
         context.setExtraAttribute(ContextNames.COMMAND_LOG, commandLog);

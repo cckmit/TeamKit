@@ -32,6 +32,10 @@ public class CommandLog extends AggregateRoot {
      * 渠道处理耗时（毫秒）
      */
     private Long durationMillisecond;
+    /**
+     * 是否刚刚保存成功
+     */
+    private transient boolean saveBefore;
 
     public CommandLog(Object request) {
         this.request = request;
@@ -81,6 +85,15 @@ public class CommandLog extends AggregateRoot {
 
     public CommandLog setDurationMillisecond(Long durationMillisecond) {
         this.durationMillisecond = durationMillisecond;
+        return this;
+    }
+
+    public boolean isSaveBefore() {
+        return saveBefore;
+    }
+
+    public CommandLog setSaveBefore(boolean saveBefore) {
+        this.saveBefore = saveBefore;
         return this;
     }
 }
