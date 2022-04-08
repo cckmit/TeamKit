@@ -1,11 +1,8 @@
-package org.team4u.ddd.message;
+package org.team4u.base.message.mq;
 
 import com.alibaba.fastjson.JSON;
 import org.junit.Assert;
 import org.junit.Test;
-import org.team4u.ddd.infrastructure.message.JsonMessageConverter;
-
-import java.io.IOException;
 
 public class MessageQueueMapperTest {
 
@@ -64,7 +61,7 @@ public class MessageQueueMapperTest {
         }
 
         @Override
-        public void close() throws IOException {
+        public void close() {
 
         }
     }

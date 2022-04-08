@@ -2,7 +2,7 @@ package org.team4u.config.domain;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
-import org.team4u.base.message.MessagePublisher;
+import org.team4u.base.message.jvm.MessagePublisher;
 import org.team4u.config.domain.event.ConfigAllChangedEvent;
 import org.team4u.config.domain.event.SimpleConfigEvent;
 

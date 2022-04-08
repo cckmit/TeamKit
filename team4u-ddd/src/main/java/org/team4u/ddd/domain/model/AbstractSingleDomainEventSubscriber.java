@@ -1,6 +1,7 @@
 package org.team4u.ddd.domain.model;
 
-import org.team4u.ddd.message.AbstractMessageConsumer;
+
+import org.team4u.base.message.mq.AbstractMessageConsumer;
 
 import java.util.concurrent.ExecutorService;
 

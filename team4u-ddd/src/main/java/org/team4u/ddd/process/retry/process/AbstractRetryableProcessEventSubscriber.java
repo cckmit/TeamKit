@@ -2,9 +2,9 @@ package org.team4u.ddd.process.retry.process;
 
 import cn.hutool.core.util.ClassUtil;
 import org.team4u.base.error.BusinessException;
+import org.team4u.base.message.jvm.AbstractMessageSubscriber;
 import org.team4u.base.serializer.json.JsonSerializers;
 import org.team4u.ddd.domain.model.DomainEvent;
-import org.team4u.ddd.message.AbstractMessageConsumer;
 import org.team4u.ddd.process.TimeConstrainedProcessTracker;
 import org.team4u.ddd.process.TimeConstrainedProcessTrackerAppService;
 import org.team4u.ddd.process.retry.RetryService;
@@ -17,7 +17,7 @@ import java.util.concurrent.ExecutorService;
  * @author jay.wu
  */
 public abstract class AbstractRetryableProcessEventSubscriber<E extends DomainEvent, R extends AbstractRetryableProcessTimedOutEvent>
-        extends AbstractMessageConsumer<E> {
+        extends AbstractMessageSubscriber<E> {
 
     private final RetryService retryService;
     private final TimeConstrainedProcessTrackerAppService trackerAppService;

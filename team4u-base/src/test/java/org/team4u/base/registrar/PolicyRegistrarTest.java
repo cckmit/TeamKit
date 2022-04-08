@@ -7,7 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.team4u.base.TestUtil;
 import org.team4u.base.bean.provider.BeanProviders;
-import org.team4u.base.message.MessagePublisher;
+import org.team4u.base.message.jvm.MessagePublisher;
 
 import java.util.List;
 import java.util.stream.Collectors;

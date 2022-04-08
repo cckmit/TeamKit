@@ -3,7 +3,7 @@ package org.team4u.base.bean.provider;
 
 import cn.hutool.core.lang.Dict;
 import org.team4u.base.bean.event.BeanInitializedEvent;
-import org.team4u.base.message.MessagePublisher;
+import org.team4u.base.message.jvm.MessagePublisher;
 
 import java.util.Map;
 import java.util.stream.Collectors;

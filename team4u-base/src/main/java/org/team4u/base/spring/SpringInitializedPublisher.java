@@ -8,8 +8,8 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.team4u.base.bean.event.ApplicationInitializedEvent;
 import org.team4u.base.bean.event.BeanInitializedEvent;
-import org.team4u.base.message.MessagePublisher;
-import org.team4u.base.message.MessageSubscriber;
+import org.team4u.base.message.jvm.MessagePublisher;
+import org.team4u.base.message.jvm.MessageSubscriber;
 
 import java.util.List;
 

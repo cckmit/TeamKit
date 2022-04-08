@@ -1,8 +1,8 @@
 package org.team4u.config.domain.converter;
 
 import lombok.Getter;
-import org.team4u.base.message.AbstractMessageSubscriber;
-import org.team4u.base.message.MessagePublisher;
+import org.team4u.base.message.jvm.AbstractMessageSubscriber;
+import org.team4u.base.message.jvm.MessagePublisher;
 import org.team4u.config.domain.SimpleConfigRepository;
 import org.team4u.config.domain.event.ConfigAllChangedEvent;
 

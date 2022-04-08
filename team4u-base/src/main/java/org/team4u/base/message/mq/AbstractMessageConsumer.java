@@ -1,6 +1,6 @@
 package org.team4u.base.message.mq;
 
-import org.team4u.base.message.AbstractMessageSubscriber;
+import org.team4u.base.message.AbstractMessageReceiver;
 
 import java.util.concurrent.ExecutorService;
 
@@ -10,7 +10,7 @@ import java.util.concurrent.ExecutorService;
  * @param <M> 消息类型
  * @author jay.wu
  */
-public abstract class AbstractMessageConsumer<M> extends AbstractMessageSubscriber<M> implements MessageConsumer<M> {
+public abstract class AbstractMessageConsumer<M> extends AbstractMessageReceiver<M> implements MessageConsumer<M> {
 
     public AbstractMessageConsumer() {
     }

@@ -21,8 +21,8 @@ import org.team4u.base.log.audit.domain.annotion.TraceAuditLog;
 import org.team4u.base.log.audit.domain.condition.ConditionHandler;
 import org.team4u.base.log.audit.domain.provider.OperatorProvider;
 import org.team4u.base.log.audit.domain.provider.ReferenceIdProvider;
-import org.team4u.base.message.AbstractMessageSubscriber;
-import org.team4u.base.message.MessagePublisher;
+import org.team4u.base.message.jvm.AbstractMessageSubscriber;
+import org.team4u.base.message.jvm.MessagePublisher;
 import org.team4u.base.spring.SpringInitializedPublisher;
 import org.team4u.test.spring.BaseTestBeanConfig;
 

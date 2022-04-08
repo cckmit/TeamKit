@@ -2,8 +2,8 @@ package org.team4u.ddd.process.retry.method.interceptor;
 
 import cn.hutool.core.thread.ExecutorBuilder;
 import com.alibaba.fastjson.JSON;
+import org.team4u.base.message.jvm.AbstractMessageSubscriber;
 import org.team4u.ddd.infrastructure.util.MethodInvoker;
-import org.team4u.ddd.message.AbstractMessageConsumer;
 import org.team4u.ddd.process.TimeConstrainedProcessTracker;
 import org.team4u.ddd.process.TimeConstrainedProcessTrackerAppService;
 import org.team4u.ddd.process.retry.RetryService;
@@ -18,7 +18,7 @@ import java.util.concurrent.ThreadPoolExecutor;
  *
  * @author jay.wu
  */
-public abstract class AbstractRetryableMethodTimedOutEventSubscriber extends AbstractMessageConsumer<RetryableMethodTimedOutEvent> {
+public abstract class AbstractRetryableMethodTimedOutEventSubscriber extends AbstractMessageSubscriber<RetryableMethodTimedOutEvent> {
 
     private final MethodInvoker methodInvoker;
     private final TimeConstrainedProcessTrackerAppService trackerAppService;

@@ -10,12 +10,12 @@ import java.util.concurrent.ExecutorService;
 import static org.team4u.base.log.LogService.withInfoLog;
 
 /**
- * 抽象消息订阅者
+ * 抽象消息接收者
  *
  * @param <M> 消息类型
  * @author jay.wu
  */
-public abstract class AbstractMessageSubscriber<M> implements MessageSubscriber<M> {
+public abstract class AbstractMessageReceiver<M> implements MessageReceiver<M> {
 
     protected final Log log = LogFactory.get(this.getClass());
 
@@ -25,11 +25,11 @@ public abstract class AbstractMessageSubscriber<M> implements MessageSubscriber<
     private final ExecutorService executorService;
 
 
-    protected AbstractMessageSubscriber() {
+    protected AbstractMessageReceiver() {
         this(null);
     }
 
-    protected AbstractMessageSubscriber(ExecutorService executorService) {
+    protected AbstractMessageReceiver(ExecutorService executorService) {
         this.executorService = executorService;
     }
 

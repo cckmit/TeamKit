@@ -1,6 +1,6 @@
 package org.team4u.base.bean.event;
 
-import org.team4u.base.message.MessageSubscriber;
+import org.team4u.base.message.jvm.MessageSubscriber;
 import org.team4u.base.spring.SpringInitializedPublisher;
 
 /**

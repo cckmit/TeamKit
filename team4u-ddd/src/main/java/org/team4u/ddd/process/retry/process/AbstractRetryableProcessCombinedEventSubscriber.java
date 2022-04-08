@@ -4,8 +4,8 @@ import cn.hutool.core.thread.ExecutorBuilder;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.TypeUtil;
 import org.team4u.base.error.BusinessException;
+import org.team4u.base.message.jvm.AbstractMessageSubscriber;
 import org.team4u.ddd.domain.model.DomainEvent;
-import org.team4u.ddd.message.AbstractMessageConsumer;
 import org.team4u.ddd.process.TimeConstrainedProcessTrackerAppService;
 
 import java.util.concurrent.ExecutorService;
@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 public abstract class AbstractRetryableProcessCombinedEventSubscriber<
         P extends DomainEvent,
         R extends AbstractRetryableProcessTimedOutEvent
-        > extends AbstractMessageConsumer<DomainEvent> {
+        > extends AbstractMessageSubscriber<DomainEvent> {
 
     private final RetryableProcessEventSubscriber retryableProcessEventSubscriber;
     private final RetryableProcessTimedOutEventSubscriber retryableProcessTimedOutEventSubscriber;

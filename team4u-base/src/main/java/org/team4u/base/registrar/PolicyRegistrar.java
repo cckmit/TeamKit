@@ -13,7 +13,7 @@ import org.team4u.base.bean.event.AbstractBeanInitializedEventSubscriber;
 import org.team4u.base.bean.event.BeanInitializedEvent;
 import org.team4u.base.bean.provider.BeanProviders;
 import org.team4u.base.log.LogMessage;
-import org.team4u.base.message.MessagePublisher;
+import org.team4u.base.message.jvm.MessagePublisher;
 
 import java.lang.annotation.Annotation;
 import java.util.*;

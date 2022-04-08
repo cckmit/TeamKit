@@ -5,7 +5,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.team4u.base.bean.event.ApplicationInitializedEvent;
 import org.team4u.base.bean.provider.BeanProviders;
-import org.team4u.base.message.MessagePublisher;
+import org.team4u.base.message.jvm.MessagePublisher;
 
 import java.util.List;
 import java.util.stream.Collectors;

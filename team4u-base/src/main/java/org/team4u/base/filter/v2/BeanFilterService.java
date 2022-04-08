@@ -3,7 +3,7 @@ package org.team4u.base.filter.v2;
 import lombok.Getter;
 import org.team4u.base.bean.event.ApplicationInitializedEvent;
 import org.team4u.base.bean.provider.BeanProviders;
-import org.team4u.base.message.AbstractMessageSubscriber;
+import org.team4u.base.message.jvm.AbstractMessageSubscriber;
 
 /**
  * 基于bean管理器的过滤器服务

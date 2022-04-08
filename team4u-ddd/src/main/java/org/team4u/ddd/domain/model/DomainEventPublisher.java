@@ -3,8 +3,8 @@ package org.team4u.ddd.domain.model;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 import org.team4u.base.log.LogMessage;
-import org.team4u.base.message.MessagePublisher;
-import org.team4u.ddd.message.MessageConsumer;
+import org.team4u.base.message.jvm.MessagePublisher;
+import org.team4u.base.message.jvm.MessageSubscriber;
 
 import java.util.Collection;
 import java.util.List;
@@ -27,11 +27,11 @@ public class DomainEventPublisher {
         return INSTANCE;
     }
 
-    public void subscribe(List<MessageConsumer<? extends DomainEvent>> listeners) {
+    public void subscribe(List<MessageSubscriber<? extends DomainEvent>> listeners) {
         messagePublisher.subscribe(listeners);
     }
 
-    public void subscribe(MessageConsumer<? extends DomainEvent> listener) {
+    public void subscribe(MessageSubscriber<? extends DomainEvent> listener) {
         messagePublisher.subscribe(listener);
     }
 
@@ -52,10 +52,10 @@ public class DomainEventPublisher {
     }
 
     @SuppressWarnings("unchecked")
-    public Set<MessageConsumer<? extends DomainEvent>> subscribers() {
+    public Set<MessageSubscriber<? extends DomainEvent>> subscribers() {
         return messagePublisher.subscribers()
                 .stream()
-                .map(it -> (MessageConsumer<? extends DomainEvent>) it)
+                .map(it -> (MessageSubscriber<? extends DomainEvent>) it)
                 .collect(Collectors.toSet());
     }
 }

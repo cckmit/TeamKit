@@ -4,7 +4,7 @@ import cn.hutool.core.convert.Convert;
 import org.team4u.base.log.audit.domain.*;
 import org.team4u.base.log.audit.domain.condition.ConditionHandlerHolder;
 import org.team4u.base.log.audit.domain.provider.LogPropProviders;
-import org.team4u.base.message.MessagePublisher;
+import org.team4u.base.message.jvm.MessagePublisher;
 
 import java.util.Map;
 

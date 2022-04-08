@@ -1,4 +1,4 @@
-package org.team4u.base.message;
+package org.team4u.base.message.jvm;
 
 import cn.hutool.core.collection.ConcurrentHashSet;
 import cn.hutool.log.Log;

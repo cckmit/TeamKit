@@ -4,11 +4,11 @@ import cn.hutool.core.lang.Singleton;
 import cn.hutool.core.util.ClassUtil;
 
 /**
- * 消息订阅者
+ * 消息接收器
  *
  * @author jay.wu
  */
-public interface MessageSubscriber<M> {
+public interface MessageReceiver<M> {
 
     /**
      * 处理消息

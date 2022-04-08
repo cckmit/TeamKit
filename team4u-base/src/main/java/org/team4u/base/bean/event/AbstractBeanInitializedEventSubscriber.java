@@ -1,6 +1,6 @@
 package org.team4u.base.bean.event;
 
-import org.team4u.base.message.AbstractMessageSubscriber;
+import org.team4u.base.message.jvm.AbstractMessageSubscriber;
 
 /**
  * BeanInitializedEvent抽象监听器
