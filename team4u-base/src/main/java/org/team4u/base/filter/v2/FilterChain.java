@@ -48,7 +48,7 @@ public class FilterChain<C, F extends Filter<C>> {
 
     @SuppressWarnings("unchecked")
     private FilterInvoker<C> initFilterChain() {
-        return withInfoLog(log, "initFilterChain", () -> {
+        return withInfoLog(log, config.getName(), "initFilterChain", () -> {
             List<F> filters = (List<F>) config.filtersWithClasses();
             LogMessageContext.get().append("filters", config.dump(filters));
 
@@ -76,7 +76,7 @@ public class FilterChain<C, F extends Filter<C>> {
      * @param context 过滤上下文
      */
     public C doFilter(C context) {
-        return withInfoLog(log, "doFilter", () -> {
+        return withInfoLog(log, config.getName(), "doFilter", () -> {
             LogMessageContext.get().append("context", context);
             header.invoke(context);
             return context;

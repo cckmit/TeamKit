@@ -1,6 +1,7 @@
 package org.team4u.base.log;
 
 import cn.hutool.core.util.ClassUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.log.Log;
 import cn.hutool.log.level.Level;
 import org.team4u.base.error.BusinessException;
@@ -45,9 +46,11 @@ public class LogService {
 
     public static <V> V withLog(Log log,
                                 Level level,
+                                String module,
                                 String eventName,
                                 Callable<V> callable) {
-        LogMessage lm = LogMessageContext.createAndSet(ClassUtil.getShortClassName(log.getName()), eventName);
+        module = ObjectUtil.defaultIfNull(module, ClassUtil.getShortClassName(log.getName()));
+        LogMessage lm = LogMessageContext.createAndSet(module, eventName);
 
         try {
             V result = callable.call();
@@ -60,20 +63,32 @@ public class LogService {
         } catch (Exception e) {
             logForError(log, lm, e);
             throw NestedException.wrap(e);
-        } finally {
-            LogMessageContext.remove();
         }
+    }
+
+    public static <V> V withDebugLog(Log log,
+                                     String module,
+                                     String eventName,
+                                     Callable<V> callable) {
+        return withLog(log, Level.DEBUG, module, eventName, callable);
     }
 
     public static <V> V withDebugLog(Log log,
                                      String eventName,
                                      Callable<V> callable) {
-        return withLog(log, Level.DEBUG, eventName, callable);
+        return withLog(log, Level.DEBUG, null, eventName, callable);
+    }
+
+    public static <V> V withInfoLog(Log log,
+                                    String module,
+                                    String eventName,
+                                    Callable<V> callable) {
+        return withLog(log, Level.INFO, module, eventName, callable);
     }
 
     public static <V> V withInfoLog(Log log,
                                     String eventName,
                                     Callable<V> callable) {
-        return withLog(log, Level.INFO, eventName, callable);
+        return withLog(log, Level.INFO, null, eventName, callable);
     }
 }

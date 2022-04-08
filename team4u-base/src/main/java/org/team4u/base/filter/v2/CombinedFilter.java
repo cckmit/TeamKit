@@ -1,5 +1,7 @@
 package org.team4u.base.filter.v2;
 
+import org.team4u.base.log.DisableAutoLog;
+
 /**
  * 组合过滤器
  * <p>
@@ -7,6 +9,7 @@ package org.team4u.base.filter.v2;
  *
  * @author jay.wu
  */
+@DisableAutoLog
 public class CombinedFilter<C> implements Filter<C> {
 
     private final FilterChain<C, Filter<C>> filterChain;
