@@ -13,6 +13,6 @@ public class HutoolJsonCacheSerializer extends AbstractCacheableSerializer imple
 
     @Override
     protected Serializer newSerializer() {
-        return new HutoolJsonSerializer();
+        return  HutoolJsonSerializer.getInstance();
     }
 }

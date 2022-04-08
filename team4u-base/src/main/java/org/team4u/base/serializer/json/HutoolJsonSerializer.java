@@ -17,7 +17,7 @@ public class HutoolJsonSerializer implements JsonSerializer {
     private final static Serializer instance = new HutoolJsonSerializer();
     private final JSONConfig config = JSONConfig.create().setOrder(true);
 
-    public static Serializer instance() {
+    public static Serializer getInstance() {
         return instance;
     }
 

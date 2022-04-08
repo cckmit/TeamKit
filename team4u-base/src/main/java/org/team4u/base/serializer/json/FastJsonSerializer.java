@@ -1,8 +1,11 @@
 package org.team4u.base.serializer.json;
 
+import cn.hutool.core.lang.Singleton;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.lang.reflect.Type;
 
@@ -13,7 +16,9 @@ import java.lang.reflect.Type;
  */
 public class FastJsonSerializer implements JsonSerializer {
 
-    private final SerializerFeature[] features;
+    @Getter
+    @Setter
+    private SerializerFeature[] features;
 
     public FastJsonSerializer() {
         features = new SerializerFeature[]{};
@@ -21,6 +26,10 @@ public class FastJsonSerializer implements JsonSerializer {
 
     public FastJsonSerializer(SerializerFeature... features) {
         this.features = features;
+    }
+
+    public static FastJsonSerializer getInstance() {
+        return Singleton.get(FastJsonSerializer.class);
     }
 
     @Override
