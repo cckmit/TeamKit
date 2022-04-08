@@ -4,7 +4,7 @@ import org.team4u.base.serializer.AbstractCacheableSerializer;
 import org.team4u.base.serializer.Serializer;
 
 /**
- * 基于fastjson的可缓存序列化器
+ * 基于fastjson带缓存功能的JSON序列化器
  *
  * @author jay.wu
  * @see FastJsonSerializer

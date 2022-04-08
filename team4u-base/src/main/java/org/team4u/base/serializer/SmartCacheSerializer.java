@@ -5,7 +5,7 @@ import org.team4u.base.serializer.json.JsonCacheableSerializers;
 import org.team4u.base.serializer.simple.SimpleValueCacheSerializer;
 
 /**
- * 可缓存的智能序列化器
+ * 带缓存功能的智能序列化器
  *
  * @author jay.wu
  * @see SmartSerializer
