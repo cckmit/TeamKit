@@ -107,12 +107,12 @@
 
     <distributionManagement>
         <repository>
-            <id>rdc-releases</id>
-            <url>https://packages.aliyun.com/maven/repository/2016366-release-X1rEnZ/</url>
+            <id>releases</id>
+            <url>${distributionRelease}</url>
         </repository>
         <snapshotRepository>
-            <id>rdc-snapshots</id>
-            <url>https://packages.aliyun.com/maven/repository/2016366-snapshot-lj2H3H/</url>
+            <id>snapshots</id>
+            <url>${distributionSnapshot}</url>
         </snapshotRepository>
     </distributionManagement>
 </project>
