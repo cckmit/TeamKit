@@ -120,6 +120,15 @@ public class FilterChain<C, F extends Filter<C>> {
             return StrUtil.equals(getName(), DEFAULT_NAME);
         }
 
+        public void setNameIfNotDefault(String name) {
+            if (!isDefaultName()) {
+                return;
+            }
+
+            setName(name);
+        }
+
+
         public List<String> dump(List<? extends Filter<?>> filters) {
             return filters.stream()
                     .map(it -> ClassUtil.getShortClassName(it.getClass().getName()))

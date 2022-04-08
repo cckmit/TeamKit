@@ -25,16 +25,8 @@ public abstract class BeanFilterService<C, F extends Filter<C>> extends Abstract
     @Override
     protected void internalOnMessage(ApplicationInitializedEvent message) throws Exception {
         FilterChain.Config config = config();
-        initFilterChainName(config);
+        config.setNameIfNotDefault(getClass().getSimpleName());
         filterChain = FilterChain.create(config);
-    }
-
-    private void initFilterChainName(FilterChain.Config config) {
-        if (!config.isDefaultName()) {
-            return;
-        }
-
-        config.setName(this.getClass().getSimpleName());
     }
 
     /**
