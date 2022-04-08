@@ -43,9 +43,17 @@ public class FilterCommandExecutor extends PolicyRegistrar<String, CommandRoutes
     }
 
     private void initFilterChain(CommandRoutesBuilder builder) {
-        filterChainMap.put(builder.id(), FilterChain.create(
-                builder.configure()
-        ));
+        FilterChain.Config config = builder.configure();
+        initFilterChainName(config, builder);
+        filterChainMap.put(builder.id(), FilterChain.create(config));
+    }
+
+    private void initFilterChainName(FilterChain.Config config, CommandRoutesBuilder builder) {
+        if (!config.isDefaultName()) {
+            return;
+        }
+
+        config.setName(builder.getClass().getSimpleName());
     }
 
     @Override
