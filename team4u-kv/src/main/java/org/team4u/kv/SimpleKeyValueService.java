@@ -1,7 +1,7 @@
 package org.team4u.kv;
 
-import org.team4u.base.serializer.JsonOrSimpleValueSerializer;
 import org.team4u.base.serializer.Serializer;
+import org.team4u.base.serializer.SmartSerializer;
 
 import java.util.Collection;
 import java.util.Map;
@@ -37,7 +37,7 @@ public class SimpleKeyValueService<V> {
     public SimpleKeyValueService(String type,
                                  Class<V> valueClass,
                                  KeyValueRepository keyValueRepository) {
-        this(type, 0, valueClass, JsonOrSimpleValueSerializer.noCache(), keyValueRepository, null);
+        this(type, 0, valueClass, SmartSerializer.getInstance(), keyValueRepository, null);
     }
 
 
@@ -46,7 +46,7 @@ public class SimpleKeyValueService<V> {
                                  Class<V> valueClass,
                                  KeyValueRepository keyValueRepository,
                                  KeyValueCleaner keyValueCleaner) {
-        this(type, ttlMillis, valueClass, JsonOrSimpleValueSerializer.noCache(), keyValueRepository, keyValueCleaner);
+        this(type, ttlMillis, valueClass, SmartSerializer.getInstance(), keyValueRepository, keyValueCleaner);
     }
 
     public SimpleKeyValueService(String type,

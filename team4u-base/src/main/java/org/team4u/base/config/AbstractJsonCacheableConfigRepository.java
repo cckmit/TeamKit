@@ -61,7 +61,7 @@ public abstract class AbstractJsonCacheableConfigRepository<T> {
     }
 
     protected Serializer serializer() {
-        return JsonSerializers.getInstance().serializer();
+        return JsonSerializers.getInstance();
     }
 
     public ConfigService getConfigService() {

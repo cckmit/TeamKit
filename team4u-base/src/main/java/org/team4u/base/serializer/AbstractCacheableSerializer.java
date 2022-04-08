@@ -29,4 +29,14 @@ public abstract class AbstractCacheableSerializer implements Serializer {
     }
 
     protected abstract Serializer newSerializer();
+
+    @Override
+    public boolean supports(Object context) {
+        return cacheableSerializer.supports(context);
+    }
+
+    @Override
+    public int priority() {
+        return cacheableSerializer.priority();
+    }
 }

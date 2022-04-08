@@ -1,7 +1,7 @@
-package org.team4u.base.serializer;
+package org.team4u.base.serializer.simple;
 
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.util.ClassUtil;
+import org.team4u.base.serializer.Serializer;
 
 import java.lang.reflect.Type;
 
@@ -9,7 +9,6 @@ import java.lang.reflect.Type;
  * 简单类型序列化器
  *
  * @author jay.wu
- * @see ClassUtil isSimpleTypeOrArray
  */
 public class SimpleValueSerializer implements Serializer {
 
@@ -32,5 +31,16 @@ public class SimpleValueSerializer implements Serializer {
     @Override
     public <T> T deserialize(String serialization, Type type) {
         return Convert.convert(type, serialization);
+    }
+
+    @Override
+    public boolean supports(Object context) {
+        // 兜底策略
+        return true;
+    }
+
+    @Override
+    public int priority() {
+        return 100;
     }
 }

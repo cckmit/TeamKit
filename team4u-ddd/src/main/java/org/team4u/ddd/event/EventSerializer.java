@@ -2,13 +2,13 @@ package org.team4u.ddd.event;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
-import org.team4u.base.serializer.Serializer;
+import org.team4u.base.serializer.json.JsonSerializer;
 
 import java.lang.reflect.Type;
 
 import static com.alibaba.fastjson.parser.Feature.SupportAutoType;
 
-public class EventSerializer implements Serializer {
+public class EventSerializer implements JsonSerializer {
 
     public static final EventSerializer INSTANCE = new EventSerializer();
 

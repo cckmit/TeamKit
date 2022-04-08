@@ -1,6 +1,7 @@
-package org.team4u.base.serializer;
+package org.team4u.base.serializer.json;
 
-import org.team4u.base.serializer.json.HutoolJsonCacheSerializer;
+import org.team4u.base.serializer.Serializer;
+
 
 public class HutoolJsonCacheSerializerTest extends AbstractCacheSerializerTest {
 

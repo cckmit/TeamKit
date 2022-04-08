@@ -1,11 +1,11 @@
 package org.team4u.ddd.notification;
 
-import org.team4u.base.serializer.Serializer;
+import org.team4u.base.serializer.json.JsonSerializer;
 import org.team4u.base.serializer.json.JsonSerializers;
 
 import java.lang.reflect.Type;
 
-public class NotificationSerializer implements Serializer {
+public class NotificationSerializer implements JsonSerializer {
 
     public static final NotificationSerializer INSTANCE = new NotificationSerializer();
 

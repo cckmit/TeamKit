@@ -34,6 +34,6 @@ public class JsonCommandConfigRepository
 
     @Override
     protected Serializer serializer() {
-        return JsonCacheableSerializers.getInstance().serializer();
+        return JsonCacheableSerializers.getInstance();
     }
 }

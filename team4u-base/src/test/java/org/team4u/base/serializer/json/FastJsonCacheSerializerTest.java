@@ -1,6 +1,6 @@
-package org.team4u.base.serializer;
+package org.team4u.base.serializer.json;
 
-import org.team4u.base.serializer.json.FastJsonCacheSerializer;
+import org.team4u.base.serializer.Serializer;
 
 public class FastJsonCacheSerializerTest extends AbstractCacheSerializerTest {
 

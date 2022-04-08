@@ -1,7 +1,8 @@
 package org.team4u.config.domain.converter;
 
-import org.team4u.base.serializer.JsonOrSimpleValueSerializer;
 import org.team4u.base.serializer.Serializer;
+import org.team4u.base.serializer.SmartCacheSerializer;
+import org.team4u.base.serializer.SmartSerializer;
 import org.team4u.config.domain.SimpleConfigs;
 
 import java.lang.reflect.Type;
@@ -36,9 +37,9 @@ public class ConfigValueBeanConverter {
 
     protected Serializer serializer(boolean isCacheResult) {
         if (isCacheResult) {
-            return JsonOrSimpleValueSerializer.cache();
+            return SmartCacheSerializer.getInstance();
         }
 
-        return JsonOrSimpleValueSerializer.noCache();
+        return SmartSerializer.getInstance();
     }
 }

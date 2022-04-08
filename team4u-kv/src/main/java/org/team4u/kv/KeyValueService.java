@@ -4,8 +4,8 @@ import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 import org.team4u.base.log.LogMessage;
-import org.team4u.base.serializer.JsonOrSimpleValueSerializer;
 import org.team4u.base.serializer.Serializer;
+import org.team4u.base.serializer.SmartSerializer;
 import org.team4u.kv.model.KeyValue;
 import org.team4u.kv.model.KeyValueFactory;
 import org.team4u.kv.model.KeyValueId;
@@ -40,7 +40,7 @@ public class KeyValueService {
 
     public KeyValueService(KeyValueRepository keyValueRepository,
                            KeyValueCleaner keyValueCleaner) {
-        this(JsonOrSimpleValueSerializer.noCache(), keyValueRepository, keyValueCleaner);
+        this(SmartSerializer.getInstance(), keyValueRepository, keyValueCleaner);
     }
 
     public KeyValueService(Serializer valueSerializer,

@@ -3,6 +3,7 @@ package org.team4u.base.serializer;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import lombok.Getter;
 import org.team4u.base.lang.lazy.LazyFunction;
 import org.team4u.base.lang.lazy.NullValueException;
 
@@ -17,11 +18,15 @@ import java.lang.reflect.Type;
  */
 public class CacheableSerializer implements Serializer {
 
+    @Getter
+    private final Serializer serializer;
+
     private final LazyFunction<Pair<Class<?>, String>, Object> classDeserializer;
     private final LazyFunction<Pair<Type, String>, Object> typeDeserializer;
     private final LazyFunction<Object, String> objectSerializer;
 
     public CacheableSerializer(Serializer serializer) {
+        this.serializer = serializer;
         String name = getClass().getSimpleName();
 
         this.classDeserializer = LazyFunction.of(
@@ -79,5 +84,15 @@ public class CacheableSerializer implements Serializer {
         } catch (NullValueException e) {
             return null;
         }
+    }
+
+    @Override
+    public boolean supports(Object context) {
+        return serializer.supports(context);
+    }
+
+    @Override
+    public int priority() {
+        return serializer.priority();
     }
 }
