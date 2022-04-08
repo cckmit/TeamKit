@@ -2,6 +2,7 @@ package org.team4u.base.filter.v2;
 
 import cn.hutool.core.lang.func.VoidFunc1;
 import cn.hutool.core.util.ClassUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.Log;
 import lombok.Builder;
 import lombok.Data;
@@ -86,8 +87,11 @@ public class FilterChain<C, F extends Filter<C>> {
     @Data
     @Builder
     public static class Config {
+
+        public static final String DEFAULT_NAME = FilterChain.class.getSimpleName();
+
         @Builder.Default
-        private String name = FilterChain.class.getSimpleName();
+        private String name = DEFAULT_NAME;
 
         @Singular
         private List<? extends Filter<?>> filters;
@@ -110,6 +114,10 @@ public class FilterChain<C, F extends Filter<C>> {
             }
 
             return filtersOfClasses();
+        }
+
+        public boolean isDefaultName() {
+            return StrUtil.equals(getName(), DEFAULT_NAME);
         }
 
         public List<String> dump(List<? extends Filter<?>> filters) {

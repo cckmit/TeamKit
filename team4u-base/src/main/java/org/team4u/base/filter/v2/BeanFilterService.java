@@ -18,13 +18,23 @@ public abstract class BeanFilterService<C, F extends Filter<C>> extends Abstract
     @Getter
     private FilterChain<C, F> filterChain;
 
-    public BeanFilterService(){
+    public BeanFilterService() {
         MessagePublisher.instance().subscribe(this);
     }
 
     @Override
     protected void internalOnMessage(ApplicationInitializedEvent message) throws Exception {
-        filterChain = FilterChain.create(config());
+        FilterChain.Config config = config();
+        initFilterChainName(config);
+        filterChain = FilterChain.create(config);
+    }
+
+    private void initFilterChainName(FilterChain.Config config) {
+        if (!config.isDefaultName()) {
+            return;
+        }
+
+        config.setName(this.getClass().getSimpleName());
     }
 
     /**

@@ -49,7 +49,6 @@ public class BeanFilterServiceTest {
         @Override
         protected FilterChain.Config config() {
             return FilterChain.Config.builder()
-                    .name(getClass().getSimpleName())
                     .filterClasses(filters.stream()
                             .map(it -> (Class<Filter<Dict>>) it.getClass())
                             .collect(Collectors.toList()))
