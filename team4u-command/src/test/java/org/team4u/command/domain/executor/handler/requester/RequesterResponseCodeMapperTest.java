@@ -22,13 +22,18 @@ public class RequesterResponseCodeMapperTest {
 
     @Test
     public void handle() {
+        Assert.assertEquals("2", codeOf("1"));
+        Assert.assertNull(codeOf("2"));
+    }
+
+    private String codeOf(String channelCode) {
         CommandHandler.Context context = new CommandHandler.Context(
                 null,
                 TestUtil.configOf("test_command.json"),
-                "1"
+                channelCode
         );
         codeMapper.handle(context);
 
-        Assert.assertEquals("2", context.getResponse());
+        return context.getResponse();
     }
 }

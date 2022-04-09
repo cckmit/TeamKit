@@ -15,6 +15,7 @@ import org.team4u.selector.domain.interceptor.SelectorInterceptorFactoryService;
 import org.team4u.selector.domain.interceptor.SelectorInterceptorService;
 import org.team4u.selector.domain.selector.*;
 import org.team4u.selector.domain.selector.binding.SelectorBinding;
+import org.team4u.selector.infrastructure.persistence.InMemorySelectorConfigRepository;
 
 import java.util.Collections;
 import java.util.List;
@@ -34,6 +35,10 @@ public class SelectorAppService {
 
     private final SelectorInterceptorService selectorInterceptorService;
     private final SelectorInterceptorFactoryService selectorInterceptorFactoryService;
+
+    public SelectorAppService() {
+        this(new InMemorySelectorConfigRepository(Collections.emptyList()));
+    }
 
     public SelectorAppService(SelectorConfigRepository selectorConfigRepository) {
         this.selectorConfigRepository = selectorConfigRepository;

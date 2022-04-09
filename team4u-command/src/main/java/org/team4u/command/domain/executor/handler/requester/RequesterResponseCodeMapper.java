@@ -9,9 +9,6 @@ import org.team4u.selector.application.SelectorAppService;
 import org.team4u.selector.domain.selector.SelectorConfig;
 import org.team4u.selector.domain.selector.SelectorResult;
 import org.team4u.selector.domain.selector.binding.SingleValueBinding;
-import org.team4u.selector.infrastructure.persistence.InMemorySelectorConfigRepository;
-
-import java.util.Collections;
 
 /**
  * 请求者响应码映射器
@@ -22,15 +19,7 @@ public abstract class RequesterResponseCodeMapper implements CommandHandler {
 
     private final Log log = LogFactory.get();
 
-    private final SelectorAppService selectorAppService;
-
-    public RequesterResponseCodeMapper() {
-        this(new SelectorAppService(new InMemorySelectorConfigRepository(Collections.emptyList())));
-    }
-
-    public RequesterResponseCodeMapper(SelectorAppService selectorAppService) {
-        this.selectorAppService = selectorAppService;
-    }
+    private final SelectorAppService selectorAppService = new SelectorAppService();
 
     @Override
     public void handle(CommandHandler.Context context) {
