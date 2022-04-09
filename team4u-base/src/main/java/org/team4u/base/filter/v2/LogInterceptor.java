@@ -3,7 +3,7 @@ package org.team4u.base.filter.v2;
 import cn.hutool.core.annotation.AnnotationUtil;
 import cn.hutool.log.Log;
 import org.team4u.base.log.DisableAutoLog;
-import org.team4u.base.log.LogMessageContext;
+import org.team4u.base.log.LogMessage;
 
 /**
  * 日志拦截器
@@ -12,52 +12,65 @@ import org.team4u.base.log.LogMessageContext;
  */
 public class LogInterceptor implements FilterInterceptor<Object, Filter<Object>> {
 
+    private final static String LM_KEY = "LOG_MESSAGE";
+
     private final Log log = Log.get();
 
     @Override
-    public boolean preHandle(Object context, Filter<Object> filter) {
-        if (isDisableLog(filter)) {
+    public boolean preHandle(Context<Object, Filter<Object>> context) {
+        if (isDisableLog(context.getFilter())) {
             return true;
         }
 
-        LogMessageContext.createAndSet(filter.getClass().getSimpleName(), "doFilter")
-                .append("context", context);
-
+        LogMessage lm = LogMessage.create(moduleNameOf(context), "doFilter")
+                .append("context", context.getFilterContext());
+        setLogMessage(context, lm);
         return true;
     }
 
+    private String moduleNameOf(Context<Object, Filter<Object>> context) {
+        return context.getFilterChain().getConfig().getName() +
+                "|" +
+                context.getFilter().getClass().getSimpleName();
+    }
+
     @Override
-    public void postHandle(Object o, Filter<Object> filter, boolean toNext) {
-        if (isDisableLog(filter)) {
+    public void postHandle(Context<Object, Filter<Object>> context, boolean toNext) {
+        if (isDisableLog(context.getFilter())) {
             return;
         }
 
-        if (LogMessageContext.get() == null) {
+        if (lm(context) == null) {
             return;
         }
 
         if (log.isDebugEnabled()) {
-            log.debug(LogMessageContext.get()
-                    .success()
-                    .append("toNext", toNext)
-                    .toString());
+            log.debug(lm(context).success().append("toNext", toNext).toString());
         }
     }
 
     @Override
-    public void afterCompletion(Object o, Filter<Object> filter, Exception e) {
-        if (isDisableLog(filter)) {
+    public void afterCompletion(Context<Object, Filter<Object>> context, Exception e) {
+        if (isDisableLog(context.getFilter())) {
             return;
         }
 
-        if (LogMessageContext.get() == null) {
+        if (lm(context) == null) {
             return;
         }
 
-        log.error(e, LogMessageContext.get().fail(e.getMessage()).toString());
+        log.error(e, lm(context).fail(e.getMessage()).toString());
     }
 
     private boolean isDisableLog(Filter<Object> filter) {
         return AnnotationUtil.hasAnnotation(filter.getClass(), DisableAutoLog.class);
+    }
+
+    private void setLogMessage(Context<Object, Filter<Object>> context, LogMessage lm) {
+        context.getExt().set(LM_KEY, lm);
+    }
+
+    private LogMessage lm(Context<Object, Filter<Object>> context) {
+        return (LogMessage) context.getExt().get(LM_KEY);
     }
 }

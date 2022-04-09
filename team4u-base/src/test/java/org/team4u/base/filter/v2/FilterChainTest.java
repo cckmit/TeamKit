@@ -117,17 +117,17 @@ public class FilterChainTest {
     public static class TestFilterInterceptor implements FilterInterceptor<List<String>, Filter<List<String>>> {
 
         @Override
-        public boolean preHandle(List<String> strings, Filter<List<String>> filter) {
-            return !(filter instanceof E);
+        public boolean preHandle(Context<List<String>, Filter<List<String>>> context) {
+            return !(context.getFilter() instanceof E);
         }
 
         @Override
-        public void postHandle(List<String> strings, Filter<List<String>> filter, boolean toNext) {
+        public void postHandle(Context<List<String>, Filter<List<String>>> context, boolean toNext) {
 
         }
 
         @Override
-        public void afterCompletion(List<String> strings, Filter<List<String>> filter, Exception e) {
+        public void afterCompletion(Context<List<String>, Filter<List<String>>> context, Exception e) {
 
         }
     }
@@ -135,7 +135,7 @@ public class FilterChainTest {
     public static class Log2FilterInterceptor extends LogInterceptor {
 
         @Override
-        public void afterCompletion(Object o, Filter<Object> filter, Exception e) {
+        public void afterCompletion(Context<Object, Filter<Object>> context, Exception e) {
             // Ignore error log
         }
 

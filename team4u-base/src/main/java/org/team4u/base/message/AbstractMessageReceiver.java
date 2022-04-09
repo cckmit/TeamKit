@@ -2,9 +2,7 @@ package org.team4u.base.message;
 
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
-import org.team4u.base.log.LogMessageContext;
 
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
 import static org.team4u.base.log.LogService.withInfoLog;
@@ -50,8 +48,8 @@ public abstract class AbstractMessageReceiver<M> implements MessageReceiver<M> {
     }
 
     protected void onMessageWithLog(M message) {
-        withInfoLog(log, "onMessage", (Callable<Void>) () -> {
-            LogMessageContext.get().append("messageType", message.getClass().getSimpleName())
+        withInfoLog(log, "onMessage", (lm) -> {
+            lm.append("messageType", message.getClass().getSimpleName())
                     .append("message", message);
             internalOnMessage(message);
             return null;

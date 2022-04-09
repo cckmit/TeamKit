@@ -13,7 +13,7 @@ import java.util.List;
  *
  * @author jay.wu
  */
-public class FilterInterceptorService<Context, F extends Filter<Context>>
+public class FilterInterceptorService<C, F extends Filter<C>>
         extends PolicyRegistrar<String, FilterInterceptor<?, ?>> {
 
     public FilterInterceptorService(List<? extends FilterInterceptor<?, ?>> interceptors) {
@@ -39,9 +39,9 @@ public class FilterInterceptorService<Context, F extends Filter<Context>>
      * 命令执行前
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public boolean preHandle(Context context, F filter) {
+    public boolean preHandle(FilterInterceptor.Context context) {
         return policies().stream().allMatch(it ->
-                ((FilterInterceptor) it).preHandle(context, filter)
+                it.preHandle(context)
         );
     }
 
@@ -51,9 +51,9 @@ public class FilterInterceptorService<Context, F extends Filter<Context>>
      * 命令执行后
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public void postHandle(Context context, F filter, boolean toNext) {
+    public void postHandle(FilterInterceptor.Context context, boolean toNext) {
         CollUtil.reverse(policies()).forEach(it ->
-                ((FilterInterceptor) it).postHandle(context, filter, toNext)
+                it.postHandle(context, toNext)
         );
     }
 
@@ -61,29 +61,35 @@ public class FilterInterceptorService<Context, F extends Filter<Context>>
      * 完成处理（异常情况执行）
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public void afterCompletion(Context context, F filter, Exception e) {
+    public void afterCompletion(FilterInterceptor.Context context, Exception e) {
         CollUtil.reverse(policies()).forEach(it ->
-                ((FilterInterceptor) it).afterCompletion(context, filter, e)
+                it.afterCompletion(context, e)
         );
     }
 
     /**
      * 执行处理器
      */
-    public void apply(Context context, FilterInvoker<Context> invoker, F filter) {
+    public void apply(FilterChain<C, F> filterChain, C filterContext, FilterInvoker<C> invoker, F filter) {
+        FilterInterceptor.Context<C, F> context = new FilterInterceptor.Context<>(
+                filterChain,
+                filterContext,
+                filter
+        );
+
         try {
-            if (!preHandle(context, filter)) {
+            if (!preHandle(context)) {
                 return;
             }
 
-            boolean toNext = filter.doFilter(context);
-            postHandle(context, filter, toNext);
+            boolean toNext = filter.doFilter(filterContext);
+            postHandle(context, toNext);
 
             if (toNext) {
-                invoker.invoke(context);
+                invoker.invoke(filterContext);
             }
         } catch (Exception e) {
-            afterCompletion(context, filter, e);
+            afterCompletion(context, e);
             throw NestedException.wrap(e);
         }
     }

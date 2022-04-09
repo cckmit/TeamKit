@@ -3,13 +3,11 @@ package org.team4u.notification.application;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 import org.team4u.base.error.RemoteCallException;
-import org.team4u.base.log.LogMessageContext;
 import org.team4u.base.registrar.PolicyRegistrar;
 import org.team4u.notification.domain.Notification;
 import org.team4u.notification.domain.NotificationSender;
 
 import java.util.List;
-import java.util.concurrent.Callable;
 
 import static org.team4u.base.log.LogService.withInfoLog;
 
@@ -39,11 +37,10 @@ public class NotificationService extends PolicyRegistrar<String, NotificationSen
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
     public void send(String type, Notification notification) throws RemoteCallException {
-        withInfoLog(log, "send", (Callable<Void>) () -> {
+        withInfoLog(log, "send", (lm) -> {
             NotificationSender sender = availablePolicyOf(type);
 
-            LogMessageContext.get()
-                    .append("notificationId", notification.getId())
+            lm.append("notificationId", notification.getId())
                     .append("sender", sender.getClass().getSimpleName())
                     .append("type", type);
 

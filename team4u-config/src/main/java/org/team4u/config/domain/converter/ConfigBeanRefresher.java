@@ -3,8 +3,6 @@ package org.team4u.config.domain.converter;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.log.Log;
 import lombok.Getter;
-import org.team4u.base.log.LogMessage;
-import org.team4u.base.log.LogMessageContext;
 import org.team4u.config.domain.SimpleConfigs;
 
 import static org.team4u.base.log.LogService.withInfoLog;
@@ -45,8 +43,8 @@ public class ConfigBeanRefresher {
      * @param latestAllConfigs 最新的配置项
      */
     public synchronized void refresh(SimpleConfigs latestAllConfigs) {
-        withInfoLog(log, "refresh", () -> {
-            LogMessage lm = LogMessageContext.get().append("configType", configType);
+        withInfoLog(log, "refresh", (lm) -> {
+            lm.append("configType", configType);
 
             SimpleConfigs latestConfigs = configsOfType(latestAllConfigs);
             if (isNotNeedToRefresh(latestConfigs)) {

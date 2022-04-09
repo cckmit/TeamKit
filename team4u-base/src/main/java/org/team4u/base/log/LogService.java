@@ -1,5 +1,6 @@
 package org.team4u.base.log;
 
+import cn.hutool.core.lang.func.Func1;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.log.Log;
@@ -7,8 +8,6 @@ import cn.hutool.log.level.Level;
 import org.team4u.base.error.BusinessException;
 import org.team4u.base.error.ControlException;
 import org.team4u.base.error.NestedException;
-
-import java.util.concurrent.Callable;
 
 /**
  * 日志服务
@@ -48,12 +47,12 @@ public class LogService {
                                 Level level,
                                 String module,
                                 String eventName,
-                                Callable<V> callable) {
+                                Func1<LogMessage, V> callable) {
         module = ObjectUtil.defaultIfNull(module, ClassUtil.getShortClassName(log.getName()));
-        LogMessage lm = LogMessageContext.createAndSet(module, eventName);
+        LogMessage lm = LogMessage.create(module, eventName);
 
         try {
-            V result = callable.call();
+            V result = callable.call(lm);
 
             if (log.isEnabled(level)) {
                 log.log(level, lm.success().toString());
@@ -69,26 +68,26 @@ public class LogService {
     public static <V> V withDebugLog(Log log,
                                      String module,
                                      String eventName,
-                                     Callable<V> callable) {
+                                     Func1<LogMessage, V> callable) {
         return withLog(log, Level.DEBUG, module, eventName, callable);
     }
 
     public static <V> V withDebugLog(Log log,
                                      String eventName,
-                                     Callable<V> callable) {
+                                     Func1<LogMessage, V> callable) {
         return withLog(log, Level.DEBUG, null, eventName, callable);
     }
 
     public static <V> V withInfoLog(Log log,
                                     String module,
                                     String eventName,
-                                    Callable<V> callable) {
+                                    Func1<LogMessage, V> callable) {
         return withLog(log, Level.INFO, module, eventName, callable);
     }
 
     public static <V> V withInfoLog(Log log,
                                     String eventName,
-                                    Callable<V> callable) {
+                                    Func1<LogMessage, V> callable) {
         return withLog(log, Level.INFO, null, eventName, callable);
     }
 }

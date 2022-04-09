@@ -10,7 +10,6 @@ import lombok.Getter;
 import lombok.Singular;
 import org.team4u.base.bean.provider.BeanProviders;
 import org.team4u.base.filter.FilterInvoker;
-import org.team4u.base.log.LogMessageContext;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -49,16 +48,16 @@ public class FilterChain<C, F extends Filter<C>> {
 
     @SuppressWarnings("unchecked")
     private FilterInvoker<C> initFilterChain() {
-        return withInfoLog(log, config.getName(), "initFilterChain", () -> {
+        return withInfoLog(log, config.getName(), "initFilterChain", (lm) -> {
             List<F> filters = (List<F>) config.filtersWithClasses();
-            LogMessageContext.get().append("filters", config.dump(filters));
+            lm.append("filters", config.dump(filters));
 
             final AtomicReference<FilterInvoker<C>> last = new AtomicReference<FilterInvoker<C>>(
                     FilterInvoker.EMPTY_INVOKER
             );
             reverse(filters, filter -> {
                 FilterInvoker<C> next = last.get();
-                last.set(context -> interceptorService.apply(context, next, filter));
+                last.set(context -> interceptorService.apply(this, context, next, filter));
             });
 
             return last.get();
@@ -77,8 +76,8 @@ public class FilterChain<C, F extends Filter<C>> {
      * @param context 过滤上下文
      */
     public C doFilter(C context) {
-        return withInfoLog(log, config.getName(), "doFilter", () -> {
-            LogMessageContext.get().append("context", context);
+        return withInfoLog(log, config.getName(), "doFilter", (lm) -> {
+            lm.append("context", context);
             header.invoke(context);
             return context;
         });
