@@ -15,13 +15,22 @@ public class JsonCommandConfigRepositoryTest {
     @Test
     public void configOf() {
         CommandConfig commandConfig = TestUtil.configOf("test_command.json");
+        // 缓存生效
+        Assert.assertSame(commandConfig, TestUtil.configOf("test_command.json"));
 
-        ExtractConfig extractConfig = commandConfig.itemOf(
-                "jsonExtractor",
-                ExtractConfig.class
-        );
+        ExtractConfig extractConfig = itemOf(commandConfig);
 
         Assert.assertEquals(MockCommandResponse.class.getName(), extractConfig.getTargetType());
         Assert.assertEquals("{\"channelCode\":\"x\"}", extractConfig.getTemplate());
+
+        // 缓存生效
+        Assert.assertSame(extractConfig, itemOf(commandConfig));
+    }
+
+    private ExtractConfig itemOf(CommandConfig commandConfig) {
+        return commandConfig.itemOf(
+                "jsonExtractor",
+                ExtractConfig.class
+        );
     }
 }

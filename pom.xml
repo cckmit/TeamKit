@@ -32,11 +32,11 @@
         <spring.version>5.3.9</spring.version>
         <beetl.version>3.9.3.RELEASE</beetl.version>
         <jetbrick.version>2.1.10</jetbrick.version>
-        <fastjson.version>1.2.76</fastjson.version>
+        <fastjson.version>1.2.80</fastjson.version>
         <byte-buddy.version>1.12.8</byte-buddy.version>
         <camel.version>3.11.0</camel.version>
         <testable.version>0.7.0</testable.version>
-        <liteflow.version>2.5.10</liteflow.version>
+        <liteflow.version>2.6.12</liteflow.version>
         <org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
         <lombok.version>1.18.22</lombok.version>
     </properties>

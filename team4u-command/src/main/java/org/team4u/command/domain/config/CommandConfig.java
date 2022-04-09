@@ -2,7 +2,10 @@ package org.team4u.command.domain.config;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.lang.Dict;
+import cn.hutool.core.lang.Pair;
 import org.team4u.base.config.IdentifiedConfig;
+import org.team4u.base.lang.lazy.LazyFunction;
+import org.team4u.base.lang.lazy.LazyValueFormatter;
 
 import java.util.Map;
 
@@ -12,6 +15,14 @@ import java.util.Map;
  * @author jay.wu
  */
 public class CommandConfig extends IdentifiedConfig {
+
+    private final LazyFunction<Pair<String, Class<?>>, Object> itemCache = LazyFunction.of(
+            LazyFunction.Config.builder()
+                    .name(this.getClass().getSimpleName())
+                    .parameterFormatter(cacheKeyFormatter())
+                    .build(),
+            this::itemOf
+    );
 
     /**
      * 命令配置明细项
@@ -33,8 +44,9 @@ public class CommandConfig extends IdentifiedConfig {
      * @param <T>        配置类型
      * @return 配置对象
      */
+    @SuppressWarnings("unchecked")
     public <T> T itemOf(String itemId, Class<T> configType) {
-        return BeanUtil.toBean(itemOf(itemId), configType);
+        return (T) itemCache.apply(Pair.of(itemId, configType));
     }
 
     /**
@@ -45,5 +57,14 @@ public class CommandConfig extends IdentifiedConfig {
      */
     public Dict itemOf(String itemId) {
         return items.get(itemId);
+    }
+
+    private LazyValueFormatter<Pair<String, Class<?>>> cacheKeyFormatter() {
+        return (log, value) -> value.getKey();
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> T itemOf(Pair<String, Class<?>> itemIdAndType) {
+        return (T) BeanUtil.toBean(itemOf(itemIdAndType.getKey()), itemIdAndType.getValue());
     }
 }

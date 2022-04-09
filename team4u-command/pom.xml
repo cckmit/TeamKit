@@ -18,6 +18,12 @@
             <version>${parent.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.team4u</groupId>
+            <artifactId>team4u-selector</artifactId>
+            <version>${parent.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>${fastjson.version}</version>
@@ -27,18 +33,6 @@
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-core</artifactId>
             <version>${camel.version}</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>com.yomahub</groupId>
-            <artifactId>liteflow-core</artifactId>
-            <version>${liteflow.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>cn.hutool</groupId>
-                    <artifactId>hutool-core</artifactId>
-                </exclusion>
-            </exclusions>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -52,12 +46,6 @@
             <artifactId>spring-beans</artifactId>
             <version>${spring.version}</version>
             <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.team4u</groupId>
-            <artifactId>team4u-test</artifactId>
-            <version>${parent.version}</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.team4u</groupId>
