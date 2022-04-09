@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.dao.DuplicateKeyException;
 import org.team4u.base.log.LogMessage;
-import org.team4u.base.log.LogMessageContext;
 import org.team4u.kv.KeyValueRepository;
 import org.team4u.kv.model.KeyValue;
 import org.team4u.kv.model.KeyValueFactory;
@@ -101,7 +100,7 @@ public class DbKeyValueRepository implements KeyValueRepository {
 
     @Override
     public KeyValueId save(KeyValue keyValue) {
-        LogMessage lm = LogMessageContext.createAndSet(this.getClass().getSimpleName(), "save")
+        LogMessage lm = LogMessage.create(this.getClass().getSimpleName(), "save")
                 .append("id", keyValue.id());
 
         KeyValueEntity entity = toKeyValueEntity(keyValue).setUpdateTime(new Date());
@@ -133,7 +132,7 @@ public class DbKeyValueRepository implements KeyValueRepository {
 
         StoreResource resource = withResource(keyValue.id());
 
-        LogMessage lm = LogMessageContext.createAndSet(this.getClass().getSimpleName(), "saveIfAbsent")
+        LogMessage lm = LogMessage.create(this.getClass().getSimpleName(), "saveIfAbsent")
                 .append("resource", resource.toString())
                 .append("id", keyValue.id());
 

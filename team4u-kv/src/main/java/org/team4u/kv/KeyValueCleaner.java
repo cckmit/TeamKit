@@ -1,7 +1,7 @@
 package org.team4u.kv;
 
 import org.team4u.base.lang.LongTimeThread;
-import org.team4u.base.log.LogMessageContext;
+import org.team4u.base.log.LogMessage;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -36,11 +36,12 @@ public class KeyValueCleaner extends LongTimeThread {
         }
 
         try {
+            LogMessage lm = LogMessage.create(this.getClass().getSimpleName(), "onRun");
+
             // 执行清理
             int count = removeExpirationValues();
 
-            log.info(LogMessageContext.createAndSet(this.getClass().getSimpleName(), "onRun")
-                    .append("typeCount", keyValueRepositories.size())
+            log.info(lm.append("typeCount", keyValueRepositories.size())
                     .append("intervalMillis", config.getIntervalMillis())
                     .append("count", count)
                     .success().toString());
