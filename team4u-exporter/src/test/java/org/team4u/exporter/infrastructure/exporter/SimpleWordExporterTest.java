@@ -11,7 +11,7 @@ public class SimpleWordExporterTest {
         SimpleWordExporter.getInstance().export(SimpleWordExporter.Context.builder()
                 .templateInputStream(FileUtil.getInputStream("template/test.docx"))
                 .outputStream(FileUtil.getOutputStream("result/test.docx"))
-                .bindings(Dict.create().set("title", "测试"))
+                .bindings(Dict.create().set("title", "选中的复选框：☑，未选中的复选框：□"))
                 .build());
     }
 }

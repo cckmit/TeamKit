@@ -1,6 +1,5 @@
 package org.team4u.exporter.infrastructure.exporter;
 
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.lang.Singleton;
 import com.deepoove.poi.XWPFTemplate;
@@ -13,11 +12,12 @@ import org.team4u.exporter.domain.Exporter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.List;
 import java.util.Map;
 
 /**
  * 简单word导出器
+ * <p>
+ * 更多用法请参考https://github.com/Sayi/poi-tl
  *
  * @author jay.wu
  */
@@ -44,19 +44,9 @@ public class SimpleWordExporter implements Exporter<SimpleWordExporter.Context> 
     @Builder
     public static class Context {
         /**
-         * 字体路径集合
-         */
-        @Builder.Default
-        private List<String> fonts = CollectionUtil.newArrayList("font/simsun.ttf");
-        /**
          * 模板路径
          */
         private InputStream templateInputStream;
-        /**
-         * 模板引擎标识
-         */
-        @Builder.Default
-        private String templateEngineId = "BEETL";
         /**
          * 上下文变量
          */
