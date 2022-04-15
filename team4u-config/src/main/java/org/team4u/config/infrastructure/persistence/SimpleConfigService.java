@@ -32,9 +32,7 @@ public class SimpleConfigService implements ConfigService {
     public <T> T get(String key, T defaultValue) {
         Pair<String, String> typeAndKey = getConfigType(key);
         return simpleConfigAppService.to(
-                defaultValue.getClass(),
-                typeAndKey.getKey(),
-                typeAndKey.getValue()
+                typeAndKey.getKey(), typeAndKey.getValue(), defaultValue.getClass()
         );
     }
 

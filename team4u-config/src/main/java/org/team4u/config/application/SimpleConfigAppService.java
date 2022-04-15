@@ -21,25 +21,25 @@ public class SimpleConfigAppService {
     /**
      * 将多个配置项转换为指定的配置类
      *
-     * @param toType     目标配置类型
-     * @param configType 配置项类型或配置项前缀
      * @param <T>        目标配置类型
+     * @param configType 配置项类型或配置项前缀
+     * @param toType     目标配置类型
      * @return 目标配置类
      */
-    public <T> T to(Class<T> toType, String configType) {
+    public <T> T to(String configType, Class<T> toType) {
         return simpleConfigConverter.to(configType, toType);
     }
 
     /**
      * 根据特定的配置项转换为指定的配置类
      *
-     * @param toType     目标配置类型
+     * @param <T>        目标配置类型
      * @param configType 配置类型或配置前缀
      * @param configKey  配置项key
-     * @param <T>        目标配置类型
+     * @param toType     目标配置类型
      * @return 目标配置类
      */
-    public <T> T to(Type toType, String configType, String configKey) {
+    public <T> T to(String configType, String configKey, Type toType) {
         return simpleConfigConverter.to(configType, configKey, toType);
     }
 
