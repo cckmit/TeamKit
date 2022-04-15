@@ -19,23 +19,33 @@ import java.util.stream.Collectors;
 @Data
 @AllArgsConstructor
 public class SimpleConfig extends AggregateRoot {
-
+    /**
+     * 配置标识
+     */
     private final SimpleConfigId configId;
-
+    /**
+     * 配置值
+     */
     private String configValue;
-
+    /**
+     * 配置描述
+     */
     private String description;
-
+    /**
+     * 配置顺序
+     */
     private int sequenceNo;
-
-    private Boolean enabled;
+    /**
+     * 是否启用配置
+     */
+    private boolean enabled;
 
     public void create() {
         publishEvent(new ConfigCreatedEvent(this));
     }
 
     public void enable() {
-        if (getEnabled()) {
+        if (isEnabled()) {
             return;
         }
 
@@ -45,7 +55,7 @@ public class SimpleConfig extends AggregateRoot {
     }
 
     public void disable() {
-        if (!getEnabled()) {
+        if (!isEnabled()) {
             return;
         }
 

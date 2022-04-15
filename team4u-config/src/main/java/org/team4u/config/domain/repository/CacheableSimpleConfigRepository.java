@@ -45,21 +45,38 @@ public class CacheableSimpleConfigRepository implements SimpleConfigRepository {
         return configsSupplier.get();
     }
 
+    public void refresh() {
+        configsSupplier.refresh();
+    }
+
     private SimpleConfigs loadAndCompare() {
         SimpleConfigs newConfigs = delegateConfigRepository.allConfigs();
 
+        // 配置项比对
+        compareAndPublishEvents(newConfigs);
+
+        // 需要复制副本，防止外部修改值导致比对失效
+        return newConfigs.copy();
+    }
+
+    private void compareAndPublishEvents(SimpleConfigs newConfigs) {
         // 首次初始化不做比对
-        if (configsSupplier.value() != null) {
-            simpleConfigComparator.compareAndPublishEvents(
-                    configsSupplier.value().getValue(),
-                    newConfigs.getValue()
-            );
+        if (configsSupplier.value() == null) {
+            return;
         }
 
-        return newConfigs;
+        SimpleConfigs oldConfigs = configsSupplier.value();
+
+        simpleConfigComparator.compareAndPublishEvents(
+                oldConfigs.getValue(),
+                newConfigs.getValue()
+        );
     }
 
     public static class Config {
+        /**
+         * 缓存有效期（秒）
+         */
         private int maxEffectiveSec = 60;
 
         public int getMaxEffectiveSec() {

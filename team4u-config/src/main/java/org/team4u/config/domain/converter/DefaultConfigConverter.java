@@ -4,6 +4,8 @@ import lombok.Getter;
 import org.team4u.config.domain.SimpleConfigConverter;
 import org.team4u.config.domain.SimpleConfigRepository;
 import org.team4u.config.domain.SimpleConfigs;
+import org.team4u.config.domain.converter.type.ConfigTypeBeanConverter;
+import org.team4u.config.domain.converter.value.ConfigValueBeanConverter;
 
 import java.lang.reflect.Type;
 
@@ -22,13 +24,13 @@ public class DefaultConfigConverter implements SimpleConfigConverter {
     }
 
     @Override
-    public <T> T to(Class<T> toType, String configType) {
+    public <T> T to(String configType, Class<T> toType) {
         return configTypeBeanConverter.convert(allConfigs(), configType, toType);
     }
 
     @Override
-    public <T> T to(Type toType, String configType, String configKey, boolean isCacheResult) {
-        return configValueBeanConverter.convert(allConfigs(), toType, configType, configKey, isCacheResult);
+    public <T> T to(String configType, String configKey, Type toType) {
+        return configValueBeanConverter.convert(allConfigs(), configType, configKey, toType);
     }
 
     @Override

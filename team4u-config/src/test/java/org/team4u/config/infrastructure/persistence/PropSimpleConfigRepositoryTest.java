@@ -25,6 +25,6 @@ public class PropSimpleConfigRepositoryTest {
                              String value) {
         Assert.assertEquals(new SimpleConfigId(type, key), config.getConfigId());
         Assert.assertEquals(value, config.getConfigValue());
-        Assert.assertTrue(config.getEnabled());
+        Assert.assertTrue(config.isEnabled());
     }
 }

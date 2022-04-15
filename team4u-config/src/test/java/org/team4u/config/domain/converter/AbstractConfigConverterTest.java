@@ -3,6 +3,8 @@ package org.team4u.config.domain.converter;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.TypeReference;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.junit.Assert;
 import org.junit.Test;
 import org.team4u.config.TestUtil;
@@ -17,18 +19,12 @@ import java.util.Map;
 import static org.team4u.config.TestUtil.c;
 
 public abstract class AbstractConfigConverterTest {
-
-    protected final MockSimpleConfigRepository repository = new MockSimpleConfigRepository();
-
-    protected final SimpleConfigConverter converter = newSimpleConfigConverter();
-
-    protected abstract SimpleConfigConverter newSimpleConfigConverter();
+    protected abstract SimpleConfigConverter converter();
 
     @Test
     public void type() {
-        TestConfig config = converter.to(
-                TestConfig.class,
-                TestUtil.TEST_ID
+        TestConfig config = converter().to(
+                TestUtil.TEST_ID, TestConfig.class
         );
 
         Assert.assertEquals(1, config.getA());
@@ -46,28 +42,22 @@ public abstract class AbstractConfigConverterTest {
 
     @Test
     public void value() {
-        Integer a = converter.to(
-                Integer.class,
-                TestUtil.TEST_ID,
-                "a"
+        Integer a = converter().to(
+                TestUtil.TEST_ID, "a", Integer.class
         );
 
         Assert.assertEquals(1, a.intValue());
 
-        String[] b = converter.to(
-                String[].class,
-                TestUtil.TEST_ID,
-                "b"
+        String[] b = converter().to(
+                TestUtil.TEST_ID, "b", String[].class
         );
 
         Assert.assertArrayEquals(new String[]{"1", "2"}, b);
 
-        List<Demo> e = converter.to(
-                new TypeReference<List<Demo>>() {
+        List<Demo> e = converter().to(
+                TestUtil.TEST_ID, "e", new TypeReference<List<Demo>>() {
 
-                }.getType(),
-                TestUtil.TEST_ID,
-                "e"
+                }.getType()
         );
         Assert.assertEquals(new Demo("1", "2"), e.get(0));
     }
@@ -83,6 +73,7 @@ public abstract class AbstractConfigConverterTest {
     }
 
     @Data
+    @NoArgsConstructor
     public static class Demo {
         private String a;
         private String b;
@@ -95,7 +86,8 @@ public abstract class AbstractConfigConverterTest {
 
     public static class MockSimpleConfigRepository implements SimpleConfigRepository {
 
-        private final List<SimpleConfig> list = CollUtil.newArrayList(
+        @Setter
+        private List<SimpleConfig> list = CollUtil.newArrayList(
                 c("a", "1"),
                 c("b", "1,2"),
                 c("c", "1,2"),

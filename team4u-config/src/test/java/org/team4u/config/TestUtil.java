@@ -28,7 +28,7 @@ public class TestUtil {
 
     public static void checkConfigByDb(SimpleConfig config) {
         Assert.assertEquals(1, config.getSequenceNo());
-        Assert.assertTrue(config.getEnabled());
+        Assert.assertTrue(config.isEnabled());
         Assert.assertEquals(TestUtil.TEST_ID, config.getConfigId().getConfigKey());
         Assert.assertEquals(TestUtil.TEST_ID, config.getConfigId().getConfigType());
         Assert.assertEquals(TestUtil.TEST_ID, config.getConfigValue());

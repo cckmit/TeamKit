@@ -12,41 +12,25 @@ public interface SimpleConfigConverter {
     /**
      * 将多个配置项转换为指定的配置类
      *
-     * @param toType     目标配置类型
-     * @param configType 配置项类型或配置项前缀
      * @param <T>        目标配置类型
+     * @param configType 配置项类型或配置项前缀
+     * @param toType     目标配置类型
      * @return 目标配置类
      */
-    <T> T to(Class<T> toType, String configType);
+    <T> T to(String configType, Class<T> toType);
 
     /**
      * 根据特定的配置项转换为指定的配置类
      * <p>
      * 默认开启缓存结果
      *
-     * @param toType     目标配置类型
+     * @param <T>        目标配置类型
      * @param configType 配置类型或配置前缀
      * @param configKey  配置项key
-     * @param <T>        目标配置类型
+     * @param toType     目标配置类型
      * @return 目标配置类
      */
-    default <T> T to(Type toType, String configType, String configKey) {
-        return to(toType, configType, configKey, true);
-    }
-
-    /**
-     * 根据特定的配置项转换为指定的配置类
-     * <p>
-     * 默认缓存转换后的配置类，即相同的配置项
-     *
-     * @param toType        目标配置类型
-     * @param configType    配置类型或配置前缀
-     * @param configKey     配置项key
-     * @param isCacheResult 是否缓存转换后的配置类。true则缓存，相同的配置项仅转换一次，仅不同时会再次转换和缓存；false为不缓存，每次重新转换
-     * @param <T>           目标配置类型
-     * @return 目标配置类
-     */
-    <T> T to(Type toType, String configType, String configKey, boolean isCacheResult);
+    <T> T to(String configType, String configKey, Type toType);
 
     /**
      * 获取指定配置项对应的值

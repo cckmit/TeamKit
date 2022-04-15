@@ -2,6 +2,7 @@ package org.team4u.config.domain.event;
 
 import cn.hutool.core.util.IdUtil;
 import lombok.Getter;
+import org.team4u.config.domain.SimpleConfigId;
 import org.team4u.ddd.domain.model.AbstractDomainEvent;
 
 import java.util.List;
@@ -31,6 +32,12 @@ public class ConfigAllChangedEvent extends AbstractDomainEvent {
     public Set<String> allConfigTypes() {
         return allEvents.stream()
                 .map(it -> it.getConfigId().getConfigType())
+                .collect(Collectors.toSet());
+    }
+
+    public Set<SimpleConfigId> allConfigIdList() {
+        return allEvents.stream()
+                .map(SimpleConfigEvent::getConfigId)
                 .collect(Collectors.toSet());
     }
 

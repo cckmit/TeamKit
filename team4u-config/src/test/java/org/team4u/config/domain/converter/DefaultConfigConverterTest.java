@@ -4,8 +4,10 @@ import org.team4u.config.domain.SimpleConfigConverter;
 
 public class DefaultConfigConverterTest extends AbstractConfigConverterTest {
 
+    private final DefaultConfigConverter converter = new DefaultConfigConverter(new MockSimpleConfigRepository());
+
     @Override
-    protected SimpleConfigConverter newSimpleConfigConverter() {
-        return new DefaultConfigConverter(repository);
+    protected SimpleConfigConverter converter() {
+        return converter;
     }
 }

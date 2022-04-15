@@ -61,34 +61,55 @@ public class LazyRefreshSupplier<T> extends LongTimeThread implements Supplier<T
         return value;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     protected void onRun() {
-        LogMessage lm = LogMessage.create(config.getName(), "onRefresh");
+        refresh();
+    }
+
+    public synchronized void refresh() {
+        LogMessage lm = LogMessage.create(config.getName(), "refresh");
 
         T newValue = supplier.get();
-
-        if (newValue == null) {
-            IllegalStateException e = new NullValueException("Lazy value can not be null!");
-            log.error(lm.fail(e.getMessage()).toString());
-            throw e;
-        }
+        assertNotNull(lm, newValue);
 
         T oldValue = value;
         value = newValue;
 
         // 仅打印变化值
-        if (log.isInfoEnabled()) {
-            if (!ObjectUtil.equal(oldValue, newValue)) {
-                log.info(lm.success()
-                        .append("value", config.getValueFormatter().format(log, newValue))
-                        .toString());
-            }
+        logIfChanged(lm, oldValue, newValue);
+
+        notifyRefreshListener(oldValue, newValue);
+    }
+
+    private void notifyRefreshListener(T oldValue, T newValue) {
+        if (config.getRefreshListener() == null) {
+            return;
         }
 
-        if (config.getRefreshListener() != null) {
+        //noinspection unchecked
+        config.getRefreshListener().afterRefresh(oldValue, newValue);
+    }
+
+    private void assertNotNull(LogMessage lm, T value) {
+        if (value != null) {
+            return;
+        }
+
+        IllegalStateException e = new NullValueException("Lazy value can not be null!");
+        log.error(lm.fail(e.getMessage()).toString());
+        throw e;
+    }
+
+    private void logIfChanged(LogMessage lm, T oldValue, T newValue) {
+        if (!log.isInfoEnabled()) {
+            return;
+        }
+
+        if (!ObjectUtil.equal(oldValue, newValue)) {
             //noinspection unchecked
-            config.getRefreshListener().afterRefresh(oldValue, newValue);
+            log.info(lm.success()
+                    .append("value", config.getValueFormatter().format(log, newValue))
+                    .toString());
         }
     }
 

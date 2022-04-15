@@ -39,7 +39,7 @@ public class SimpleConfigs {
         return value.stream()
                 .filter(it -> StrUtil.equals(it.getConfigId().getConfigType(), configType))
                 .filter(it -> StrUtil.equals(it.getConfigId().getConfigKey(), configKey))
-                .filter(SimpleConfig::getEnabled)
+                .filter(SimpleConfig::isEnabled)
                 .findFirst()
                 .orElse(null);
     }
@@ -54,9 +54,13 @@ public class SimpleConfigs {
         return new SimpleConfigs(
                 value.stream()
                         .filter(it -> StrUtil.equals(it.getConfigId().getConfigType(), configType))
-                        .filter(SimpleConfig::getEnabled)
+                        .filter(SimpleConfig::isEnabled)
                         .collect(Collectors.toList())
         );
+    }
+
+    public String value(SimpleConfigId configId) {
+        return value(configId.getConfigType(), configId.getConfigKey());
     }
 
     /**
@@ -88,7 +92,7 @@ public class SimpleConfigs {
                                 it.getConfigValue(),
                                 it.getDescription(),
                                 it.getSequenceNo(),
-                                it.getEnabled()
+                                it.isEnabled()
                         ))
                         .collect(Collectors.toList())
         );

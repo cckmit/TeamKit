@@ -79,12 +79,12 @@ public class SimpleConfigComparator {
             return;
         }
 
-        if (oldConfig.getEnabled() && !newConfig.getEnabled()) {
+        if (oldConfig.isEnabled() && !newConfig.isEnabled()) {
             oldConfig.disable();
             return;
         }
 
-        if (!oldConfig.getEnabled() && newConfig.getEnabled()) {
+        if (!oldConfig.isEnabled() && newConfig.isEnabled()) {
             oldConfig.enable();
         }
 

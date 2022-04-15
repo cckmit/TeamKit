@@ -1,10 +1,11 @@
-package org.team4u.config.domain.converter;
+package org.team4u.config.domain.converter.type;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.bean.copier.ValueProvider;
 import cn.hutool.core.util.ReflectUtil;
 import org.team4u.config.domain.SimpleConfigs;
+import org.team4u.config.domain.converter.value.ConfigValueBeanConverter;
 
 import java.lang.reflect.Type;
 
@@ -43,10 +44,7 @@ public class ConfigTypeBeanConverter {
         public Object value(String key, Type valueType) {
             return configValueBeanConverter.convert(
                     simpleConfigs,
-                    valueType,
-                    configType,
-                    key,
-                    false
+                    configType, key, valueType
             );
         }
 
