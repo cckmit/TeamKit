@@ -1,22 +1,15 @@
 package org.team4u.config.application;
 
-import org.team4u.config.domain.SimpleConfigConverter;
 import org.team4u.config.domain.SimpleConfigs;
 
 import java.lang.reflect.Type;
 
 /**
- * 配置应用服务
+ * 配置转换器
  *
  * @author jay.wu
  */
-public class SimpleConfigAppService {
-
-    private final SimpleConfigConverter simpleConfigConverter;
-
-    public SimpleConfigAppService(SimpleConfigConverter simpleConfigConverter) {
-        this.simpleConfigConverter = simpleConfigConverter;
-    }
+public interface SimpleConfigConverter {
 
     /**
      * 将多个配置项转换为指定的配置类
@@ -26,12 +19,12 @@ public class SimpleConfigAppService {
      * @param toType     目标配置类型
      * @return 目标配置类
      */
-    public <T> T to(String configType, Class<T> toType) {
-        return simpleConfigConverter.to(configType, toType);
-    }
+    <T> T to(String configType, Class<T> toType);
 
     /**
      * 根据特定的配置项转换为指定的配置类
+     * <p>
+     * 默认开启缓存结果
      *
      * @param <T>        目标配置类型
      * @param configType 配置类型或配置前缀
@@ -39,9 +32,7 @@ public class SimpleConfigAppService {
      * @param toType     目标配置类型
      * @return 目标配置类
      */
-    public <T> T to(String configType, String configKey, Type toType) {
-        return simpleConfigConverter.to(configType, configKey, toType);
-    }
+    <T> T to(String configType, String configKey, Type toType);
 
     /**
      * 获取指定配置项对应的值
@@ -50,8 +41,8 @@ public class SimpleConfigAppService {
      * @param configKey  配置项key
      * @return 配置值
      */
-    public String value(String configType, String configKey) {
-        return simpleConfigConverter.value(configType, configKey);
+    default String value(String configType, String configKey) {
+        return allConfigs().value(configType, configKey);
     }
 
     /**
@@ -59,7 +50,5 @@ public class SimpleConfigAppService {
      *
      * @return 配置项集合
      */
-    public SimpleConfigs allConfigs() {
-        return simpleConfigConverter.allConfigs();
-    }
+    SimpleConfigs allConfigs();
 }

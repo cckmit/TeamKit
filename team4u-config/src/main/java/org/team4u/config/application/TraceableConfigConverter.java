@@ -1,9 +1,8 @@
-package org.team4u.config.domain.converter;
+package org.team4u.config.application;
 
 import lombok.Getter;
 import org.team4u.base.message.jvm.AbstractMessageSubscriber;
 import org.team4u.base.message.jvm.MessagePublisher;
-import org.team4u.config.domain.SimpleConfigConverter;
 import org.team4u.config.domain.SimpleConfigId;
 import org.team4u.config.domain.SimpleConfigs;
 import org.team4u.config.domain.converter.type.ConfigTypeBeanRefresher;

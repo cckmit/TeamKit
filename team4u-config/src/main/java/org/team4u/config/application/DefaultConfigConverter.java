@@ -1,7 +1,6 @@
-package org.team4u.config.domain.converter;
+package org.team4u.config.application;
 
 import lombok.Getter;
-import org.team4u.config.domain.SimpleConfigConverter;
 import org.team4u.config.domain.SimpleConfigRepository;
 import org.team4u.config.domain.SimpleConfigs;
 import org.team4u.config.domain.converter.type.ConfigTypeBeanConverter;

@@ -1,4 +1,4 @@
-package org.team4u.config.domain.converter;
+package org.team4u.config.application;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.TypeReference;
@@ -9,7 +9,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.team4u.config.TestUtil;
 import org.team4u.config.domain.SimpleConfig;
-import org.team4u.config.domain.SimpleConfigConverter;
 import org.team4u.config.domain.SimpleConfigRepository;
 import org.team4u.config.domain.SimpleConfigs;
 

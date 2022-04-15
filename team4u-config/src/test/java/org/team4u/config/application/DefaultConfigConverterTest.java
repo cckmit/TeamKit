@@ -1,6 +1,4 @@
-package org.team4u.config.domain.converter;
-
-import org.team4u.config.domain.SimpleConfigConverter;
+package org.team4u.config.application;
 
 public class DefaultConfigConverterTest extends AbstractConfigConverterTest {
 

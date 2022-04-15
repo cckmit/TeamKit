@@ -1,7 +1,6 @@
-package org.team4u.config.domain.converter;
+package org.team4u.config.application;
 
 import org.junit.Assert;
-import org.team4u.config.domain.SimpleConfigConverter;
 import org.team4u.config.domain.SimpleConfigs;
 import org.team4u.config.domain.repository.CacheableSimpleConfigRepository;
 
