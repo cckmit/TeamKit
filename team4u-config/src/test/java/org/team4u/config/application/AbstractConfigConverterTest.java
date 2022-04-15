@@ -6,9 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.team4u.config.TestUtil;
-import org.team4u.config.domain.SimpleConfig;
 import org.team4u.config.domain.SimpleConfigRepository;
 import org.team4u.config.domain.SimpleConfigs;
 
@@ -19,6 +19,13 @@ import static org.team4u.config.TestUtil.c;
 
 public abstract class AbstractConfigConverterTest {
     protected abstract SimpleConfigConverter converter();
+
+    protected abstract MockSimpleConfigRepository mockRepository();
+
+    @Before
+    public void setUp() {
+        mockRepository().reset();
+    }
 
     @Test
     public void type() {
@@ -59,6 +66,15 @@ public abstract class AbstractConfigConverterTest {
                 }.getType()
         );
         Assert.assertEquals(new Demo("1", "2"), e.get(0));
+
+        Demo g = converter().to(TestUtil.TEST_ID, "g", Demo.class);
+        Assert.assertEquals(new Demo("1", "2"), g);
+
+        additionalValueCheck();
+    }
+
+    protected void additionalValueCheck() {
+
     }
 
     @Data
@@ -69,6 +85,7 @@ public abstract class AbstractConfigConverterTest {
         private Map<String, String> d;
         private List<Demo> e;
         private boolean f;
+        private Demo g;
     }
 
     @Data
@@ -85,8 +102,7 @@ public abstract class AbstractConfigConverterTest {
 
     public static class MockSimpleConfigRepository implements SimpleConfigRepository {
 
-        @Setter
-        private List<SimpleConfig> list = CollUtil.newArrayList(
+        private static final SimpleConfigs DEFAULT = new SimpleConfigs(CollUtil.newArrayList(
                 c("a", "1"),
                 c("b", "1,2"),
                 c("c", "1,2"),
@@ -99,12 +115,24 @@ public abstract class AbstractConfigConverterTest {
                         "  }\n" +
                         "]"),
                 c("f", "true"),
+                c("g", "{\n" +
+                        "    \"a\": \"1\",\n" +
+                        "    \"b\": \"2\",\n" +
+                        "    \"c\": \"3\"\n" +
+                        "  }\n"),
                 c(TestUtil.TEST_ID2, "a", "2")
-        );
+        ));
+
+        @Setter
+        private SimpleConfigs simpleConfigs = DEFAULT.copy();
+
+        public void reset() {
+            simpleConfigs = DEFAULT.copy();
+        }
 
         @Override
         public SimpleConfigs allConfigs() {
-            return new SimpleConfigs(list);
+            return simpleConfigs;
         }
     }
 }
