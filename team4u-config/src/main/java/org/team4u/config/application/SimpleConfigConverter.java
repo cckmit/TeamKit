@@ -23,8 +23,6 @@ public interface SimpleConfigConverter {
 
     /**
      * 根据特定的配置项转换为指定的配置类
-     * <p>
-     * 默认开启缓存结果
      *
      * @param <T>        目标配置类型
      * @param configType 配置类型或配置前缀
